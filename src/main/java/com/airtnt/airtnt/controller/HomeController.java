@@ -1,6 +1,7 @@
 package com.airtnt.airtnt.controller;
 
 import java.text.DateFormat;
+
 import java.util.Date;
 import java.util.Locale;
 
@@ -13,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.airtnt.airtnt.service.RoomMapper;
-import com.airtnt.airtnt.service.RoomsMapper;
 
 /**
  * Handles requests for the application home page.
