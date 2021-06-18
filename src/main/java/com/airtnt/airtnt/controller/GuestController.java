@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.airtnt.airtnt.service.RoomMapper;
 
 @Controller
+@RequestMapping("guest")
 public class GuestController {
 
 	
@@ -16,7 +17,7 @@ public class GuestController {
 //	 private RoomMapper roomMapper;
 	 
 
-	@RequestMapping("search_room")
+	@RequestMapping("search")
 	public String searchRoom() {
 
 		return "guest/room/room_list";
