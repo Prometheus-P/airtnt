@@ -18,13 +18,13 @@
   <header id="header" class="hoc clear">
     <div id="logo" class="fl_left"> 
       <!-- ################################################################################################ -->
-      <h1><a href="/airtnt/">AirTnT</a></h1>
+      <h1><a href="index">AirTnT</a></h1>
       <!-- ################################################################################################ -->
     </div>
     <nav id="mainav" class="fl_right"> 
       <!-- ################################################################################################ -->
       <ul class="clear">
-        <li class="active"><a href="/airtnt/">호스트 되기</a></li>
+        <li class="active"><a href="index">호스트 되기</a></li>
         <li><a class="drop" href="#">Pages</a>
           <ul>
             <li><a href="pages/gallery.html">Gallery</a></li>
