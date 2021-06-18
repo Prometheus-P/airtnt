@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ include file="../../top.jsp" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -12,7 +13,7 @@
 
 <form method="get">
 	<!-- 검색 필터 -->
-	<div id="filter" align="center">
+	<div id="filter" align="center" style="border: 1px solid blue; border-radius: 5px; float: left; width: 10%; padding:10px">
 		<label>편의시설</label>
 		<!-- <input type="checkbox" name="bath_num" value=""> 침대 수<input type="number" ><br>
 		<input type="checkbox" name="" value="">침ㅅ 수<input type="number" ><br>
@@ -32,12 +33,12 @@
 </form>
 
 <!-- 숙소 목록 -->
-<div>
+<div align="center">
 	숙소 목록<!-- room_detail.jsp -->
 </div>
 
 <!-- 최근 목록 -->
-<div>
+<div align="center">
 	최근 목록
 </div>
 
