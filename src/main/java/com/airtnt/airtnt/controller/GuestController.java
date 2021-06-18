@@ -12,8 +12,8 @@ import com.airtnt.airtnt.service.RoomMapper;
 public class GuestController {
 
 	
-	 @Autowired
-	 private RoomMapper roomMapper;
+//	 @Autowired
+//	 private RoomMapper roomMapper;
 	 
 
 	@RequestMapping("search_room")
