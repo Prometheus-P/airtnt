@@ -13,7 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 
 @Controller
-public class RoomsController {
+public class RoomController {
 	/*@Autowired
 	private HostMapper hostMapper;*/
 
