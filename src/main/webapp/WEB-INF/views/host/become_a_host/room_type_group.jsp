@@ -33,11 +33,11 @@
 			<!-- Blueprint header -->
 			<header class="bp-header cf">
 				<span>AirTnT <span class="bp-icon bp-icon-about" 
-				data-content="저희 AirTnT의 주 원동력 호스트가 되어 주셔서 감사합니다."></span></span>
+				data-content="10단계의 분류를 통해 숙소를 등록하실 수 있습니다!"></span></span>
 				<h1>숙소 유형</h1>
 				<!-- top을 넣어서 홈으로 갈 수 있게 -->
 				<nav>
-					<a href="" class="bp-icon bp-icon-next" data-info="다음 페이지"><span>다음 페이지</span></a>
+					<a href="" class="bp-icon bp-icon-next"  data-info="다음 페이지"><span>다음 페이지</span></a>
 				</nav>
 			</header>
 			<!-- Product grid -->

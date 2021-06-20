@@ -4,6 +4,7 @@
 	templated.co @templatedco
 	Released for free under the Creative Commons Attribution 3.0 license (templated.co/license)
 -->
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 	<head>
 		<title>Hosting start</title>
@@ -83,7 +84,11 @@
 							숙소 준비 및 등록을 마치면, 게스트를 맞이하고 수입을 올릴 준비가 완료됩니다!
 							</p>
 							<ul class="actions">
-								<li align="center"><a href="/become_a_host/room_type.jsp" class="button special big">시작하기</a></li>
+								<li align="center">
+								<a href="<c:url value='host/room_type'/>" class="button special big">
+								시작하기
+								</a>
+								</li>
 							</ul>
 						</div>
 					</section>
@@ -99,7 +104,7 @@
 								남는 공간이 있다면 누구나 에어비앤비 호스트가 될 수 있습니다.
 								</p>
 								<ul class="actions">
-									<li><a href="hosting_context_basic" class="button special">더보기</a></li>
+									<li><a href="<c:url value='host/hosting_context_basic'/>" class="button special">더보기</a></li>
 								</ul>
 							</div>
 						</div>
@@ -113,7 +118,7 @@
 								모든 단계에서 에어비앤비가 든든하게 지원해드립니다.
 								</p>
 								<ul class="actions">
-									<li><a href="hosting_context_confidence" class="button special">더보기</a></li>
+									<li><a href="<c:url value='host/hosting_context_confidence'/>" class="button special">더보기</a></li>
 								</ul>
 							</div>
 						</div>

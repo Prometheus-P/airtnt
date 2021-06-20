@@ -78,10 +78,10 @@
           </article>
         </li>
         <li class="one_third">
-          <article><a href="<c:url value='hosting_context_confidence'/>"><i class="fas fa-couch"></i></a>
+          <article><a href="<c:url value='host/hosting_context_confidence'/>"><i class="fas fa-couch"></i></a>
             <h6 class="heading">자신 있게 호스팅을 시작하는 방법</h6>
             <p>에어비앤비 호스트 커뮤니티를 통해 호스팅 관련 도움과 베테랑 호스트의 조언을 얻고 유용한 도구에 대해 배워보세요.</p>
-            <footer><a href="<c:url value='hosting_context_confidence'/>">더보기 &raquo;</a></footer>
+            <footer><a href="<c:url value='host/hosting_context_confidence'/>">더보기 &raquo;</a></footer>
           </article>
         </li>
       </ul>
