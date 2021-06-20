@@ -16,7 +16,6 @@ public class GuestController {
 //	 @Autowired
 //	 private RoomMapper roomMapper;
 	 
-
 	@RequestMapping("search")
 	public String searchRoom() {
 
