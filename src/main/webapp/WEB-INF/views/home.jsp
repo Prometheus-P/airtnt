@@ -8,31 +8,31 @@
 <title>AirTnT</title>
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<link href='<c:url value='/resources/layout/styles/layout.css'/>' rel="stylesheet" type="text/css" media="all">
+	<link href='<c:url value='/resources/layout/styles/layout.css'/>' rel="stylesheet" type="text/css" media="all">
 </head>
 <body>
 <div class="bgded overlay padtop" style="background-image:url('<c:url value='/resources/img/main3.jpg'/>');">
   <!-- ################################################################################################ -->
   <!-- ################################################################################################ -->
   <!-- ################################################################################################ -->
-  <header id="header" class="hoc clear">
+  <header id="header" class="hoc clear" style="padding-right: 10vh;">
     <div id="logo" class="fl_left"> 
       <!-- ################################################################################################ -->
       <h1><a href="index">AirTnT</a></h1>
       <!-- ################################################################################################ -->
     </div>
-    <nav id="mainav" class="fl_right"> 
+    <nav id="mainav" class="fl_right" > 
       <!-- ################################################################################################ -->
       <ul class="clear">
         <li class="active"><a href="index">호스트 되기</a></li>
-        <li><a class="drop" href="#">Pages</a>
+        <li><a class="drop" href="#">MyPages</a>
           <ul>
-            <li><a href="pages/gallery.html">Gallery</a></li>
-            <li><a href="pages/full-width.html">Full Width</a></li>
-            <li><a href="pages/sidebar-left.html">Sidebar Left</a></li>
-            <li><a href="pages/sidebar-right.html">Sidebar Right</a></li>
-            <li><a href="pages/basic-grid.html">Basic Grid</a></li>
-            <li><a href="pages/font-icons.html">Font Icons</a></li>
+            <li><a href="trip">여행</a></li>
+            <li><a href="wishlist">위시리스트</a></li>
+            <li><a href="pages/sidebar-right.html">호스트 되기</a></li>
+            <li><a href="mypage">계정</a></li>
+            <li><a href="help">도움말</a></li>
+            <li><a href="logout">로그아웃</a></li>
           </ul>
         </li>
       </ul>
@@ -42,46 +42,21 @@
   <!-- ################################################################################################ -->
   <!-- ################################################################################################ -->
   <!-- ################################################################################################ -->
-  <div id="pageintro" class="hoc clear"> 
+  <div id="pageintro" class="hoc clear d-flex justify-content-center" style="padding-top: 5vh; padding-bottom: 50vh;"> 
     <!-- ################################################################################################ -->
-    <article>
-      <h3 class="heading">Suspendisse potenti</h3>
-      <p>Arcu mi porttitor est non felis aliquam ullamcorper sed porttitor accumsan arcu maecenas lorem elit tristique quis iaculis at euismod vel arcu donec et lorem.</p>
-      <footer>
-        <ul class="nospace inline pushright">
-          <li><a class="btn" href="guest/search">검색</a></li>
-          <li><a class="btn inverse" href="#">Egestas</a></li>
-        </ul>
-      </footer>
-    </article>
+        <nav class="navbar navbar-light">
+		  <div class="container-fluid">
+		    <form class="d-flex" action="guest/search" method="post">
+		      <input class="form-control me-2" type="search" placeholder="위치" aria-label="Search">
+		      <button  class="btn btn-outline-primary" type="submit" style="background-color:#01546b; border: 0px;">Search</button>
+		    </form>
+		  </div>
+		</nav>
     <!-- ################################################################################################ -->
   </div>
   <!-- ################################################################################################ -->
 </div>
 <!-- End Top Background Image Wrapper -->
-<!-- ################################################################################################ -->
-<!-- ################################################################################################ -->
-<!-- ################################################################################################ -->
-<div class="wrapper row1">
-  <section id="ctdetails" class="hoc clear"> 
-    <!-- ################################################################################################ -->
-    <ul class="nospace clear">
-      <li class="one_quarter first">
-        <div class="block clear"><a href="#"><i class="fas fa-phone"></i></a> <span><strong>Give us a call:</strong> +00 (123) 456 7890</span></div>
-      </li>
-      <li class="one_quarter">
-        <div class="block clear"><a href="#"><i class="fas fa-envelope"></i></a> <span><strong>Send us a mail:</strong> support@domain.com</span></div>
-      </li>
-      <li class="one_quarter">
-        <div class="block clear"><a href="#"><i class="fas fa-clock"></i></a> <span><strong> Mon. - Sat.:</strong> 08.00am - 18.00pm</span></div>
-      </li>
-      <li class="one_quarter">
-        <div class="block clear"><a href="#"><i class="fas fa-map-marker-alt"></i></a> <span><strong>Come visit us:</strong> Directions to <a href="#">our location</a></span></div>
-      </li>
-    </ul>
-    <!-- ################################################################################################ -->
-  </section>
-</div>
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
@@ -91,8 +66,7 @@
     <!-- ################################################################################################ -->
     <section id="services">
       <div class="sectiontitle">
-        <p class="nospace font-xs">Mauris tempor aliquam venenatis</p>
-        <h6 class="heading">Curabitur at odio sed enim</h6>
+        <span class="bold" style="font-size: 3vh">어디에서나, 여행은 살아보는 거야!</span>
       </div>
       <ul class="nospace group grid-3">
         <li class="one_third">
@@ -147,9 +121,32 @@
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
-<div class="bgded overlay" style="background-image:url('images/demo/backgrounds/01.png');">
-  <section class="hoc container clear"> 
+<div class="wrapper row1">
+  <section id="ctdetails" class="hoc clear"> 
     <!-- ################################################################################################ -->
+    <ul class="nospace clear">
+      <li class="one_quarter first">
+        <div class="block clear"><a href="#"><i class="fas fa-phone"></i></a> <span><strong>Give us a call:</strong> +00 (123) 456 7890</span></div>
+      </li>
+      <li class="one_quarter">
+        <div class="block clear"><a href="#"><i class="fas fa-envelope"></i></a> <span><strong>Send us a mail:</strong> support@domain.com</span></div>
+      </li>
+      <li class="one_quarter">
+        <div class="block clear"><a href="#"><i class="fas fa-clock"></i></a> <span><strong> Mon. - Sat.:</strong> 08.00am - 18.00pm</span></div>
+      </li>
+      <li class="one_quarter">
+        <div class="block clear"><a href="#"><i class="fas fa-map-marker-alt"></i></a> <span><strong>Come visit us:</strong> Directions to <a href="#">our location</a></span></div>
+      </li>
+    </ul>
+    <!-- ################################################################################################ -->
+  </section>
+</div>
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<!-- <div class="bgded overlay" style="background-image:url('images/demo/backgrounds/01.png');">
+  <section class="hoc container clear"> 
+    ################################################################################################
     <div class="sectiontitle">
       <p class="nospace font-xs">Nisi velit nec turpis nullam vitae</p>
       <h6 class="heading">Quam nunc ut elit nunc molestie</h6>
@@ -172,15 +169,15 @@
       </div>
       <div class="one_third last"><a class="imgover" href="#"><img src="images/demo/348x394.png" alt=""></a></div>
     </article>
-    <!-- ################################################################################################ -->
+    ################################################################################################
   </section>
-</div>
+</div> -->
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
-<div class="wrapper row2">
+<!-- <div class="wrapper row2">
   <section class="hoc container clear"> 
-    <!-- ################################################################################################ -->
+    ################################################################################################
     <div class="sectiontitle">
       <p class="nospace font-xs">Odio duis ut est quis nisl consequat</p>
       <h6 class="heading">Gravida donec non erat eget</h6>
@@ -235,15 +232,15 @@
         </article>
       </li>
     </ul>
-    <!-- ################################################################################################ -->
+    ################################################################################################
   </section>
-</div>
+</div> -->
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
-<div class="wrapper row4">
+<!-- <div class="wrapper row4">
   <footer id="footer" class="hoc clear"> 
-    <!-- ################################################################################################ -->
+    ################################################################################################
     <div class="one_quarter first">
       <h6 class="heading">Praesent id aliquam</h6>
       <p>Non tellus nec sapien lobortis lobortis mauris egestas massa ac cursus pellentesque leo risus convallis nulla et fringilla sapien magna sit amet magna aliquam tempus praesent sit amet neque sed lobortis nulla facilisi [<a href="#">&hellip;</a>]</p>
@@ -296,24 +293,24 @@
         </li>
       </ul>
     </div>
-    <!-- ################################################################################################ -->
+    ################################################################################################
   </footer>
-</div>
+</div> -->
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
-<div class="wrapper row5">
+<!-- <div class="wrapper row5">
   <div id="copyright" class="hoc clear"> 
-    <!-- ################################################################################################ -->
+    ################################################################################################
     <p class="fl_left">Copyright &copy; 2018 - All Rights Reserved - <a href="#">Domain Name</a></p>
     <p class="fl_right">Template by <a target="_blank" href="https://www.os-templates.com/" title="Free Website Templates">OS Templates</a></p>
-    <!-- ################################################################################################ -->
+    ################################################################################################
   </div>
 </div>
-<!-- ################################################################################################ -->
-<!-- ################################################################################################ -->
-<!-- ################################################################################################ -->
-<a id="backtotop" href="#top"><i class="fas fa-chevron-up"></i></a>
+################################################################################################
+################################################################################################
+################################################################################################
+<a id="backtotop" href="#top"><i class="fas fa-chevron-up"></i></a> -->
 <!-- JAVASCRIPTS -->
 <script src="layout/scripts/jquery.min.js"></script>
 <script src="layout/scripts/jquery.backtotop.js"></script>
