@@ -13,12 +13,13 @@ import org.springframework.web.servlet.ModelAndView;
 
 
 @Controller
+@RequestMapping("host")
 public class HostController {
 	/*@Autowired
 	private HostMapper hostMapper;*/
 
-	/*@RequestMapping("/member_index.do")
-	public String index() {
+	@RequestMapping("/room_type")
+	public String room_type_jsp() {
 		return "member/member_index";
-	}*/
+	}
 }

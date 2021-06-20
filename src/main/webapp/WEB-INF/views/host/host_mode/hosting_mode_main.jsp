@@ -9,9 +9,12 @@
 </head>
 <%@ include file="top.jsp" %>
 <body>
-	<table>
-		<tr><th><font size="400">투데이</font></th></tr>
-	</table>
+	<div align="left"><h2>투데이</h2></div>
+	<div>
+		<h3>예약</h3>
+		
+	</div>
+	
 </body>
 </html>
 <!--< include file="../bottom.jsp" %>-->
