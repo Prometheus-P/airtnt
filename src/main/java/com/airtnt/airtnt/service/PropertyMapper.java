@@ -14,7 +14,12 @@ public class PropertyMapper {
 	@Autowired
 	private SqlSession sqlSession;
 	
-	public List<PropertyDTO> selectRooms(int id) {
-		return sqlSession.selectList("selectRooms", id);
+	public PropertyDTO selectPropertyById(int id) {
+		return sqlSession.selectOne("selectPropertyById", id);
+	}
+	
+	public List<PropertyDTO> searchPropertiesByAddress(String addressKey) {
+		addressKey = "%" + addressKey + "%";
+		return sqlSession.selectList("selectPropertiesByAddress", addressKey);
 	}
 }

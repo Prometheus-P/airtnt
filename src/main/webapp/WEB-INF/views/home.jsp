@@ -72,8 +72,8 @@
     <!-- ################################################################################################ -->
         <nav class="navbar navbar-light">
 		  <div class="container-fluid">
-		    <form class="d-flex" action="guest/search" method="post">
-		      <input class="form-control me-2" type="search" placeholder="위치" aria-label="Search">
+		    <form class="d-flex" action="<c:url value='/guest/search'/>" method="post">
+		      <input name="address_key" class="form-control me-2" type="search" placeholder="위치" aria-label="Search">
 		      <button  class="btn btn-outline-primary" type="submit" style="background-color:#01546b; border: 0px;">Search</button>
 		    </form>
 		  </div>

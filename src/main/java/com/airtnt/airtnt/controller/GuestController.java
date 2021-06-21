@@ -2,41 +2,52 @@ package com.airtnt.airtnt.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import com.airtnt.airtnt.model.PropertyDTO;
 import com.airtnt.airtnt.service.PropertyMapper;
 
 @Controller
 @RequestMapping("guest")
 public class GuestController {
 	
-//	 @Autowired
-//	 private PropertyMapper propertyMapper;
+	 @Autowired
+	 private PropertyMapper propertyMapper;
 	 
 	@RequestMapping("search")
-	public String searchRoom() {
-
-		return "guest/room/room_list_temp";
+	public String searchRoom(HttpServletRequest req,
+			@RequestParam(required = false, value = "address_key") String addressKey) {
+		if(addressKey == null) {
+			addressKey = "노원";
+		}
+		List<PropertyDTO> properties = propertyMapper.searchPropertiesByAddress(addressKey);
+		req.setAttribute("properties", properties);
+		
+		return "guest/property/property_list";
 	}
 
-	@RequestMapping("room_detail")
+	@RequestMapping("property_detail")
 	public String detail() {
 
-		return "guest/room/room_detail";
+		return "guest/property/property_detail";
 	}
 
-	@RequestMapping("booking")
+	@RequestMapping("property_booking")
 	public String booking() {
 
-		return "guest/room/reserve";
+		return "guest/property/booking";
 	}
 
 	@RequestMapping("booking_confirm")
 	public String confirm() {
 
-		return "guest/room/confirm";
+		return "guest/property/booking_confirm";
 	}
 
 }

@@ -7,7 +7,7 @@ public class PropertyDTO {
 	private int id;
 	private String name;
 	private String host_id;
-	private String room_desc;
+	private String property_desc;
 	private String property_type_name;	// 주거형태
 	private String sub_property_type_name;	
 	private String room_type_name;
@@ -38,11 +38,11 @@ public class PropertyDTO {
 	public void setHost_id(String host_id) {
 		this.host_id = host_id;
 	}
-	public String getRoom_desc() {
-		return room_desc;
+	public String getProperty_desc() {
+		return property_desc;
 	}
-	public void setRoom_desc(String room_desc) {
-		this.room_desc = room_desc;
+	public void setProperty_desc(String property_desc) {
+		this.property_desc = property_desc;
 	}
 	public String getProperty_type_name() {
 		return property_type_name;
