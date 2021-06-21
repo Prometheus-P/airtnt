@@ -12,14 +12,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.airtnt.airtnt.service.RoomMapper;
+import com.airtnt.airtnt.service.PropertyMapper;
 
 
 @Controller
 @RequestMapping("/room")
 public class RoomController {
+	
 	@Autowired
-	private RoomMapper roomMapper;
+	private PropertyMapper roomMapper;
 	/*
 	 * 1. 방 정보 입력(/host/become_a_host 에서 오는 정보로 방 생성) 
 	 * 2. 방 정보 출력
