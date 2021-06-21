@@ -6,20 +6,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.airtnt.airtnt.service.RoomMapper;
+import com.airtnt.airtnt.service.PropertyMapper;
 
 @Controller
+@RequestMapping("guest")
 public class GuestController {
-
 	
 //	 @Autowired
-//	 private RoomMapper roomMapper;
+//	 private PropertyMapper propertyMapper;
 	 
-
-	@RequestMapping("search_room")
+	@RequestMapping("search")
 	public String searchRoom() {
 
-		return "guest/room/room_list";
+		return "guest/room/room_list_temp";
 	}
 
 	@RequestMapping("room_detail")
