@@ -3,20 +3,19 @@ package com.airtnt.airtnt.model;
 public class FilterSubPropDTO {
 
 	private int id;
-	private int propertyTypeId;	//부모테이블 key (id)
+	private int property_type_id;	//부모테이블 key (id)
 	private String name;
-	
 	public int getId() {
 		return id;
 	}
 	public void setId(int id) {
 		this.id = id;
 	}
-	public int getPropertyTypeId() {
-		return propertyTypeId;
+	public int getProperty_type_id() {
+		return property_type_id;
 	}
-	public void setPropertyTypeId(int propertyTypeId) {
-		this.propertyTypeId = propertyTypeId;
+	public void setProperty_type_id(int property_type_id) {
+		this.property_type_id = property_type_id;
 	}
 	public String getName() {
 		return name;
@@ -24,6 +23,5 @@ public class FilterSubPropDTO {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
 
 }
