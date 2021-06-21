@@ -21,8 +21,10 @@
 		<beans:property name="suffix" value=".jsp" />
 	</beans:bean>
 	
+
 	<context:component-scan base-package="com.airtnt.airtnt.service" />
 	<context:component-scan base-package="com.airtnt.airtnt.controller" />
+
 	
 	
 	

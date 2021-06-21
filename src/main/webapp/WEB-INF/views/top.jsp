@@ -17,7 +17,7 @@
   <!-- ################################################################################################ -->
   <!-- ################################################################################################ -->
   <!-- ################################################################################################ -->
-  <header id="header" class="hoc clear">
+  <header id="header" class="hoc clear" style="padding-right: 10vh;">
     <div id="logo" class="fl_left"> 
       <!-- ################################################################################################ -->
       <h1><a href="/index">AirTnT</a></h1>
@@ -26,15 +26,15 @@
     <nav id="mainav" class="fl_right"> 
       <!-- ################################################################################################ -->
       <ul class="clear">
-        <li class="active"><a href="/index">호스트 되기</a></li>
-        <li><a class="drop" href="#">Pages</a>
+        <li class="active"><a href="index">호스트 되기</a></li>
+        <li><a class="drop" href="#">MyPages</a>
           <ul>
-            <li><a href="pages/gallery.html">Gallery</a></li>
-            <li><a href="pages/full-width.html">Full Width</a></li>
-            <li><a href="pages/sidebar-left.html">Sidebar Left</a></li>
-            <li><a href="pages/sidebar-right.html">Sidebar Right</a></li>
-            <li><a href="pages/basic-grid.html">Basic Grid</a></li>
-            <li><a href="pages/font-icons.html">Font Icons</a></li>
+            <li><a href="trip">여행</a></li>
+            <li><a href="wishlist">위시리스트</a></li>
+            <li><a href="pages/sidebar-right.html">호스트 되기</a></li>
+            <li><a href="mypage">계정</a></li>
+            <li><a href="help">도움말</a></li>
+            <li><a href="logout">로그아웃</a></li>
           </ul>
         </li>
       </ul>
