@@ -4,6 +4,7 @@
 	templated.co @templatedco
 	Released for free under the Creative Commons Attribution 3.0 license (templated.co/license)
 -->
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 	<head>
 		<title>The Basic of Hosting</title>
@@ -61,7 +62,10 @@
 							추가 게스트나 숙소 청소에 대한 선불 수수료를 추가하실 수도 있습니다.
 							</p>
 							<ul class="actions">
-								<li align="center"><a href="/become_a_host/room_type.jsp" class="button special big">시작하기</a></li>
+								<li align="center">
+								<a href="<c:url value='host/room_type'/>" class="button special big">시작하기
+								</a>
+								</li>
 							</ul>
 						</div>
 					</section>
@@ -76,7 +80,7 @@
 								숙소의 매력을 최대한으로 표현하는 동시에 특이한 점이 있다면 솔직하게 밝혀야 합니다.
 								</p>
 								<ul class="actions">
-									<li><a href="hosting_context_get_started" class="button special">더보기</a></li>
+									<li><a href="<c:url value='host/hosting_context_get_started'/>" class="button special">더보기</a></li>
 								</ul>
 							</div>
 						</div>
@@ -90,7 +94,7 @@
 								모든 단계에서 에어비앤비가 든든하게 지원해드립니다.
 								</p>
 								<ul class="actions">
-									<li><a href="hosting_context_confidence" class="button special">더보기</a></li>
+									<li><a href="<c:url value='host/hosting_context_confidence'/>" class="button special">더보기</a></li>
 								</ul>
 							</div>
 						</div>

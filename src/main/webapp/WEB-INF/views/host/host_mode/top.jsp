@@ -8,7 +8,9 @@
 		<meta charset="UTF-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<title>top</title>
+		<meta name="description" content="An open collection of menu styles that use the line as a creative design element" />
+		<meta name="keywords" content="web design, styles, inspiration, line, pseudo-element, SVG, animation" />
+		<meta name="author" content="Codrops" />
 		<link rel="stylesheet" type="text/css" href="/resources_host/host_mode/css/normalize.css" />
 		<link rel="stylesheet" type="text/css" href="/resources_host/host_mode/css/demo.css" />
 		<link rel="stylesheet" type="text/css" href="/resources_host/host_mode/css/component.css" />
