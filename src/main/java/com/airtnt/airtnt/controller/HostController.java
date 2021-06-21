@@ -33,7 +33,18 @@ public class HostController {
 		return "host/before_host/hosting_context_confidence";
 	}
 	//2. room_type_group으로 이동해서 분류 시작
+	/*
+	 @RequestMapping("/room_type_group")
+	public String room_type_group() {
+		return "host/become_a_host/room_type";
+	}
 	
+	
+	
+	
+	
+	
+	*/
 	//3. host_mode_main >> 호스트 모드
 	/*@RequestMapping("/host_mode_main")// 호스트 모드로 전환
 	public ModelAndView host_mode_main() {
@@ -46,7 +57,7 @@ public class HostController {
 		List<String, BookingDTO> listBooking; 
 		return new ModelAndView("host/host_mode/host_mode_main", "listBooking", listBooking);
 	}
-	 @RequestMapping("/hosting_listing")// 숙소 목록
+	 @RequestMapping("/hosting_listing")// 
 	public ModelAndView hosting_listing() {
 		List<String, BookingDTO> listBooking; 
 		return new ModelAndView("host/host_mode/host_mode_main", "listBooking", listBooking);

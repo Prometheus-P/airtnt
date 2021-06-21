@@ -1,15 +1,18 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+
 <!DOCTYPE html>
 <html lang="en" class="no-js">
 	<head>
 		<meta charset="UTF-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
 		<meta name="viewport" content="width=device-width, initial-scale=1.0"> 
-		<title>Blueprint: Product Comparison Layout &amp; Effect</title>
+		<title>room_type</title>
 		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 		<link rel="stylesheet" type="text/css" href="/resources_host/become_a_host/css/demo.css" />
 		<link rel="stylesheet" type="text/css" href="/resources_host/become_a_host/css/component.css" />
 		<!-- Modernizr is used for flexbox fallback -->
-		<script src="js/modernizr.custom.js"></script>
+		<script src="/resources_host/become_a_host/js/modernizr.custom.js"></script>
 	</head>
 	<body>
 		<!-- Compare basket -->
@@ -76,9 +79,6 @@
 				</div>
 
 			</section>
-		</div><!-- /view -->
-		<!-- product compare wrapper -->
-		<script src="/resources_host/become_a_host/js/classie.js"></script>
-		<script src="/resources_host/become_a_host/js/main.js"></script>
+		</div>
 	</body>
 </html>
