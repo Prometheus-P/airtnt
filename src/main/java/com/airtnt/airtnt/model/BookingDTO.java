@@ -14,4 +14,5 @@ public class BookingDTO {
 	private int amountPaid;
 	private boolean refund;
 	
+	
 }

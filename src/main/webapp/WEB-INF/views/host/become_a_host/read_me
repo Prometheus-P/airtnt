@@ -1,12 +1,12 @@
 become_a_host 내에서 페이지 이동은 어떻게 이루어 지는가...
 
 1. 외부에서 '호스트 되기' 또는 '새로운 숙소 만들기' 클릭시
-	>> property_type_group
-2. property_type
-3. privacy_type
+	>> property_type
+2. sub_property_type
+3. room_type
 4. location
 5. detail
-	- 숙소에서 맞이 할 최대 인원 수를 알려주세요(floor_plan)
+	- 숙소에서 맞이 할 최대 인원 수를 알려주세요(maxGuest)
 	- 숙소 편의시설 정보를 추가해 주세요(amenities)
 6. photos
 7. description
