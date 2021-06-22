@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="com.airtnt.airtnt.service.AdminMapper">
+
+	<select id="listDashboard" resultType="dashboardDTO">
+        SELECT  A.TRANSACTION_DATE as transactionDate,
+                A.TOT_SITE_FEE as thisTotSiteFee,
+                B.TOT_SITE_FEE as lastTotSiteFee
+        FROM (
+                    SELECT TO_CHAR(TRANSACTION_DATE, 'YYYYMMDD') AS transaction_date
+                         , NVL(SUM(SITE_FEES),0) AS tot_site_fee 
+                    FROM TRANSACTIONS
+                    WHERE TRANSACTION_DATE BETWEEN SYSDATE-7 AND SYSDATE
+                    GROUP BY TO_CHAR(TRANSACTION_DATE, 'YYYYMMDD')
+                    ORDER BY TRANSACTION_DATE
+            ) A, --올해
+            (
+                    SELECT TO_CHAR(TRANSACTION_DATE+365, 'YYYYMMDD') AS transaction_date
+                         , NVL(SUM(SITE_FEES),0) AS tot_site_fee 
+                    FROM TRANSACTIONS
+                    WHERE TRANSACTION_DATE BETWEEN SYSDATE-7-365 AND SYSDATE-365
+                    GROUP BY TO_CHAR(TRANSACTION_DATE+365, 'YYYYMMDD')
+                    ORDER BY TRANSACTION_DATE
+            ) B --작년
+        WHERE A.TRANSACTION_DATE = B.TRANSACTION_DATE(+)
+	</select>
+	
+	<select id="listProperty" resultType="filterPropDTO">
+		select *
+		from property
+		order by id
+	</select>
+	
+	<select id="listSubProperty" resultType="filterSubPropDTO" parameterType="String">
+		SELECT property_type_id,
+			   ID,
+			   NAME
+		FROM SUB_PROPERTY
+		WHERE 1=1
+		<if test="propertyTypeId!=null">
+			AND PROPERTY_TYPE_ID = #{property_type_id}
+		</if>
+		<if test="propertyTypeId==null">
+			AND PROPERTY_TYPE_ID = (SELECT MIN(ID) FROM PROPERTY)
+		</if>	
+		ORDER BY ID
+	</select>
+	
+	
+</mapper>
