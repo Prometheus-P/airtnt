@@ -135,7 +135,7 @@ Licence URI: https://www.os-templates.com/template-terms
 	              </div>
 	              <div class="two_third">
 	                <h2><a href="<c:url value='/room/detail'/>">${property.name}</a></h2>
-	                <h4>${property.property_type_name}/${property.sub_property_type_name} ${property.room_type_name}</h4>
+	                <h4>${property.propertyTypeName}/${property.subPropertyTypeName} ${property.roomTypeName}</h4>
 	                <h4>${property.address}</h4>
 	              </div>
 	            </li>

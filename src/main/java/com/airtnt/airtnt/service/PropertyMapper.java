@@ -20,6 +20,10 @@ public class PropertyMapper {
 	
 	public List<PropertyDTO> searchPropertiesByAddress(String addressKey) {
 		addressKey = "%" + addressKey + "%";
-		return sqlSession.selectList("selectPropertiesByAddress", addressKey);
+		List<PropertyDTO> properties = sqlSession.selectList("selectPropertiesByAddress", addressKey);
+		for(PropertyDTO property : properties) {
+			System.out.println(property);
+		}
+		return properties;
 	}
 }

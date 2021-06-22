@@ -22,7 +22,7 @@ public class GuestController {
 	 
 	@RequestMapping("search")
 	public String searchRoom(HttpServletRequest req,
-			@RequestParam(required = false, value = "address_key") String addressKey) {
+			@RequestParam(required = false, value = "addressKey") String addressKey) {
 		if(addressKey == null) {
 			addressKey = "노원";
 		}

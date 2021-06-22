@@ -27,7 +27,7 @@
 <c:set var="isLogin" value="false"/>
 <c:if test="${not empty sessionScope.id && not empty sessionScope.pw}"><c:set var="isLogin" value="true"/></c:if>
 	
-<div class="bgded overlay padtop" style="background-image:url('<c:url value='/resources/img/main3.jpg'/>');">
+<div class="overlay" style="background-image:url('<c:url value='/resources/img/main3.jpg'/>');">
   <!-- ################################################################################################ -->
   <!-- ################################################################################################ -->
   <!-- ################################################################################################ -->
@@ -68,13 +68,13 @@
   <!-- ################################################################################################ -->
   <!-- ################################################################################################ -->
   <!-- ################################################################################################ -->
-  <div id="pageintro" class="hoc clear d-flex justify-content-center" style="padding-top: 5vh; padding-bottom: 50vh;"> 
+  <div id="pageintro" class="hoc clear justify-content-center" style="padding-top: 5vh;"> 
     <!-- ################################################################################################ -->
         <nav class="navbar navbar-light">
-		  <div class="container-fluid">
+		  <div class="container-fluid" >
 		    <form class="d-flex" action="<c:url value='/guest/search'/>" method="get">
-		      <input name="address_key" class="form-control me-2" type="search" placeholder="위치" aria-label="Search">
-		      <button class="btn btn-outline-primary" type="submit" style="background-color:#01546b; border: 0px;">검색</button>
+		      <input name="addressKey" class="form-control me-2" type="search" placeholder="위치" aria-label="Search" style="height: 50px; width: 300px; font-size: 20px">
+		      <button class="btn btn-outline-primary" type="submit" style="background-color:#01546b; border: 0px; height: 50px; width: 100px; font-size: 20px">검색</button>
 		    </form>
 		  </div>
 		</nav>
