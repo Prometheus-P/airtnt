@@ -25,7 +25,7 @@
 </head>
 <body>
 	<c:set var="isLogin" value="false"/>
-	<c:if test="${not empty id && not empty pw}"><c:set var="isLogin" value="true"/></c:if>
+	<c:if test="${not empty member_id && not empty member_name}"><c:set var="isLogin" value="true"/></c:if>
 	
 <div class="bgded overlay padtop" style="background-image:url('<c:url value='/resources/img/main3.jpg'/>');">
   <!-- ################################################################################################ -->
@@ -351,13 +351,27 @@
 			<div class="modal-body">
 				<form action="login" method="post">
 					<div class="form-group">
-						<input type="text" class="form-control" name="id" placeholder="ID" required="required">		
+						<c:if test="${empty value}">		
+							<input type="text" class="form-control" name="member_id" placeholder="ID" required="required">
+						</c:if>
+						<c:if test="${not empty value}">
+							<input type="text" class="form-control" name="member_id" placeholder="ID" required="required" value="${value}">		
+						</c:if>
 					</div>
 					<div class="form-group">
-						<input type="password" class="form-control" name="password" placeholder="Password" required="required">	
+						<input type="password" class="form-control" name="passwd" placeholder="Password" required="required">	
 					</div>        
 					<div class="form-group">
 						<button type="submit" class="btn btn-primary btn-lg btn-block login-btn">로그인</button>
+					</div>
+					<div class="form-group">
+						<c:if test="${empty value}">			
+							<input type="checkbox" name="saveId">
+						</c:if>	
+						<c:if test="${not empty value}">
+							<input type="checkbox" name="saveId" checked>
+						</c:if>
+						<p>아이디 기억하기</p>
 					</div>
 				</form>
 			</div>
@@ -396,9 +410,6 @@
 						<label><input type="checkbox" class="center" name="gender" value="1" checked="checked"> 남</label>
       					<label><input type="checkbox" class="center" name="gender" value="2"> 여</label>
 					</div>
-					<div class="form-group">
-						<input type="text" class="form-control" name="account" placeholder="계좌번호" required="required">	
-					</div>        
 					<div class="form-group">
 						<button type="submit" class="btn btn-primary btn-lg btn-block login-btn" style="font-size: 15px">동의 및 계속하기</button>
 					</div>
