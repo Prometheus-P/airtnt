@@ -4,11 +4,29 @@
  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
  <mapper namespace="com.airtnt.airtnt.service.PropertyMapper">
  
-<select id="selectPropertiesById" parameterType="int" resultType="propertyDTO">
+<resultMap type="propertyDTO" id="propertyMap">
+	<id column="id" property="id"/>
+	<result column="name" property="name"/>
+	<result column="host_id" property="hostId"/>
+	<result column="property_desc" property="propertyDesc"/>
+	<result column="property_type_name" property="propertyTypeName"/>
+	<result column="sub_property_type_name" property="subPropertyTypeName"/>
+	<result column="room_type_name" property="roomTypeName"/>
+	<result column="address" property="address"/>
+	<result column="latitude" property="latitude"/>
+	<result column="longitude" property="longitude"/>
+	<result column="price" property="price"/>
+	<result column="bed_count" property="bedCount"/>
+	<result column="max_guest" property="maxGuest"/>
+	<result column="reg_date" property="regDate"/>
+	<result column="mod_date" property="modDate"/>
+</resultMap>
+
+<select id="selectPropertiesById" parameterType="int" resultMap="propertyMap">
 
 </select>
 
-<select id="selectPropertiesByAddress" parameterType="String" resultType="propertyDTO">
+<select id="selectPropertiesByAddress" parameterType="String" resultMap="propertyMap">
 select p.*, pt.name property_type_name, spt.name sub_property_type_name, rt.name room_type_name
 from property p, property_type pt, sub_property_type spt, room_type rt
 where p.property_type_id=pt.id and p.sub_property_type_id=spt.id and p.room_type_id=rt.id
