@@ -1,5 +1,9 @@
 package com.airtnt.airtnt.controller;
 
+import java.io.File;
+
+import java.io.IOException;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
@@ -7,10 +11,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import com.airtnt.airtnt.model.BookingDTO;
+import com.airtnt.airtnt.model.RoomPhotoDTO;
 
 
 @Controller
@@ -20,7 +30,7 @@ public class HostController {
 	/*@Autowired
 	private HostMapper hostMapper;*/
 	HttpSession session;
-	
+	Map<String, String> roomMap;
 	public HostController(HttpServletRequest req) {
 		session = req.getSession();
 	}
@@ -48,7 +58,7 @@ public class HostController {
 	}
 	
 	//2. property_type으로 이동해서 분류 시작
-	// roomId를 미리 발급 해서 session에서 겹치지 않게 가능한가...?
+	// roomMap & amenitiesMap
 	
 	 @RequestMapping("/property_type")
 	public String property_type() {
@@ -57,41 +67,83 @@ public class HostController {
 	
 	@RequestMapping("/sub_property_type")
 	public String sub_property_type(@RequestParam String propertyType) {
-		session.setAttribute("propertyType", propertyType);
+		roomMap = new Hashtable<>();
+		roomMap.put("propertyType", propertyType);
+		session.setAttribute("roomMap", roomMap);
 		return "host/become_a_host/sub_property_type";
 	}
 	
 	@RequestMapping("/room_type") // 개인실, 다인실, 전체
 	public String room_type(@RequestParam String subPropertyType) {
-		session.setAttribute("subPropertyType" /* + roomId */, subPropertyType);
+		roomMap = (Map<String, String>)session.getAttribute("roomMap");
+		roomMap.put("subPropertyType" /* + roomId */, subPropertyType);
 		return "host/become_a_host/room_type";
 	}
 	@RequestMapping("/location")
 	public String location(@RequestParam String roomType) {
-		session.setAttribute("roomType", roomType);
+		roomMap = (Map<String, String>)session.getAttribute("roomMap");
+		roomMap.put("roomType", roomType);
 		return "host/become_a_host/location";
 	}
 	@RequestMapping("/detail")
 	public String detail(@RequestParam String address) {
-		session.setAttribute("address", address);
+		roomMap = (Map<String, String>)session.getAttribute("roomMap");
+		roomMap.put("address", address);
 		return "host/become_a_host/detail";
 	}
 	@RequestMapping("/photos")
 	public String photos(@RequestParam Map<String, String> map) {
-		session.setAttribute("maxGuest", map.get("maxGuest"));
-		map.remove("maxGuest");//편의 시설들만 남기기
+		roomMap = (Map<String, String>)session.getAttribute("roomMap");
+		roomMap.put("maxGuest", map.get("maxGuest"));
+		map.remove("maxGuest"); //편의 시설들만 남기기
 		session.setAttribute("amenitiesMap", map);
 		return "host/become_a_host/photos";
 	}
+	
 	@RequestMapping("/description")
-	public String description(@RequestParam Map<String, String> map) {
-		session.setAttribute("roomName", map.get("roomName"));
+	public String description(HttpServletRequest req, @ModelAttribute RoomPhotoDTO dto) {
+		MultipartHttpServletRequest mr = (MultipartHttpServletRequest) req;
+		MultipartFile mf = mr.getFile("fileName");
+		String fileName = mf.getOriginalFilename();
+		String upPath = session.getServletContext().getRealPath("");
+		File file = new File(upPath, fileName);
+		roomMap = (Map<String, String>)session.getAttribute("roomMap");
+		roomMap.put("fileName", fileName);
+		roomMap.put("fileSize", Long.toString(file.length()));
+		/*	dto.setFilename(filename);
+		dto.setFilesize((int) file.length());
+		dto.setIp(req.getRemoteAddr());*/
+		try {
+		mf.transferTo(file);
+		}catch(Exception e) {
+			roomMap.put("alert", "사진 업로드 중 오류 발생!");
+			e.printStackTrace();
+		}
 		return "host/become_a_host/description";
 	}
-	/*
-	 * session.setAttribute("roomName", map.get("roomName"));
-	 * session.setAttribute("description", map.get("description"));
-	 */
+	
+	@RequestMapping("/price")
+	public String price(@RequestParam Map<String, String> map) {
+		roomMap = (Map<String, String>)session.getAttribute("roomMap");
+		roomMap.put("roomName", map.get("roomName"));
+		roomMap.put("description", map.get("description"));
+		return "host/become_a_host/price";
+	}
+	@RequestMapping("/preview")
+	public String preview(@RequestParam String price) {
+		roomMap = (Map<String, String>)session.getAttribute("roomMap");
+		roomMap.put("price", price);
+		return "host/become_a_host/preview";
+	}
+	@RequestMapping("/publish_celebration")
+	public String publish_celebration() {
+		roomMap = (Map<String, String>)session.getAttribute("roomMap");
+		//Mapper 통해서 정보저장
+		session.removeAttribute("roomMap");
+		session.removeAttribute("amenitiesMap");
+		return "host/become_a_host/publish_celebration";
+	}
+	
 	//3. host_mode_main >> 호스트 모드
 	/*@RequestMapping("/host_mode_main")// 호스트 모드로 전환
 	public ModelAndView host_mode_main() {
