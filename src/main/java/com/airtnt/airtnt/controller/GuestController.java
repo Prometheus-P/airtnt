@@ -27,14 +27,22 @@ public class GuestController {
 			addressKey = "노원";
 		}
 		List<PropertyDTO> properties = propertyMapper.searchPropertiesByAddress(addressKey);
+		for(PropertyDTO property : properties) {
+			System.out.println(property);
+		}
 		req.setAttribute("properties", properties);
 		
 		return "guest/property/property_list";
 	}
 
-	@RequestMapping("property_detail")
-	public String detail() {
-
+	@RequestMapping("property-detail")
+	public String detail(HttpServletRequest req,
+			@RequestParam("propertyId") int propertyId) {
+		PropertyDTO property = propertyMapper.selectPropertyById(propertyId);
+		
+		// 사진 리스트랑 편의시설 리스트랑 댓글 리스트 추가해야 함
+		
+		req.setAttribute("property", property);
 		return "guest/property/property_detail";
 	}
 

@@ -8,9 +8,6 @@ public class PropertyDTO {
 	private String name;
 	private String hostId;
 	private String propertyDesc;
-	private String propertyTypeName;
-	private String subPropertyTypeName;	
-	private String roomTypeName;
 	private String address;
 	private String latitude;
 	private String longitude;
@@ -19,6 +16,18 @@ public class PropertyDTO {
 	private int maxGuest;
 	private Date regDate;
 	private Date modDate;
+	
+	// property_type 테이블 참조값
+	private int propertyTypeId;
+	private String propertyTypeName;
+	
+	// sub_property_type 테이블 참조값
+	private int subPropertyTypeId;
+	private String subPropertyTypeName;
+	
+	// room_type 테이블 참조값
+	private int roomTypeId;
+	private String roomTypeName;
 	
 	public int getId() {
 		return id;
@@ -43,24 +52,6 @@ public class PropertyDTO {
 	}
 	public void setPropertyDesc(String propertyDesc) {
 		this.propertyDesc = propertyDesc;
-	}
-	public String getPropertyTypeName() {
-		return propertyTypeName;
-	}
-	public void setPropertyTypeName(String propertyTypeName) {
-		this.propertyTypeName = propertyTypeName;
-	}
-	public String getSubPropertyTypeName() {
-		return subPropertyTypeName;
-	}
-	public void setSubPropertyTypeName(String subPropertyTypeName) {
-		this.subPropertyTypeName = subPropertyTypeName;
-	}
-	public String getRoomTypeName() {
-		return roomTypeName;
-	}
-	public void setRoomTypeName(String roomTypeName) {
-		this.roomTypeName = roomTypeName;
 	}
 	public String getAddress() {
 		return address;
@@ -110,14 +101,49 @@ public class PropertyDTO {
 	public void setModDate(Date modDate) {
 		this.modDate = modDate;
 	}
+	public int getPropertyTypeId() {
+		return propertyTypeId;
+	}
+	public void setPropertyTypeId(int propertyTypeId) {
+		this.propertyTypeId = propertyTypeId;
+	}
+	public String getPropertyTypeName() {
+		return propertyTypeName;
+	}
+	public void setPropertyTypeName(String propertyTypeName) {
+		this.propertyTypeName = propertyTypeName;
+	}
+	public int getSubPropertyTypeId() {
+		return subPropertyTypeId;
+	}
+	public void setSubPropertyTypeId(int subPropertyTypeId) {
+		this.subPropertyTypeId = subPropertyTypeId;
+	}
+	public String getSubPropertyTypeName() {
+		return subPropertyTypeName;
+	}
+	public void setSubPropertyTypeName(String subPropertyTypeName) {
+		this.subPropertyTypeName = subPropertyTypeName;
+	}
+	public int getRoomTypeId() {
+		return roomTypeId;
+	}
+	public void setRoomTypeId(int roomTypeId) {
+		this.roomTypeId = roomTypeId;
+	}
+	public String getRoomTypeName() {
+		return roomTypeName;
+	}
+	public void setRoomTypeName(String roomTypeName) {
+		this.roomTypeName = roomTypeName;
+	}
 	@Override
 	public String toString() {
 		return "PropertyDTO [id=" + id + ", name=" + name + ", hostId=" + hostId + ", propertyDesc=" + propertyDesc
-				+ ", propertyTypeName=" + propertyTypeName + ", subPropertyTypeName=" + subPropertyTypeName
-				+ ", roomTypeName=" + roomTypeName + ", address=" + address + ", latitude=" + latitude + ", longitude="
-				+ longitude + ", price=" + price + ", bedCount=" + bedCount + ", maxGuest=" + maxGuest + ", regDate="
-				+ regDate + ", modDate=" + modDate + "]";
+				+ ", address=" + address + ", latitude=" + latitude + ", longitude=" + longitude + ", price=" + price
+				+ ", bedCount=" + bedCount + ", maxGuest=" + maxGuest + ", regDate=" + regDate + ", modDate=" + modDate
+				+ ", propertyTypeId=" + propertyTypeId + ", propertyTypeName=" + propertyTypeName
+				+ ", subPropertyTypeId=" + subPropertyTypeId + ", subPropertyTypeName=" + subPropertyTypeName
+				+ ", roomTypeId=" + roomTypeId + ", roomTypeName=" + roomTypeName + "]";
 	}
-	
-	
 }
