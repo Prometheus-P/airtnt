@@ -14,10 +14,11 @@ become_a_host 내에서 페이지 이동은 어떻게 이루어 지는가...
 	- 숙소에 대해 설명해 주세요(description)
 8. price
 	- 이제 요금을 설정 하실 차례입니다!(price)
-	- 마지막으로 법률 상황을 확인 해주세요(legal)
+	- 마지막으로 법률 상황을 확인 해주세요(legal)x
 9.  preview
 	- 등록한 모든 정보를 모아 보여주기(마지막 확인)
 10. publish_celebration
 	- 등록 후 축하
 	
-	<session에 roomMap과 amenitiesMap으로 정보를 저장하고 마지막에 prview페이지에서 등록하면 정보 DB이동>
+	<session에 roomMap과 amenitiesMap으로 정보를 저장하고 
+	마지막에 preview페이지에서 등록하면 정보 DB이동>

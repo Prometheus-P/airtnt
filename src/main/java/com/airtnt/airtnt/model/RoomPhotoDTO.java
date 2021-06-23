@@ -3,7 +3,8 @@ package com.airtnt.airtnt.model;
 public class RoomPhotoDTO {
 	private String memberId;
 	private int propertyId;
-	private String photo;
+	private String photoName;
+	private String phtoSize;
 
 	public int getPropertyId() {
 		return propertyId;
@@ -13,12 +14,12 @@ public class RoomPhotoDTO {
 		this.propertyId = propertyId;
 	}
 
-	public String getPhoto() {
-		return photo;
+	public String getPhotoName() {
+		return photoName;
 	}
 
-	public void setPhoto(String photo) {
-		this.photo = photo;
+	public void setPhotoName(String photoName) {
+		this.photoName = photoName;
 	}
 
 	public String getMemberId() {
@@ -27,6 +28,14 @@ public class RoomPhotoDTO {
 
 	public void setMemberId(String memberId) {
 		this.memberId = memberId;
+	}
+
+	public String getPhtoSize() {
+		return phtoSize;
+	}
+
+	public void setPhtoSize(String phtoSize) {
+		this.phtoSize = phtoSize;
 	}
 
 }
