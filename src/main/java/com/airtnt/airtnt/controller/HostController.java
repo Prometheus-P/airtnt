@@ -53,10 +53,6 @@ public class HostController {
 	// 2. property_type으로 이동해서 분류 시작
 	// roomMap & amenitiesMap
 
-	@RequestMapping("/property_type")
-	public String property_type() {
-		return "host/become_a_host/property_type";
-	}
 
 	@RequestMapping("/sub_property_type")
 	public String sub_property_type(@RequestParam String propertyType) {
