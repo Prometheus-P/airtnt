@@ -19,9 +19,9 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<!-- JAVASCRIPTS -->
-	<script src="layout/scripts/jquery.min.js"></script>
+	<!-- <script src="layout/scripts/jquery.min.js"></script>
 	<script src="layout/scripts/jquery.backtotop.js"></script>
-	<script src="layout/scripts/jquery.mobilemenu.js"></script>
+	<script src="layout/scripts/jquery.mobilemenu.js"></script> -->
 </head>
 <body>
 	<c:set var="isLogin" value="false"/>

@@ -1,5 +1,6 @@
 package com.airtnt.airtnt.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.Cookie;
@@ -15,14 +16,19 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.airtnt.airtnt.guest.LoginOKBean;
 import com.airtnt.airtnt.model.MemberDTO;
+import com.airtnt.airtnt.model.WishListDTO;
 import com.airtnt.airtnt.service.MemberMapper;
+import com.airtnt.airtnt.service.WishListMapper;
 
 @Controller
 public class UserController {
 	
 	@Autowired
 	MemberMapper memberMapper;
+	@Autowired
+	WishListMapper wishListMapper;
 	
+	// 회원가입
 	@RequestMapping("signUp")
 	public String signUp(HttpServletRequest req, @ModelAttribute MemberDTO dto) {
 		int res = memberMapper.inputMember(dto);
@@ -36,6 +42,7 @@ public class UserController {
 		return "message";
 	}
 	
+	// 로그인
 	@RequestMapping("/login")
 	public String login(HttpServletRequest req, @RequestParam Map<String, String> params, 
 			HttpServletResponse resp, final HttpSession session ) {
@@ -53,15 +60,15 @@ public class UserController {
 			return "message";
 		}else {
 			//로그인 빈에 로그인한 멤버의 정보 담고 세션에 저장
-			LoginOKBean loginOk = new LoginOKBean();
-			loginOk.login_setting(dto);
-			session.setAttribute("member_id", loginOk.getMember_id());
-			session.setAttribute("member_name", loginOk.getMember_name());
-			session.setAttribute("member_mode", loginOk.getMember_mode());
-			session.setAttribute("member_image", loginOk.getMember_image());
+			//LoginOKBean loginOk = new LoginOKBean();
+			//loginOk.login_setting(dto);
+			session.setAttribute("member_id", dto.getMember_id());
+			session.setAttribute("member_name", dto.getMember_name());
+			session.setAttribute("member_mode", dto.getMember_mode());
+			session.setAttribute("member_image", dto.getMember_image());
 			
 			//아이디저장하기 버튼 클릭시 아이디 쿠키에 저장
-			Cookie ck = new Cookie("saveId", loginOk.getMember_id());
+			Cookie ck = new Cookie("saveId", dto.getMember_id());
 			if(params.get("saveId")==null){
 				ck.setMaxAge(0);
 			}else{
@@ -81,4 +88,24 @@ public class UserController {
 		return "redirect:/index";
 	}
 	
+	// 위시리스트
+	@RequestMapping("wishlist")
+	public String wishlist(HttpServletRequest req) {
+		String member_id=(String) req.getSession().getAttribute("member_id");
+		List<WishListDTO> list = wishListMapper.getWish(member_id);
+		if(list==null) {
+			List<WishListDTO> adminList = wishListMapper.getAdminWish();
+			req.setAttribute("admin_wishlist", adminList);
+		}
+		
+		req.setAttribute("user_wishlist", list);
+		return "user/wish/wishList";
+	}
+	
+	@RequestMapping("makeWish")
+	public String makeWish(HttpServletRequest req, @ModelAttribute WishListDTO dto) {
+		int res = wishListMapper.makeWish(dto);
+		
+		return "redirect:/wishlist";
+	}
 }

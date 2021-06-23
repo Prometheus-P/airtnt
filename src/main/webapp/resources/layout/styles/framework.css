@@ -34,7 +34,7 @@ html, body{margin:0; padding:0; font-size:14px; line-height:1.6em;}
 .bgded{background-position:top center; background-repeat:no-repeat; background-size:cover;}
 .circle{border-radius:50%; background-clip:padding-box;}
 
-.btn, button.btn{display:inline-block; padding:8px 25px 10px; text-transform:uppercase; font-size:1rem; font-weight:400; border:1px solid;}
+.btn, button.btn{display:inline-block; padding:8px 25px 10px; text-transform:uppercase; font-size:larger; font-weight:400; border:1px solid;}
 button.btn{cursor:pointer;}
 
 .clear, .group{display:block;}
