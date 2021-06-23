@@ -21,12 +21,7 @@ public class HostController {
 	/*
 	 * @Autowired private HostMapper hostMapper;
 	 */
-	HttpSession session;
 	Map<String, String> roomMap;
-
-	public HostController(HttpServletRequest req) {
-		session = req.getSession();
-	}
 
 	// 1. 호스트 시작하기 >> property_type으로 이동
 	// 나머지는 게시판
@@ -55,7 +50,8 @@ public class HostController {
 
 
 	@RequestMapping("/sub_property_type")
-	public String sub_property_type(@RequestParam String propertyType) {
+	public String sub_property_type(HttpServletRequest req, @RequestParam String propertyType) {
+		HttpSession session = req.getSession();
 		roomMap = new Hashtable<>();
 		roomMap.put("propertyType", propertyType);
 		session.setAttribute("roomMap", roomMap);
@@ -63,37 +59,46 @@ public class HostController {
 	}
 
 	@RequestMapping("/room_type") // 개인실, 다인실, 전체
-	public String room_type(@RequestParam String subPropertyType) {
+	public String room_type(HttpServletRequest req, @RequestParam String subPropertyType) {
+		HttpSession session = req.getSession();
 		roomMap = (Map<String, String>) session.getAttribute("roomMap");
 		roomMap.put("subPropertyType" /* + roomId */, subPropertyType);
+		session.setAttribute("roomMap", roomMap);
 		return "host/become_a_host/room_type";
 	}
 
 	@RequestMapping("/location")
-	public String location(@RequestParam String roomType) {
+	public String location(HttpServletRequest req, @RequestParam String roomType) {
+		HttpSession session = req.getSession();
 		roomMap = (Map<String, String>) session.getAttribute("roomMap");
 		roomMap.put("roomType", roomType);
+		session.setAttribute("roomMap", roomMap);
 		return "host/become_a_host/location";
 	}
 
 	@RequestMapping("/detail")
-	public String detail(@RequestParam String address) {
+	public String detail(HttpServletRequest req, @RequestParam String address) {
+		HttpSession session = req.getSession();
 		roomMap = (Map<String, String>) session.getAttribute("roomMap");
 		roomMap.put("address", address);
+		session.setAttribute("roomMap", roomMap);
 		return "host/become_a_host/detail";
 	}
 
 	@RequestMapping("/photos")
-	public String photos(@RequestParam Map<String, String> map) {
+	public String photos(HttpServletRequest req, @RequestParam Map<String, String> map) {
+		HttpSession session = req.getSession();
 		roomMap = (Map<String, String>) session.getAttribute("roomMap");
 		roomMap.put("maxGuest", map.get("maxGuest"));
 		map.remove("maxGuest"); // 편의 시설들만 남기기
 		session.setAttribute("amenitiesMap", map);
+		session.setAttribute("roomMap", roomMap);
 		return "host/become_a_host/photos";
 	}
 
 	@RequestMapping("/description")
 	public String description(HttpServletRequest req) {
+		HttpSession session = req.getSession();
 		MultipartHttpServletRequest mr = (MultipartHttpServletRequest) req;
 		MultipartFile mf = mr.getFile("fileName");
 		String fileName = mf.getOriginalFilename();
@@ -112,26 +117,32 @@ public class HostController {
 			roomMap.put("alert", "사진 업로드 중 오류 발생!");
 			e.printStackTrace();
 		}
+		session.setAttribute("roomMap", roomMap);
 		return "host/become_a_host/description";
 	}
 
 	@RequestMapping("/price")
-	public String price(@RequestParam Map<String, String> map) {
+	public String price(HttpServletRequest req, @RequestParam Map<String, String> map) {
+		HttpSession session = req.getSession();
 		roomMap = (Map<String, String>) session.getAttribute("roomMap");
 		roomMap.put("roomName", map.get("roomName"));
 		roomMap.put("description", map.get("description"));
+		session.setAttribute("roomMap", roomMap);
 		return "host/become_a_host/price";
 	}
 
 	@RequestMapping("/preview")
-	public String preview(@RequestParam String price) {
+	public String preview(HttpServletRequest req, @RequestParam String price) {
+		HttpSession session = req.getSession();
 		roomMap = (Map<String, String>) session.getAttribute("roomMap");
 		roomMap.put("price", price);
+		session.setAttribute("roomMap", roomMap);
 		return "host/become_a_host/preview";
 	}
 
 	@RequestMapping("/publish_celebration")
-	public String publish_celebration() {
+	public String publish_celebration(HttpServletRequest req) {
+		HttpSession session = req.getSession();
 		roomMap = (Map<String, String>) session.getAttribute("roomMap");
 		// Mapper 통해서 정보저장
 		/*
