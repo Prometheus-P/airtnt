@@ -13,7 +13,7 @@ Licence URI: https://www.os-templates.com/template-terms
 <html lang="">
 <!-- To declare your language - read more here: https://www.w3.org/International/questions/qa-html-language-declarations -->
 <head>
-<title>AirTnT/숙소검색</title>
+<title>AirTnT/숙소검색(키워드:${param.addressKey})</title>
 <meta charset="utf-8">
 
 </head>
@@ -24,8 +24,19 @@ Licence URI: https://www.os-templates.com/template-terms
 <!-- Top Background Image Wrapper -->
 
 <!-- 검색, 로그인 네비게이션 바 -->
-<jsp:include page="/nav_bar.jsp"/>
-
+<jsp:include page="/top.jsp"/>
+<div id="pageintro" class="hoc clear justify-content-center" style="padding-top: 5vh;"> 
+    <!-- ################################################################################################ -->
+        <nav class="navbar navbar-light">
+		  <div class="container-fluid" >
+		    <form class="d-flex" action="<c:url value='/guest/search'/>" method="get">
+		      <input name="addressKey" class="form-control me-2" type="search" placeholder="위치" aria-label="Search" style="height: 50px; width: 300px; font-size: 20px">
+		      <button class="btn btn-outline-primary" type="submit" style="background-color:#01546b; border: 0px; height: 50px; width: 100px; font-size: 20px">검색</button>
+		    </form>
+		  </div>
+		</nav>
+    <!-- ################################################################################################ -->
+  </div>
 <%-- <div class="bgded overlay padtop" style="background-image:url('<c:url value='/resources/images/demo/backgrounds/01.png'/>')"> 
   <!-- ################################################################################################ -->
   <!-- ################################################################################################ -->
@@ -131,10 +142,10 @@ Licence URI: https://www.os-templates.com/template-terms
 	            <c:forEach var="property" items="${properties}">
 	            <li style="height: 150px;">
 	              <div class="one_third first" >
-	                <a href="<c:url value='/room/detail'/>"><img src="/resources/room_img/room_ex.jpg" alt="" ></a>
+	                <a href="<c:url value='/guest/property-detail?propertyId=${property.id}'/>"><img src="/resources/room_img/room_ex.jpg" alt="" ></a>
 	              </div>
 	              <div class="two_third">
-	                <h2><a href="<c:url value='/room/detail'/>">${property.name}</a></h2>
+	                <h2><a href="<c:url value='/guest/property-detail?propertyId=${property.id}'/>">${property.name}</a></h2>
 	                <h4>${property.propertyTypeName}/${property.subPropertyTypeName} ${property.roomTypeName}</h4>
 	                <h4>${property.address}</h4>
 	              </div>
@@ -167,7 +178,15 @@ Licence URI: https://www.os-templates.com/template-terms
 	    </div>
         
         </div>
-        <div class="one_half">지ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ도</div>
+        
+        
+	
+	
+        <div class="one_half">
+          <div id="map" style="width:600px;height:600px;"></div>
+          <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=62b11c585fb341eec39dbc28ac9bad71"></script>
+          <script type="text/javascript" src="/resources/map/kakao_map_test.js"></script>
+        </div>
       </div>
       </div>
       </main>
