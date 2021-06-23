@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.airtnt.airtnt.model.AmenityDTO;
 import com.airtnt.airtnt.model.PropertyDTO;
-import com.airtnt.airtnt.service.AmenityMapper;
+import com.airtnt.airtnt.model.PropertyImageDTO;
 import com.airtnt.airtnt.service.PropertyMapper;
 
 @Controller
@@ -21,8 +21,6 @@ public class GuestController {
 	
 	@Autowired
 	private PropertyMapper propertyMapper;
-	@Autowired
-	private AmenityMapper amenityMapper;
 	
 	@RequestMapping("search")
 	public String searchRoom(HttpServletRequest req,
@@ -44,9 +42,12 @@ public class GuestController {
 			@RequestParam("propertyId") int propertyId) {
 		PropertyDTO property = propertyMapper.selectPropertyById(propertyId);
 		
-		List<AmenityDTO> amenities = amenityMapper.selectAmenities(propertyId);
+		List<PropertyImageDTO> images = propertyMapper.selectPropertyImages(propertyId);
+		
+		List<AmenityDTO> amenities = propertyMapper.selectAmenities(propertyId);
 		// 사진 리스트랑 편의시설 리스트랑 댓글 리스트 추가해야 함
 		
+		req.setAttribute("images", images);
 		req.setAttribute("property", property);
 		req.setAttribute("amenities", amenities);
 		return "guest/property/property_detail";
