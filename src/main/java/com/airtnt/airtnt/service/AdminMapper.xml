@@ -34,20 +34,29 @@
 		order by id
 	</select>
 	
-	<select id="listSubProperty" resultType="filterSubPropDTO" parameterType="String">
-		SELECT property_type_id,
-			   ID,
-			   NAME
-		FROM SUB_PROPERTY
-		WHERE 1=1
-		<if test="propertyTypeId!=null">
-			AND PROPERTY_TYPE_ID = #{property_type_id}
-		</if>
-		<if test="propertyTypeId==null">
-			AND PROPERTY_TYPE_ID = (SELECT MIN(ID) FROM PROPERTY)
-		</if>	
-		ORDER BY ID
+	<select id="listSubProperty" resultType="filterSubPropDTO">
+		select property_type_id as propertyTypeId,
+			   id,
+			   name,
+			   use_yn as useYn
+		from sub_property
+		where 1=1
+		and property_type_id = (select min(id) from property)
+		order by id
 	</select>
 	
+	<select id="getSubProperty" resultType="filterSubPropDTO" parameterType="String">
+		select property_type_id as propertyTypeId,
+			   id,
+			   name,
+			   use_yn as useYn
+		from sub_property
+		where 1=1
+		and property_type_id = #{propertyTypeId}
+		order by id
+	</select>
 	
+	<insert id="insertProperty" parameterType="filterPropDTO">
+		insert into property values((select max(id)+1 from property), #{name}, 'Y')
+	</insert>
 </mapper>

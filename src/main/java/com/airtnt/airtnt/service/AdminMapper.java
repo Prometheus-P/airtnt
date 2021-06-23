@@ -1,8 +1,6 @@
 package com.airtnt.airtnt.service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,15 +22,33 @@ public class AdminMapper {
 		return list;
 	}
 	
-	//필터 대분류
+	//필터 대분류 리스트
 	public List<FilterPropDTO> listProperty(){
 		List<FilterPropDTO> list = sqlSession.selectList("listProperty");
 		return list;
 	}
 	
-	//필터 중분류
+	//필터 중분류 리스트
 	public List<FilterSubPropDTO> listSubProperty(){
 		List<FilterSubPropDTO> list = sqlSession.selectList("listSubProperty");
 		return list;
+	}
+	
+	//대분류 선택시 대분류id에 해당하는 중분류 리스트를 꺼내온다
+	public List<FilterSubPropDTO> getSubProperty(String propertyTypeId){
+		List<FilterSubPropDTO> list = sqlSession.selectList("getSubProperty", propertyTypeId);
+		return list;
+	}
+	
+	//대분류 추가
+	public int insertProperty(Object prop){
+		int res = sqlSession.insert("insertProperty", prop);
+		return res;
+	}
+	
+	//대분류 수정
+	public int updateProperty(Object prop){
+		int res = sqlSession.update("updateProperty", prop);
+		return res;
 	}
 }
