@@ -8,14 +8,14 @@
 	<id column="id" property="id"/>
 	<result column="property_id" property="propertyId"/>
 	
-	<result column="amenity_id" property="amenityId"/>
-	<result column="amenity_name" property="amenityName"/>
+	<result column="amenity_type_id" property="amenityTypeId"/>
+	<result column="amenity_type_name" property="amenityTypeName"/>
 </resultMap>
 
 <select id="selectAmenities" parameterType="int" resultMap="amenityMap">
-select al.*, a.name amenity_name
-from amenity_list al, amenity a
-where al.amenity_id=a.id and a.use_yn='y'
+select al.*, at.name amenity_type_name
+from amenity_list al, amenity_type at
+where al.amenity_type_id=at.id and at.use_yn='y'
 and al.property_id=#{propertyId}
 </select>
 

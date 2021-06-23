@@ -145,7 +145,7 @@ Licence URI: https://www.os-templates.com/template-terms
 	          <c:forEach var="amenity" items="${amenities}">
 	            <ul>
 	              <li>
-	                ${amenity.amenityName}
+	                ${amenity.amenityTypeName}
 	              </li>
 	            </ul>
 	          </c:forEach>
