@@ -2,8 +2,8 @@
 <!DOCTYPE mapper
  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
- <mapper namespace="com.airtnt.airtnt.service.PropertyMapper">
- 
+<mapper namespace="com.airtnt.airtnt.service.PropertyMapper">
+
 <resultMap type="propertyDTO" id="propertyMap">
 	<id column="id" property="id"/>
 	<result column="name" property="name"/>
@@ -36,10 +36,12 @@
 	<result column="amenity_type_name" property="amenityTypeName"/>
 </resultMap>
 
-<resultMap type="propertyImageDTO" id="propertyImageMap">
+<resultMap type="RoomImageDTO" id="roomImageMap">
 	<id column="id" property="id"/>
 	<result column="property_id" property="propertyId"/>
 	<result column="image_name" property="imageName"/>
+	<result column="image_size" property="imageSize"/>
+	<result column="priority" property="priority"/>
 </resultMap>
 
 <select id="selectPropertyById" parameterType="int" resultMap="propertyMap">
@@ -69,9 +71,9 @@ where al.amenity_type_id=at.id and at.use_yn='y'
 and al.property_id=#{propertyId}
 </select>
 
-<select id="selectPropertyImages" parameterType="int" resultMap="propertyImageMap">
-select * from property_image_list
+<select id="selectRoomImages" parameterType="int" resultMap="roomImageMap">
+select * from room_image
 where property_id=#{propertyId}
 </select>
- 
- </mapper>
+
+</mapper>

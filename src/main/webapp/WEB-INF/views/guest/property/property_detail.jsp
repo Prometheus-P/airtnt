@@ -123,7 +123,7 @@ Licence URI: https://www.os-templates.com/template-terms
         <img class="imgl borderedbox inspace-5" src="${images.get(0).imageName}" alt="" style="width: 800px;height: 600px">
       </div>
       <div class="one_half">
-        <c:forEach var="image" items="${images}" begin="1" varStatus="status">
+        <c:forEach var="image" items="${images}" begin="1" end="4" varStatus="status">
           <c:choose>
             <c:when test="${status.count % 2 == 1}">
               <div class="one_half first">

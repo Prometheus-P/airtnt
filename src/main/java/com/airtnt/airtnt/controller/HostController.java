@@ -1,8 +1,13 @@
 package com.airtnt.airtnt.controller;
 
 import java.io.File;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.Enumeration;
+import java.util.Formatter;
 import java.util.Hashtable;
-
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,6 +21,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 @Controller
 @RequestMapping("host")
+@SuppressWarnings("unchecked")
 public class HostController {
 
 	/*
@@ -91,23 +97,41 @@ public class HostController {
 	@RequestMapping("/description")
 	public String description(HttpServletRequest req) {
 		MultipartHttpServletRequest mr = (MultipartHttpServletRequest) req;
-		MultipartFile mf = mr.getFile("fileName");
-		String fileName = mf.getOriginalFilename();
-		String upPath = session.getServletContext().getRealPath("");
-		File file = new File(upPath, fileName);
 		roomMap = (Map<String, String>) session.getAttribute("roomMap");
-		roomMap.put("fileName", fileName);
-		roomMap.put("fileSize", Long.toString(file.length()));
+		MultipartFile mf = mr.getFile("fileName");
+		Hashtable<String, MultipartFile> map = (Hashtable<String, MultipartFile>)mr.getFileMap();
+		Enumeration<String> en = map.keys();
+		int i = 0;
+		while(en.hasMoreElements()) {
+			String key = en.nextElement();
+			MultipartFile image = map.get(key);
+			String fileName = image.getOriginalFilename();
+			String upPath = session.getServletContext().getRealPath("");
+			String imageIndex = String.valueOf(i);
+			if(i < 10) {
+				imageIndex = "0" + imageIndex;
+			}
+			fileName += imageIndex;
+			File file = new File(upPath, fileName);
+			roomMap.put("fileName" + imageIndex, fileName);
+			
+			String fileSizeStr = String.format("%.1f", file.length() / 1024.0);
+			// ex) 214.2 메가바이트 이렇게 표시 가능
+			
+			roomMap.put("fileSize", fileSizeStr/*Long.toString(file.length())*/);
+			try {
+				mf.transferTo(file);
+			} catch (Exception e) {
+				roomMap.put("alert", "사진 업로드 중 오류 발생!");
+				e.printStackTrace();
+			}
+			i++;
+		}
+		session.setAttribute("roomMap", roomMap);
 		/*
 		 * dto.setFilename(filename); dto.setFilesize((int) file.length());
 		 * dto.setIp(req.getRemoteAddr());
 		 */
-		try {
-			mf.transferTo(file);
-		} catch (Exception e) {
-			roomMap.put("alert", "사진 업로드 중 오류 발생!");
-			e.printStackTrace();
-		}
 		return "host/become_a_host/description";
 	}
 

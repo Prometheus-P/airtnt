@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.airtnt.airtnt.model.AmenityDTO;
 import com.airtnt.airtnt.model.PropertyDTO;
-import com.airtnt.airtnt.model.PropertyImageDTO;
+import com.airtnt.airtnt.model.RoomImageDTO;
 
 @Service
 public class PropertyMapper {
@@ -33,9 +33,9 @@ public class PropertyMapper {
 		return amenities;
 	}
 	
-	public List<PropertyImageDTO> selectPropertyImages(int propertyId){
-		List<PropertyImageDTO> images = sqlSession.selectList("selectPropertyImages", propertyId);
-		for(PropertyImageDTO image : images) {
+	public List<RoomImageDTO> selectPropertyImages(int propertyId){
+		List<RoomImageDTO> images = sqlSession.selectList("selectRoomImages", propertyId);
+		for(RoomImageDTO image : images) {
 			System.out.println(image);
 		}
 		return images;

@@ -1,10 +1,12 @@
 package com.airtnt.airtnt.model;
 
-public class PropertyImageDTO {
+public class RoomImageDTO {
 	
 	private int id;
 	private int propertyId;
 	private String imageName;
+	private String imageSize;
+	private int priority;
 	
 	public int getId() {
 		return id;
@@ -24,9 +26,23 @@ public class PropertyImageDTO {
 	public void setImageName(String imageName) {
 		this.imageName = imageName;
 	}
-	
+	public String getImageSize() {
+		return imageSize;
+	}
+	public void setImageSize(String imageSize) {
+		this.imageSize = imageSize;
+	}
+	public int getPriority() {
+		return priority;
+	}
+	public void setPriority(int priority) {
+		this.priority = priority;
+	}
 	@Override
 	public String toString() {
-		return "PropertyImageDTO [id=" + id + ", propertyId=" + propertyId + ", imageName=" + imageName + "]";
+		return "RoomImageDTO [id=" + id + ", propertyId=" + propertyId + ", imageName=" + imageName + ", imageSize="
+				+ imageSize + ", priority=" + priority + "]";
 	}
+	
+	
 }

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.airtnt.airtnt.model.AmenityDTO;
 import com.airtnt.airtnt.model.PropertyDTO;
-import com.airtnt.airtnt.model.PropertyImageDTO;
+import com.airtnt.airtnt.model.RoomImageDTO;
 import com.airtnt.airtnt.service.PropertyMapper;
 
 @Controller
@@ -42,7 +42,7 @@ public class GuestController {
 			@RequestParam("propertyId") int propertyId) {
 		PropertyDTO property = propertyMapper.selectPropertyById(propertyId);
 		
-		List<PropertyImageDTO> images = propertyMapper.selectPropertyImages(propertyId);
+		List<RoomImageDTO> images = propertyMapper.selectPropertyImages(propertyId);
 		
 		List<AmenityDTO> amenities = propertyMapper.selectAmenities(propertyId);
 		// 사진 리스트랑 편의시설 리스트랑 댓글 리스트 추가해야 함
