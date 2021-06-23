@@ -119,7 +119,27 @@ Licence URI: https://www.os-templates.com/template-terms
     <!-- ################################################################################################ -->
     <div class="content">
       <!-- 숙소 이미지 -->
-      <img class="imgl borderedbox inspace-5" src="/resources/room_img/room_ex.jpg" alt="" style="width: 1000px;height: 800px">
+      <div class="one_half first">
+        <img class="imgl borderedbox inspace-5" src="${images.get(0).imageName}" alt="" style="width: 800px;height: 600px">
+      </div>
+      <div class="one_half">
+        <c:forEach var="image" items="${images}" begin="1" varStatus="status">
+          <c:choose>
+            <c:when test="${status.count % 2 == 1}">
+              <div class="one_half first">
+                <img class="imgl borderedbox inspace-5" src="${image.imageName}" alt="" style="width: 400px;height: 300px">
+              </div>
+            </c:when>
+            <c:otherwise>
+              <div class="one_half">
+                <img class="imgl borderedbox inspace-5" src="${image.imageName}" alt="" style="width: 400px;height: 300px">
+              </div>
+            </c:otherwise>
+          </c:choose>
+        </c:forEach>
+      </div>
+
+      
       
       <!-- 숙소 상세정보 나열 구역 -->
 	  <div class="two_third first">
@@ -142,8 +162,12 @@ Licence URI: https://www.os-templates.com/template-terms
 	        
 	        <div>
 	          <h1>편의 시설</h1><br>
-	          <c:forEach begin="1" end="3">
-	            편의시설DTO 리스트 띄워야함<br>
+	          <c:forEach var="amenity" items="${amenities}">
+	            <ul>
+	              <li>
+	                ${amenity.amenityTypeName}
+	              </li>
+	            </ul>
 	          </c:forEach>
 	        </div>
 	        

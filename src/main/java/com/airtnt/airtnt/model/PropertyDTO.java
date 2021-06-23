@@ -4,7 +4,7 @@ import java.sql.Date;
 
 public class PropertyDTO {
 	
-	private int id;
+	private int id;	// pk
 	private String name;
 	private String hostId;
 	private String propertyDesc;
@@ -18,15 +18,15 @@ public class PropertyDTO {
 	private Date modDate;
 	
 	// property_type 테이블 참조값
-	private int propertyTypeId;
+	private int propertyTypeId;	// fk
 	private String propertyTypeName;
 	
 	// sub_property_type 테이블 참조값
-	private int subPropertyTypeId;
+	private int subPropertyTypeId;	// fk
 	private String subPropertyTypeName;
 	
 	// room_type 테이블 참조값
-	private int roomTypeId;
+	private int roomTypeId;	// fk
 	private String roomTypeName;
 	
 	public int getId() {

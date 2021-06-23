@@ -28,11 +28,25 @@
 	<result column="room_type_name" property="roomTypeName"/>
 </resultMap>
 
+<resultMap type="amenityDTO" id="amenityMap">
+	<id column="id" property="id"/>
+	<result column="property_id" property="propertyId"/>
+	
+	<result column="amenity_type_id" property="amenityTypeId"/>
+	<result column="amenity_type_name" property="amenityTypeName"/>
+</resultMap>
+
+<resultMap type="propertyImageDTO" id="propertyImageMap">
+	<id column="id" property="id"/>
+	<result column="property_id" property="propertyId"/>
+	<result column="image_name" property="imageName"/>
+</resultMap>
+
 <select id="selectPropertyById" parameterType="int" resultMap="propertyMap">
 select p.*,
-pt.id property_type_id,pt.name property_type_name,
-spt.id sub_property_type_id,spt.name sub_property_type_name,
-rt.id room_type_id,rt.name room_type_name
+pt.id property_type_id, pt.name property_type_name,
+spt.id sub_property_type_id, spt.name sub_property_type_name,
+rt.id room_type_id, rt.name room_type_name
 from property p, property_type pt, sub_property_type spt, room_type rt
 where p.property_type_id=pt.id and p.sub_property_type_id=spt.id and p.room_type_id=rt.id
 and p.id=#{id}
@@ -40,12 +54,24 @@ and p.id=#{id}
 
 <select id="selectPropertiesByAddress" parameterType="String" resultMap="propertyMap">
 select p.*,
-pt.id property_type_id,pt.name property_type_name,
-spt.id sub_property_type_id,spt.name sub_property_type_name,
-rt.id room_type_id,rt.name room_type_name
+pt.id property_type_id, pt.name property_type_name,
+spt.id sub_property_type_id, spt.name sub_property_type_name,
+rt.id room_type_id, rt.name room_type_name
 from property p, property_type pt, sub_property_type spt, room_type rt
 where p.property_type_id=pt.id and p.sub_property_type_id=spt.id and p.room_type_id=rt.id
 and p.address like #{addressKey}
+</select>
+
+<select id="selectAmenities" parameterType="int" resultMap="amenityMap">
+select al.*, at.name amenity_type_name
+from amenity_list al, amenity_type at
+where al.amenity_type_id=at.id and at.use_yn='y'
+and al.property_id=#{propertyId}
+</select>
+
+<select id="selectPropertyImages" parameterType="int" resultMap="propertyImageMap">
+select * from property_image_list
+where property_id=#{propertyId}
 </select>
  
  </mapper>

@@ -10,19 +10,21 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.airtnt.airtnt.model.AmenityDTO;
 import com.airtnt.airtnt.model.PropertyDTO;
+import com.airtnt.airtnt.model.PropertyImageDTO;
 import com.airtnt.airtnt.service.PropertyMapper;
 
 @Controller
 @RequestMapping("guest")
 public class GuestController {
 	
-	 @Autowired
-	 private PropertyMapper propertyMapper;
-	 
+	@Autowired
+	private PropertyMapper propertyMapper;
+	
 	@RequestMapping("search")
 	public String searchRoom(HttpServletRequest req,
-			@RequestParam(required = false, value = "addressKey") String addressKey) {
+			@RequestParam(value = "addressKey", required = false) String addressKey) {
 		if(addressKey == null) {
 			addressKey = "노원";
 		}
@@ -40,9 +42,14 @@ public class GuestController {
 			@RequestParam("propertyId") int propertyId) {
 		PropertyDTO property = propertyMapper.selectPropertyById(propertyId);
 		
+		List<PropertyImageDTO> images = propertyMapper.selectPropertyImages(propertyId);
+		
+		List<AmenityDTO> amenities = propertyMapper.selectAmenities(propertyId);
 		// 사진 리스트랑 편의시설 리스트랑 댓글 리스트 추가해야 함
 		
+		req.setAttribute("images", images);
 		req.setAttribute("property", property);
+		req.setAttribute("amenities", amenities);
 		return "guest/property/property_detail";
 	}
 
