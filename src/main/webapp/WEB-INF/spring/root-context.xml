@@ -5,26 +5,19 @@
 	
 	<!-- Root Context: defines shared resources visible to all other web components -->
 	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-		<property name="driverClassName">
-			<value>oracle.jdbc.driver.OracleDriver</value>
-		</property>
-	
-		<property name="url">
-			<value>jdbc:oracle:thin:@127.0.0.1:1521:XE</value>
-		</property>
-		
+		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
+		<property name="url" value="jdbc:oracle:thin:@127.0.0.1:1521:XE"/>
 		<property name="username" value="teambit"/>
 		<property name="password" value="teambit"/>
 	</bean>
 		
-	<bean id="sqlSessionFactory" 
-                  class="org.mybatis.spring.SqlSessionFactoryBean">
-      <property name="dataSource" ref="dataSource"/>
-      <property name="typeAliasesPackage" value="com.airtnt.airtnt.model" />
-      <property name="mapperLocations" value="classpath:com/airtnt/airtnt/service/*Mapper.xml" />
-   </bean>
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"/>
+		<property name="typeAliasesPackage" value="com.airtnt.airtnt.model" />
+		<property name="mapperLocations" value="classpath:com/airtnt/airtnt/service/*Mapper.xml" />
+	</bean>
 
-   <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
-      <constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory"/>
-   </bean>
-</beans>	
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory"/>
+	</bean>
+</beans>

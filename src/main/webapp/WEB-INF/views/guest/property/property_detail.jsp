@@ -142,8 +142,12 @@ Licence URI: https://www.os-templates.com/template-terms
 	        
 	        <div>
 	          <h1>편의 시설</h1><br>
-	          <c:forEach begin="1" end="3">
-	            편의시설DTO 리스트 띄워야함<br>
+	          <c:forEach var="amenity" items="${amenities}">
+	            <ul>
+	              <li>
+	                ${amenity.amenityName}
+	              </li>
+	            </ul>
 	          </c:forEach>
 	        </div>
 	        

@@ -24,10 +24,6 @@ public class HostController {
 	HttpSession session;
 	Map<String, String> roomMap;
 
-	public HostController(HttpServletRequest req) {
-		session = req.getSession();
-	}
-
 	// 1. 호스트 시작하기 >> property_type으로 이동
 	// 나머지는 게시판
 	@RequestMapping("/property_type")
