@@ -29,9 +29,7 @@ public class GuestController {
 			addressKey = "노원";
 		}
 		List<PropertyDTO> properties = propertyMapper.searchPropertiesByAddress(addressKey);
-		for(PropertyDTO property : properties) {
-			System.out.println(property);
-		}
+		
 		req.setAttribute("properties", properties);
 		
 		return "guest/property/property_list";
@@ -42,14 +40,8 @@ public class GuestController {
 			@RequestParam("propertyId") int propertyId) {
 		PropertyDTO property = propertyMapper.selectPropertyById(propertyId);
 		
-		List<RoomImageDTO> images = propertyMapper.selectPropertyImages(propertyId);
-		
-		List<AmenityDTO> amenities = propertyMapper.selectAmenities(propertyId);
-		// 사진 리스트랑 편의시설 리스트랑 댓글 리스트 추가해야 함
-		
-		req.setAttribute("images", images);
 		req.setAttribute("property", property);
-		req.setAttribute("amenities", amenities);
+		
 		return "guest/property/property_detail";
 	}
 

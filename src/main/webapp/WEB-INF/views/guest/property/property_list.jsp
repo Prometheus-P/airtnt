@@ -27,7 +27,7 @@ Licence URI: https://www.os-templates.com/template-terms
 <jsp:include page="/top.jsp"/>
 <div id="pageintro" class="hoc clear justify-content-center" style="padding-top: 5vh;"> 
     <!-- ################################################################################################ -->
-        <nav class="navbar navbar-light">
+        <nav id="mainnav" class="navbar navbar-light">
 		  <div class="container-fluid" >
 		    <form class="d-flex" action="<c:url value='/guest/search'/>" method="get">
 		      <input name="addressKey" class="form-control me-2" type="search" placeholder="위치" aria-label="Search" style="height: 50px; width: 300px; font-size: 20px">

@@ -1,11 +1,10 @@
 package com.airtnt.airtnt.model;
 
 public class RoomImageDTO {
-	
 	private int id;
 	private int propertyId;
-	private String imageName;
-	private String imageSize;
+	private String fileName;
+	private String fileSize;
 	private int priority;
 	
 	public int getId() {
@@ -20,17 +19,17 @@ public class RoomImageDTO {
 	public void setPropertyId(int propertyId) {
 		this.propertyId = propertyId;
 	}
-	public String getImageName() {
-		return imageName;
+	public String getFileName() {
+		return fileName;
 	}
-	public void setImageName(String imageName) {
-		this.imageName = imageName;
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
 	}
-	public String getImageSize() {
-		return imageSize;
+	public String getFileSize() {
+		return fileSize;
 	}
-	public void setImageSize(String imageSize) {
-		this.imageSize = imageSize;
+	public void setFileSize(String fileSize) {
+		this.fileSize = fileSize;
 	}
 	public int getPriority() {
 		return priority;
@@ -40,9 +39,7 @@ public class RoomImageDTO {
 	}
 	@Override
 	public String toString() {
-		return "RoomImageDTO [id=" + id + ", propertyId=" + propertyId + ", imageName=" + imageName + ", imageSize="
-				+ imageSize + ", priority=" + priority + "]";
+		return "RoomImageDTO [id=" + id + ", propertyId=" + propertyId + ", fileName=" + fileName + ", fileSize="
+				+ fileSize + ", priority=" + priority + "]";
 	}
-	
-	
 }

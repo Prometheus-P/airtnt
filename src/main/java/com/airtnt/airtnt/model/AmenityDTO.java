@@ -4,10 +4,8 @@ public class AmenityDTO {
 	
 	private int id;
 	private int propertyId;
-	
-	// amenity 테이블 참조값
 	private int amenityTypeId;
-	private String amenityTypeName;
+	private String name;
 
 	public int getId() {
 		return id;
@@ -27,16 +25,16 @@ public class AmenityDTO {
 	public void setAmenityTypeId(int amenityTypeId) {
 		this.amenityTypeId = amenityTypeId;
 	}
-	public String getAmenityTypeName() {
-		return amenityTypeName;
+	public String getName() {
+		return name;
 	}
-	public void setAmenityTypeName(String amenityTypeName) {
-		this.amenityTypeName = amenityTypeName;
+	public void setName(String name) {
+		this.name = name;
 	}
 	
 	@Override
 	public String toString() {
-		return "AmenityDTO [id=" + id + ", propertyId=" + propertyId + ", amenityTypeId=" + amenityTypeId
-				+ ", amenityTypeName=" + amenityTypeName + "]";
+		return "AmenityDTO [id=" + id + ", propertyId=" + propertyId + ", amenityTypeId=" + amenityTypeId + ", name="
+				+ name + "]";
 	}
 }

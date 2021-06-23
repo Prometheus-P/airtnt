@@ -1,6 +1,7 @@
 package com.airtnt.airtnt.model;
 
 import java.sql.Date;
+import java.util.List;
 
 public class PropertyDTO {
 	
@@ -28,6 +29,9 @@ public class PropertyDTO {
 	// room_type 테이블 참조값
 	private int roomTypeId;	// fk
 	private String roomTypeName;
+	
+	private List<RoomImageDTO> images;
+	private List<AmenityDTO> amenities;
 	
 	public int getId() {
 		return id;
@@ -137,13 +141,16 @@ public class PropertyDTO {
 	public void setRoomTypeName(String roomTypeName) {
 		this.roomTypeName = roomTypeName;
 	}
-	@Override
-	public String toString() {
-		return "PropertyDTO [id=" + id + ", name=" + name + ", hostId=" + hostId + ", propertyDesc=" + propertyDesc
-				+ ", address=" + address + ", latitude=" + latitude + ", longitude=" + longitude + ", price=" + price
-				+ ", bedCount=" + bedCount + ", maxGuest=" + maxGuest + ", regDate=" + regDate + ", modDate=" + modDate
-				+ ", propertyTypeId=" + propertyTypeId + ", propertyTypeName=" + propertyTypeName
-				+ ", subPropertyTypeId=" + subPropertyTypeId + ", subPropertyTypeName=" + subPropertyTypeName
-				+ ", roomTypeId=" + roomTypeId + ", roomTypeName=" + roomTypeName + "]";
+	public List<RoomImageDTO> getImages() {
+		return images;
+	}
+	public void setImages(List<RoomImageDTO> images) {
+		this.images = images;
+	}
+	public List<AmenityDTO> getAmenities() {
+		return amenities;
+	}
+	public void setAmenities(List<AmenityDTO> amenities) {
+		this.amenities = amenities;
 	}
 }

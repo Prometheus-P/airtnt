@@ -18,11 +18,37 @@ public class PropertyMapper {
 	
 	public List<PropertyDTO> searchPropertiesByAddress(String addressKey) {
 		addressKey = "%" + addressKey + "%";
-		return sqlSession.selectList("selectPropertiesByAddress", addressKey);
+		List<PropertyDTO> properties = sqlSession.selectList("searchPropertiesByAddress", addressKey);
+		for(PropertyDTO property : properties) {
+			int propertyId = property.getId();
+			
+			List<RoomImageDTO> images = selectRoomImages(propertyId);
+			property.setImages(images);
+			
+			List<AmenityDTO> amenities = selectAmenities(propertyId);
+			property.setAmenities(amenities);
+		}
+		return properties;
 	}
 	
-	public PropertyDTO selectPropertyById(int id) {
-		return sqlSession.selectOne("selectPropertyById", id);
+	public PropertyDTO selectPropertyById(int propertyId) {
+		PropertyDTO property = sqlSession.selectOne("selectPropertyById", propertyId);
+		
+		List<RoomImageDTO> images = selectRoomImages(propertyId);
+		property.setImages(images);
+		
+		List<AmenityDTO> amenities = selectAmenities(propertyId);
+		property.setAmenities(amenities);
+		
+		return property;
+	}
+	
+	public List<RoomImageDTO> selectRoomImages(int propertyId){
+		List<RoomImageDTO> images = sqlSession.selectList("selectRoomImages", propertyId);
+		for(RoomImageDTO image : images) {
+			System.out.println(image);
+		}
+		return images;
 	}
 	
 	public List<AmenityDTO> selectAmenities(int propertyId){
@@ -31,13 +57,5 @@ public class PropertyMapper {
 			System.out.println(amenity);
 		}
 		return amenities;
-	}
-	
-	public List<RoomImageDTO> selectPropertyImages(int propertyId){
-		List<RoomImageDTO> images = sqlSession.selectList("selectRoomImages", propertyId);
-		for(RoomImageDTO image : images) {
-			System.out.println(image);
-		}
-		return images;
 	}
 }

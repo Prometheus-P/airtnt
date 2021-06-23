@@ -120,19 +120,19 @@ Licence URI: https://www.os-templates.com/template-terms
     <div class="content">
       <!-- 숙소 이미지 -->
       <div class="one_half first">
-        <img class="imgl borderedbox inspace-5" src="${images.get(0).imageName}" alt="" style="width: 800px;height: 600px">
+        <img class="imgl borderedbox inspace-5" src="${property.images.get(0).fileName}" alt="" style="width: 800px;height: 600px">
       </div>
       <div class="one_half">
-        <c:forEach var="image" items="${images}" begin="1" end="4" varStatus="status">
+        <c:forEach var="image" items="${property.images}" begin="1" end="4" varStatus="status">
           <c:choose>
             <c:when test="${status.count % 2 == 1}">
               <div class="one_half first">
-                <img class="imgl borderedbox inspace-5" src="${image.imageName}" alt="" style="width: 400px;height: 300px">
+                <img class="imgl borderedbox inspace-5" src="${image.fileName}" alt="" style="width: 400px;height: 300px">
               </div>
             </c:when>
             <c:otherwise>
               <div class="one_half">
-                <img class="imgl borderedbox inspace-5" src="${image.imageName}" alt="" style="width: 400px;height: 300px">
+                <img class="imgl borderedbox inspace-5" src="${image.fileName}" alt="" style="width: 400px;height: 300px">
               </div>
             </c:otherwise>
           </c:choose>
@@ -162,10 +162,10 @@ Licence URI: https://www.os-templates.com/template-terms
 	        
 	        <div>
 	          <h1>편의 시설</h1><br>
-	          <c:forEach var="amenity" items="${amenities}">
+	          <c:forEach var="amenity" items="${property.amenities}">
 	            <ul>
 	              <li>
-	                ${amenity.amenityTypeName}
+	                ${amenity.name}
 	              </li>
 	            </ul>
 	          </c:forEach>
