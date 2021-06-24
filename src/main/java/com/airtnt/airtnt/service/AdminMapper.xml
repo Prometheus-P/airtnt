@@ -77,8 +77,8 @@
 	
 	<insert id="insertSubProperty" parameterType="filterSubPropDTO">
 		insert into sub_property 
-		values(	#{propertyTypeId}, 
-				(select max(id)+1 from sub_property), 
+		values(	(select max(id)+1 from sub_property), 
+				#{propertyTypeId},
 				#{name}, 
 				#{isUse}
 				)

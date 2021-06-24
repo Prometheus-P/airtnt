@@ -22,33 +22,45 @@ public class AdminMapper {
 		return list;
 	}
 	
-	//필터 대분류 리스트
+	//[filter] : 대분류 리스트
 	public List<FilterPropDTO> listProperty(){
 		List<FilterPropDTO> list = sqlSession.selectList("listProperty");
 		return list;
 	}
 	
-	//필터 중분류 리스트
+	//[filter] : 중분류 리스트
 	public List<FilterSubPropDTO> listSubProperty(){
 		List<FilterSubPropDTO> list = sqlSession.selectList("listSubProperty");
 		return list;
 	}
 	
-	//대분류 선택시 대분류id에 해당하는 중분류 리스트를 꺼내온다
+	//[filter] : 대분류 선택시 대분류id에 해당하는 중분류 리스트를 꺼내온다
 	public List<FilterSubPropDTO> getSubProperty(String propertyTypeId){
 		List<FilterSubPropDTO> list = sqlSession.selectList("getSubProperty", propertyTypeId);
 		return list;
 	}
 	
-	//대분류 추가
-	public int insertProperty(Object prop){
+	//[filter] : 대분류 추가
+	public int insertProperty(FilterPropDTO prop){
 		int res = sqlSession.insert("insertProperty", prop);
 		return res;
 	}
 	
-	//대분류 수정
-	public int updateProperty(Object prop){
+	//[filter] : 대분류 수정
+	public int updateProperty(FilterPropDTO prop){
 		int res = sqlSession.update("updateProperty", prop);
+		return res;
+	}
+	
+	//[filter] : 중분류 추가
+	public int insertSubProperty(FilterSubPropDTO subProp){
+		int res = sqlSession.insert("insertSubProperty", subProp);
+		return res;
+	}
+	
+	//[filter] : 중분류 수정
+	public int updateSubProperty(FilterSubPropDTO subProp){
+		int res = sqlSession.update("updateSubProperty", subProp);
 		return res;
 	}
 }

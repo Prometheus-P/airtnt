@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -28,7 +29,7 @@ public class AdminController {
 	AdminMapper adminMapper;
 
 	/*
-	 * dashboard : chart에 사용되는 일별 수수료 sum 데이터
+	 * [dashboard] : chart에 사용되는 일별 수수료 sum 데이터
 	 */
 	@RequestMapping(value="admin", method=RequestMethod.GET)
 	public String listDashboard(HttpServletRequest req) throws Exception {
@@ -56,7 +57,7 @@ public class AdminController {
 	}
 	
 	/*
-	 * filter : 화면 최초 조회시 카테고리마스터 조회
+	 * [filter] : 화면 최초 조회시 카테고리마스터 조회
 	 */
 	@RequestMapping(value="filter", method = RequestMethod.GET)
 	public String listfilterMaster(HttpServletRequest req) throws Exception {
@@ -68,7 +69,7 @@ public class AdminController {
 	}
 	
 	/*
-	 * filter : 대분류 선택시 해당하는 중분류 데이터 view 로 가져감
+	 * [filter] : 선택한 대분류로 중분류 테이블 변경
 	 */
 	@RequestMapping(value = "filter", method = RequestMethod.POST)
 	@ResponseBody
@@ -79,37 +80,65 @@ public class AdminController {
 	}
 	
 	/*
-	 * 컨트롤러에서는 넘어온 데이터를 String 형으로 받아서 Object인 JSONArray 형태로 변환하여 처리합니다.
+	    [filter] : 대분류 추가/수정
+	       컨트롤러에서는 넘어온 데이터를 String 형으로 받아서 Object인 JSONArray 형태로 변환하여 처리합니다.
 		이때 방법은 Json 라이브러리와 Gson 라이브러리를 이용한 방법을 사용하면 됩니다.
 		Gson은 JSON구조의 직렬화된 데이터를 JAVA의 객체로 역질렬화, 직렬화 해주는 자바 라이브러리 입니다.
 		JSON Object -> Java Object 또는 그 반대의 행위를 돕는 라이브러리 입니다.
 	 */
-	@RequestMapping(value="filter/update_prop", method = RequestMethod.POST)
+	@RequestMapping(value="filter/update/prop", method = RequestMethod.POST)
 	@ResponseBody
 	public int updatePropertyList(HttpServletRequest req, @RequestParam String data) 
 			throws Exception {
-		Map<String, Object> result = new HashMap<>();
 		int res = 0;
 		try {
-			List<Map<String, Object>> datalist = new Gson().fromJson(String.valueOf(data), new TypeToken<List<Map<String, Object>>>(){}.getType());
+			List<Map<String, String>> datalist = new Gson().fromJson(String.valueOf(data), new TypeToken<List<Map<String, String>>>(){}.getType());
+			
+			System.out.println(data); 
+			// [{"id":"2","name":"CATE02","isUse":"Y"},{"id":"4","name":"tttttttt","isUse":"Y"}]
+			
 			//json으로 받아온 데이터들 신규추가 / 수정 하나씩 진행
-			for (Map<String, Object> prop : datalist) {
-				String key = (String) prop.get("id");
-				if(key.contains("new")) {	//신규인지 아닌지 구분
-					res += adminMapper.insertProperty(prop);
+			for (Map<String, String> prop : datalist) {
+				if(prop.get("id").equals("") || prop.get("id") == null) { //신규등록건과 수정건 구분
+					FilterPropDTO dto = new FilterPropDTO(prop.get("name"), prop.get("isUse"));
+					res += adminMapper.insertProperty(dto);
 				}else {
-					res += adminMapper.updateProperty(prop);
+					FilterPropDTO dto = new FilterPropDTO(prop.get("id"), prop.get("name"), prop.get("isUse"));
+					res += adminMapper.updateProperty(dto);
 				}
-			}  
+			} 
 		} catch (Exception e) {
 		  e.printStackTrace();
 		}
 	return res;
+	}
 	
-}
-	
-	
-	
+	/*
+	 * [filter] : 중분류 추가/수정
+	 */
+	@RequestMapping(value="filter/update/subprop", method = RequestMethod.POST)
+	@ResponseBody
+	public int updateSubPropertyList(HttpServletRequest req, @RequestParam String data) throws Exception {
+		int res = 0;
+		FilterSubPropDTO dto;
+		System.out.println(data);
+		try {
+			List<Map<String, String>> datalist = new Gson().fromJson(String.valueOf(data), new TypeToken<List<Map<String, String>>>(){}.getType());
+			
+			for (Map<String, String> sub : datalist) {
+				if(sub.get("id").equals("") || sub.get("id") == null) {
+					dto = new FilterSubPropDTO(sub.get("propertyTypeId"), sub.get("name"), sub.get("isUse"));
+					res += adminMapper.insertSubProperty(dto);
+				}else {
+					dto = new FilterSubPropDTO(sub.get("id"), sub.get("name"), sub.get("isUse"));
+					res += adminMapper.updateSubProperty(dto);
+				}
+			} 
+		} catch (Exception e) {
+		  e.printStackTrace();
+		}
+		return res;
+	}
 	
 	
 }
