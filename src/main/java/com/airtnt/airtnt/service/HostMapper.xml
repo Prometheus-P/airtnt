@@ -4,16 +4,19 @@
  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.airtnt.airtnt.service.HostMapper">
+	
+	<insert id="insertProperty" parameterType="propertyDTO">
+		insert into property values(property_seq.nextval, #{name}, #{hostId}, 
+		#{propertyDesc}, #{address}, #{latitude}, #{longitude}, #{price}, #{bedCount}, 
+		#{maxGuest}, sysdate)<!-- modeDate==null -->
+	</insert>
 	<!-- <select >
 		
 	</select>
-	<insert >
-		
-	</insert>
 	<delete>
 	
 	</delete>
 	<update>
 		
-	</update>-->
+	</update> -->
 </mapper>
