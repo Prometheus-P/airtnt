@@ -16,6 +16,8 @@ public class MemberMapper {
 		return res;
 	}
 
-	
-	
+	public MemberDTO getMember(String member_id) {
+		MemberDTO dto = sqlSession.selectOne("getMember", member_id);
+		return dto;
+	}
 }

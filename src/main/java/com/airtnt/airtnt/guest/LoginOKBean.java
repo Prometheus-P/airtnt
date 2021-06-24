@@ -1,6 +1,8 @@
-package com.airtnt.airtnt.model;
+package com.airtnt.airtnt.guest;
 
-public class MemberDTO {
+import com.airtnt.airtnt.model.MemberDTO;
+
+public class LoginOKBean {
 	private String member_id;
 	private String member_name;
 	private String passwd;
@@ -11,6 +13,20 @@ public class MemberDTO {
 	private String member_image;
 	private String reg_date;
 	private String mod_date;
+	
+	
+	public void login_setting(MemberDTO dto) {
+		this.member_id = dto.getMember_id();
+		this.member_name = dto.getMember_name();
+		this.passwd = dto.getPasswd();
+		this.birth = dto.getBirth();
+		this.tel = dto.getTel();
+		this.member_mode = dto.getMember_mode();
+		this.gender = dto.getGender();
+		this.member_image = dto.getMember_image();
+		this.reg_date = dto.getMember_mode();
+		this.mod_date = dto.getMod_date();
+	}
 	
 	public String getMember_id() {
 		return member_id;
@@ -72,4 +88,5 @@ public class MemberDTO {
 	public void setMod_date(String mod_date) {
 		this.mod_date = mod_date;
 	}
+	
 }
