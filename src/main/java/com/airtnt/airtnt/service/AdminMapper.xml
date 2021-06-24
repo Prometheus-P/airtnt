@@ -6,9 +6,9 @@
 <mapper namespace="com.airtnt.airtnt.service.AdminMapper">
 
 	<select id="listDashboard" resultType="dashboardDTO">
-        SELECT  A.TRANSACTION_DATE as transactionDate,
-                A.TOT_SITE_FEE as thisTotSiteFee,
-                B.TOT_SITE_FEE as lastTotSiteFee
+		        SELECT  C.CAL as transactionDate,
+                NVL(A.TOT_SITE_FEE, 0) as thisTotSiteFee,
+                NVL(B.TOT_SITE_FEE, 0)  as lastTotSiteFee
         FROM (
                     SELECT TO_CHAR(TRANSACTION_DATE, 'YYYYMMDD') AS transaction_date
                          , NVL(SUM(SITE_FEES),0) AS tot_site_fee 
@@ -24,8 +24,14 @@
                     WHERE TRANSACTION_DATE BETWEEN SYSDATE-7-365 AND SYSDATE-365
                     GROUP BY TO_CHAR(TRANSACTION_DATE+365, 'YYYYMMDD')
                     ORDER BY TRANSACTION_DATE
-            ) B --작년
-        WHERE A.TRANSACTION_DATE = B.TRANSACTION_DATE(+)
+            ) B, --작년
+            (   SELECT TO_CHAR(SYSDATE-6,'YYYYMMDD') + LEVEL - 1 AS CAL
+                FROM dual 
+                CONNECT BY LEVEL <![CDATA[ <= ]]> TO_CHAR(SYSDATE,'YYYYMMDD') - TO_CHAR(SYSDATE-7,'YYYYMMDD')
+            ) C --날짜대상
+        WHERE A.TRANSACTION_DATE = B.TRANSACTION_DATE(+) 
+        AND C.CAL = A.TRANSACTION_DATE(+)
+        ORDER BY C.CAL
 	</select>
 	
 	<select id="listProperty" resultType="filterPropDTO">
@@ -36,10 +42,11 @@
 	
 	<select id="listSubProperty" resultType="filterSubPropDTO">
 		select property_type_id as propertyTypeId,
+			   (select b.name from property b where id = a.property_type_id) as propertyTypeName,
 			   id,
 			   name,
-			   use_yn as useYn
-		from sub_property
+			   is_use as isUse
+		from sub_property a
 		where 1=1
 		and property_type_id = (select min(id) from property)
 		order by id
@@ -47,9 +54,10 @@
 	
 	<select id="getSubProperty" resultType="filterSubPropDTO" parameterType="String">
 		select property_type_id as propertyTypeId,
+			   (select name from property where id = #{propertyTypeId} ) as propertyTypeName,
 			   id,
 			   name,
-			   use_yn as useYn
+			   is_use as isUse
 		from sub_property
 		where 1=1
 		and property_type_id = #{propertyTypeId}
@@ -57,6 +65,30 @@
 	</select>
 	
 	<insert id="insertProperty" parameterType="filterPropDTO">
-		insert into property values((select max(id)+1 from property), #{name}, 'Y')
+		insert into property values((select max(id)+1 from property), #{name}, #{isUse})
 	</insert>
+	
+	<update id="updateProperty" parameterType="filterPropDTO">
+		update property 
+		set name = #{name},
+			is_use = #{isUse}
+		where id = #{id} 
+	</update>
+	
+	<insert id="insertSubProperty" parameterType="filterSubPropDTO">
+		insert into sub_property 
+		values(	#{propertyTypeId}, 
+				(select max(id)+1 from sub_property), 
+				#{name}, 
+				#{isUse}
+				)
+	</insert>
+	
+	<update id="updateSubProperty" parameterType="filterSubPropDTO">
+		update sub_property 
+		set name = #{name},
+			is_use = #{isUse}
+		where id = #{id}
+	</update>
+	
 </mapper>
