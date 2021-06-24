@@ -7,6 +7,9 @@ public class WishListDTO {
 	private String is_admin;
 	private String reg_date;
 	private String mod_date;
+	//select 변수
+	private int room_id;
+	private String image_path;
 	
 	public int getWish_id() {
 		return wish_id;
@@ -43,6 +46,18 @@ public class WishListDTO {
 	}
 	public void setMod_date(String mod_date) {
 		this.mod_date = mod_date;
+	}
+	public int getRoom_id() {
+		return room_id;
+	}
+	public void setRoom_id(int room_id) {
+		this.room_id = room_id;
+	}
+	public String getImage_path() {
+		return image_path;
+	}
+	public void setImage_path(String image_path) {
+		this.image_path = image_path;
 	}
 	
 }

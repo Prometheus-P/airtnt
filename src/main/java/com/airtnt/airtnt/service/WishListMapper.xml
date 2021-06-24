@@ -4,12 +4,31 @@
  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
  <mapper namespace="com.airtnt.airtnt.service.WishListMapper">
  	<insert id="makeWish" parameterType="WishListDTO">
-		insert into wishlist values(seq.nextval, #{wish_name}, #{member_id}, #{seq}, 0, #{is_admin}, #{is_public}, sysdate, sysdate)	
+		insert into wishlist values(seq.nextval, #{wish_name}, #{member_id}, #{is_admin}, sysdate, sysdate)	
 	</insert>
 	<select id="getWish" resultType="WishListDTO" parameterType="String"> 
- 		select * from wishlist where member_id=#{member_id}
+ 		select aa.*, (select min(c.image_path)
+             from image c
+              where aa.room_id = c.room_id) image_path
+		from (
+		        select w.wish_id, w.wish_name, min(r.room_id) room_id
+		        from (select * from wishlist where member_id=#{member_id}) w left outer join wishlist_room r on w.wish_id = r.wish_id
+		        group by w.wish_id, w.wish_name
+		)aa
+		order by aa.wish_id
  	</select>
 	<select id="getAdminWish" resultType="WishListDTO"> 
- 		select * from wishlist where is_admin=1
+ 		select aa.*, (select min(c.image_path)
+             from image c
+              where aa.room_id = c.room_id) image_path
+		from (
+		        select w.wish_id, w.wish_name, min(r.room_id) room_id
+		        from (select * from wishlist where is_admin='Y') w left outer join wishlist_room r on w.wish_id = r.wish_id
+		        group by w.wish_id, w.wish_name
+		)aa
+		order by aa.wish_id
+ 	</select>
+ 	<select id="getWishRoom" resultType="WishList_RoomDTO" parameterType="String"> 
+ 		select room_id from wishlist_room where wish_id=#{wish_id}
  	</select>
  </mapper>

@@ -1,33 +1,35 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/top.jsp"%>
-<div class="wrapper row3">
-  <main class="hoc container clear"> 
+
+<div class="hoc container clear ">
+	<div>
+		<span class="bold fl_left" style="font-size: 3vh; margin-right:50vh;">위시리스트</span>
+		<span><a class="btn btn-outline-primary fl_right" href="#NewWish" role="button" data-toggle="modal">새로운 위시리스트 만들기</a></span>
+	</div>
+  <main> 
     <!-- main body -->
     <!-- ################################################################################################ -->
     <section id="services">
-      <div class="sectiontitle" style="max-width:100%">
-        <span class="bold " style="font-size: 3vh; margin-right:50vh;">위시리스트</span>
-        <span><a class="btn btn-outline-primary" href="#NewWish" role="button" data-toggle="modal">새로운 위시리스트 만들기</a></span>
-      </div>
+      <div class="sectiontitle" style="max-width:100%"></div>
       <ul class="nospace group grid-3">
-      	<c:if test="${not empty user_wishlist}">
-	      	<c:forEach var="dto" items="${user_wishlist}">
+      	<c:if test="${not empty user_wishList}">
+	      	<c:forEach var="dto" items="${user_wishList}">
 		        <li class="one_third">
 		        	<div>
-		        		<a href="inWishlist"><img src="<c:url value='/resources/img/main3.jpg'/>"></a>
+		        		<a href="inWishList?wish_id=${dto.wish_id}"><img src="<c:url value='/resources/img/main3.jpg'/>"></a>
 		        	</div>
-		            <footer><span class="bold " style="font-size: 2vh;">예시${dto.wish_name}</span></footer>
+		            <footer><span class="bold " style="font-size: 2vh;">${dto.wish_name}</span></footer>
 		        </li>
 			</c:forEach>
 		</c:if>
-		<c:if test="${empty user_wishlist}">
-	      	<c:forEach var="dto" items="${admin_wishlist}">
+		<c:if test="${empty user_wishList}">
+	      	<c:forEach var="dto" items="${admin_wishList}">
 		        <li class="one_third">
 		        	<div>
-		        		<a href="inWishlist"><img src="<c:url value='/resources/img/main3.jpg'/>"></a>
+		        		<a href="inWishList?wish_id=${dto.wish_id}"><img src="<c:url value='/resources/img/main3.jpg'/>"></a>
 		        	</div>
-		            <footer><span class="bold " style="font-size: 2vh;">예시${dto.wish_name}</span></footer>
+		            <footer><span class="bold " style="font-size: 2vh;">${dto.wish_name}</span></footer>
 		        </li>
 			</c:forEach>
 		</c:if>
@@ -68,4 +70,5 @@
 			</div>
 		</div>
 	</div>
-</div> 
+</div>
+<%@ include file="/WEB-INF/views/bottom.jsp"%> 
