@@ -91,4 +91,17 @@
 		where id = #{id}
 	</update>
 	
+	<select id= "selectMemberList" resultType="memberDTO">
+		select member_mode as memberMode
+			 , id
+			 , name as name
+			 , tel
+			 , (CASE WHEN gender = '1' THEN '남성'
+		            WHEN gender = '2' THEN '여성'
+		       END) AS gender
+			 , to_char(reg_date,'YYYY-MM-DD') as regDate
+		from member
+		where 1=1
+	</select>
+	
 </mapper>

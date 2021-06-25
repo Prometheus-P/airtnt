@@ -22,10 +22,9 @@
     	var token = $("input[name='_csrf']").val();
 		var header = "X-CSRF-TOKEN";
 		
-		//이렇게 해도 될지 모르겠지만,,,, 선택한 대분류 데이터 여기에 담아두고 중분류 추가할때 화면에 보여준다
+		//선택한 대분류 데이터 여기에 담아두고 중분류 추가할때 화면에 보여준다
 		var selectedPropCode = null;
 		var selectedPropName = null;
-		
     	
     	//[공통] 행추가 후 저장 전 삭제 
     	function deleteRow(){

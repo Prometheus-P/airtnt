@@ -49,14 +49,6 @@ public class AdminController {
 	}
 	
 	/*
-	 * admin nav
-	 */
-	@RequestMapping(value="admin_nav", method=RequestMethod.GET)
-	public String test(HttpServletRequest req) throws Exception {
-		return "admin/admin_nav";
-	}
-	
-	/*
 	 * [filter] : 화면 최초 조회시 카테고리마스터 조회
 	 */
 	@RequestMapping(value="filter", method = RequestMethod.GET)
@@ -140,5 +132,14 @@ public class AdminController {
 		return res;
 	}
 	
+	/*
+	 * [member] : 회원조회
+	 */
+	@RequestMapping(value="member", method = RequestMethod.GET)
+	public String selectMemberList(HttpServletRequest req){
+		List memberList = adminMapper.selectMemberList();
+		req.setAttribute("memberList", memberList); //작년수수료SUM
+		return "admin/member";
+	}
 	
 }

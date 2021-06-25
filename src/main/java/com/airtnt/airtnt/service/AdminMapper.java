@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.airtnt.airtnt.model.DashBoardDTO;
 import com.airtnt.airtnt.model.FilterPropDTO;
 import com.airtnt.airtnt.model.FilterSubPropDTO;
+import com.airtnt.airtnt.model.MemberDTO;
 
 
 @Service
@@ -63,4 +64,11 @@ public class AdminMapper {
 		int res = sqlSession.update("updateSubProperty", subProp);
 		return res;
 	}
+	
+	//[member] : 회원 조회
+	public List<MemberDTO> selectMemberList(){
+		List<MemberDTO> list = sqlSession.selectList("selectMemberList");
+		return list;
+	}
+	
 }
