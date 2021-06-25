@@ -1,0 +1,43 @@
+사용시 체크사항
+
+1. modal
+
+a. head에 들어 갈 사항
+	<link rel="stylesheet" type="text/css" href="<c:url value='/resources_host/modal/css/default.css'/>" />
+	<link rel="stylesheet" type="text/css" href="<c:url value='/resources_host/modal/css/component1.css'/>" />
+	<script src="<c:url value='/resources_host/modal/js/modernizr.custom.js'/>"></script>
+	
+b. 모달 띄우는 버튼
+<button class="md-trigger" data-modal="modal-1">세부정보</button>
+
+c. 잘모름
+<div class="md-overlay"></div>
+
+d. 모달에 들어갈 내용
+	<div class="md-modal md-effect-1" id="modal-1">
+		<div class="md-content">
+			<h3>예약상세 정보</h3>
+			<div>
+				<p>상세 정보</p>
+				<ul>
+					<li><strong>정보1</strong> 
+					내용내용내용
+					</li>
+					<li><strong>정보2</strong>
+					내용내용내용
+					</li>
+				</ul>
+				<button class="md-close">닫기</button>
+			</div>
+		</div>
+	</div>
+
+e. 사용 하는 script
+	<script src="<c:url value='/resources_host/modal/js/classie.js'/>"></script>
+	<script src="<c:url value='/resources_host/modal/js/modalEffects.js'/>"></script>
+	<script>
+		// this is important for IEs
+		var polyfilter_scriptpath = '/js/';
+	</script>
+	<script src="<c:url value='/resources_host/modal/js/cssParser.js'/>"></script>
+	<script src="<c:url value='/resources_host/modal/js/css-filters-polyfill.js'/>"></script>

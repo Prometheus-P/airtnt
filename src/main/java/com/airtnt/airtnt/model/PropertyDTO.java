@@ -1,24 +1,37 @@
 package com.airtnt.airtnt.model;
 
 import java.sql.Date;
+import java.util.List;
 
 public class PropertyDTO {
 	
-	private int id;
+	private int id;	// pk
 	private String name;
-	private String host_id;
-	private String room_desc;
-	private String property_type_name;	// 주거형태
-	private String sub_property_type_name;	
-	private String room_type_name;
+	private String hostId;
+	private String propertyDesc;
 	private String address;
 	private String latitude;
 	private String longitude;
 	private int price;
-	private int bed_count;
-	private int max_guest;
-	private Date reg_date;
-	private Date mod_date;
+	private int bedCount;
+	private int maxGuest;
+	private Date regDate;
+	private Date modDate;
+	
+	// property_type 테이블 참조값
+	private int propertyTypeId;	// fk
+	private String propertyTypeName;
+	
+	// sub_property_type 테이블 참조값
+	private int subPropertyTypeId;	// fk
+	private String subPropertyTypeName;
+	
+	// room_type 테이블 참조값
+	private int roomTypeId;	// fk
+	private String roomTypeName;
+	
+	private List<RoomImageDTO> images;
+	private List<AmenityDTO> amenities;
 	
 	public int getId() {
 		return id;
@@ -32,35 +45,17 @@ public class PropertyDTO {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public String getHost_id() {
-		return host_id;
+	public String getHostId() {
+		return hostId;
 	}
-	public void setHost_id(String host_id) {
-		this.host_id = host_id;
+	public void setHostId(String hostId) {
+		this.hostId = hostId;
 	}
-	public String getRoom_desc() {
-		return room_desc;
+	public String getPropertyDesc() {
+		return propertyDesc;
 	}
-	public void setRoom_desc(String room_desc) {
-		this.room_desc = room_desc;
-	}
-	public String getProperty_type_name() {
-		return property_type_name;
-	}
-	public void setProperty_type_name(String property_type_name) {
-		this.property_type_name = property_type_name;
-	}
-	public String getSub_property_type_name() {
-		return sub_property_type_name;
-	}
-	public void setSub_property_type_name(String sub_property_type_name) {
-		this.sub_property_type_name = sub_property_type_name;
-	}
-	public String getRoom_type_name() {
-		return room_type_name;
-	}
-	public void setRoom_type_name(String room_type_name) {
-		this.room_type_name = room_type_name;
+	public void setPropertyDesc(String propertyDesc) {
+		this.propertyDesc = propertyDesc;
 	}
 	public String getAddress() {
 		return address;
@@ -86,29 +81,76 @@ public class PropertyDTO {
 	public void setPrice(int price) {
 		this.price = price;
 	}
-	public int getBed_count() {
-		return bed_count;
+	public int getBedCount() {
+		return bedCount;
 	}
-	public void setBed_count(int bed_count) {
-		this.bed_count = bed_count;
+	public void setBedCount(int bedCount) {
+		this.bedCount = bedCount;
 	}
-	public int getMax_guest() {
-		return max_guest;
+	public int getMaxGuest() {
+		return maxGuest;
 	}
-	public void setMax_guest(int max_guest) {
-		this.max_guest = max_guest;
+	public void setMaxGuest(int maxGuest) {
+		this.maxGuest = maxGuest;
 	}
-	public Date getReg_date() {
-		return reg_date;
+	public Date getRegDate() {
+		return regDate;
 	}
-	public void setReg_date(Date reg_date) {
-		this.reg_date = reg_date;
+	public void setRegDate(Date regDate) {
+		this.regDate = regDate;
 	}
-	public Date getMod_date() {
-		return mod_date;
+	public Date getModDate() {
+		return modDate;
 	}
-	public void setMod_date(Date mod_date) {
-		this.mod_date = mod_date;
+	public void setModDate(Date modDate) {
+		this.modDate = modDate;
 	}
-	
+	public int getPropertyTypeId() {
+		return propertyTypeId;
+	}
+	public void setPropertyTypeId(int propertyTypeId) {
+		this.propertyTypeId = propertyTypeId;
+	}
+	public String getPropertyTypeName() {
+		return propertyTypeName;
+	}
+	public void setPropertyTypeName(String propertyTypeName) {
+		this.propertyTypeName = propertyTypeName;
+	}
+	public int getSubPropertyTypeId() {
+		return subPropertyTypeId;
+	}
+	public void setSubPropertyTypeId(int subPropertyTypeId) {
+		this.subPropertyTypeId = subPropertyTypeId;
+	}
+	public String getSubPropertyTypeName() {
+		return subPropertyTypeName;
+	}
+	public void setSubPropertyTypeName(String subPropertyTypeName) {
+		this.subPropertyTypeName = subPropertyTypeName;
+	}
+	public int getRoomTypeId() {
+		return roomTypeId;
+	}
+	public void setRoomTypeId(int roomTypeId) {
+		this.roomTypeId = roomTypeId;
+	}
+	public String getRoomTypeName() {
+		return roomTypeName;
+	}
+	public void setRoomTypeName(String roomTypeName) {
+		this.roomTypeName = roomTypeName;
+	}
+	public List<RoomImageDTO> getImages() {
+		return images;
+	}
+	public void setImages(List<RoomImageDTO> images) {
+		this.images = images;
+	}
+	public List<AmenityDTO> getAmenities() {
+		return amenities;
+	}
+	public void setAmenities(List<AmenityDTO> amenities) {
+		this.amenities = amenities;
+	}
 }

@@ -1,0 +1,75 @@
+host_mode
+
+(_host_support)
+1. 호스트 지원
+	
+	(host_askBoard_list)
+	a. 숙소 문의 목록
+		*(host_askBoard)
+		i. 숙소 문의 게시판
+		
+		(host_review_list)
+	b. 숙소 후기 모음 목록 >> select * from property where HOSTID = ?
+		*(host_review_answer) >> DB Review table 에서 답변 칼럼으로 관리됨
+		i. 후기 답글 달기
+		
+		(super_host)	
+	c. 슈퍼 호스트 자격 확인 >>평점 연산 어떻게...? 총 평점의 평균...
+		
+		(total_earnings)
+	d. 총 수입
+	
+		(view_count)
+	e. 조회 수 확인
+
+(_host_properties_list)
+2. 등록한 숙소 목록
+	
+	(properties_update)
+	a. 등록한 숙소 수정 >> 내용수정, 기간별 활성화&비활성화
+	
+	(_host_properties_detail)
+	b. 등록한 숙소 상세 정보 >> 달력으로 예약 내역 확인, 
+		
+		(host_askBoard)
+		i. 숙소 문의 게시판
+			(host_askBoard_answer)
+			1)숙소 문의 답글 작성
+			(host_askBoard_write)
+			2) 게시글 작성
+			//삭제: 3) 예약 상세 정보
+
+	c. 등록한 숙소 삭제
+
+(_host_booked_list >> host_mode.jsp)
+3. 예약된 숙소 목록 
+	a. 예약 상세 정보(modal)
+		a)예약 확정
+		b)예약 취소
+		
+(_transaction_list)
+4. 대금 수령 내역 >> transaction table에서 대금예정일자 기분으로 완료와 예정 확인
+					>> bookingId를 통해 booking table에 접근해서 정보 냠냠
+	(transaction_completed)
+	a. 대금 수령 완료 내역
+	(transaction_future)
+	b. 대금 수령 예정 내역
+	(total_earnings)
+	c. 총 수입
+	
+(_account >> modal)
+5. 개인 계정 관리
+	*a. 계정
+	*b. 게스트 모드 전환
+	c. 로그아웃
+	*d. 프로필 관리
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
