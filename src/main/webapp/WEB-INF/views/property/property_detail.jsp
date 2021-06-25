@@ -50,7 +50,7 @@ function setTotalPrice(){
 </head>
 <body id="top">
 
-<jsp:include page="/top.jsp"/>
+<jsp:include page="/WEB-INF/views/top.jsp"/>
 
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
@@ -143,25 +143,25 @@ function setTotalPrice(){
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
 <div class="wrapper row3">
-  <main class="hoc container clear"> 
+  <main class="hoc clear"> 
     <!-- main body -->
     <!-- ################################################################################################ -->
-    <div class="content">
+    <div class="container">
       <!-- 숙소 이미지 -->
       <div class="one_half first">
-        <img class="imgl borderedbox inspace-5" src="${property.images.get(0).fileName}" alt="" style="width: 800px;height: 600px">
+        <img class="imgl borderedbox inspace-5" src="${property.images.get(0).fileName}" alt="" >
       </div>
       <div class="one_half">
         <c:forEach var="image" items="${property.images}" begin="1" end="4" varStatus="status">
           <c:choose>
             <c:when test="${status.count % 2 == 1}">
               <div class="one_half first">
-                <img class="imgl borderedbox inspace-5" src="${image.fileName}" alt="" style="width: 400px;height: 300px">
+                <img class="imgl borderedbox inspace-5" src="${image.fileName}" alt="" >
               </div>
             </c:when>
             <c:otherwise>
               <div class="one_half">
-                <img class="imgl borderedbox inspace-5" src="${image.fileName}" alt="" style="width: 400px;height: 300px">
+                <img class="imgl borderedbox inspace-5" src="${image.fileName}" alt="" >
               </div>
             </c:otherwise>
           </c:choose>
