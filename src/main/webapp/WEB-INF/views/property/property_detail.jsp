@@ -18,6 +18,35 @@ Licence URI: https://www.os-templates.com/template-terms
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <link href="/resources/layout/styles/layout.css" rel="stylesheet" type="text/css" media="all">
+<script type="text/javascript">
+function setTotalPrice(){
+	var checkInDateStr = document.getElementById("check_in_date").value;
+	var checkOutDateStr = document.getElementById("check_out_date").value;
+	var guestCount = document.getElementById("guest_count").value;
+	//console.log(checkInDateStr);
+	//console.log(checkOutDateStr);
+	if(checkInDateStr == "" || checkOutDateStr == ""){
+		return 0;
+	}
+	var checkInDate = new Date(checkInDateStr);
+	var checkOutDate = new Date(checkOutDateStr);
+	//console.log(checkInDate);
+	//console.log(checkOutDate);
+	
+	var diff = checkOutDate - checkInDate;
+	//console.log(diff);
+	var dayCount = diff / (24*60*60*1000);
+	//console.log(dayCount);
+	var totalPrice = guestCount * dayCount * ${property.price};
+	const totalPriceStr = new Intl.NumberFormat('ko-KR', {style: 'currency',currency: 'KRW', minimumFractionDigits: 0}).format(totalPrice);
+	
+	document.getElementById("total_price").value = totalPrice;
+	document.getElementById("price_disp").innerHTML = totalPriceStr;
+	
+	return totalPrice;
+}
+
+</script>
 </head>
 <body id="top">
 
@@ -138,7 +167,6 @@ Licence URI: https://www.os-templates.com/template-terms
           </c:choose>
         </c:forEach>
       </div>
-
       
       
       <!-- 숙소 상세정보 나열 구역 -->
@@ -222,19 +250,36 @@ Licence URI: https://www.os-templates.com/template-terms
 	      </div>
 	   </div>
 	   <div class="one_third">
-	     <form action="/guest/booking?propertyId=${property.id}" method="post">
+	     <form action="<c:url value='/property/booking?propertyId=${property.id}'/>" method="post">
+	       <input type="hidden" name="hostId" value="${property.hostId}">
+	       <input type="hidden" name="guestId" value="${sessionScope.id}">
+	       <input id="total_price" type="hidden" name="totalPrice" value="${property.price}">
 	       <table>
 	         <tr>
 	           <th>체크인</th>
-	           <td><input class="btmspace-15" type="date" name="checkInDate"></td>
+	           <td><input id="check_in_date" type="date" name="checkInDate" class="btmspace-15"
+	            	min="${tomorrow}" value="${tomorrow}"
+	            	onchange="javascript:setTotalPrice()"></td>
 	         </tr>
 	         <tr>
 	           <th>체크아웃</th>
-	           <td><input class="btmspace-15" type="date" name="checkOutDate"></td>
+	           <td><input id="check_out_date" type="date" name="checkOutDate" class="btmspace-15"
+	            	min="${dayAfterTomorrow}" value="${dayAfterTomorrow}"
+	            	onchange="javascript:setTotalPrice()"></td>
 	         </tr>
 	         <tr>
 	           <th>인원수</th>
-	           <td><input class="btmspace-15" type="number" name="guestCount" min="1" max="${property.maxGuest}" value="1"></td>
+	           <td><input id="guest_count" type="number" name="guestCount" class="btmspace-15"
+	            	min="1" max="${property.maxGuest}" value="1" 
+	            	onchange="javascript:setTotalPrice()"></td>
+	         </tr>
+	         <tr>
+	           <td colspan="2" style="font-size: 30px">
+	             총액 <span id="price_disp"></span>
+	             <script type="text/javascript">
+	             document.getElementById("price_disp").innerHTML = new Intl.NumberFormat('ko-KR', {style: 'currency',currency: 'KRW', minimumFractionDigits: 0}).format(${property.price});
+	             </script>
+	           </td>
 	         </tr>
 	         <tr>
 	           <td colspan="2">

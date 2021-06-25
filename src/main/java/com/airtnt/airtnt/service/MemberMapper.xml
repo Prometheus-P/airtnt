@@ -4,6 +4,9 @@
  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
  <mapper namespace="com.airtnt.airtnt.service.MemberMapper">
  	<insert id="inputMember" parameterType="memberDTO">
-		insert into member values(#{member_id}, #{member_name}, #{passwd}, #{birth}, #{tel}, 1, #{gender}, #{account}, #{member_image, jdbcType=VARCHAR}, sysdate, sysdate)
+		insert into member values(#{member_id}, #{member_name}, #{passwd}, #{birth}, #{tel}, 1, #{gender}, #{member_image, jdbcType=VARCHAR}, sysdate, sysdate)
 	</insert>
+	<select id="getMember" parameterType="String" resultType="memberDTO">
+		select * from member where member_id = #{member_id}
+	</select>
  </mapper>

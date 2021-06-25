@@ -8,7 +8,6 @@ public class MemberDTO {
 	private String tel;
 	private String member_mode;
 	private String gender;
-	private String account;
 	private String member_image;
 	private String reg_date;
 	private String mod_date;
@@ -54,12 +53,6 @@ public class MemberDTO {
 	}
 	public void setGender(String gender) {
 		this.gender = gender;
-	}
-	public String getAccount() {
-		return account;
-	}
-	public void setAccount(String account) {
-		this.account = account;
 	}
 	public String getMember_image() {
 		return member_image;

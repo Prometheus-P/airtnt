@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="com.airtnt.airtnt.service.AdminMapper">
+
+	<select id="listDashboard" resultType="dashboardDTO">
+		        SELECT  C.CAL as transactionDate,
+                NVL(A.TOT_SITE_FEE, 0) as thisTotSiteFee,
+                NVL(B.TOT_SITE_FEE, 0)  as lastTotSiteFee
+        FROM (
+                    SELECT TO_CHAR(TRANSACTION_DATE, 'YYYYMMDD') AS transaction_date
+                         , NVL(SUM(SITE_FEES),0) AS tot_site_fee 
+                    FROM TRANSACTIONS
+                    WHERE TRANSACTION_DATE BETWEEN SYSDATE-7 AND SYSDATE
+                    GROUP BY TO_CHAR(TRANSACTION_DATE, 'YYYYMMDD')
+                    ORDER BY TRANSACTION_DATE
+            ) A, --올해
+            (
+                    SELECT TO_CHAR(TRANSACTION_DATE+365, 'YYYYMMDD') AS transaction_date
+                         , NVL(SUM(SITE_FEES),0) AS tot_site_fee 
+                    FROM TRANSACTIONS
+                    WHERE TRANSACTION_DATE BETWEEN SYSDATE-7-365 AND SYSDATE-365
+                    GROUP BY TO_CHAR(TRANSACTION_DATE+365, 'YYYYMMDD')
+                    ORDER BY TRANSACTION_DATE
+            ) B, --작년
+            (   SELECT TO_CHAR(SYSDATE-6,'YYYYMMDD') + LEVEL - 1 AS CAL
+                FROM dual 
+                CONNECT BY LEVEL <![CDATA[ <= ]]> TO_CHAR(SYSDATE,'YYYYMMDD') - TO_CHAR(SYSDATE-7,'YYYYMMDD')
+            ) C --날짜대상
+        WHERE A.TRANSACTION_DATE = B.TRANSACTION_DATE(+) 
+        AND C.CAL = A.TRANSACTION_DATE(+)
+        ORDER BY C.CAL
+	</select>
+	
+	<select id="listProperty" resultType="filterPropDTO">
+		select *
+		from property
+		order by id
+	</select>
+	
+	<select id="listSubProperty" resultType="filterSubPropDTO">
+		select property_type_id as propertyTypeId,
+			   (select b.name from property b where id = a.property_type_id) as propertyTypeName,
+			   id,
+			   name,
+			   is_use as isUse
+		from sub_property a
+		where 1=1
+		and property_type_id = (select min(id) from property)
+		order by id
+	</select>
+	
+	<select id="getSubProperty" resultType="filterSubPropDTO" parameterType="String">
+		select property_type_id as propertyTypeId,
+			   (select name from property where id = #{propertyTypeId} ) as propertyTypeName,
+			   id,
+			   name,
+			   is_use as isUse
+		from sub_property
+		where 1=1
+		and property_type_id = #{propertyTypeId}
+		order by id
+	</select>
+	
+	<insert id="insertProperty" parameterType="filterPropDTO">
+		insert into property values((select max(id)+1 from property), #{name}, #{isUse})
+	</insert>
+	
+	<update id="updateProperty" parameterType="filterPropDTO">
+		update property 
+		set name = #{name},
+			is_use = #{isUse}
+		where id = #{id} 
+	</update>
+	
+	<insert id="insertSubProperty" parameterType="filterSubPropDTO">
+		insert into sub_property 
+		values(	(select max(id)+1 from sub_property), 
+				#{propertyTypeId},
+				#{name}, 
+				#{isUse}
+				)
+	</insert>
+	
+	<update id="updateSubProperty" parameterType="filterSubPropDTO">
+		update sub_property 
+		set name = #{name},
+			is_use = #{isUse}
+		where id = #{id}
+	</update>
+	
+	<select id= "selectMemberList" resultType="memberDTO">
+		select member_mode as memberMode
+			 , id
+			 , name as name
+			 , tel
+			 , (CASE WHEN gender = '1' THEN '남성'
+		            WHEN gender = '2' THEN '여성'
+		       END) AS gender
+			 , to_char(reg_date,'YYYY-MM-DD') as regDate
+		from member
+		where 1=1
+	</select>
+	
+</mapper>

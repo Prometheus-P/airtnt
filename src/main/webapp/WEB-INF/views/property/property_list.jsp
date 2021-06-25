@@ -29,7 +29,7 @@ Licence URI: https://www.os-templates.com/template-terms
     <!-- ################################################################################################ -->
         <nav id="mainnav" class="navbar navbar-light">
 		  <div class="container-fluid" >
-		    <form class="d-flex" action="<c:url value='/guest/search'/>" method="get">
+		    <form class="d-flex" action="<c:url value='/property/search'/>" method="get">
 		      <input name="addressKey" class="form-control me-2" type="search" placeholder="위치" aria-label="Search" style="height: 50px; width: 300px; font-size: 20px">
 		      <button class="btn btn-outline-primary" type="submit" style="background-color:#01546b; border: 0px; height: 50px; width: 100px; font-size: 20px">검색</button>
 		    </form>
@@ -142,10 +142,10 @@ Licence URI: https://www.os-templates.com/template-terms
 	            <c:forEach var="property" items="${properties}">
 	            <li style="height: 150px;">
 	              <div class="one_third first" >
-	                <a href="<c:url value='/guest/property-detail?propertyId=${property.id}'/>"><img src="/resources/room_img/room_ex.jpg" alt="" ></a>
+	                <a href="<c:url value='/property/detail?propertyId=${property.id}'/>"><img src="/resources/room_img/room_ex.jpg" alt="" ></a>
 	              </div>
 	              <div class="two_third">
-	                <h2><a href="<c:url value='/guest/property-detail?propertyId=${property.id}'/>">${property.name}</a></h2>
+	                <h2><a href="<c:url value='/property/detail?propertyId=${property.id}'/>">${property.name}</a></h2>
 	                <h4>${property.propertyTypeName}/${property.subPropertyTypeName} ${property.roomTypeName}</h4>
 	                <h4>${property.address}</h4>
 	              </div>
