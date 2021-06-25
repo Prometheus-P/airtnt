@@ -8,8 +8,11 @@
 	<insert id="insertProperty" parameterType="propertyDTO">
 		insert into property values(property_seq.nextval, #{name}, #{hostId}, 
 		#{propertyDesc}, #{address}, #{latitude}, #{longitude}, #{price}, #{bedCount}, 
-		#{maxGuest}, sysdate)<!-- modeDate==null -->
+		#{maxGuest})<!-- modeDate==null -->
 	</insert>
+	<delete id="deleteProperty" parameterType="int">
+		
+	</delete>
 	<!-- <select >
 		
 	</select>

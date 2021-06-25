@@ -15,4 +15,8 @@ public class HostMapper {
 		int res = sqlSession.insert("insertProperty", dto);
 		return res;
 	}
+	public int deleteProperty() {
+		int res = sqlSession.delete("deleteProperty");
+		return res;
+	}
 }
