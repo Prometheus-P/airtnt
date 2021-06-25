@@ -1,8 +1,10 @@
 become_a_host 내에서 페이지 이동은 어떻게 이루어 지는가...
 
+0. property_type >> sub_property_type에 변화를 주기 위해..
+
 1. 외부에서 '호스트 되기' 또는 '새로운 숙소 만들기' 클릭시>> before_host
 	시작하기 클릭시
-	>> property_type & sub_property_type & room_type & maxGuest & bedCount(property_detail_1)
+	>> sub_property_type & room_type & maxGuest & bedCount(property_detail_1)
 	
 2. address(property_address_2)
 

@@ -13,10 +13,19 @@
 	<delete id="deleteProperty" parameterType="int">
 		
 	</delete>
-	<!-- <select >
-		
+	<select id="propertyType" resultType="propertyTypeDTO">
+		select * from property_type order by id
 	</select>
-	<delete>
+	<select id="subPropertyType" parameterType="int" resultType="subPropertyTypeDTO">
+		select * from sub_property_type where property_type_id = #{propertyTypeId}
+	</select>
+	<select id="roomType" resultType="RoomTypeDTO">
+		select * from room_type
+	</select>
+	<!-- <insert id="saveImage" parameterType="java.util.Map">
+    I	insert into img_table VALUES #{img}    
+	</insert> -->
+	<!--<delete>
 	
 	</delete>
 	<update>
