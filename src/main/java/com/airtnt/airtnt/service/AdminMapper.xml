@@ -34,62 +34,14 @@
         ORDER BY C.CAL
 	</select>
 	
-	<select id="listProperty" resultType="filterPropDTO">
-		select *
-		from property
-		order by id
+	<select id = "selectRoomTypeList" resultType="roomTypeDTO">
+	select 	id,
+			name,
+		   	is_use as 
+	from room_type
+	where 1=1
 	</select>
 	
-	<select id="listSubProperty" resultType="filterSubPropDTO">
-		select property_type_id as propertyTypeId,
-			   (select b.name from property b where id = a.property_type_id) as propertyTypeName,
-			   id,
-			   name,
-			   is_use as isUse
-		from sub_property a
-		where 1=1
-		and property_type_id = (select min(id) from property)
-		order by id
-	</select>
-	
-	<select id="getSubProperty" resultType="filterSubPropDTO" parameterType="String">
-		select property_type_id as propertyTypeId,
-			   (select name from property where id = #{propertyTypeId} ) as propertyTypeName,
-			   id,
-			   name,
-			   is_use as isUse
-		from sub_property
-		where 1=1
-		and property_type_id = #{propertyTypeId}
-		order by id
-	</select>
-	
-	<insert id="insertProperty" parameterType="filterPropDTO">
-		insert into property values((select max(id)+1 from property), #{name}, #{isUse})
-	</insert>
-	
-	<update id="updateProperty" parameterType="filterPropDTO">
-		update property 
-		set name = #{name},
-			is_use = #{isUse}
-		where id = #{id} 
-	</update>
-	
-	<insert id="insertSubProperty" parameterType="filterSubPropDTO">
-		insert into sub_property 
-		values(	(select max(id)+1 from sub_property), 
-				#{propertyTypeId},
-				#{name}, 
-				#{isUse}
-				)
-	</insert>
-	
-	<update id="updateSubProperty" parameterType="filterSubPropDTO">
-		update sub_property 
-		set name = #{name},
-			is_use = #{isUse}
-		where id = #{id}
-	</update>
 	
 	<select id= "selectMemberList" resultType="memberDTO">
 		select member_mode as memberMode

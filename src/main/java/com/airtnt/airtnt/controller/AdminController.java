@@ -18,128 +18,118 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.airtnt.airtnt.model.DashBoardDTO;
 import com.airtnt.airtnt.model.FilterPropDTO;
 import com.airtnt.airtnt.model.FilterSubPropDTO;
+import com.airtnt.airtnt.model.RoomTypeDTO;
 import com.airtnt.airtnt.service.AdminMapper;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 @Controller
 public class AdminController {
-	
+
 	@Autowired
 	AdminMapper adminMapper;
 
 	/*
-	 * [dashboard] : chart¿¡ »ç¿ëµÇ´Â ÀÏº° ¼ö¼ö·á sum µ¥ÀÌÅÍ
+	 * [dashboard] : ëŒ€ì‹œë³´ë“œ í•„ìš” ë°ì´í„° ì¡°íšŒ ë° ë„˜ê¸´ë‹¤
 	 */
-	@RequestMapping(value="admin", method=RequestMethod.GET)
+	@RequestMapping(value = "admin", method = RequestMethod.GET)
 	public String listDashboard(HttpServletRequest req) throws Exception {
 		List<DashBoardDTO> list = adminMapper.listDashboard();
 		ArrayList<String> key = new ArrayList<>();
 		ArrayList<Integer> this_value = new ArrayList<>();
 		ArrayList<Integer> last_value = new ArrayList<>();
-		for(int i=0; i<list.size(); i++) {
+		for (int i = 0; i < list.size(); i++) {
 			key.add(list.get(i).getTransactionDate());
 			this_value.add(list.get(i).getThisTotSiteFee());
 			last_value.add(list.get(i).getLastTotSiteFee());
 		}
-		req.setAttribute("keylist", key);				//¶óº§
-		req.setAttribute("this_valuelist", this_value);	//¿ÃÇØ¼ö¼ö·áSUM
-		req.setAttribute("last_valuelist", last_value); //ÀÛ³â¼ö¼ö·áSUM
+		req.setAttribute("keylist", key); // ë¼ë²¨ë‚ ì§œ
+		req.setAttribute("this_valuelist", this_value); // ì˜¬í•´
+		req.setAttribute("last_valuelist", last_value); // ì‘ë…„
 		return "admin/dashboard";
 	}
-	
-	/*
-	 * [filter] : È­¸é ÃÖÃÊ Á¶È¸½Ã Ä«Å×°í¸®¸¶½ºÅÍ Á¶È¸
-	 */
-	@RequestMapping(value="filter", method = RequestMethod.GET)
-	public String listfilterMaster(HttpServletRequest req) throws Exception {
-		List<FilterPropDTO> propertyList = adminMapper.listProperty();
-		List<FilterSubPropDTO> subPropertyList = adminMapper.listSubProperty();
-		req.setAttribute("propertyList", propertyList);
-		req.setAttribute("subPropertyList", subPropertyList);
+
+	@RequestMapping(value = "filter", method = RequestMethod.GET)
+	public String selectFilterTables(HttpServletRequest req) throws Exception {
+		List<RoomTypeDTO> roomTypeList = adminMapper.selectRoomTypeList();
+		//List propertyTypeList = adminMapper.selectPropertyTypeList();
+		//List subPropertyTypeList = adminMapper.selectSubPropertyTypeList();
+		//List amenityTypeList = adminMapper.selectAmenityTypeList();
+		req.setAttribute("roomTypeList", roomTypeList);
+		//req.setAttribute("propertyTypeList", propertyTypeList);
+		//req.setAttribute("subPropertyTypeList", subPropertyTypeList);
+		//req.setAttribute("amenityTypeList", amenityTypeList);
+
 		return "admin/filter";
 	}
-	
+
 	/*
-	 * [filter] : ¼±ÅÃÇÑ ´ëºĞ·ù·Î ÁßºĞ·ù Å×ÀÌºí º¯°æ
+	 * 
+	 * /* [filter] : È­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¸ï¿½ï¿½ Ä«ï¿½×°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¸
+	 * 
+	 * @RequestMapping(value="filter2", method = RequestMethod.GET) public String
+	 * listfilterMaster(HttpServletRequest req) throws Exception {
+	 * List<FilterPropDTO> propertyList = adminMapper.listProperty();
+	 * List<FilterSubPropDTO> subPropertyList = adminMapper.listSubProperty();
+	 * req.setAttribute("propertyList", propertyList);
+	 * req.setAttribute("subPropertyList", subPropertyList); return "admin/filter";
+	 * }
+	 * 
+	 * 
+	 * [filter] : ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ğ·ï¿½ï¿½ï¿½ ï¿½ßºĞ·ï¿½ ï¿½ï¿½ï¿½Ìºï¿½ ï¿½ï¿½ï¿½ï¿½
+	 * 
+	 * @RequestMapping(value = "filter2", method = RequestMethod.POST)
+	 * 
+	 * @ResponseBody public List<FilterSubPropDTO> getSubProperty(HttpServletRequest
+	 * req, @RequestParam String propertyTypeId) throws Exception {
+	 * List<FilterSubPropDTO> selectedSubProperty =
+	 * adminMapper.getSubProperty(propertyTypeId); return selectedSubProperty; }
+	 * 
+	 * 
+	 * [filter] : ï¿½ï¿½Ğ·ï¿½ ï¿½ß°ï¿½/ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Æ®ï¿½Ñ·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ñ¾ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ String ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ş¾Æ¼ï¿½
+	 * Objectï¿½ï¿½ JSONArray ï¿½ï¿½ï¿½Â·ï¿½ ï¿½ï¿½È¯ï¿½Ï¿ï¿½ Ã³ï¿½ï¿½ï¿½Õ´Ï´ï¿½. ï¿½Ì¶ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ Json ï¿½ï¿½ï¿½Ìºê·¯ï¿½ï¿½ï¿½ï¿½ Gson
+	 * ï¿½ï¿½ï¿½Ìºê·¯ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ï¸ï¿½ ï¿½Ë´Ï´ï¿½. Gsonï¿½ï¿½ JSONï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½È­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ JAVAï¿½ï¿½
+	 * ï¿½ï¿½Ã¼ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È­, ï¿½ï¿½ï¿½ï¿½È­ ï¿½ï¿½ï¿½Ö´ï¿½ ï¿½Ú¹ï¿½ ï¿½ï¿½ï¿½Ìºê·¯ï¿½ï¿½ ï¿½Ô´Ï´ï¿½. JSON Object -> Java Object ï¿½Ç´ï¿½
+	 * ï¿½ï¿½ ï¿½İ´ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ìºê·¯ï¿½ï¿½ ï¿½Ô´Ï´ï¿½.
+	 * 
+	 * @RequestMapping(value="filter2/update/prop", method = RequestMethod.POST)
+	 * 
+	 * @ResponseBody public int updatePropertyList(HttpServletRequest
+	 * req, @RequestParam String data) throws Exception { int res = 0; try {
+	 * List<Map<String, String>> datalist = new
+	 * Gson().fromJson(String.valueOf(data), new TypeToken<List<Map<String,
+	 * String>>>(){}.getType());
+	 * 
+	 * System.out.println(data); //
+	 * [{"id":"2","name":"CATE02","isUse":"Y"},{"id":"4","name":"tttttttt","isUse":
+	 * "Y"}]
+	 * 
+	 * //jsonï¿½ï¿½ï¿½ï¿½ ï¿½Ş¾Æ¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Íµï¿½ ï¿½Å±ï¿½ï¿½ß°ï¿½ / ï¿½ï¿½ï¿½ï¿½ ï¿½Ï³ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ for (Map<String, String>
+	 * prop : datalist) { if(prop.get("id").equals("") || prop.get("id") == null) {
+	 * //ï¿½Å±Ôµï¿½Ï°Ç°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ FilterPropDTO dto = new FilterPropDTO(prop.get("name"),
+	 * prop.get("isUse")); res += adminMapper.insertProperty(dto); }else {
+	 * FilterPropDTO dto = new FilterPropDTO(prop.get("id"), prop.get("name"),
+	 * prop.get("isUse")); res += adminMapper.updateProperty(dto); } } } catch
+	 * (Exception e) { e.printStackTrace(); } return res; }
+	 * 
+	 * 
+	 * [filter] : ï¿½ßºĞ·ï¿½ ï¿½ß°ï¿½/ï¿½ï¿½ï¿½ï¿½
+	 * 
+	 * @RequestMapping(value="filter2/update/subprop", method = RequestMethod.POST)
+	 * 
+	 * @ResponseBody public int updateSubPropertyList(HttpServletRequest
+	 * req, @RequestParam String data) throws Exception { int res = 0;
+	 * FilterSubPropDTO dto; System.out.println(data); try { List<Map<String,
+	 * String>> datalist = new Gson().fromJson(String.valueOf(data), new
+	 * TypeToken<List<Map<String, String>>>(){}.getType());
+	 * 
+	 * for (Map<String, String> sub : datalist) { if(sub.get("id").equals("") ||
+	 * sub.get("id") == null) { dto = new
+	 * FilterSubPropDTO(sub.get("propertyTypeId"), sub.get("name"),
+	 * sub.get("isUse")); res += adminMapper.insertSubProperty(dto); }else { dto =
+	 * new FilterSubPropDTO(sub.get("id"), sub.get("name"), sub.get("isUse")); res
+	 * += adminMapper.updateSubProperty(dto); } } } catch (Exception e) {
+	 * e.printStackTrace(); } return res; }
 	 */
-	@RequestMapping(value = "filter", method = RequestMethod.POST)
-	@ResponseBody
-	public List<FilterSubPropDTO> getSubProperty(HttpServletRequest req, @RequestParam String propertyTypeId) 
-			throws Exception {
-		List<FilterSubPropDTO> selectedSubProperty = adminMapper.getSubProperty(propertyTypeId);
-		return selectedSubProperty;  
-	}
-	
-	/*
-	    [filter] : ´ëºĞ·ù Ãß°¡/¼öÁ¤
-	       ÄÁÆ®·Ñ·¯¿¡¼­´Â ³Ñ¾î¿Â µ¥ÀÌÅÍ¸¦ String ÇüÀ¸·Î ¹Ş¾Æ¼­ ObjectÀÎ JSONArray ÇüÅÂ·Î º¯È¯ÇÏ¿© Ã³¸®ÇÕ´Ï´Ù.
-		ÀÌ¶§ ¹æ¹ıÀº Json ¶óÀÌºê·¯¸®¿Í Gson ¶óÀÌºê·¯¸®¸¦ ÀÌ¿ëÇÑ ¹æ¹ıÀ» »ç¿ëÇÏ¸é µË´Ï´Ù.
-		GsonÀº JSON±¸Á¶ÀÇ Á÷·ÄÈ­µÈ µ¥ÀÌÅÍ¸¦ JAVAÀÇ °´Ã¼·Î ¿ªÁú·ÄÈ­, Á÷·ÄÈ­ ÇØÁÖ´Â ÀÚ¹Ù ¶óÀÌºê·¯¸® ÀÔ´Ï´Ù.
-		JSON Object -> Java Object ¶Ç´Â ±× ¹İ´ëÀÇ ÇàÀ§¸¦ µ½´Â ¶óÀÌºê·¯¸® ÀÔ´Ï´Ù.
-	 */
-	@RequestMapping(value="filter/update/prop", method = RequestMethod.POST)
-	@ResponseBody
-	public int updatePropertyList(HttpServletRequest req, @RequestParam String data) 
-			throws Exception {
-		int res = 0;
-		try {
-			List<Map<String, String>> datalist = new Gson().fromJson(String.valueOf(data), new TypeToken<List<Map<String, String>>>(){}.getType());
-			
-			System.out.println(data); 
-			// [{"id":"2","name":"CATE02","isUse":"Y"},{"id":"4","name":"tttttttt","isUse":"Y"}]
-			
-			//jsonÀ¸·Î ¹Ş¾Æ¿Â µ¥ÀÌÅÍµé ½Å±ÔÃß°¡ / ¼öÁ¤ ÇÏ³ª¾¿ ÁøÇà
-			for (Map<String, String> prop : datalist) {
-				if(prop.get("id").equals("") || prop.get("id") == null) { //½Å±Ôµî·Ï°Ç°ú ¼öÁ¤°Ç ±¸ºĞ
-					FilterPropDTO dto = new FilterPropDTO(prop.get("name"), prop.get("isUse"));
-					res += adminMapper.insertProperty(dto);
-				}else {
-					FilterPropDTO dto = new FilterPropDTO(prop.get("id"), prop.get("name"), prop.get("isUse"));
-					res += adminMapper.updateProperty(dto);
-				}
-			} 
-		} catch (Exception e) {
-		  e.printStackTrace();
-		}
-	return res;
-	}
-	
-	/*
-	 * [filter] : ÁßºĞ·ù Ãß°¡/¼öÁ¤
-	 */
-	@RequestMapping(value="filter/update/subprop", method = RequestMethod.POST)
-	@ResponseBody
-	public int updateSubPropertyList(HttpServletRequest req, @RequestParam String data) throws Exception {
-		int res = 0;
-		FilterSubPropDTO dto;
-		System.out.println(data);
-		try {
-			List<Map<String, String>> datalist = new Gson().fromJson(String.valueOf(data), new TypeToken<List<Map<String, String>>>(){}.getType());
-			
-			for (Map<String, String> sub : datalist) {
-				if(sub.get("id").equals("") || sub.get("id") == null) {
-					dto = new FilterSubPropDTO(sub.get("propertyTypeId"), sub.get("name"), sub.get("isUse"));
-					res += adminMapper.insertSubProperty(dto);
-				}else {
-					dto = new FilterSubPropDTO(sub.get("id"), sub.get("name"), sub.get("isUse"));
-					res += adminMapper.updateSubProperty(dto);
-				}
-			} 
-		} catch (Exception e) {
-		  e.printStackTrace();
-		}
-		return res;
-	}
-	
-	/*
-	 * [member] : È¸¿øÁ¶È¸
-	 */
-	@RequestMapping(value="member", method = RequestMethod.GET)
-	public String selectMemberList(HttpServletRequest req){
-		List memberList = adminMapper.selectMemberList();
-		req.setAttribute("memberList", memberList); //ÀÛ³â¼ö¼ö·áSUM
-		return "admin/member";
-	}
-	
+
 }
