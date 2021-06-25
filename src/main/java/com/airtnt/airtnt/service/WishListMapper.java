@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.airtnt.airtnt.model.WishListDTO;
-import com.airtnt.airtnt.model.WishList_RoomDTO;
+import com.airtnt.airtnt.model.WishList_PropertyDTO;
 
 @Service
 public class WishListMapper {
@@ -21,18 +21,18 @@ public class WishListMapper {
 		return res;
 	}
 
-	public List<WishListDTO> getWish(String member_id) {
-		List<WishListDTO> list = sqlSession.selectList("getWish", member_id);
+	public List<WishList_PropertyDTO> getWish(String member_id) {
+		List<WishList_PropertyDTO> list = sqlSession.selectList("getWish", member_id);
 		return list;
 	}
 
-	public List<WishListDTO> getAdminWish() {
-		List<WishListDTO> list = sqlSession.selectList("getAdminWish");
+	public List<WishList_PropertyDTO> getAdminWish() {
+		List<WishList_PropertyDTO> list = sqlSession.selectList("getAdminWish");
 		return list;
 	}
 
-	public List<WishList_RoomDTO> getWishRoom(String wish_id) {
-		List<WishList_RoomDTO> list = sqlSession.selectList("getWishRoom", wish_id);
+	public List<WishList_PropertyDTO> getWishRoom(String wish_id) {
+		List<WishList_PropertyDTO> list = sqlSession.selectList("getWishRoom", wish_id);
 		return list;
 	}
 
