@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.airtnt.airtnt.model.BookingDTO;
 import com.airtnt.airtnt.model.PropertyDTO;
+import com.airtnt.airtnt.model.TransactionDTO;
 import com.airtnt.airtnt.service.PropertyMapper;
 
 @Controller
@@ -56,12 +57,33 @@ public class PropertyController {
 		return "property/booking";
 	}
 
-	@RequestMapping("booking_confirm")
-	public String confirm() {
-//		String frontBookingNumber = getCurrentTimeStamp();
-//		booking.setBookingNumber(frontBookingNumber);
-//		int random = (int)(Math.random() * 10);
-
+	@RequestMapping("booking-confirm")
+	public String bookingConfirm(HttpServletRequest req, @ModelAttribute BookingDTO booking) {
+//		System.out.println(booking);
+		int propertyId;
+		try {
+			propertyId = Integer.parseInt(req.getParameter("propertyId"));
+		} catch(NullPointerException | NumberFormatException e) {
+			req.setAttribute("msg", "숙소정보 없음");
+			req.setAttribute("url", "/");
+			return "message";
+		}
+		String bookingNumber = getCurrentTimeStamp();
+		// 타임스탬프 뒤에 0~9의 난수를 붙이고 그 뒤에 db에서 0~9의 시퀀스 사이클을 붙일 것임
+		bookingNumber += String.valueOf((int)(Math.random() * 10));
+		booking.setPropertyId(propertyId);
+		booking.setBookingNumber(bookingNumber);
+		if(propertyMapper.insertBooking(booking) < 1) {
+			req.setAttribute("msg", "예약 실패(DB 오류)");
+			req.setAttribute("url", "/property/detail?propertyId=" + propertyId);
+			return "message";
+		}
+		
+		
+		TransactionDTO transaction = new TransactionDTO();
+		
+		
+		
 		return "property/booking_confirm";
 	}
 	

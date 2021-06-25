@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.airtnt.airtnt.model.AmenityDTO;
+import com.airtnt.airtnt.model.BookingDTO;
 import com.airtnt.airtnt.model.PropertyDTO;
 import com.airtnt.airtnt.model.RoomImageDTO;
 
@@ -57,6 +58,10 @@ public class PropertyMapper {
 			System.out.println(amenity);
 		}
 		return amenities;
+	}
+	
+	public int insertBooking(BookingDTO booking) {
+		return sqlSession.insert("insertBooking", booking);
 	}
 	
 }

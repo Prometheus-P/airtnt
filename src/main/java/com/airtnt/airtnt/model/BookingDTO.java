@@ -8,12 +8,13 @@ public class BookingDTO {
 	private int propertyId;
 	private String guestId;
 	private String hostId;
+	private int guestCount;
+	private int dayCount;
+	private int totalPrice;
+	private String bookingNumber;
 	private Date checkInDate;
 	private Date checkOutDate;
-	private int guestCount;
-	private int totalPrice;
-	private char isRefund;
-	private String bookingNumber;
+	private Date confirmDate;
 	private Date regDate;
 	private Date modDate;
 	
@@ -41,6 +42,30 @@ public class BookingDTO {
 	public void setHostId(String hostId) {
 		this.hostId = hostId;
 	}
+	public int getGuestCount() {
+		return guestCount;
+	}
+	public void setGuestCount(int guestCount) {
+		this.guestCount = guestCount;
+	}
+	public int getDayCount() {
+		return dayCount;
+	}
+	public void setDayCount(int dayCount) {
+		this.dayCount = dayCount;
+	}
+	public int getTotalPrice() {
+		return totalPrice;
+	}
+	public void setTotalPrice(int totalPrice) {
+		this.totalPrice = totalPrice;
+	}
+	public String getBookingNumber() {
+		return bookingNumber;
+	}
+	public void setBookingNumber(String bookingNumber) {
+		this.bookingNumber = bookingNumber;
+	}
 	public Date getCheckInDate() {
 		return checkInDate;
 	}
@@ -53,29 +78,11 @@ public class BookingDTO {
 	public void setCheckOutDate(Date checkOutDate) {
 		this.checkOutDate = checkOutDate;
 	}
-	public int getGuestCount() {
-		return guestCount;
+	public Date getConfirmDate() {
+		return confirmDate;
 	}
-	public void setGuestCount(int guestCount) {
-		this.guestCount = guestCount;
-	}
-	public int getTotalPrice() {
-		return totalPrice;
-	}
-	public void setTotalPrice(int totalPrice) {
-		this.totalPrice = totalPrice;
-	}
-	public char getIsRefund() {
-		return isRefund;
-	}
-	public void setIsRefund(char isRefund) {
-		this.isRefund = isRefund;
-	}
-	public String getBookingNumber() {
-		return bookingNumber;
-	}
-	public void setBookingNumber(String bookingNumber) {
-		this.bookingNumber = bookingNumber;
+	public void setConfirmDate(Date confirmDate) {
+		this.confirmDate = confirmDate;
 	}
 	public Date getRegDate() {
 		return regDate;
@@ -89,6 +96,11 @@ public class BookingDTO {
 	public void setModDate(Date modDate) {
 		this.modDate = modDate;
 	}
-	
-	
+	@Override
+	public String toString() {
+		return "BookingDTO [id=" + id + ", propertyId=" + propertyId + ", guestId=" + guestId + ", hostId=" + hostId
+				+ ", guestCount=" + guestCount + ", dayCount=" + dayCount + ", totalPrice=" + totalPrice
+				+ ", bookingNumber=" + bookingNumber + ", checkInDate=" + checkInDate + ", checkOutDate=" + checkOutDate
+				+ ", confirmDate=" + confirmDate + ", regDate=" + regDate + ", modDate=" + modDate + "]";
+	}
 }
