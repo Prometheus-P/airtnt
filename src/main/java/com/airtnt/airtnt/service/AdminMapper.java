@@ -6,11 +6,12 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.airtnt.airtnt.model.AmenityTypeDTO;
 import com.airtnt.airtnt.model.DashBoardDTO;
-import com.airtnt.airtnt.model.FilterPropDTO;
-import com.airtnt.airtnt.model.FilterSubPropDTO;
 import com.airtnt.airtnt.model.MemberDTO;
+import com.airtnt.airtnt.model.PropertyTypeDTO;
 import com.airtnt.airtnt.model.RoomTypeDTO;
+import com.airtnt.airtnt.model.SubPropertyTypeDTO;
 
 
 @Service
@@ -31,20 +32,26 @@ public class AdminMapper {
 	}
 	
 	//[filter] : propertyTypeList
-	public List selectPropertyTypeList(){
-		List list = sqlSession.selectList("selectPropertyTypeList");
+	public List<PropertyTypeDTO> selectPropertyTypeList(){
+		List<PropertyTypeDTO> list = sqlSession.selectList("selectPropertyTypeList");
 		return list;
 	}
 	
-	//[filter] : subPropertyTypeList
-	public List selectSubPropertyTypeList(){
-		List list = sqlSession.selectList("selectSubPropertyTypeList");
+	//[filter] : subPropertyTypeList 
+	public List<SubPropertyTypeDTO> selectSubPropertyTypeList(){
+		List<SubPropertyTypeDTO> list = sqlSession.selectList("selectSubPropertyTypeList");
+		return list;
+	}
+	
+	//[filter] : subPropertyTypeList 
+	public List<SubPropertyTypeDTO> getSubPropertyType(String propertyTypeId){
+		List<SubPropertyTypeDTO> list = sqlSession.selectList("getSubPropertyType", propertyTypeId);
 		return list;
 	}
 	
 	//[filter] : amenityTypeList
-	public List selectAmenityTypeList(){
-		List list = sqlSession.selectList("selectAmenityTypeList");
+	public List<AmenityTypeDTO> selectAmenityTypeList(){
+		List<AmenityTypeDTO> list = sqlSession.selectList("selectAmenityTypeList");
 		return list;
 	}
 	

@@ -15,15 +15,19 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.airtnt.airtnt.model.AmenityTypeDTO;
 import com.airtnt.airtnt.model.DashBoardDTO;
 import com.airtnt.airtnt.model.FilterPropDTO;
 import com.airtnt.airtnt.model.FilterSubPropDTO;
+import com.airtnt.airtnt.model.PropertyTypeDTO;
 import com.airtnt.airtnt.model.RoomTypeDTO;
+import com.airtnt.airtnt.model.SubPropertyTypeDTO;
 import com.airtnt.airtnt.service.AdminMapper;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 @Controller
+@RequestMapping("admin")
 public class AdminController {
 
 	@Autowired
@@ -32,7 +36,7 @@ public class AdminController {
 	/*
 	 * [dashboard] : 대시보드 필요 데이터 조회 및 넘긴다
 	 */
-	@RequestMapping(value = "admin", method = RequestMethod.GET)
+	@RequestMapping(value = "dashboard", method = RequestMethod.GET)
 	public String listDashboard(HttpServletRequest req) throws Exception {
 		List<DashBoardDTO> list = adminMapper.listDashboard();
 		ArrayList<String> key = new ArrayList<>();
@@ -52,15 +56,22 @@ public class AdminController {
 	@RequestMapping(value = "filter", method = RequestMethod.GET)
 	public String selectFilterTables(HttpServletRequest req) throws Exception {
 		List<RoomTypeDTO> roomTypeList = adminMapper.selectRoomTypeList();
-		List propertyTypeList = adminMapper.selectPropertyTypeList();
-		//List subPropertyTypeList = adminMapper.selectSubPropertyTypeList();
-		//List amenityTypeList = adminMapper.selectAmenityTypeList();
+		List<PropertyTypeDTO> propertyTypeList = adminMapper.selectPropertyTypeList();
+		List<SubPropertyTypeDTO> subPropertyTypeList = adminMapper.selectSubPropertyTypeList();
+		List<AmenityTypeDTO> amenityTypeList = adminMapper.selectAmenityTypeList();
 		req.setAttribute("roomTypeList", roomTypeList);
 		req.setAttribute("propertyTypeList", propertyTypeList);
-		//req.setAttribute("subPropertyTypeList", subPropertyTypeList);
-		//req.setAttribute("amenityTypeList", amenityTypeList);
+		req.setAttribute("subPropertyTypeList", subPropertyTypeList);
+		req.setAttribute("amenityTypeList", amenityTypeList);
 
 		return "admin/filter";
+	}
+	
+	@RequestMapping(value = "filter", method = RequestMethod.POST)
+	@ResponseBody public List<SubPropertyTypeDTO> getSubProperty(
+			HttpServletRequest req, @RequestParam String propertyTypeId) throws Exception {
+		List<SubPropertyTypeDTO> selectedSubProperty = adminMapper.getSubPropertyType(propertyTypeId); 
+		return selectedSubProperty; 
 	}
 
 	/*

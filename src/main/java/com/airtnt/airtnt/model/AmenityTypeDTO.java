@@ -1,7 +1,7 @@
 package com.airtnt.airtnt.model;
 
-public class RoomTypeDTO {
-	private int id;	// fk
+public class AmenityTypeDTO {
+	private int id;
 	private String name;
 	private String isUse;
 	
@@ -20,11 +20,8 @@ public class RoomTypeDTO {
 	public String getIsUse() {
 		return isUse;
 	}
-	public void setIsUSe(String isUse) {
+	public void setIsUse(String isUse) {
 		this.isUse = isUse;
 	}
-	@Override
-	public String toString() {
-		return "RoomTypeDTO [id=" + id + ", name=" + name + "]";
-	}
+	
 }
