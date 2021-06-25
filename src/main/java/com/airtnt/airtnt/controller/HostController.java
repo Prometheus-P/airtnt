@@ -31,9 +31,9 @@ public class HostController {
 
 	// 1. 호스트 시작하기 >> property_type으로 이동
 	// 나머지는 게시판
-	@RequestMapping("/property_type")
-	public String room_type_jsp() {
-		return "host/become_a_host/room_type_group";
+	@RequestMapping("/before_host")
+	public String before_host_jsp() {
+		return "host/before_host/before";
 	}
 
 	@RequestMapping("/hosting_context_get_started")
@@ -51,25 +51,21 @@ public class HostController {
 		return "host/before_host/hosting_context_confidence";
 	}
 
-	// 2. property_type으로 이동해서 분류 시작
+	// 2. property_detail으로 이동해서 분류 시작
 	// roomMap & amenitiesMap
 
-
-	@RequestMapping("/sub_property_type")
-	public String sub_property_type(HttpServletRequest req, @RequestParam String propertyType) {
-		HttpSession session = req.getSession();
-		roomMap = new Hashtable<>();
-		roomMap.put("propertyType", propertyType);
-		session.setAttribute("roomMap", roomMap);
-		return "host/become_a_host/sub_property_type";
+	@RequestMapping("/property_detail_1")
+	public String property_detail_1() {
+		return "host/become_a_host/property_detail_1";
 	}
 
 	@RequestMapping("/room_type") // 개인실, 다인실, 전체
-	public String room_type(HttpServletRequest req, @RequestParam String subPropertyType) {
-		HttpSession session = req.getSession();
-		roomMap = (Map<String, String>) session.getAttribute("roomMap");
-		roomMap.put("subPropertyType" /* + roomId */, subPropertyType);
-		session.setAttribute("roomMap", roomMap);
+	public String room_type(HttpServletRequest req, @RequestParam Map<String, String> map) {
+		/*
+		 * HttpSession session = req.getSession(); roomMap = (Map<String, String>)
+		 * session.getAtt ribute("roomMap"); roomMap.put("subPropertyType" + roomId ,
+		 * subPropertyType); session.setAttribute("roomMap", roomMap);
+		 */
 		return "host/become_a_host/room_type";
 	}
 
@@ -108,26 +104,26 @@ public class HostController {
 		MultipartHttpServletRequest mr = (MultipartHttpServletRequest) req;
 		roomMap = (Map<String, String>) session.getAttribute("roomMap");
 		MultipartFile mf = mr.getFile("fileName");
-		Hashtable<String, MultipartFile> map = (Hashtable<String, MultipartFile>)mr.getFileMap();
+		Hashtable<String, MultipartFile> map = (Hashtable<String, MultipartFile>) mr.getFileMap();
 		Enumeration<String> en = map.keys();
 		int i = 0;
-		while(en.hasMoreElements()) {
+		while (en.hasMoreElements()) {
 			String key = en.nextElement();
 			MultipartFile image = map.get(key);
 			String fileName = image.getOriginalFilename();
 			String upPath = session.getServletContext().getRealPath("");
 			String imageIndex = String.valueOf(i);
-			if(i < 10) {
+			if (i < 10) {
 				imageIndex = "0" + imageIndex;
 			}
 			fileName += imageIndex;
 			File file = new File(upPath, fileName);
 			roomMap.put("fileName" + imageIndex, fileName);
-			
+
 			String fileSizeStr = String.format("%.1f", file.length() / 1024.0);
 			// ex) 214.2 메가바이트 이렇게 표시 가능
-			
-			roomMap.put("fileSize", fileSizeStr/*Long.toString(file.length())*/);
+
+			roomMap.put("fileSize", fileSizeStr/* Long.toString(file.length()) */);
 			try {
 				mf.transferTo(file);
 			} catch (Exception e) {

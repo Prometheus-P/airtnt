@@ -7,6 +7,6 @@
 <title>Insert title here</title>
 </head>
 <body>
-3. 이제 숙소 사진을 올릴 차례입니다(photos)
+
 </body>
 </html>
