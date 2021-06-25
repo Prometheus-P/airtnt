@@ -19,4 +19,9 @@ public class HostMapper {
 		int res = sqlSession.delete("deleteProperty");
 		return res;
 	}
+	/*
+	 * public PropertyTypeDTO getPropertyType() {
+	 * 
+	 * }
+	 */
 }
