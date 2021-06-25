@@ -24,12 +24,12 @@ Licence URI: https://www.os-templates.com/template-terms
 <!-- Top Background Image Wrapper -->
 
 <!-- 검색, 로그인 네비게이션 바 -->
-<jsp:include page="/top.jsp"/>
-<div id="pageintro" class="hoc clear justify-content-center" style="padding-top: 5vh;"> 
+<jsp:include page="/WEB-INF/views/top.jsp"/>
+<div id="pageintro" class="hoc clear justify-content-center" style="padding-top: 1vh; padding-bottom: 1vh;"> 
     <!-- ################################################################################################ -->
         <nav id="mainnav" class="navbar navbar-light">
 		  <div class="container-fluid" >
-		    <form class="d-flex" action="<c:url value='/property/search'/>" method="get">
+		    <form class="d-flex" action="/property/search" method="get">
 		      <input name="addressKey" class="form-control me-2" type="search" placeholder="위치" aria-label="Search" style="height: 50px; width: 300px; font-size: 20px">
 		      <button class="btn btn-outline-primary" type="submit" style="background-color:#01546b; border: 0px; height: 50px; width: 100px; font-size: 20px">검색</button>
 		    </form>

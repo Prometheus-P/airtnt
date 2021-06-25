@@ -28,6 +28,27 @@
 	<result column="room_type_name" property="roomTypeName"/>
 </resultMap>
 
+<resultMap type="propertyTypeDTO" id="propertyTypeMap">
+	<id column="id" property="id"/>
+	<result column="name" property="name"/>
+</resultMap>
+
+<resultMap type="subPropertyTypeDTO" id="subPropertyTypeMap">
+	<id column="id" property="id"/>
+	<result column="property_type_id" property="propertyTypeId"/>
+	<result column="name" property="name"/>
+</resultMap>
+
+<resultMap type="roomTypeDTO" id="roomTypeMap">
+	<id column="id" property="id"/>
+	<result column="name" property="name"/>
+</resultMap>
+
+<resultMap type="amenityTypeDTO" id="amenityTypeMap">
+	<id column="id" property="id"/>
+	<result column="name" property="name"/>
+</resultMap>
+
 <resultMap type="amenityDTO" id="amenityMap">
 	<id column="id" property="id"/>
 	<result column="property_id" property="propertyId"/>

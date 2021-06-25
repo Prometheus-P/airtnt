@@ -152,11 +152,27 @@ function setTotalPrice(){
          <div>
            <table border="1">
              <tr>
+               <td>결제정보</td>
+             </tr>
+             <tr>
                <td>
                  <img class="imgl borderedbox inspace-5" src="${property.images.get(0).fileName}" alt="" style="width: 200px;height: 150px">
                </td>
                <td>
-                 
+                 <ul>
+                   <li>숙소명 : ${property.name}</li>
+                   <li>주소 : ${property.address}</li>
+                   <li>숙소 유형 : ${property.propertyTypeName}/${property.subPropertyTypeName}</li>
+                   <li>방 유형 : ${property.roomTypeName}</li>
+                 </ul>
+               </td>
+               <td>
+                 <ul>
+                   <li>체크인 : ${booking.checkInDate}</li>
+                   <li>체크아웃 : ${booking.checkOutDate}</li>
+                   <li>숙박기간 : ${booking.dayCount}박</li>
+                   <li>인원 : ${booking.guestCount}</li>
+                 </ul>
                </td>
              </tr>
            </table>
