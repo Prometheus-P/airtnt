@@ -23,7 +23,8 @@
   </script>
 	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 	<main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-		 
+	
+	<!-- (1) 방유형코드 -->		 
 		 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
 		 	<h5 style="font-weight:bold">ROOM TYPE</h5>
             <div class="btn-toolbar mb-2 mb-md-0">
@@ -37,13 +38,13 @@
         <div style="overflow:auto; height:200px;">
 			<table class="table table-striped table-sm" id="roomTypeTable" style="text-align:center;">
 				<tr class = "thead-dark" style='position:relative;top:expression(this.offsetParent.scrollTop);'>
-					<th colspan="2">방유형코드</th>
-					<th>방유형명</th>
+					<th colspan="2">룸타입코드</th>
+					<th>룸타입명</th>
 					<th colspan="2">사용여부</th>
 				</tr>
 				<c:if test="${empty roomTypeList}">
 					<tr>
-						<td colspan='4'>등록된 필터 대분류가 없습니다.</td>
+						<td colspan='4'>등록된 룸 타입 코드가 없습니다.</td>
 					</tr>		 
 				</c:if>
 				<c:forEach var="dto" items="${roomTypeList}">
@@ -57,6 +58,47 @@
 						<td><input type="text" class="form-control" name = "propName" onclick="event.cancelBubble=true"
 										value="${dto.name}" style="text-align:center; height:23px; font-size:13px"></td> <!-- 해당 td 이벤트 제외 -->
 						<td colspan="2"><input type="checkbox" id="isUseYnRoomType"></td>
+					</tr>			
+				</c:forEach>
+			</table>
+		</div>
+		
+		<br><br>
+		
+		<!-- (2) 숙소타입코드 -->		 
+		 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+		 	<h5 style="font-weight:bold">PROPERTY TYPE</h5>
+            <div class="btn-toolbar mb-2 mb-md-0">
+              <div class="btn-group mr-2">
+                <button class="btn btn-sm btn-outline-secondary" id="addPropertyList">추가</button>
+                <button class="btn btn-sm btn-outline-secondary" id="savePropertyBtn">저장</button>
+              </div>
+            </div>
+         </div>
+		
+        <div style="overflow:auto; height:200px;">
+			<table class="table table-striped table-sm" id="roomTypeTable" style="text-align:center;">
+				<tr class = "thead-dark" style='position:relative;top:expression(this.offsetParent.scrollTop);'>
+					<th colspan="2">숙소유형코드</th>
+					<th>숙소유형명</th>
+					<th colspan="2">사용여부</th>
+				</tr>
+				<c:if test="${empty propertyTypeList}">
+					<tr>
+						<td colspan='4'>등록된 숙소 유형 코드가 없습니다.</td>
+					</tr>		 
+				</c:if>
+				<c:forEach var="dto" items="${propertyTypeList}">
+				<script>
+					var checkYn = "${dto.isUse}";
+					if(checkYn=="Y") $("#isUseYnPropertyType").prop("checked",true);
+				</script>
+					<tr>
+						<td><input type="checkbox" name="chk"></td>
+						<td>${dto.id}</td>
+						<td><input type="text" class="form-control" name = "propName" onclick="event.cancelBubble=true"
+										value="${dto.name}" style="text-align:center; height:23px; font-size:13px"></td> <!-- 해당 td 이벤트 제외 -->
+						<td colspan="2"><input type="checkbox" id="isUseYnPropertyType"></td>
 					</tr>			
 				</c:forEach>
 			</table>

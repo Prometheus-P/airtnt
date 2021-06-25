@@ -52,11 +52,11 @@ public class AdminController {
 	@RequestMapping(value = "filter", method = RequestMethod.GET)
 	public String selectFilterTables(HttpServletRequest req) throws Exception {
 		List<RoomTypeDTO> roomTypeList = adminMapper.selectRoomTypeList();
-		//List propertyTypeList = adminMapper.selectPropertyTypeList();
+		List propertyTypeList = adminMapper.selectPropertyTypeList();
 		//List subPropertyTypeList = adminMapper.selectSubPropertyTypeList();
 		//List amenityTypeList = adminMapper.selectAmenityTypeList();
 		req.setAttribute("roomTypeList", roomTypeList);
-		//req.setAttribute("propertyTypeList", propertyTypeList);
+		req.setAttribute("propertyTypeList", propertyTypeList);
 		//req.setAttribute("subPropertyTypeList", subPropertyTypeList);
 		//req.setAttribute("amenityTypeList", amenityTypeList);
 
