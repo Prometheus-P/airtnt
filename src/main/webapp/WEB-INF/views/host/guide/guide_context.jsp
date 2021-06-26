@@ -66,7 +66,7 @@
 								${dto.explanation}
 								</p>
 								<ul class="actions">
-									<li><a href="<c:url value='host/guide_context'/>?contentId=${dto.id}" class="button special">더보기</a></li>
+									<li><a href="<c:url value='host/guide_context'/>?id=${dto.id}" class="button special">더보기</a></li>
 								</ul>
 							</div>
 						</div>
