@@ -18,6 +18,14 @@ public class HostMapper {
 	@Autowired
 	private SqlSession sqlSession;
 
+	public List<GuideDTO> getGuideList(){
+		List<GuideDTO> guideList = sqlSession.selectList("guideList");
+		return guideList;
+	}
+	public GuideDTO getGuide(int contentId) {
+		GuideDTO guideDTO = sqlSession.selectOne("getGuide", contentId);
+		return guideDTO;
+	}
 	public int insertProperty(PropertyDTO dto) {
 		int res = sqlSession.insert("insertProperty", dto);
 		return res;

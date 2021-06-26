@@ -38,28 +38,28 @@ import com.airtnt.airtnt.service.HostMapper;
 public class HostController {
 
 	@Autowired private HostMapper hostMapper;
-	 
 
-	// 1. 호스트 시작하기 >> property_type으로 이동
+	// 1. 호스트 시작하기 >>으로 이동
 	// 나머지는 게시판
-	@RequestMapping("/before_host")
-	public String before_host_jsp() {
-		return "host/before_host/before";
+	@RequestMapping("/guide_home")
+	public ModelAndView guide_home() {
+		List<GuideDTO> guideList = hostMapper.getGuideList();
+		return new ModelAndView("host/guide/guide_main", "guideList", guideList);
 	}
 
-	@RequestMapping("/hosting_context_get_started")
-	public String context_get_started_jsp() {
-		return "host/before_host/hosting_context_get_started";
-	}
-
-	@RequestMapping("/hosting_context_basic")
-	public String context_basic_jsp() {
-		return "host/before_host/hosting_context_basic";
-	}
-
-	@RequestMapping("/hosting_context_confidence")
-	public String context_confidence_jsp() {
-		return "host/before_host/hosting_context_confidence";
+	@RequestMapping("/guide_context")
+	public ModelAndView guide_context(@RequestParam int contentId) {
+		GuideDTO guideDTO = hostMapper.getGuide(contentId);
+		List<GuideDTO> guideList = hostMapper.getGuideList();
+		for(GuideDTO dto : guideList) {
+			if(dto.getContentId == contentId) {
+				guideList.remove(dto);
+			}
+		}
+		ModelAndView mav = new ModelAndView("host/guide/guide_content");
+		mav.addObject("guideDTO", guideDTO);
+		mav.addObject("guideList", guideList);
+		return mav;
 	}
 
 	// 2. property_detail으로 이동해서 분류 시작
