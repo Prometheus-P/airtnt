@@ -26,6 +26,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.airtnt.airtnt.host.Vo;
+import com.airtnt.airtnt.model.GuideDTO;
 import com.airtnt.airtnt.model.PropertyTypeDTO;
 import com.airtnt.airtnt.model.RoomTypeDTO;
 import com.airtnt.airtnt.model.SubPropertyTypeDTO;
@@ -52,7 +53,7 @@ public class HostController {
 		GuideDTO guideDTO = hostMapper.getGuide(contentId);
 		List<GuideDTO> guideList = hostMapper.getGuideList();
 		for(GuideDTO dto : guideList) {
-			if(dto.getContentId == contentId) {
+			if(dto.getContentId() == contentId) {
 				guideList.remove(dto);
 			}
 		}
