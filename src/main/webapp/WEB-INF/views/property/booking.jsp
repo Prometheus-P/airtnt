@@ -50,7 +50,7 @@ function setTotalPrice(){
 </head>
 <body id="top">
 
-<jsp:include page="/top.jsp"/>
+<jsp:include page="/WEB-INF/views/top.jsp"/>
 
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
@@ -146,65 +146,65 @@ function setTotalPrice(){
   <main class="hoc container clear"> 
     <!-- main body -->
     <!-- ################################################################################################ -->
-    <div class="content">
-      <!-- 숙소 상세정보 나열 구역 -->
-       <div class="two_third first">
+       <!-- 숙소 상세정보 나열 구역 -->
+       <div class="content" style="font-size: 20px">
          <div>
+         <!-- 
+	       상세정보에서 넘어오는 예약정보
+	       host id, guest id, day count, guest count, total price,
+	       checkin date, checkout date
+	      -->
+         <form action="/property/booking-confirm" method="post">
+           <input type="hidden" name="propertyId" value="${property.id}">
+           <input type="hidden" name="hostId" value="${booking.hostId}">
+           <input type="hidden" name="guestId" value="${booking.guestId}">
+           <input type="hidden" name="dayCount" value="${booking.dayCount}">
+           <input type="hidden" name="totalPrice" value="${booking.totalPrice}">
            <table border="1">
+             <tr>
+               <td colspan="3">결제정보</td>
+             </tr>
              <tr>
                <td>
                  <img class="imgl borderedbox inspace-5" src="${property.images.get(0).fileName}" alt="" style="width: 200px;height: 150px">
                </td>
                <td>
+                 <ul>
+                   <li>숙소명 : ${property.name}</li>
+                   <li>주소 : ${property.address}</li>
+                   <li>숙소 유형 : ${property.propertyTypeName}/${property.subPropertyTypeName}</li>
+                   <li>방 유형 : ${property.roomTypeName}</li>
+                 </ul>
+               </td>
+               <td>
+                 <ul>
+                   <li>체크인 : <input type="date" name="checkInDate" value="${booking.checkInDate}" readonly></li>
+                   <li>체크아웃 : <input type="date" name="checkOutDate" value="${booking.checkOutDate}" readonly></li>
+                   <li>숙박기간 : ${booking.dayCount}박</li>
+                   <li>인원 : <input type="number" name="guestCount" value="${booking.guestCount}" readonly style="width: 100px"></li>
+                 </ul>
                  
                </td>
              </tr>
+             <tr>
+               <td colspan="3" style="font-size: 40px">
+                 <label>결제금액</label>
+                 <p>
+                   ₩${property.price} × ${booking.dayCount}박 × ${booking.guestCount}명<br>
+                   = <font color="blue">₩${booking.totalPrice}</font>
+                 </p>
+               </td>
+             </tr>
            </table>
+           <div>
+             <button class="btn" type="submit" style="width: 200px; height: 80px; font-size: 30px">예약하기</button>
+	         <a href="javascript:history.back()">
+	           <button class="btn" type="button"style="width: 200px; height: 80px; font-size: 30px">취소</button>
+	         </a>
+           </div>
+           </form>
          </div>
-       </div>
-	   <div class="one_third">
-	     <form action="<c:url value='/property/booking?propertyId=${property.id}'/>" method="post">
-	       <input type="hidden" name="hostId" value="${property.hostId}">
-	       <input type="hidden" name="guestId" value="${sessionScope.id}">
-	       <input id="total_price" type="hidden" name="totalPrice" value="${property.price}">
-	       <table>
-	         <tr>
-	           <th>체크인</th>
-	           <td><input id="check_in_date" type="date" name="checkInDate" class="btmspace-15"
-	            	min="${tomorrow}" value="${tomorrow}"
-	            	onchange="javascript:setTotalPrice()"></td>
-	         </tr>
-	         <tr>
-	           <th>체크아웃</th>
-	           <td><input id="check_out_date" type="date" name="checkOutDate" class="btmspace-15"
-	            	min="${dayAfterTomorrow}" value="${dayAfterTomorrow}"
-	            	onchange="javascript:setTotalPrice()"></td>
-	         </tr>
-	         <tr>
-	           <th>인원수</th>
-	           <td><input id="guest_count" type="number" name="guestCount" class="btmspace-15"
-	            	min="1" max="${property.maxGuest}" value="1" 
-	            	onchange="javascript:setTotalPrice()"></td>
-	         </tr>
-	         <tr>
-	           <td colspan="2" style="font-size: 30px">
-	             총액 <span id="price_disp"></span>
-	             <script type="text/javascript">
-	             document.getElementById("price_disp").innerHTML = new Intl.NumberFormat('ko-KR', {style: 'currency',currency: 'KRW', minimumFractionDigits: 2}).format(${property.price});
-	             </script>
-	           </td>
-	         </tr>
-	         <tr>
-	           <td colspan="2">
-	             <button class="btn" type="submit">예약하기</button>
-	             <a href="문의url?propertyId=${property.id}"><button class="btn" type="button">1:1 문의하기</button></a>
-	           </td>
-	         </tr>
-	     </table>
-	     </form>
-	   </div>
-	   
-      
+         
       <!-- <div class="scrollable">
         <table>
           <thead>

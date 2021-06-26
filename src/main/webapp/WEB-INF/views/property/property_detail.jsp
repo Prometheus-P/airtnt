@@ -26,7 +26,7 @@ function setTotalPrice(){
 	//console.log(checkInDateStr);
 	//console.log(checkOutDateStr);
 	if(checkInDateStr == "" || checkOutDateStr == ""){
-		return 0;
+		return;
 	}
 	var checkInDate = new Date(checkInDateStr);
 	var checkOutDate = new Date(checkOutDateStr);
@@ -38,19 +38,18 @@ function setTotalPrice(){
 	var dayCount = diff / (24*60*60*1000);
 	//console.log(dayCount);
 	var totalPrice = guestCount * dayCount * ${property.price};
-	const totalPriceStr = new Intl.NumberFormat('ko-KR', {style: 'currency',currency: 'KRW', minimumFractionDigits: 0}).format(totalPrice);
+	var totalPriceStr = new Intl.NumberFormat('ko-KR', {style: 'currency',currency: 'KRW', minimumFractionDigits: 0}).format(totalPrice);
 	
+	document.getElementById("day_count").value = dayCount;
 	document.getElementById("total_price").value = totalPrice;
 	document.getElementById("price_disp").innerHTML = totalPriceStr;
-	
-	return totalPrice;
 }
 
 </script>
 </head>
 <body id="top">
 
-<jsp:include page="/top.jsp"/>
+<jsp:include page="/WEB-INF/views/top.jsp"/>
 
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
@@ -143,25 +142,25 @@ function setTotalPrice(){
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
 <div class="wrapper row3">
-  <main class="hoc container clear"> 
+  <main class="hoc clear"> 
     <!-- main body -->
     <!-- ################################################################################################ -->
-    <div class="content">
+    <div class="container">
       <!-- 숙소 이미지 -->
       <div class="one_half first">
-        <img class="imgl borderedbox inspace-5" src="${property.images.get(0).fileName}" alt="" style="width: 800px;height: 600px">
+        <img class="imgl borderedbox inspace-5" src="${property.images.get(0).fileName}" alt="" >
       </div>
       <div class="one_half">
         <c:forEach var="image" items="${property.images}" begin="1" end="4" varStatus="status">
           <c:choose>
             <c:when test="${status.count % 2 == 1}">
               <div class="one_half first">
-                <img class="imgl borderedbox inspace-5" src="${image.fileName}" alt="" style="width: 400px;height: 300px">
+                <img class="imgl borderedbox inspace-5" src="${image.fileName}" alt="" >
               </div>
             </c:when>
             <c:otherwise>
               <div class="one_half">
-                <img class="imgl borderedbox inspace-5" src="${image.fileName}" alt="" style="width: 400px;height: 300px">
+                <img class="imgl borderedbox inspace-5" src="${image.fileName}" alt="" >
               </div>
             </c:otherwise>
           </c:choose>
@@ -250,10 +249,16 @@ function setTotalPrice(){
 	      </div>
 	   </div>
 	   <div class="one_third">
+	     <!-- 
+	       상세정보에서 넘어가는 예약정보
+	       host id, guest id, day count, guest count, total price,
+	       checkin date, checkout date
+	      -->
 	     <form action="<c:url value='/property/booking?propertyId=${property.id}'/>" method="post">
 	       <input type="hidden" name="hostId" value="${property.hostId}">
 	       <input type="hidden" name="guestId" value="${sessionScope.id}">
-	       <input id="total_price" type="hidden" name="totalPrice" value="${property.price}">
+	       <input id="day_count" type="hidden" name="dayCount">
+	       <input id="total_price" type="hidden" name="totalPrice">
 	       <table>
 	         <tr>
 	           <th>체크인</th>
@@ -277,7 +282,7 @@ function setTotalPrice(){
 	           <td colspan="2" style="font-size: 30px">
 	             총액 <span id="price_disp"></span>
 	             <script type="text/javascript">
-	             document.getElementById("price_disp").innerHTML = new Intl.NumberFormat('ko-KR', {style: 'currency',currency: 'KRW', minimumFractionDigits: 0}).format(${property.price});
+	               setTotalPrice();
 	             </script>
 	           </td>
 	         </tr>
