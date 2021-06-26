@@ -5,15 +5,33 @@
 
 <mapper namespace="com.airtnt.airtnt.service.HostMapper">
 	
+	<select id="guideList" resultType="guideDTO">
+		select * from guide
+	</select>
+	<select id="getGuide" parameterType="int" resultType="guideDTO">
+		select * from guide where contentId = #{contentId}
+	</select>
 	<insert id="insertProperty" parameterType="propertyDTO">
 		insert into property values(property_seq.nextval, #{name}, #{hostId}, 
 		#{propertyDesc}, #{address}, #{latitude}, #{longitude}, #{price}, #{bedCount}, 
-		#{maxGuest}, sysdate)<!-- modeDate==null -->
+		#{maxGuest})<!-- modeDate==null -->
 	</insert>
-	<!-- <select >
+	<delete id="deleteProperty" parameterType="int">
 		
+	</delete>
+	<select id="propertyType" resultType="propertyTypeDTO">
+		select * from property_type order by id
 	</select>
-	<delete>
+	<select id="subPropertyType" parameterType="int" resultType="subPropertyTypeDTO">
+		select * from sub_property_type where property_type_id = #{propertyTypeId}
+	</select>
+	<select id="roomType" resultType="roomTypeDTO">
+		select * from room_type
+	</select>
+	<!-- <insert id="saveImage" parameterType="java.util.Map">
+    I	insert into img_table VALUES #{img}    
+	</insert> -->
+	<!--<delete>
 	
 	</delete>
 	<update>
