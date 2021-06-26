@@ -23,8 +23,8 @@ public class HostMapper {
 		List<GuideDTO> guideList = sqlSession.selectList("guideList");
 		return guideList;
 	}
-	public GuideDTO getGuide(int contentId) {
-		GuideDTO guideDTO = sqlSession.selectOne("getGuide", contentId);
+	public GuideDTO getGuide(int id) {
+		GuideDTO guideDTO = sqlSession.selectOne("getGuide", id);
 		return guideDTO;
 	}
 	public int insertProperty(PropertyDTO dto) {

@@ -40,7 +40,7 @@
     <nav id="mainav" class="fl_right" > 
       <!-- ################################################################################################ -->
       <ul class="clear">
-        <li class="active"><a href="index">호스트 되기</a></li>
+        <li class="active"><a href="host/guide_home">호스트 되기</a></li>
         <c:if test="${!isLogin}">
         <li><a class="drop" href="#">로그인 하기</a>
           <ul>

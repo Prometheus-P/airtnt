@@ -2,6 +2,7 @@ package com.airtnt.airtnt.controller;
 
 import java.io.File;
 
+
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Enumeration;
@@ -34,7 +35,7 @@ import com.airtnt.airtnt.service.HostMapper;
 
 
 @Controller
-@RequestMapping("host")
+@RequestMapping("/host")
 @SuppressWarnings("unchecked")
 public class HostController {
 
@@ -45,15 +46,15 @@ public class HostController {
 	@RequestMapping("/guide_home")
 	public ModelAndView guide_home() {
 		List<GuideDTO> guideList = hostMapper.getGuideList();
-		return new ModelAndView("host/guide/guide_main", "guideList", guideList);
+		return new ModelAndView("host/guide/guide_home", "guideList", guideList);
 	}
 
 	@RequestMapping("/guide_context")
-	public ModelAndView guide_context(@RequestParam int contentId) {
-		GuideDTO guideDTO = hostMapper.getGuide(contentId);
+	public ModelAndView guide_context(@RequestParam int id) {
+		GuideDTO guideDTO = hostMapper.getGuide(id);
 		List<GuideDTO> guideList = hostMapper.getGuideList();
 		for(GuideDTO dto : guideList) {
-			if(dto.getContentId() == contentId) {
+			if(dto.getId() == id) {
 				guideList.remove(dto);
 			}
 		}

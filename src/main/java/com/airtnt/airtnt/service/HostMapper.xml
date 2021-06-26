@@ -9,7 +9,7 @@
 		select * from guide
 	</select>
 	<select id="getGuide" parameterType="int" resultType="guideDTO">
-		select * from guide where contentId = #{contentId}
+		select * from guide where id = #{id}
 	</select>
 	<insert id="insertProperty" parameterType="propertyDTO">
 		insert into property values(property_seq.nextval, #{name}, #{hostId}, 
