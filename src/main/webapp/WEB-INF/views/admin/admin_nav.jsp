@@ -12,11 +12,11 @@
     <link rel="canonical" href="https://getbootstrap.com/docs/4.1/examples/dashboard/">
 
     <!-- Bootstrap core CSS -->
-    <link href="resources/bootstrap.min.css" rel="stylesheet">
-    <link href="resources/bootstrap.css" rel="stylesheet">
+    <link href="../resources/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../resources/css/bootstrap.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="resources/dashboard.css" rel="stylesheet">
+    <link href="../resources/css/dashboard.css" rel="stylesheet">
   </head>
 
   <body>

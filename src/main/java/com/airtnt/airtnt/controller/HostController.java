@@ -1,10 +1,12 @@
 package com.airtnt.airtnt.controller;
 
 import java.io.File;
+
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Enumeration;
 import java.util.Formatter;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
@@ -13,168 +15,181 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.airtnt.airtnt.host.Vo;
+import com.airtnt.airtnt.model.GuideDTO;
+import com.airtnt.airtnt.model.PropertyTypeDTO;
+import com.airtnt.airtnt.model.RoomTypeDTO;
+import com.airtnt.airtnt.model.SubPropertyTypeDTO;
+import com.airtnt.airtnt.service.HostMapper;
+
 
 @Controller
 @RequestMapping("host")
 @SuppressWarnings("unchecked")
 public class HostController {
 
-	/*
-	 * @Autowired private HostMapper hostMapper;
-	 */
-	Map<String, String> roomMap;
+	@Autowired private HostMapper hostMapper;
 
-	// 1. 호스트 시작하기 >> property_type으로 이동
+	// 1. 호스트 시작하기 >>으로 이동
 	// 나머지는 게시판
-	@RequestMapping("/property_type")
-	public String room_type_jsp() {
-		return "host/become_a_host/room_type_group";
+	@RequestMapping("/guide_home")
+	public ModelAndView guide_home() {
+		List<GuideDTO> guideList = hostMapper.getGuideList();
+		return new ModelAndView("host/guide/guide_main", "guideList", guideList);
 	}
 
-	@RequestMapping("/hosting_context_get_started")
-	public String context_get_started_jsp() {
-		return "host/before_host/hosting_context_get_started";
+	@RequestMapping("/guide_context")
+	public ModelAndView guide_context(@RequestParam int contentId) {
+		GuideDTO guideDTO = hostMapper.getGuide(contentId);
+		List<GuideDTO> guideList = hostMapper.getGuideList();
+		for(GuideDTO dto : guideList) {
+			if(dto.getContentId() == contentId) {
+				guideList.remove(dto);
+			}
+		}
+		ModelAndView mav = new ModelAndView("host/guide/guide_content");
+		mav.addObject("guideDTO", guideDTO);
+		mav.addObject("guideList", guideList);
+		return mav;
 	}
 
-	@RequestMapping("/hosting_context_basic")
-	public String context_basic_jsp() {
-		return "host/before_host/hosting_context_basic";
-	}
-
-	@RequestMapping("/hosting_context_confidence")
-	public String context_confidence_jsp() {
-		return "host/before_host/hosting_context_confidence";
-	}
-
-	// 2. property_type으로 이동해서 분류 시작
+	// 2. property_detail으로 이동해서 분류 시작
 	// roomMap & amenitiesMap
-
-
-	@RequestMapping("/sub_property_type")
-	public String sub_property_type(HttpServletRequest req, @RequestParam String propertyType) {
+	@RequestMapping("/property_type_0")
+	public ModelAndView property_type_0(HttpServletRequest req) {
 		HttpSession session = req.getSession();
-		roomMap = new Hashtable<>();
-		roomMap.put("propertyType", propertyType);
-		session.setAttribute("roomMap", roomMap);
-		return "host/become_a_host/sub_property_type";
+		List<PropertyTypeDTO> propertyTypeList = hostMapper.getPropertyType();
+		return new ModelAndView("host/become_a_host/property_type_0","propertyTypeList", propertyTypeList);
+	}
+	//property_type(int)
+	@RequestMapping("/property_detail_1")
+	public ModelAndView property_detail_1(HttpServletRequest req, @RequestParam int propertyTypeId) {
+		HttpSession session = req.getSession();
+		session.setAttribute("propertyTypeId", propertyTypeId);
+		List<SubPropertyTypeDTO> subPropertyTypeList = hostMapper.getSubPropertyType(propertyTypeId);
+		List<RoomTypeDTO> roomTypeList = hostMapper.getRoomType();
+		ModelAndView mav = new ModelAndView("host/become_a_host/property_detail_1");
+		mav.addObject("subPropertyTypeList", subPropertyTypeList);
+		mav.addObject("roomTypeList", roomTypeList);
+		return mav;
 	}
 
-	@RequestMapping("/room_type") // 개인실, 다인실, 전체
-	public String room_type(HttpServletRequest req, @RequestParam String subPropertyType) {
+	@RequestMapping("/property_address_2") // 개인실, 다인실, 전체
+	// sub_property_type(int) & 
+	//room_type(int) & maxGuest(int)(proptertyDTO) &
+	//bedCount(int)(proptertyDTO) >> (property_detail_1)
+	public String property_address_2(HttpServletRequest req, @RequestParam Map<String, Integer> map1) {
 		HttpSession session = req.getSession();
-		roomMap = (Map<String, String>) session.getAttribute("roomMap");
-		roomMap.put("subPropertyType" /* + roomId */, subPropertyType);
-		session.setAttribute("roomMap", roomMap);
-		return "host/become_a_host/room_type";
+		session.setAttribute("map1", map1);
+		return "host/become_a_host/property_address_2";
 	}
 
-	@RequestMapping("/location")
-	public String location(HttpServletRequest req, @RequestParam String roomType) {
+	@RequestMapping("/property_detail_3")
+	public String property_detail_3(HttpServletRequest req, @RequestParam String address) {
 		HttpSession session = req.getSession();
-		roomMap = (Map<String, String>) session.getAttribute("roomMap");
-		roomMap.put("roomType", roomType);
-		session.setAttribute("roomMap", roomMap);
-		return "host/become_a_host/location";
+		session.setAttribute("address", address);
+		return "host/become_a_host/property_detail_3";
+	}
+	//amenities(int) & room_name(String) & description(String) & price(int)
+	//(property_detail_3)
+	@RequestMapping("/property_image_4")
+	public String property_image_4(HttpServletRequest req, @RequestParam Map<String, String> map2) {
+		HttpSession session = req.getSession();
+		session.setAttribute("map2", map2);
+		return "host/become_a_host/property_image_4";
 	}
 
-	@RequestMapping("/detail")
-	public String detail(HttpServletRequest req, @RequestParam String address) {
-		HttpSession session = req.getSession();
-		roomMap = (Map<String, String>) session.getAttribute("roomMap");
-		roomMap.put("address", address);
-		session.setAttribute("roomMap", roomMap);
-		return "host/become_a_host/detail";
+	/*
+	 * @RequestMapping("/save_image") public String save_image(Vo vo) { try {
+	 * Map<String, Object> hmap = new HashMap<String, Object>(); hmap.put("img",
+	 * vo.getImgFile().getBytes()); hostMapper.saveImage(hmap); }catch(Exception e)
+	 * { e.printStackTrace(); } return "redirect:host/property_image_4"; }
+	 */
+	/*
+	@RequestMapping(value="/save_image", method = RequestMethod.POST, produces="text/plain;Charset=UTF-8")
+	@ResponseBody
+	public void uploadContent(MultipartHttpServletRequest req) throws Exception{
+		Gson gson = new Gson();
+		FolderSet set = new FolderSet();
+		 List<MultipartFile> mf = req.getFiles("files[]");
 	}
-
-	@RequestMapping("/photos")
-	public String photos(HttpServletRequest req, @RequestParam Map<String, String> map) {
-		HttpSession session = req.getSession();
-		roomMap = (Map<String, String>) session.getAttribute("roomMap");
-		roomMap.put("maxGuest", map.get("maxGuest"));
-		map.remove("maxGuest"); // 편의 시설들만 남기기
-		session.setAttribute("amenitiesMap", map);
-		session.setAttribute("roomMap", roomMap);
-		return "host/become_a_host/photos";
-	}
-
-	@RequestMapping("/description")
-	public String description(HttpServletRequest req) {
+	*/
+	/*
+	 * @RequestMapping(value="/save_image", method = RequestMethod.POST,
+	 * produces="text/plain; Charset=UTF-8")
+	 * 
+	 * @ResponseBody public void uploadContent(MultipartHttpServletRequest req) {
+	 * Gson gson = new Gson(); FolderSet set = new FolderSet();
+	 * List<MultipartFile> mf = req.getFiles("files[]"); }
+	 */
+	
+	
+	@RequestMapping("/property_preview_5")
+	public String property_preview_5(HttpServletRequest req) {
 		HttpSession session = req.getSession();
 		MultipartHttpServletRequest mr = (MultipartHttpServletRequest) req;
-		roomMap = (Map<String, String>) session.getAttribute("roomMap");
-		MultipartFile mf = mr.getFile("fileName");
-		Hashtable<String, MultipartFile> map = (Hashtable<String, MultipartFile>)mr.getFileMap();
+		Map<String, String> map3= new Hashtable<>();
+		MultipartFile mf = mr.getFile("filename");
+		Hashtable<String, MultipartFile> map = (Hashtable<String, MultipartFile>) mr.getFileMap();
 		Enumeration<String> en = map.keys();
 		int i = 0;
-		while(en.hasMoreElements()) {
+		while (en.hasMoreElements()) {
 			String key = en.nextElement();
 			MultipartFile image = map.get(key);
 			String fileName = image.getOriginalFilename();
 			String upPath = session.getServletContext().getRealPath("");
-			String imageIndex = String.valueOf(i);
-			if(i < 10) {
-				imageIndex = "0" + imageIndex;
-			}
-			fileName += imageIndex;
+			String now = new java.text.SimpleDateFormat("yyyyMMddHmsS").format(new java.util.Date());
+			String fullFileName = "/image/" + fileName + ".jpeg";//절대 경로와 파일명
 			File file = new File(upPath, fileName);
-			roomMap.put("fileName" + imageIndex, fileName);
-			
+			map3.put("fileName", fileName);
+			//    image/property/property_id-시간-for문 숫자
+			//
 			String fileSizeStr = String.format("%.1f", file.length() / 1024.0);
 			// ex) 214.2 메가바이트 이렇게 표시 가능
-			
-			roomMap.put("fileSize", fileSizeStr/*Long.toString(file.length())*/);
+
+			map3.put("fileSize", fileSizeStr/* Long.toString(file.length()) */);
 			try {
 				mf.transferTo(file);
 			} catch (Exception e) {
-				roomMap.put("alert", "사진 업로드 중 오류 발생!");
+				map3.put("alert", "사진 업로드 중 오류 발생!");
 				e.printStackTrace();
 			}
 			i++;
 		}
-		session.setAttribute("roomMap", roomMap);
+		session.setAttribute("map3", map3);
 		/*
 		 * dto.setFilename(filename); dto.setFilesize((int) file.length());
 		 * dto.setIp(req.getRemoteAddr());
 		 */
-		return "host/become_a_host/description";
+		return "host/become_a_host/property_preview_5";
 	}
 
-	@RequestMapping("/price")
-	public String price(HttpServletRequest req, @RequestParam Map<String, String> map) {
+	@RequestMapping("/publish_celebration_6")
+	public String publish_celebration_6(HttpServletRequest req) {
 		HttpSession session = req.getSession();
-		roomMap = (Map<String, String>) session.getAttribute("roomMap");
-		roomMap.put("roomName", map.get("roomName"));
-		roomMap.put("description", map.get("description"));
-		session.setAttribute("roomMap", roomMap);
-		return "host/become_a_host/price";
-	}
-
-	@RequestMapping("/preview")
-	public String preview(HttpServletRequest req, @RequestParam String price) {
-		HttpSession session = req.getSession();
-		roomMap = (Map<String, String>) session.getAttribute("roomMap");
-		roomMap.put("price", price);
-		session.setAttribute("roomMap", roomMap);
-		return "host/become_a_host/preview";
-	}
-
-	@RequestMapping("/publish_celebration")
-	public String publish_celebration(HttpServletRequest req) {
-		HttpSession session = req.getSession();
-		roomMap = (Map<String, String>) session.getAttribute("roomMap");
-		// Mapper 통해서 정보저장
+		Map<String, Integer> map1 = (Map<String, Integer>) session.getAttribute("map1");
+		
+		/*property_type(int) & sub_property_type(int) & 
+		room_type(int) & maxGuest(int)(proptertyDTO) &
+		bedCount(int)(proptertyDTO)*/
+		String address = (String)session.getAttribute("address");
+		Map<String, String> map2 = (Map<String, String>)session.getAttribute("map2");
 		/*
-		 * RoomPhotoDTO dto = new RoomPhotoDTO(); dto.setMemberId dtp.setPropertyId
-		 * dto.setPhotoName dto.setPhtoSize
-		 */
-		session.removeAttribute("roomMap");
-		session.removeAttribute("amenitiesMap");
-		return "host/become_a_host/publish_celebration";
+		amenities(int) & room_name(String) & description(String) & price(int)
+		(property_detail_3)*/
+		session.getAttribute("map3");
+		//사진
+		return "host/become_a_host/publish_celebration_6";
 	}
 
 	// 3. host_mode_main >> 호스트 모드
