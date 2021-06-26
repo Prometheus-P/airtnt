@@ -1,7 +1,7 @@
 package com.airtnt.airtnt.model;
 
 public class GuideDTO {
-	private int contentId;
+	private int id;
 	private String subject;
 	private String regDate;
 	private String modDate;
@@ -10,12 +10,12 @@ public class GuideDTO {
 	private String content2;
 	private String content3;
 
-	public int getContentId() {
-		return contentId;
+	public int getId() {
+		return id;
 	}
 
-	public void setContentId(int contentId) {
-		this.contentId = contentId;
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public String getSubject() {

@@ -23,7 +23,7 @@
     </div>
     <nav id="mainav" class="fl_right"> 
       <!-- ################################################################################################ -->
-    	<a class="btn" href="<c:url value='host/property_type_0'/>">시작하기</a>
+    	<a class="btn" href="<c:url value='host/room_type'/>">시작하기</a>
       <!-- ################################################################################################ -->
     </nav>
   </header>
@@ -33,11 +33,11 @@
   <div id="pageintro" class="hoc clear"> 
     <!-- ################################################################################################ -->
     <article>
-      <h3 class="heading"> 공간을 나누고 <br>새로운 세상을 얻다</h3>
+      <h3 class="heading">공간을 나누고 <br>새로운 세상을 얻다</h3>
       <p>에어티앤티의 호스트가 되면 남는 공간을 활용해 부수입을 올리고 진짜 하고 싶은 일에 매진할 수 있습니다.</p>
       <footer>
         <ul class="nospace inline pushright">
-        	<li><a class="btn" href="<c:url value='host/property_type_0'/>">시작하기</a></li>
+        	<li><a class="btn" href="<c:url value='host/room_type'/>">시작하기</a></li>
         </ul>
       </footer>
     </article>
@@ -60,18 +60,30 @@
     <section id="services">
       <div class="sectiontitle">
         <p class="nospace font-xs"> 에어티앤티에서 호스팅 하기</p>
-        <h6 class="heading">에어티앤티는 항상 호스트를 지원합니다</h6>
+        <h6 class="heading">기초적인 호스팅 방법을 확인해 보세요</h6>
       </div>
       <ul class="nospace group grid-3">
-      <c:forEach var="dto" items="guideList">
         <li class="one_third">
           <article><a href="<c:url value='host/hosting_context_get_started'/>"><i class="fas fa-spray-can"></i></a>
-            <h6 class="heading">${dto.subject}</h6>
-            <p>${dto.explanation}</p>
+            <h6 class="heading">호스팅의 기초</h6>
+            <p>숙소 등록부터 게스트 맞이를 위한 숙소 준비 방법까지, 호스팅 시작 방법을 확인해 보세요.</p>
             <footer><a href="<c:url value='host/hosting_context_get_started'/>">더보기 &raquo;</a></footer>
           </article>
         </li>
-        </c:forEach>
+        <li class="one_third">
+          <article><a href="<c:url value='host/hosting_context_basic'/>"><i class="fas fa-user-secret"></i></a>
+            <h6 class="heading">에어비앤비 호스팅의 기본</h6>
+            <p>남는 공간이 있다면 누구나 에어비앤비 호스트가 될 수 있습니다. 호스팅 시작 방법을 알아보세요.</p>
+            <footer><a href="<c:url value='host/hosting_context_basic'/>">더보기 &raquo;</a></footer>
+          </article>
+        </li>
+        <li class="one_third">
+          <article><a href="<c:url value='host/hosting_context_confidence'/>"><i class="fas fa-couch"></i></a>
+            <h6 class="heading">자신 있게 호스팅을 시작하는 방법</h6>
+            <p>에어비앤비 호스트 커뮤니티를 통해 호스팅 관련 도움과 베테랑 호스트의 조언을 얻고 유용한 도구에 대해 배워보세요.</p>
+            <footer><a href="<c:url value='host/hosting_context_confidence'/>">더보기 &raquo;</a></footer>
+          </article>
+        </li>
       </ul>
     </section>
     <!-- ################################################################################################ -->

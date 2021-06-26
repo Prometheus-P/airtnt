@@ -17,7 +17,7 @@
 	<body>
 		<!-- Header -->
 			<header id="header">
-				<div class="logo"><a href="#">{guideDTO.subject}<span>by AirTnT</span></a></div>
+				<div class="logo"><a href="#">${guideDTO.subject}<span>by AirTnT</span></a></div>
 			</header>
 
 		<!-- Main -->
@@ -31,7 +31,7 @@
 							<img src="<c:url value='/resources_host/images/pic02.jpg'/>" alt="" />
 						</div>
 						<header class="special">
-							<h2>{guideDTO.subject}</h2>
+							<h2>${guideDTO.subject}</h2>
 							<p>
 							${guideDTO.explanation}
 							</p>
@@ -66,7 +66,7 @@
 								${dto.explanation}
 								</p>
 								<ul class="actions">
-									<li><a href="<c:url value='host/guide_context'/>?contentId=${dto.contentId}" class="button special">더보기</a></li>
+									<li><a href="<c:url value='host/guide_context'/>?contentId=${dto.id}" class="button special">더보기</a></li>
 								</ul>
 							</div>
 						</div>
