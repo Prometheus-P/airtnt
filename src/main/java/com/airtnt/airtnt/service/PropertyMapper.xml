@@ -28,6 +28,22 @@
 	<result column="room_type_name" property="roomTypeName"/>
 </resultMap>
 
+<resultMap type="bookingDTO" id="bookingMap">
+	<id column="id" property="id"/>
+	<result column="property_id" property="propertyId"/>
+	<result column="guest_id" property="guestId"/>
+	<result column="host_id" property="hostId"/>
+	<result column="guest_count" property="guestCount"/>
+	<result column="day_count" property="dayCount"/>
+	<result column="total_price" property="totalPrice"/>
+	<result column="booking_number" property="bookingNumber"/>
+	<result column="check_in_date" property="checkInDate"/>
+	<result column="check_out_date" property="checkOutDate"/>
+	<result column="confirm_date" property="confirmDate"/>
+	<result column="reg_date" property="regDate"/>
+	<result column="mod_date" property="modDate"/>
+</resultMap>
+
 <resultMap type="propertyTypeDTO" id="propertyTypeMap">
 	<id column="id" property="id"/>
 	<result column="name" property="name"/>
