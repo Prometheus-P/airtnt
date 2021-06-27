@@ -23,6 +23,7 @@ public class WishListMapper {
 
 	public List<WishList_PropertyDTO> getWish(String member_id) {
 		List<WishList_PropertyDTO> list = sqlSession.selectList("getWish", member_id);
+		
 		return list;
 	}
 

@@ -56,7 +56,6 @@
 			</div>
 			<div class="modal-body">
 				<form action="makeWish" method="post">
-					<input type="hidden" name="member_id" value="${member_id}">
 					<div class="form-group">
 							<input type="text" class="form-control" name="name" placeholder="이름" required="required">
 					</div>
