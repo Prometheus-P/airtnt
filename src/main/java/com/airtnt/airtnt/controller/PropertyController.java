@@ -73,16 +73,26 @@ public class PropertyController {
 		bookingNumber += String.valueOf((int)(Math.random() * 10));
 		booking.setPropertyId(propertyId);
 		booking.setBookingNumber(bookingNumber);
+		booking.setGuestId("ParkHaSung");
 		if(propertyMapper.insertBooking(booking) < 1) {
 			req.setAttribute("msg", "예약 실패(DB 오류)");
 			req.setAttribute("url", "/property/detail?propertyId=" + propertyId);
 			return "message";
 		}
-		
+		booking = propertyMapper.selectSameBooking(booking);
+//		System.out.println(booking);
 		
 		TransactionDTO transaction = new TransactionDTO();
+		transaction.setBookingId(booking.getId());
+		if(propertyMapper.insertTransaction(transaction) < 1) {
+			req.setAttribute("msg", "결제 실패(DB 오류)");
+			req.setAttribute("url", "/property/detail?propertyId=" + propertyId);
+			return "message";
+		}
+		transaction = propertyMapper.selectSameTransaction(transaction);
 		
-		
+		req.setAttribute("booking", booking);
+		req.setAttribute("transaction", transaction);
 		
 		return "property/booking_confirm";
 	}
