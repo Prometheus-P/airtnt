@@ -141,49 +141,59 @@ public class HostController implements HostControllerInterface {
 	 * Gson gson = new Gson(); FolderSet set = new FolderSet();
 	 * List<MultipartFile> mf = req.getFiles("files[]"); }
 	 */
-
+	private static final int RESULT_EXCEED_SIZE = -2;
+    private static final int RESULT_UNACCEPTED_EXTENSION = -1;
+    private static final int RESULT_SUCCESS = 1;
+    private static final long LIMIT_SIZE = 10 * 1024 * 1024;
 	@Override
+	@ResponseBody
 	@RequestMapping("/host/property_preview_5")
-	public String property_preview_5(HttpServletRequest req, MultipartHttpServletRequest mr) {
-		HttpSession session = req.getSession();
-		MultipartHttpServletRequest mrs = (MultipartHttpServletRequest) req;
-		Map<String, String> map3 = new Hashtable<>();
-		MultipartFile mf = mr.getFile("filename");
-		Hashtable<String, MultipartFile> map = (Hashtable<String, MultipartFile>) mr.getFileMap();
-		Enumeration<String> en = map.keys();
-		int i = 0;
-		while (en.hasMoreElements()) {
-			String key = en.nextElement();
-			MultipartFile image = map.get(key);
-			String fileName = image.getOriginalFilename();
-			String upPath = session.getServletContext().getRealPath("");
-			String now = new java.text.SimpleDateFormat("yyyyMMddHmsS").format(new java.util.Date());
-			String fullFileName = "/image/" + fileName + ".jpeg";// 절대 경로와 파일명
-			File file = new File(upPath, fileName);
-			map3.put("fileName", fileName);
-			// image/property/property_id-시간-for문 숫자
-			//
-			String fileSizeStr = String.format("%.1f", file.length() / 1024.0);
-			// ex) 214.2 메가바이트 이렇게 표시 가능
-
-			map3.put("fileSize", fileSizeStr/* Long.toString(file.length()) */);
-			try {
-				mf.transferTo(file);
-			} catch (Exception e) {
-				map3.put("alert", "사진 업로드 중 오류 발생!");
-				e.printStackTrace();
-			}
-			i++;
-		}
-		session.setAttribute("map3", map3);
-
-		/*
-		 * dto.setFilename(filename); dto.setFilesize((int) file.length());
-		 * dto.setIp(req.getRemoteAddr());
-		 */
-		return "host/become_a_host/property_preview_5";
+	public int property_preview_5(HttpServletRequest req, @RequestParam("files")List<MultipartFile> images) {
+		  long sizeSum = 0;
+	        for(MultipartFile image : images) {
+	            String originalName = image.getOriginalFilename();
+	            //확장자 검사
+	            if(!isValidExtension(originalName)){
+	                return RESULT_UNACCEPTED_EXTENSION;
+	            }
+	            
+	            //용량 검사
+	            sizeSum += image.getSize();
+	            if(sizeSum >= LIMIT_SIZE) {
+	                return RESULT_EXCEED_SIZE;
+	            }
+	        }
+	        for(MultipartFile image : images) {
+	        	String originalName = image.getOriginalFilename();
+	        	if(originalName != null && !originalName.trim().equals("")) {
+	        		originalName += "_" + System.currentTimeMillis();
+	        	}
+	        	try {
+	        		image.transferTo(new File("/resources/room_image/" + originalName));
+	        	}catch(Exception e) {
+	        		e.printStackTrace();
+	        	}
+	        	//File file = new File(upPath, originalName);
+	        	//MultipartHttpServletRequest mr = (MultipartHttpServletRequest) req;
+	        	//MultipartFile mf = mr.getFile("filename");
+	    		//mf.transferTo(file);
+	        }
+	        
+	        //실제로는 저장 후 이미지를 불러올 위치를 콜백반환하거나,
+	        //특정 행위를 유도하는 값을 주는 것이 옳은 것 같다.
+	        return RESULT_SUCCESS;
+		//return "host/become_a_host/property_preview_5";
 	}
-
+	private boolean isValidExtension(String originalName) {
+        String originalNameExtension = originalName.substring(originalName.lastIndexOf(".") + 1);
+        switch(originalNameExtension) {
+        case "jpg":
+        case "png":
+        case "gif":
+            return true;
+        }
+        return false;
+    }
 	@Override
 	@RequestMapping("/host/publish_celebration_6")
 	public String publish_celebration_6(HttpServletRequest req) {
@@ -211,7 +221,7 @@ public class HostController implements HostControllerInterface {
 		HttpSession session = req.getSession();
 		String hostId = (String) session.getAttribute("memeber_id");
 		List<BookingDTO> listBooking = hostMapper.getBookingList(hostId);
-		return new ModelAndView("/host/host_mode/host_mode","listBooking",listBooking );
+		return new ModelAndView("/host/host_mode/host_mode","listBooking",listBooking);
 	}
 
 	@Override

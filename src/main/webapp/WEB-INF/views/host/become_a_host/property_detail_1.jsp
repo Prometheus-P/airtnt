@@ -14,7 +14,8 @@
 <form method="post" action="<c:url value='/host/property_address_2'/>" name="f">
 <table>
 	<tr>
-		<c:forEach var="dto" items="${subPropertyTypeList}">
+	<td></td>
+	<c:forEach var="dto" items="${subPropertyTypeList}">
 			<td><input type="radio" name="subPropertyTypeId" id="${dto.name}" value="${dto.id}"><label for="${dto.name}">${dto.name}</label></td>
 		</c:forEach>
 	</tr>
@@ -42,7 +43,9 @@
 </form>
 </body>
 </html>
-	
-	
-	
-	
+
+
+
+
+
+

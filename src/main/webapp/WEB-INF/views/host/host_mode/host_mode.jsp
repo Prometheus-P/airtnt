@@ -46,13 +46,14 @@
 								<tr>
 									<td>
 									<c:if test="${dto.confirmDate == null}">
-										<font color="red"></font>
+										<font color="red">미확정</font>
 									</c:if>
-									
-										<font color="blue"></font>
-									
+									<c:if test="${dto.confirmDate != null}">
+										<font color="blue">확정</font>
+									</c:if>
 									</td>
-									<td><font color="black">박하성</font><br>성인 1명</td>
+									<td><font color="black">박하성${dto.name}
+									</font><br>1명${dto. }</td>
 									<td><font color="black">2021년 07월 01일 ~ 2021년 07월
 											10일</font><br>10박</td>
 									<td><font color="black">2021년 06월 20일</font></td>
