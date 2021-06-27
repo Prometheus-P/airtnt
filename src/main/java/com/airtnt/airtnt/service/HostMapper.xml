@@ -37,12 +37,23 @@
 		from property_type order by id
 	</select>
 	<select id="subPropertyType" parameterType="int" resultType="subPropertyTypeDTO">
+<<<<<<< HEAD
 		select 
 			id, name, 
 			property_type_id as propertyTypeId,
 			is_use as isUse, 
 			reg_date as regDate, 
 			mod_date as modDate from sub_property_type where propertyTypeId = #{propertyTypeId}
+=======
+		select
+			id, name,
+			property_type_id as propertyTypeId,
+			is_use as isUse,
+			reg_date as regDate,
+			mod_date as modDate
+		from sub_property_type
+		where property_type_id = #{propertyTypeId}
+>>>>>>> branch 'master' of https://github.com/ccd485/airtnt.git
 	</select>
 	<select id="roomType" resultType="roomTypeDTO">
 		select 

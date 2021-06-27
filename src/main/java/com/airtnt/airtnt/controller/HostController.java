@@ -169,7 +169,7 @@ public class HostController implements HostControllerInterface {
 	        		originalName += "_" + System.currentTimeMillis();
 	        	}
 	        	try {
-	        		image.transferTo(new File("/resources/room_image/" + originalName));
+	        		image.transferTo(new File("/resources/property_image/" + originalName));
 	        	}catch(Exception e) {
 	        		e.printStackTrace();
 	        	}

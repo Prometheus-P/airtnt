@@ -136,7 +136,7 @@ Licence URI: https://www.os-templates.com/template-terms
            </table>
          </div>
          <div>
-           <a href="javascript:history.go(-2)">
+           <a href="<c:url value='/property/detail?propertyId=${booking.propertyId}'/>">
              <button class="btn" type="button" style="width: 200px; height: 80px; font-size: 30px">확인</button>
            </a>
 	       <a href="<c:url value=''/>">
