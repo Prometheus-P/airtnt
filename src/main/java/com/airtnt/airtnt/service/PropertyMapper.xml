@@ -86,115 +86,131 @@
 </resultMap>
 
 <resultMap type="bookingDTO" id="bookingMap">
-	<id column="id" property="id"/>
-	<result column="property_id" property="propertyId"/>
-	<result column="guest_id" property="guestId"/>
-	<result column="host_id" property="hostId"/>
-	<result column="guest_count" property="guestCount"/>
-	<result column="day_count" property="dayCount"/>
-	<result column="total_price" property="totalPrice"/>
-	<result column="booking_number" property="bookingNumber"/>
-	<result column="check_in_date" property="checkInDate"/>
-	<result column="check_out_date" property="checkOutDate"/>
-	<result column="confirm_date" property="confirmDate"/>
-	<result column="reg_date" property="regDate"/>
-	<result column="mod_date" property="modDate"/>
+	<id property="id" column="id"/>
+	<result property="propertyId" column="property_id"/>
+	<result property="guestId" column="guest_id"/>
+	<result property="hostId" column="host_id"/>
+	<result property="guestCount" column="guest_count"/>
+	<result property="dayCount" column="day_count"/>
+	<result property="totalPrice" column="total_price"/>
+	<result property="bookingNumber" column="booking_number"/>
+	<result property="checkInDate" column="check_in_date"/>
+	<result property="checkOutDate" column="check_out_date"/>
+	<result property="confirmDate" column="confirm_date"/>
+	<result property="regDate" column="reg_date"/>
+	<result property="modDate" column="mod_date"/>
+</resultMap>
+
+<resultMap type="transactionDTO" id="transactionMap">
+	<id property="id" column="id"/>
+	<result property="bookingId" column="booking_id"/>
+	<result property="isRefund" column="is_refund"/>
+	<result property="siteFee" column="site_fee"/>
+	<result property="payExptDate" column="pay_expt_date"/>
+	<result property="regDate" column="reg_date"/>
+	<result property="modDate" column="mod_date"/>
 </resultMap>
 
 <select id="searchPropertiesByAddress" parameterType="String" resultMap="propertyMap">
-select p.*,
+select
+	p.*,
+	
+	pt.id property_type_id,
+	pt.name property_type_name,
+	pt.is_use property_type_is_use,
+	pt.reg_date property_type_reg_date,
+	pt.mod_date property_type_mod_date,
+	
+	spt.id sub_property_type_id,
+	spt.property_type_id,
+	spt.name sub_property_type_name,
+	spt.is_use sub_property_type_is_use,
+	spt.reg_date sub_property_type_reg_date,
+	spt.mod_date sub_property_type_mod_date,
+	
+	rt.id room_type_id,
+	rt.name room_type_name,
+	rt.is_use room_type_is_use,
+	rt.reg_date room_type_reg_date,
+	rt.mod_date room_type_mod_date,
+	
+	a.id amenity_id,
+	a.property_id amenity_property_id,
+	
+	at.id amenity_type_id,
+	at.name amenity_type_name,
+	at.is_use amenity_type_is_use,
+	at.reg_date amenity_type_reg_date,
+	at.mod_date amenity_type_mod_date,
+	
+	i.id image_id,
+	i.property_id image_property_id,
+	i.is_main image_is_main,
+	i.path image_path,
+	i.file_size image_file_size,
+	i.reg_date image_reg_date,
+	i.mod_date image_mod_date
 
-pt.id property_type_id,
-pt.name property_type_name,
-pt.is_use property_type_is_use,
-pt.reg_date property_type_reg_date,
-pt.mod_date property_type_mod_date,
+from
+	property p, property_type pt, sub_property_type spt, room_type rt,
+	amenity a, amenity_type at, image i
 
-spt.id sub_property_type_id,
-spt.property_type_id,
-spt.name sub_property_type_name,
-spt.is_use sub_property_type_is_use,
-spt.reg_date sub_property_type_reg_date,
-spt.mod_date sub_property_type_mod_date,
-
-rt.id room_type_id,
-rt.name room_type_name,
-rt.is_use room_type_is_use,
-rt.reg_date room_type_reg_date,
-rt.mod_date room_type_mod_date,
-
-a.id amenity_id,
-a.property_id amenity_property_id,
-
-at.id amenity_type_id,
-at.name amenity_type_name,
-at.is_use amenity_type_is_use,
-at.reg_date amenity_type_reg_date,
-at.mod_date amenity_type_mod_date,
-
-i.id image_id,
-i.property_id image_property_id,
-i.is_main image_is_main,
-i.path image_path,
-i.file_size image_file_size,
-i.reg_date image_reg_date,
-i.mod_date image_mod_date
-
-from property p, property_type pt, sub_property_type spt, room_type rt,
-amenity a, amenity_type at, image i
-
-where p.address like #{addressKey}
-and p.property_type_id=pt.id and p.sub_property_type_id=spt.id and p.room_type_id=rt.id
-and a.property_id=p.id and a.amenity_type_id=at.id and at.is_use='Y'
-and i.property_id=p.id
+where
+	p.address like #{addressKey} and
+	p.property_type_id=pt.id and p.sub_property_type_id=spt.id and p.room_type_id=rt.id and
+	a.property_id=p.id and a.amenity_type_id=at.id and at.is_use='Y' and
+	i.property_id=p.id
 </select>
 
 <select id="selectPropertyById" parameterType="int" resultMap="propertyMap">
-select p.*,
+select
+	p.*,
+	
+	pt.id property_type_id,
+	pt.name property_type_name,
+	pt.is_use property_type_is_use,
+	pt.reg_date property_type_reg_date,
+	pt.mod_date property_type_mod_date,
+	
+	spt.id sub_property_type_id,
+	spt.property_type_id,
+	spt.name sub_property_type_name,
+	spt.is_use sub_property_type_is_use,
+	spt.reg_date sub_property_type_reg_date,
+	spt.mod_date sub_property_type_mod_date,
+	
+	rt.id room_type_id,
+	rt.name room_type_name,
+	rt.is_use room_type_is_use,
+	rt.reg_date room_type_reg_date,
+	rt.mod_date room_type_mod_date,
+	
+	a.id amenity_id,
+	a.property_id amenity_property_id,
+	
+	at.id amenity_type_id,
+	at.name amenity_type_name,
+	at.is_use amenity_type_is_use,
+	at.reg_date amenity_type_reg_date,
+	at.mod_date amenity_type_mod_date,
+	
+	i.id image_id,
+	i.property_id image_property_id,
+	i.is_main image_is_main,
+	i.path image_path,
+	i.file_size image_file_size,
+	i.reg_date image_reg_date,
+	i.mod_date image_mod_date
 
-pt.id property_type_id,
-pt.name property_type_name,
-pt.is_use property_type_is_use,
-pt.reg_date property_type_reg_date,
-pt.mod_date property_type_mod_date,
+from
+	property p, property_type pt, sub_property_type spt, room_type rt,
+	amenity a, amenity_type at, image i
 
-spt.id sub_property_type_id,
-spt.property_type_id,
-spt.name sub_property_type_name,
-spt.is_use sub_property_type_is_use,
-spt.reg_date sub_property_type_reg_date,
-spt.mod_date sub_property_type_mod_date,
-
-rt.id room_type_id,
-rt.name room_type_name,
-rt.is_use room_type_is_use,
-rt.reg_date room_type_reg_date,
-rt.mod_date room_type_mod_date,
-
-a.id amenity_id,
-a.property_id amenity_property_id,
-
-at.id amenity_type_id,
-at.name amenity_type_name,
-at.is_use amenity_type_is_use,
-at.reg_date amenity_type_reg_date,
-at.mod_date amenity_type_mod_date,
-
-i.id image_id,
-i.property_id image_property_id,
-i.is_main image_is_main,
-i.path image_path,
-i.file_size image_file_size,
-i.reg_date image_reg_date,
-i.mod_date image_mod_date
-
-from property p, property_type pt, sub_property_type spt, room_type rt,
-amenity a, amenity_type at, image i
-
-where p.id=#{propertyId}
-and p.property_type_id=pt.id and p.sub_property_type_id=spt.id and p.room_type_id=rt.id
-and a.property_id=p.id and a.amenity_type_id=at.id and at.is_use='Y'
-and i.property_id=p.id
+where
+	p.id=#{propertyId} and
+	p.property_type_id=pt.id and p.sub_property_type_id=spt.id and p.room_type_id=rt.id and
+	a.property_id=p.id and a.amenity_type_id=at.id and at.is_use='Y' and
+	i.property_id=p.id
 </select>
 
 <select id="selectPropertyTypes" resultMap="propertyTypeMap">
@@ -214,22 +230,65 @@ select * from image
 </select>
 
 <select id="selectAmenityType" parameterType="int" resultMap="amenityTypeMap">
-select * from amenity_type where amenity_type_id=#{amenityTypeId}
+select * from amenity_type
+where amenity_type_id=#{amenityTypeId}
 </select>
 
 <select id="selectAmenities" parameterType="int" resultMap="amenityMap">
 select
-a.*,
+	a.*,
+	at.id type_id,
+	at.name type_name,
+	at.is_use type_is_use,
+	at.reg_date type_reg_date,
+	at.mod_date type_mod_date
 
-at.id type_id,
-at.name type_name,
-at.is_use type_is_use,
-at.reg_date type_reg_date,
-at.mod_date type_mod_date
+from
+	amenity a, amenity_type at
+where
+	a.property_id=#{propertyId} and a.amenity_type_id=at.id and
+	at.is_use='Y'
+</select>
 
-from amenity a, amenity_type at
-where a.property_id=#{propertyId} and a.amenity_type_id=at.id
-and at.is_use='Y'
+<insert id="insertBooking" parameterType="bookingDTO">
+insert into booking(
+	id,property_id,guest_id,host_id,
+	guest_count,day_count,total_price,
+	booking_number,
+	check_in_date,check_out_date
+)
+values(
+	booking_id_seq.nextval,#{propertyId},#{guestId},#{hostId},
+	#{guestCount},#{dayCount},#{totalPrice},
+	#{bookingNumber} || booking_number_seq.nextval,
+	#{checkInDate},#{checkOutDate}
+)
+</insert>
+
+<select id="selectSameBooking" parameterType="bookingDTO" resultMap="bookingMap">
+select * from booking
+
+where
+	property_id=#{propertyId} and
+	guest_id=#{guestId} and
+	host_id=#{hostId} and
+	substr(booking_number,0,length(booking_number) - 1)=#{bookingNumber} and
+	to_date(check_in_date)=to_date(#{checkInDate}) and
+	to_date(check_out_date)=to_date(#{checkOutDate})
+</select>
+
+<insert id="insertTransaction" parameterType="transactionDTO">
+insert into transaction(
+	id,booking_id,site_fee
+)
+values(
+	transaction_id_seq.nextval,#{bookingId},#{siteFee}
+)
+</insert>
+
+<select id="selectSameTransaction" parameterType="transactionDTO" resultMap="transactionMap">
+select * from transaction
+where booking_id=#{bookingId}
 </select>
 
 </mapper>

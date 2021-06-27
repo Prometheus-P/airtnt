@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.airtnt.airtnt.model.AmenityDTO;
 import com.airtnt.airtnt.model.BookingDTO;
 import com.airtnt.airtnt.model.PropertyDTO;
+import com.airtnt.airtnt.model.TransactionDTO;
 import com.airtnt.airtnt.model.ImageDTO;
 
 @Service
@@ -70,4 +71,15 @@ public class PropertyMapper {
 		return sqlSession.insert("insertBooking", booking);
 	}
 	
+	public BookingDTO selectSameBooking(BookingDTO booking) {
+		return sqlSession.selectOne("selectSameBooking", booking);
+	}
+	
+	public int insertTransaction(TransactionDTO transaction) {
+		return sqlSession.insert("insertTransaction", transaction);
+	}
+	
+	public TransactionDTO selectSameTransaction(TransactionDTO transaction) {
+		return sqlSession.selectOne("selectSameTransaction", transaction);
+	}
 }
