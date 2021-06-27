@@ -7,6 +7,6 @@
 <title>publish celebration</title>
 </head>
 <body>
-	<!-- host/host_mode -->
+	<!-- /host/host_mode -->
 </body>
 </html>

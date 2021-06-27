@@ -9,7 +9,7 @@
 </head>
 <body>
 	<h2>주소 입력페이지!</h2>
-	<form action="<c:url value='host/property_detail_3'/>" onsubmit="check()" name="f" method="post">
+	<form action="<c:url value='/host/property_detail_3'/>" onsubmit="check()" name="f" method="post">
 	<input type="text" id="address" name = "address" placeholder="주소" disabled
 						style="text-align: center; width: 200px; height: 35px;">
 	<button type="button" onclick="address_DaumPostcode(); display()" value="주소 검색">

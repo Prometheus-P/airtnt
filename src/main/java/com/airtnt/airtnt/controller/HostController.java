@@ -206,11 +206,12 @@ public class HostController implements HostControllerInterface {
 	}
 
 	@Override
+	@RequestMapping("host/host_mode")
 	public ModelAndView host_mode(HttpServletRequest req) {
 		HttpSession session = req.getSession();
 		String hostId = (String) session.getAttribute("memeber_id");
 		List<BookingDTO> listBooking = hostMapper.getBookingList(hostId);
-		return null;
+		return new ModelAndView("/host/host_mode/host_mode","listBooking",listBooking );
 	}
 
 	@Override

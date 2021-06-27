@@ -9,7 +9,7 @@
 </head>
 <body>
 <h2>숙소 상세 </h2>
-<form method="post" name="f" action="<c:url value='host/property_image_4'/>"
+<form method="post" name="f" action="<c:url value='/host/property_image_4'/>"
 onsubmit="check()">
 <table>
 	<tr>

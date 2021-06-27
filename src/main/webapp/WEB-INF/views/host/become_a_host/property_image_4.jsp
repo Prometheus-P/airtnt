@@ -42,7 +42,7 @@
             <form id="uploadForm" style="display: none;" />
         </div>
         <div class="footer">
-            <button class="submit"><a href="imageupload" title="등록" class="btnlink">등록</a></button>
+            <button class="submit"><a href="/imageupload" title="등록" class="btnlink">등록</a></button>
         </div>
     </div>
     

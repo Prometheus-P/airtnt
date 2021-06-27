@@ -7,6 +7,6 @@
 <title>preview</title>
 </head>
 <body>
-<!-- host/publish_celebration_6 -->
+<!-- /host/publish_celebration_6 -->
 </body>
 </html>
