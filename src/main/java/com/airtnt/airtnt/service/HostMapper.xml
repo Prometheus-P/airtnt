@@ -33,7 +33,7 @@
 			id, name, 
 			is_use as isUse, 
 			reg_date as regDate, 
-			mode_date as modeDate 
+			mod_date as modDate 
 		from property_type order by id
 	</select>
 	<select id="subPropertyType" parameterType="int" resultType="subPropertyTypeDTO">
