@@ -40,12 +40,18 @@
 							</thead>
 							<tbody>
 								<c:if test="${empty listBooking}">
-							게스트가 숙소를 예약하면 여기에 표시됩니다.
-							</c:if>
+								게스트가 숙소를 예약하면 여기에 표시됩니다.
+								</c:if>
 								<c:forEach var="dto" items="${listBooking}">
-								</c:forEach>
 								<tr>
-									<td><font color="red">확정</font></td>
+									<td>
+									<c:if test="${dto.confirmDate == null}">
+										<font color="red"></font>
+									</c:if>
+									
+										<font color="blue"></font>
+									
+									</td>
 									<td><font color="black">박하성</font><br>성인 1명</td>
 									<td><font color="black">2021년 07월 01일 ~ 2021년 07월
 											10일</font><br>10박</td>
@@ -55,6 +61,7 @@
 										<button class="md-trigger" data-modal="modal-1">세부정보</button>
 									</td>
 								</tr>
+								</c:forEach>
 							</tbody>
 						</table>
 					</div>

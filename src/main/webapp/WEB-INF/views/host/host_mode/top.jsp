@@ -26,7 +26,6 @@
 					<ul class="menu__list">
 						<li class="menu__item menu__item--current"><a href="#" class="menu__link">투데이</a></li>
 						<li class="menu__item"><a href="#" class="menu__link">인사이트</a></li>
-						<li class="menu__item"><a href="#" class="menu__link">달력</a></li>
 						<li class="menu__item"><a href="#" class="menu__link">숙소</a></li>
 						<li class="menu__item"><a href="#" class="menu__link">대금 수령 내역</a></li>
 					</ul>

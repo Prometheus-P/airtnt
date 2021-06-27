@@ -26,6 +26,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.MultipartRequest;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.airtnt.airtnt.model.BookingDTO;
 import com.airtnt.airtnt.model.GuideDTO;
 import com.airtnt.airtnt.model.PropertyTypeDTO;
 import com.airtnt.airtnt.model.RoomTypeDTO;
@@ -206,7 +207,9 @@ public class HostController implements HostControllerInterface {
 
 	@Override
 	public ModelAndView host_mode(HttpServletRequest req) {
-		// TODO Auto-generated method stub
+		HttpSession session = req.getSession();
+		String hostId = (String) session.getAttribute("memeber_id");
+		List<BookingDTO> listBooking = hostMapper.getBookingList(hostId);
 		return null;
 	}
 

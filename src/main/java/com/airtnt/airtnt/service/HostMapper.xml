@@ -6,10 +6,20 @@
 <mapper namespace="com.airtnt.airtnt.service.HostMapper">
 	
 	<select id="listGuide" resultType="GuideDTO">
-		select * from guide
+		select 
+			id, subject, 
+			reg_date as 'regDate', 
+			mod_date as 'modDate', 
+			explanation, content1, content2, content3 
+		from guide
 	</select>
 	<select id="getGuide" parameterType="int" resultType="guideDTO">
-		select * from guide where id = #{id}
+		select 
+			id, subject, 
+			reg_date as 'regDate', 
+			mod_date as 'modDate', 
+			explanation, content1, content2, content3 
+		from guide where id = #{id}
 	</select>
 	<insert id="insertProperty" parameterType="propertyDTO">
 		insert into property values(property_seq.nextval, #{name}, #{hostId}, 
@@ -20,13 +30,46 @@
 		
 	</delete>
 	<select id="propertyType" resultType="propertyTypeDTO">
-		select * from property_type order by id
+		select 
+			id, name, 
+			is_use as 'isUse', 
+			reg_date as 'regDate', 
+			mode_date as 'modeDate' 
+		from property_type order by id
 	</select>
 	<select id="subPropertyType" parameterType="int" resultType="subPropertyTypeDTO">
-		select * from sub_property_type where property_type_id = #{propertyTypeId}
+		select 
+			id, name 
+			property_type_id as 'propertyTypeId' 
+			is_use as 'isUse', 
+			reg_date as 'regDate', 
+			mod_date as 'modDate' 
+		from sub_property_type where propertyTypeId = #{propertyTypeId}
 	</select>
 	<select id="roomType" resultType="roomTypeDTO">
-		select * from room_type
+		select 
+			id, name, 
+			is_use as 'isUse', 
+			reg_date as 'regDate', 
+			mod_date as 'modDate' 
+		from room_type
+	</select>
+	<select id="listBooking" parameterType="String" resultType="BookingDTO">
+		select 
+			id, 
+			property_id as 'propertyId', 
+			guest_id as 'guestId', 
+			host_id as 'hostId', 
+			guest_count as 'guestCount', 
+			day_count as 'dayCount', 
+			total_price as 'totalPrice', 
+			booking_number as 'bookingNumber', 
+			check_in_date as 'checkInDate', 
+			check_out_date as 'checkOutDate', 
+			confirm_date as 'confirmDate', 
+			reg_date as 'regDate', 
+			mod_date as 'modDate' 
+		from booking where hostId = #{hostId}
 	</select>
 	<!-- <insert id="saveImage" parameterType="java.util.Map">
     I	insert into img_table VALUES #{img}    
