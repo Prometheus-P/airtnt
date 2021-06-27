@@ -31,13 +31,13 @@
   <header id="header" class="hoc clear" style="padding-right: 10vh;">
     <div id="logo" class="fl_left"> 
       <!-- ################################################################################################ -->
-      <h1><a href="index">AirTnT</a></h1>
+      <h1><a href="/index">AirTnT</a></h1>
       <!-- ################################################################################################ -->
     </div>
     <nav id="mainav" class="fl_right"> 
       <!-- ################################################################################################ -->
       <ul class="clear">
-        <li class="active"><a href="index">호스트 되기</a></li>
+        <li class="active"><a href="<c:url value='/host/guide_home'/>">호스트 되기</a></li>
         <c:if test="${!isLogin}">
         <li><a class="drop" href="#" >로그인 하기</a>
           <ul>
