@@ -12,7 +12,7 @@
 		<title>Guide</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<link rel="stylesheet" href="<c:url value='/resources_host/assets/css/main.css'/>" />
+		<link rel="stylesheet" href="/resources_host/assets/css/main.css" />
 	</head>
 	<body>
 		<!-- Header -->
@@ -28,7 +28,7 @@
 					<section id="one" class="wrapper style1">
 
 						<div class="image fit flush">
-							<img src="<c:url value='/resources_host/images/pic02.jpg'/>" alt="" />
+							<img src="/resources_host/images/pic02.jpg" alt="" />
 						</div>
 						<header class="special">
 							<h2>${guideDTO.subject}</h2>
@@ -83,10 +83,10 @@
 				</div>
 			</footer>
 		<!-- Scripts -->
-			<script src="<c:url value='/resources_host/assets/js/jquery.min.js'/>"></script>
-			<script src="<c:url value='/resources_host/assets/js/jquery.poptrox.min.js'/>"></script>
-			<script src="<c:url value='/resources_host/assets/js/skel.min.js'/>"></script>
-			<script src="<c:url value='/resources_host/assets/js/util.js'/>"></script>
-			<script src="<c:url value='/resources_host/assets/js/main.js'/>"></script>
+			<script src="/resources_host/assets/js/jquery.min.js"></script>
+			<script src="/resources_host/assets/js/jquery.poptrox.min.js"></script>
+			<script src="/resources_host/assets/js/skel.min.js"></script>
+			<script src="/resources_host/assets/js/util.js"></script>
+			<script src="/resources_host/assets/js/main.js"></script>
 	</body>
 </html>

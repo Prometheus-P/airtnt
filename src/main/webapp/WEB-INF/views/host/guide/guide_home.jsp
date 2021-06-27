@@ -23,7 +23,7 @@
     </div>
     <nav id="mainav" class="fl_right"> 
       <!-- ################################################################################################ -->
-    	<a class="btn" href="<c:url value='host/property_type_0'/>">시작하기</a>
+    	<a class="btn" href="<c:url value='/host/property_type_0'/>">시작하기</a>
       <!-- ################################################################################################ -->
     </nav>
   </header>
@@ -37,7 +37,7 @@
       <p>에어티앤티의 호스트가 되면 남는 공간을 활용해 부수입을 올리고 진짜 하고 싶은 일에 매진할 수 있습니다.</p>
       <footer>
         <ul class="nospace inline pushright">
-        	<li><a class="btn" href="<c:url value='host/property_type_0'/>">시작하기</a></li>
+        	<li><a class="btn" href="<c:url value='/host/property_type_0'/>">시작하기</a></li>
         </ul>
       </footer>
     </article>
