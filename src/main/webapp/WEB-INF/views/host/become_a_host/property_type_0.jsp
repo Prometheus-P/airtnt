@@ -8,7 +8,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-<form name="f" method="post" action="<c:url value='property_detail_1'/>">
+<form name="f" method="post" action="<c:url value='host/property_detail_1'/>">
 <h2></h2>
 <h2>
 숙소등록하기 0번 페이지<br>

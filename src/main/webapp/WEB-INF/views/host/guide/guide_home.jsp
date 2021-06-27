@@ -66,10 +66,10 @@
       <ul class="nospace group grid-3">
       <c:forEach var="dto" items="${listGuide}">
         <li class="one_third">
-          <article><a href="<c:url value='host/guide_context'/>?id=${dto.id}"><i class="fas fa-spray-can"></i></a>
+          <article><a href="<c:url value='/host/guide_context'/>?id=${dto.id}"><i class="fas fa-spray-can"></i></a>
             <h6 class="heading">${dto.subject}</h6>
             <p>${dto.explanation}.</p>
-            <footer><a href="<c:url value='host/guide_context'/>?id=${dto.id}">더보기 &raquo;</a></footer>
+            <footer><a href="<c:url value='/host/guide_context'/>?id=${dto.id}">더보기 &raquo;</a></footer>
           </article>
         </li>
         </c:forEach>

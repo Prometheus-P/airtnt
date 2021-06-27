@@ -17,7 +17,7 @@
 	<body>
 		<!-- Header -->
 			<header id="header">
-				<div class="logo"><a href="#">${guideDTO.subject}<span>by AirTnT</span></a></div>
+				<div class="logo">${guideDTO.subject}<span>by AirTnT</span></div>
 			</header>
 
 		<!-- Main -->

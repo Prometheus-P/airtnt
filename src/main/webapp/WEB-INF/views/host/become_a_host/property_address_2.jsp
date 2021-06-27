@@ -9,24 +9,29 @@
 </head>
 <body>
 	<h2>주소 입력페이지!</h2>
-	<form action="<c:url value='/host/property_detail_3'/>"  name="f" method="post">
-	<input type="text" id="sample5_address" name = "adress" placeholder="주소"
+	<form action="<c:url value='host/property_detail_3'/>" onsubmit="check()" name="f" method="post">
+	<input type="text" id="address" name = "address" placeholder="주소" disabled
 						style="text-align: center; width: 200px; height: 35px;">
-	<button type="button" onclick="sample5_execDaumPostcode(); display()" value="주소 검색">
+	<button type="button" onclick="address_DaumPostcode(); display()" value="주소 검색">
 		<span> 주소 검색 </span>
 	</button><br><br><br>
 	<div id="check" style="display:none">
 		<input type="submit" value="위치 확인!">
 	</div>
 	</form>
-	<script>
+	
+	<script type="text/javascript">
 		function display(){
 			document.getElementById("check").style.display="block";
 		}
-		/* function send(){
-			var address = document.getElementById("sample5_address").value;
-			window.location.href = "<c:url value='/property_detail_3'/>?address="+address;
-		} */
+		function check(){
+			if (f.address.value==""){
+				alert("주소를 입력해 주세요!!")
+				f.address.focus()
+				return
+			}
+			document.f.submit()
+		}
 	</script>
 
 	<div>
@@ -54,15 +59,15 @@
 				position : new daum.maps.LatLng(37.537187, 127.005476),
 				map : map
 			});
-
-			function sample5_execDaumPostcode() {
+			
+			function address_DaumPostcode() {
 				new daum.Postcode(
 						{
 							oncomplete : function(data) {
 								var addr = data.address; // 최종 주소 변수
 
 								// 주소 정보를 해당 필드에 넣는다.
-								document.getElementById("sample5_address").value = addr;
+								document.getElementById("address").value = addr;
 								// 주소로 상세 정보를 검색
 								geocoder.addressSearch(
 												data.address,
@@ -87,6 +92,7 @@
 												});
 							}
 						}).open();
+				
 			}
 		</script>
 	</div>
