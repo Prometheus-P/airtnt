@@ -35,21 +35,24 @@ import com.airtnt.airtnt.service.HostMapper;
 
 
 @Controller
-@RequestMapping("/host")
 @SuppressWarnings("unchecked")
 public class HostController {
-
+	private static final int RESULT_EXCEED_SIZE = -2;
+    private static final int RESULT_UNACCEPTED_EXTENSION = -1;
+    private static final int RESULT_SUCCESS = 1;
+    private static final long LIMIT_SIZE = 10 * 1024 * 1024;
 	@Autowired private HostMapper hostMapper;
 
 	// 1. 호스트 시작하기 >>으로 이동
 	// 나머지는 게시판
-	@RequestMapping("/guide_home")
+	@RequestMapping("guide_home")
 	public ModelAndView guide_home() {
-		List<GuideDTO> guideList = hostMapper.getGuideList();
-		return new ModelAndView("host/guide/guide_home", "guideList", guideList);
+		List<GuideDTO> listGuide = hostMapper.getGuideList();
+		//System.out.print(guideList.get(0).getId());
+		return new ModelAndView("host/guide/guide_home", "listGuide", listGuide);
 	}
 
-	@RequestMapping("/guide_context")
+	@RequestMapping("/host/guide_context")
 	public ModelAndView guide_context(@RequestParam int id) {
 		GuideDTO guideDTO = hostMapper.getGuide(id);
 		List<GuideDTO> guideList = hostMapper.getGuideList();
@@ -64,16 +67,16 @@ public class HostController {
 		return mav;
 	}
 
-	// 2. property_detail으로 이동해서 분류 시작
-	// roomMap & amenitiesMap
-	@RequestMapping("/property_type_0")
+	// 2. property_type_0으로 이동해서 분류 시작
+	
+	@RequestMapping("/host/property_type_0")
 	public ModelAndView property_type_0(HttpServletRequest req) {
 		HttpSession session = req.getSession();
 		List<PropertyTypeDTO> propertyTypeList = hostMapper.getPropertyType();
 		return new ModelAndView("host/become_a_host/property_type_0","propertyTypeList", propertyTypeList);
 	}
-	//property_type(int)
-	@RequestMapping("/property_detail_1")
+	
+	@RequestMapping("/host/property_detail_1")
 	public ModelAndView property_detail_1(HttpServletRequest req, @RequestParam int propertyTypeId) {
 		HttpSession session = req.getSession();
 		session.setAttribute("propertyTypeId", propertyTypeId);
@@ -85,7 +88,7 @@ public class HostController {
 		return mav;
 	}
 
-	@RequestMapping("/property_address_2") // 개인실, 다인실, 전체
+	@RequestMapping("/host/property_address_2") // 개인실, 다인실, 전체
 	// sub_property_type(int) & 
 	//room_type(int) & maxGuest(int)(proptertyDTO) &
 	//bedCount(int)(proptertyDTO) >> (property_detail_1)
@@ -95,21 +98,62 @@ public class HostController {
 		return "host/become_a_host/property_address_2";
 	}
 
-	@RequestMapping("/property_detail_3")
-	public String property_detail_3(HttpServletRequest req, @RequestParam String address) {
+	@RequestMapping("/host/property_detail_3")
+	public String property_detail_3(HttpServletRequest req) {
 		HttpSession session = req.getSession();
-		session.setAttribute("address", address);
+		/*
+		 * session.setAttribute("address", sample5_address);
+		 * System.out.print(sample5_address);
+		 */
 		return "host/become_a_host/property_detail_3";
 	}
 	//amenities(int) & room_name(String) & description(String) & price(int)
 	//(property_detail_3)
-	@RequestMapping("/property_image_4")
+	@RequestMapping("/host/property_image_4")
 	public String property_image_4(HttpServletRequest req, @RequestParam Map<String, String> map2) {
 		HttpSession session = req.getSession();
 		session.setAttribute("map2", map2);
 		return "host/become_a_host/property_image_4";
 	}
-
+	
+	//로직은 언제나 Service에서 짜도록 하자.
+    //중간실패시 rollback은 고려하지 않았음.
+    @ResponseBody
+    @RequestMapping(value="host/imageupload", method=RequestMethod.POST)
+    public int multiImageUpload(@RequestParam("files")List<MultipartFile> images) {
+        long sizeSum = 0;
+        for(MultipartFile image : images) {
+            String originalName = image.getOriginalFilename();
+            //확장자 검사
+            if(!isValidExtension(originalName)){
+                return RESULT_UNACCEPTED_EXTENSION;
+            }
+            
+            //용량 검사
+            sizeSum += image.getSize();
+            if(sizeSum >= LIMIT_SIZE) {
+                return RESULT_EXCEED_SIZE;
+            }
+            
+            //TODO 저장..
+        }
+        
+        //실제로는 저장 후 이미지를 불러올 위치를 콜백반환하거나,
+        //특정 행위를 유도하는 값을 주는 것이 옳은 것 같다.
+        return RESULT_SUCCESS;
+    }
+    
+    //required above jdk 1.7 - switch(String)
+    private boolean isValidExtension(String originalName) {
+        String originalNameExtension = originalName.substring(originalName.lastIndexOf(".") + 1);
+        switch(originalNameExtension) {
+        case "jpg":
+        case "png":
+        case "gif":
+            return true;
+        }
+        return false;
+    }
 	/*
 	 * @RequestMapping("/save_image") public String save_image(Vo vo) { try {
 	 * Map<String, Object> hmap = new HashMap<String, Object>(); hmap.put("img",
@@ -135,7 +179,7 @@ public class HostController {
 	 */
 	
 	
-	@RequestMapping("/property_preview_5")
+	@RequestMapping("/host/property_preview_5")
 	public String property_preview_5(HttpServletRequest req) {
 		HttpSession session = req.getSession();
 		MultipartHttpServletRequest mr = (MultipartHttpServletRequest) req;
@@ -175,7 +219,7 @@ public class HostController {
 		return "host/become_a_host/property_preview_5";
 	}
 
-	@RequestMapping("/publish_celebration_6")
+	@RequestMapping("/host/publish_celebration_6")
 	public String publish_celebration_6(HttpServletRequest req) {
 		HttpSession session = req.getSession();
 		Map<String, Integer> map1 = (Map<String, Integer>) session.getAttribute("map1");

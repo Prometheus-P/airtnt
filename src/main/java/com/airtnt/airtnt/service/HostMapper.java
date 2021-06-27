@@ -1,13 +1,11 @@
 package com.airtnt.airtnt.service;
 
 import java.util.List;
-import java.util.Map;
+
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.airtnt.airtnt.model.AmenityDTO;
 import com.airtnt.airtnt.model.GuideDTO;
 import com.airtnt.airtnt.model.PropertyDTO;
 import com.airtnt.airtnt.model.PropertyTypeDTO;
@@ -20,8 +18,11 @@ public class HostMapper {
 	private SqlSession sqlSession;
 
 	public List<GuideDTO> getGuideList(){
-		List<GuideDTO> guideList = sqlSession.selectList("guideList");
-		return guideList;
+		List<GuideDTO> listGuide = sqlSession.selectList("listGuide");
+		if(listGuide==null) {
+			System.out.print("ok");
+		}
+		return listGuide;
 	}
 	public GuideDTO getGuide(int id) {
 		GuideDTO guideDTO = sqlSession.selectOne("getGuide", id);

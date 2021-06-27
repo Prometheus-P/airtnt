@@ -5,7 +5,7 @@
 
 <mapper namespace="com.airtnt.airtnt.service.HostMapper">
 	
-	<select id="guideList" resultType="guideDTO">
+	<select id="listGuide" resultType="GuideDTO">
 		select * from guide
 	</select>
 	<select id="getGuide" parameterType="int" resultType="guideDTO">
