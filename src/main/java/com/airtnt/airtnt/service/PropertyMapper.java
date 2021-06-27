@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import com.airtnt.airtnt.model.AmenityDTO;
 import com.airtnt.airtnt.model.BookingDTO;
 import com.airtnt.airtnt.model.PropertyDTO;
-import com.airtnt.airtnt.model.RoomImageDTO;
+import com.airtnt.airtnt.model.ImageDTO;
 
 @Service
 public class PropertyMapper {
@@ -23,11 +23,11 @@ public class PropertyMapper {
 		for(PropertyDTO property : properties) {
 			int propertyId = property.getId();
 			
-			List<RoomImageDTO> images = selectRoomImages(propertyId);
-			property.setImages(images);
+//			List<ImageDTO> images = selectRoomImages(propertyId);
+//			property.setImages(images);
 			
-			List<AmenityDTO> amenities = selectAmenities(propertyId);
-			property.setAmenities(amenities);
+//			List<AmenityDTO> amenities = selectAmenities(propertyId);
+//			property.setAmenities(amenities);
 		}
 		return properties;
 	}
@@ -35,18 +35,24 @@ public class PropertyMapper {
 	public PropertyDTO selectPropertyById(int propertyId) {
 		PropertyDTO property = sqlSession.selectOne("selectPropertyById", propertyId);
 		
-		List<RoomImageDTO> images = selectRoomImages(propertyId);
-		property.setImages(images);
+//		List<ImageDTO> images = selectRoomImages(propertyId);
+//		property.setImages(images);
 		
-		List<AmenityDTO> amenities = selectAmenities(propertyId);
-		property.setAmenities(amenities);
+//		List<AmenityDTO> amenities = selectAmenities(propertyId);
+//		property.setAmenities(amenities);
+		for(ImageDTO image : property.getImages()) {
+			System.out.println(image);
+		}
+		for(AmenityDTO amenity : property.getAmenities()) {
+			System.out.println(amenity);
+		}
 		
 		return property;
 	}
 	
-	public List<RoomImageDTO> selectRoomImages(int propertyId){
-		List<RoomImageDTO> images = sqlSession.selectList("selectRoomImages", propertyId);
-		for(RoomImageDTO image : images) {
+	public List<ImageDTO> selectRoomImages(int propertyId){
+		List<ImageDTO> images = sqlSession.selectList("selectRoomImages", propertyId);
+		for(ImageDTO image : images) {
 			System.out.println(image);
 		}
 		return images;

@@ -9,6 +9,7 @@ public class SubPropertyTypeDTO {
 	private char isUse;
 	private Date regDate;
 	private Date modDate;
+	private String propertyTypeName;
 	
 	public int getId() {
 		return id;
@@ -45,6 +46,12 @@ public class SubPropertyTypeDTO {
 	}
 	public void setModDate(Date modDate) {
 		this.modDate = modDate;
+	}
+	public String getPropertyTypeName() {
+		return propertyTypeName;
+	}
+	public void setPropertyTypeName(String propertyTypeName) {
+		this.propertyTypeName = propertyTypeName;
 	}
 	
 	@Override

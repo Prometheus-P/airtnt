@@ -142,11 +142,11 @@ Licence URI: https://www.os-templates.com/template-terms
 	            <c:forEach var="property" items="${properties}">
 	            <li style="height: 150px;">
 	              <div class="one_third first" >
-	                <a href="<c:url value='/property/detail?propertyId=${property.id}'/>"><img src="/resources/room_img/room_ex.jpg" alt="" ></a>
+	                <a href="<c:url value='/property/detail?propertyId=${property.id}'/>"><img src="${property.images.get(0).path}" alt="" ></a>
 	              </div>
 	              <div class="two_third">
 	                <h2><a href="<c:url value='/property/detail?propertyId=${property.id}'/>">${property.name}</a></h2>
-	                <h4>${property.propertyTypeName}/${property.subPropertyTypeName} ${property.roomTypeName}</h4>
+	                <h4>${property.propertyType.name}/${property.subPropertyType.name} ${property.roomType.name}</h4>
 	                <h4>${property.address}</h4>
 	              </div>
 	            </li>

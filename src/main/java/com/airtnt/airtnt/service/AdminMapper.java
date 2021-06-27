@@ -6,10 +6,12 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.airtnt.airtnt.model.AmenityTypeDTO;
 import com.airtnt.airtnt.model.DashBoardDTO;
-import com.airtnt.airtnt.model.FilterPropDTO;
-import com.airtnt.airtnt.model.FilterSubPropDTO;
 import com.airtnt.airtnt.model.MemberDTO;
+import com.airtnt.airtnt.model.PropertyTypeDTO;
+import com.airtnt.airtnt.model.RoomTypeDTO;
+import com.airtnt.airtnt.model.SubPropertyTypeDTO;
 
 
 @Service
@@ -23,49 +25,37 @@ public class AdminMapper {
 		return list;
 	}
 	
-	//[filter] : ´ëºÐ·ù ¸®½ºÆ®
-	public List<FilterPropDTO> listProperty(){
-		List<FilterPropDTO> list = sqlSession.selectList("listProperty");
+	//[filter] : roomTypeList 
+	public List<RoomTypeDTO> selectRoomTypeList(){
+		List<RoomTypeDTO> list = sqlSession.selectList("selectRoomTypeList");
 		return list;
 	}
 	
-	//[filter] : ÁßºÐ·ù ¸®½ºÆ®
-	public List<FilterSubPropDTO> listSubProperty(){
-		List<FilterSubPropDTO> list = sqlSession.selectList("listSubProperty");
+	//[filter] : propertyTypeList
+	public List<PropertyTypeDTO> selectPropertyTypeList(){
+		List<PropertyTypeDTO> list = sqlSession.selectList("selectPropertyTypeList");
 		return list;
 	}
 	
-	//[filter] : ´ëºÐ·ù ¼±ÅÃ½Ã ´ëºÐ·ùid¿¡ ÇØ´çÇÏ´Â ÁßºÐ·ù ¸®½ºÆ®¸¦ ²¨³»¿Â´Ù
-	public List<FilterSubPropDTO> getSubProperty(String propertyTypeId){
-		List<FilterSubPropDTO> list = sqlSession.selectList("getSubProperty", propertyTypeId);
+	//[filter] : subPropertyTypeList 
+	public List<SubPropertyTypeDTO> selectSubPropertyTypeList(){
+		List<SubPropertyTypeDTO> list = sqlSession.selectList("selectSubPropertyTypeList");
 		return list;
 	}
 	
-	//[filter] : ´ëºÐ·ù Ãß°¡
-	public int insertProperty(FilterPropDTO prop){
-		int res = sqlSession.insert("insertProperty", prop);
-		return res;
+	//[filter] : subPropertyTypeList 
+	public List<SubPropertyTypeDTO> getSubPropertyType(String propertyTypeId){
+		List<SubPropertyTypeDTO> list = sqlSession.selectList("getSubPropertyType", propertyTypeId);
+		return list;
 	}
 	
-	//[filter] : ´ëºÐ·ù ¼öÁ¤
-	public int updateProperty(FilterPropDTO prop){
-		int res = sqlSession.update("updateProperty", prop);
-		return res;
+	//[filter] : amenityTypeList
+	public List<AmenityTypeDTO> selectAmenityTypeList(){
+		List<AmenityTypeDTO> list = sqlSession.selectList("selectAmenityTypeList");
+		return list;
 	}
 	
-	//[filter] : ÁßºÐ·ù Ãß°¡
-	public int insertSubProperty(FilterSubPropDTO subProp){
-		int res = sqlSession.insert("insertSubProperty", subProp);
-		return res;
-	}
-	
-	//[filter] : ÁßºÐ·ù ¼öÁ¤
-	public int updateSubProperty(FilterSubPropDTO subProp){
-		int res = sqlSession.update("updateSubProperty", subProp);
-		return res;
-	}
-	
-	//[member] : È¸¿ø Á¶È¸
+	//[member] : ë©¤ë²„ ì „ì²´ ì¡°íšŒ
 	public List<MemberDTO> selectMemberList(){
 		List<MemberDTO> list = sqlSession.selectList("selectMemberList");
 		return list;

@@ -4,8 +4,11 @@ public class AmenityDTO {
 	
 	private int id;
 	private int propertyId;
+	
 	private int amenityTypeId;
 	private String name;
+	
+	private AmenityTypeDTO amenityType;
 
 	public int getId() {
 		return id;
@@ -31,10 +34,15 @@ public class AmenityDTO {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+	public AmenityTypeDTO getAmenityType() {
+		return amenityType;
+	}
+	public void setAmenityType(AmenityTypeDTO amenityType) {
+		this.amenityType = amenityType;
+	}
 	@Override
 	public String toString() {
 		return "AmenityDTO [id=" + id + ", propertyId=" + propertyId + ", amenityTypeId=" + amenityTypeId + ", name="
-				+ name + "]";
+				+ name + ", amenityType=" + amenityType + "]";
 	}
 }

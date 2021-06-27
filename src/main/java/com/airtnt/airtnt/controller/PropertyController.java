@@ -25,7 +25,7 @@ public class PropertyController {
 	private PropertyMapper propertyMapper;
 	
 	@RequestMapping("search")
-	public String searchRoom(HttpServletRequest req,
+	public String search(HttpServletRequest req,
 			@RequestParam(value = "addressKey", required = false) String addressKey) {
 		if(addressKey == null) {
 			addressKey = "노원";
