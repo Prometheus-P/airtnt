@@ -64,7 +64,8 @@
     </nav>
   </header>
 
-<!-- LoginModal-->
+  
+  <!-- LoginModal-->
 <div id="LoginModal" class="modal fade">
 	<div class="modal-dialog modal-login">
 		<div class="modal-content">
@@ -78,10 +79,10 @@
 				<form action="/login" method="post">
 					<div class="form-group">
 						<c:if test="${empty value}">		
-							<input type="text" class="form-control" name="member_id" placeholder="ID" required="required">
+							<input type="text" class="form-control" name="id" placeholder="ID" required="required">
 						</c:if>
 						<c:if test="${not empty value}">
-							<input type="text" class="form-control" name="member_id" placeholder="ID" required="required" value="${value}">		
+							<input type="text" class="form-control" name="id" placeholder="ID" required="required" value="${value}">		
 						</c:if>
 					</div>
 					<div class="form-group">
@@ -118,23 +119,23 @@
 			<div class="modal-body">
 				<form action="/signUp" method="post">
 					<div class="form-group">
-						<input type="text" class="form-control" name="member_id" placeholder="ID" required="required">		
+						<input type="text" class="form-control" name="id" placeholder="ID" required="required">		
 					</div>
 					<div class="form-group">
 						<input type="password" class="form-control" name="passwd" placeholder="Password" required="required">	
 					</div>        
 					<div class="form-group">
-						<input type="text" class="form-control" name="member_name" placeholder="이름" required="required">	
+						<input type="text" class="form-control" name="name" placeholder="이름">	
 					</div>
 					<div class="form-group">
-						<input type="text" class="form-control" name="birth" placeholder="생년월일 (8자리)" required="required">	
+						<input type="text" class="form-control" name="birth" placeholder="생년월일 (2000/01/01)">	
 					</div>
 					<div class="form-group">
-						<input type="text" class="form-control" name="tel" placeholder="연락처(11자리)" required="required">	
+						<input type="text" class="form-control" name="tel" placeholder="연락처(010/0000/0000)">	
 					</div>
 					<div class="form-group">
-						<label><input type="checkbox" class="center" name="gender" value="1" checked="checked"> 남</label>
-      					<label><input type="checkbox" class="center" name="gender" value="2"> 여</label>
+						<label><input type="radio" class="center" name="gender" value="1" checked="checked"> 남</label>
+      					<label><input type="radio" class="center" name="gender" value="2"> 여</label>
 					</div>
 					<div class="form-group">
 						<button type="submit" class="btn btn-primary btn-lg btn-block login-btn" style="font-size: 15px">동의 및 계속하기</button>
@@ -146,4 +147,4 @@
 			</div>
 		</div>
 	</div>
-</div> 
+</div>    
