@@ -118,37 +118,14 @@ public class HostController implements HostControllerInterface {
 		return "host/become_a_host/property_image_4";
 	}
 
-	/*
-	 * @RequestMapping("/save_image") public String save_image(Vo vo) { try {
-	 * Map<String, Object> hmap = new HashMap<String, Object>(); hmap.put("img",
-	 * vo.getImgFile().getBytes()); hostMapper.saveImage(hmap); }catch(Exception e)
-	 * { e.printStackTrace(); } return "redirect:host/property_image_4"; }
-	 */
-	/*
-	 * @RequestMapping(value="/save_image",
-	 * method = RequestMethod.POST, produces="text/plain;Charset=UTF-8")
-	 * 
-	 * @ResponseBody public void
-	 * uploadContent(MultipartHttpServletRequest req) throws Exception{
-	 * Gson gson = new Gson(); FolderSet set = new FolderSet();
-	 *  List<MultipartFile> mf = req.getFiles("files[]"); }
-	 */
-	/*
-	 * @RequestMapping(value="/save_image", method = RequestMethod.POST,
-	 * produces="text/plain; Charset=UTF-8")
-	 * 
-	 * @ResponseBody public void uploadContent(MultipartHttpServletRequest req) {
-	 * Gson gson = new Gson(); FolderSet set = new FolderSet();
-	 * List<MultipartFile> mf = req.getFiles("files[]"); }
-	 */
 	private static final int RESULT_EXCEED_SIZE = -2;
     private static final int RESULT_UNACCEPTED_EXTENSION = -1;
     private static final int RESULT_SUCCESS = 1;
     private static final long LIMIT_SIZE = 10 * 1024 * 1024;
 	@Override
 	@ResponseBody
-	@RequestMapping("/host/property_preview_5")
-	public int property_preview_5(HttpServletRequest req, @RequestParam("files")List<MultipartFile> images) {
+	@RequestMapping(value= "/host/image_upload")
+	public int image_upload(HttpServletRequest req, @RequestParam("files")List<MultipartFile> images) {
 		  long sizeSum = 0;
 	        for(MultipartFile image : images) {
 	            String originalName = image.getOriginalFilename();
@@ -169,20 +146,13 @@ public class HostController implements HostControllerInterface {
 	        		originalName += "_" + System.currentTimeMillis();
 	        	}
 	        	try {
-	        		image.transferTo(new File("/resources/property_image/" + originalName));
+	        		image.transferTo(new File("/resources/property_img/" + originalName));
+	        		System.out.print(originalName);
 	        	}catch(Exception e) {
 	        		e.printStackTrace();
 	        	}
-	        	//File file = new File(upPath, originalName);
-	        	//MultipartHttpServletRequest mr = (MultipartHttpServletRequest) req;
-	        	//MultipartFile mf = mr.getFile("filename");
-	    		//mf.transferTo(file);
 	        }
-	        
-	        //실제로는 저장 후 이미지를 불러올 위치를 콜백반환하거나,
-	        //특정 행위를 유도하는 값을 주는 것이 옳은 것 같다.
 	        return RESULT_SUCCESS;
-		//return "host/become_a_host/property_preview_5";
 	}
 	private boolean isValidExtension(String originalName) {
         String originalNameExtension = originalName.substring(originalName.lastIndexOf(".") + 1);
@@ -194,6 +164,14 @@ public class HostController implements HostControllerInterface {
         }
         return false;
     }
+	
+	@Override
+	@RequestMapping("/host/property_preview_5")
+	public String property_preview_5(HttpServletRequest req) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
 	@Override
 	@RequestMapping("/host/publish_celebration_6")
 	public String publish_celebration_6(HttpServletRequest req) {

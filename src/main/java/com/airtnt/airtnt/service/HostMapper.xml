@@ -43,7 +43,7 @@
 			property_type_id as propertyTypeId,
 			is_use as isUse, 
 			reg_date as regDate, 
-			mod_date as modDate from sub_property_type where propertyTypeId = #{propertyTypeId}
+			mod_date as modDate from sub_property_type where property_type_id = #{propertyTypeId}
 
 	</select>
 	<select id="roomType" resultType="roomTypeDTO">

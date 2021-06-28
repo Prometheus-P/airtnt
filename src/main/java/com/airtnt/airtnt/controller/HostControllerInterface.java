@@ -18,7 +18,8 @@ public interface HostControllerInterface {
 	public String property_address_2(HttpServletRequest req, @RequestParam Map<String, Integer> map1);
 	public String property_detail_3(HttpServletRequest req, @RequestParam String address);
 	public String property_image_4(HttpServletRequest req, @RequestParam Map<String, String> map2);
-	public int property_preview_5(HttpServletRequest req, @RequestParam("files")List<MultipartFile> images) ;
+	public int image_upload(HttpServletRequest req, @RequestParam("files")List<MultipartFile> images) ;
+	public String property_preview_5(HttpServletRequest req);
 	public String publish_celebration_6(HttpServletRequest req) ;
 	public ModelAndView host_mode(HttpServletRequest req);
 	public ModelAndView host_properties_list(HttpServletRequest req);
