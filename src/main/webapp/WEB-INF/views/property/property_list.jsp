@@ -16,6 +16,8 @@ Licence URI: https://www.os-templates.com/template-terms
 <title>AirTnT/숙소검색(키워드:${param.addressKey})</title>
 <meta charset="utf-8">
 
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+
 </head>
 <body id="top">
 <!-- ################################################################################################ -->
@@ -23,20 +25,52 @@ Licence URI: https://www.os-templates.com/template-terms
 <!-- ################################################################################################ -->
 <!-- Top Background Image Wrapper -->
 
-<!-- 검색, 로그인 네비게이션 바 -->
+<!-- 상단 로그인 바 -->
 <jsp:include page="/WEB-INF/views/top.jsp"/>
+
+<form class="d-flex" action="<c:url value='/property/search'/>" method="get">
+<!-- 검색 -->
 <div id="pageintro" class="hoc clear justify-content-center" style="padding-top: 1vh; padding-bottom: 1vh;"> 
     <!-- ################################################################################################ -->
-        <nav id="mainnav" class="navbar navbar-light">
-		  <div class="container-fluid" >
-		    <form class="d-flex" action="/property/search" method="get">
-		      <input name="addressKey" class="form-control me-2" type="search" placeholder="위치" aria-label="Search" style="height: 50px; width: 300px; font-size: 20px">
-		      <button class="btn btn-outline-primary" type="submit" style="background-color:#01546b; border: 0px; height: 50px; width: 100px; font-size: 20px">검색</button>
-		    </form>
-		  </div>
-		</nav>
-    <!-- ################################################################################################ -->
-  </div>
+	<div class="position-absolute top-0 start-50 translate-middle-x">
+	  <nav id="mainnav" class="navbar navbar-light">
+	    <div class="container-fluid" >
+	      <input name="addressKey" class="form-control me-2" type="search" 
+	      placeholder="위치" value="${param.addressKey}"
+	      aria-label="Search" style="height: 50px; width: 300px; font-size: 20px">
+	      <button class="btn btn-outline-primary" type="submit" style="background-color:#01546b; border: 0px; height: 50px; width: 100px; font-size: 20px">검색</button>
+	    </div>
+	  </nav>
+	</div>
+		<%--   <!-- 방 유형 -->
+		<div id="roomType" class="modal fade">
+			<div class="modal-dialog modal-login">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title">방 유형</h4>	
+		                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					</div>
+					<div class="modal-body">
+						
+						<div class="form-group">
+						<c:forEach var="roomType" items="${roomTypes}">
+          					<label><input type="checkbox" name="roomTypeId" value="${roomType.id}">${roomType.name}</label><br>
+       					</c:forEach>
+						</div>
+						
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">확인</button>
+					</div>
+				</div>
+			</div>
+		</div> --%>
+		
+		
+		
+	
+<!-- ################################################################################################ -->
+</div>
 <%-- <div class="bgded overlay padtop" style="background-image:url('<c:url value='/resources/images/demo/backgrounds/01.png'/>')"> 
   <!-- ################################################################################################ -->
   <!-- ################################################################################################ -->
@@ -100,34 +134,127 @@ Licence URI: https://www.os-templates.com/template-terms
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
-<!-- <div class="wrapper row1">
-  <section id="ctdetails" class="hoc clear"> 
-    <ul class="nospace clear">
-      <li class="one_quarter first">
-        <div class="block clear"><a href="#"><i class="fas fa-phone"></i></a> <span><strong>Give us a call:</strong> +00 (123) 456 7890</span></div>
-      </li>
-      <li class="one_quarter">
-        <div class="block clear"><a href="#"><i class="fas fa-envelope"></i></a> <span><strong>Send us a mail:</strong> support@domain.com</span></div>
-      </li>
-      <li class="one_quarter">
-        <div class="block clear"><a href="#"><i class="fas fa-clock"></i></a> <span><strong> Mon. - Sat.:</strong> 08.00am - 18.00pm</span></div>
-      </li>
-      <li class="one_quarter">
-        <div class="block clear"><a href="#"><i class="fas fa-map-marker-alt"></i></a> <span><strong>Come visit us:</strong> Directions to <a href="#">our location</a></span></div>
-      </li>
-    </ul>
+<div class="wrapper row1" style="height: 100px">
+  <section class="hoc container clear" style="padding-top: 20px"> 
+      <div class="one_quarter first" >
+        
+        <div class="btn-group">
+        
+          <button class="btn btn-secondary btn-lg dropdown-toggle" type="button"
+          id="dropdownMenuClickableInside" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false"
+          style="width: 200px; height: 50px; font-size: 20px">
+            방 유형
+          </button>
+          
+          <ul class="dropdown-menu list-group" aria-labelledby="dropdownMenuClickableInside">
+            <c:forEach var="roomType" items="${roomTypes}">
+              <li class="list-group-item" style="font-size: 20px">
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="checkbox" name="roomType" value="${roomType.id}">
+                  <label class="form-check-label">${roomType.name}</label>
+                </div>
+              </li>
+            </c:forEach>
+          </ul>
+          
+        </div>
+        
+      </div>
+      
+      <div class="one_quarter">
+      
+        <div class="btn-group">
+        
+          <button class="btn btn-secondary btn-lg dropdown-toggle" type="button"
+          id="dropdownMenuClickableInside" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false"
+          style="width: 200px; height: 50px; font-size: 20px">
+            숙소 유형
+          </button>
+          
+          <ul class="dropdown-menu list-group" aria-labelledby="dropdownMenuClickableInside">
+            <c:forEach var="propertyType" items="${propertyTypes}" varStatus="status">
+              <li class="list-group-item">
+                <!-- Split dropend button -->
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="checkbox" name="propertyType" value="${propertyType.id}">
+                  <label class="form-check-label">${propertyType.name}</label>
+                </div>
+                
+                <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="collapse"
+                data-bs-target="#collapseExample${status.count}" aria-expanded="false" aria-controls="collapseExample${status.count}">
+                   ${propertyType.name} 세부유형
+                </button>
+                <div class="collapse" id="collapseExample${status.count}">
+                  <c:forEach var="subPropertyType" items="${propertyType.subPropertyTypes}">
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="checkbox" name="subPropertyType" value="${subPropertyType.id}">
+                      <label class="form-check-label">${subPropertyType.name}</label>
+                    </div>
+                  </c:forEach>
+                </div>
+              </li>
+            </c:forEach>
+          </ul>
+          
+        </div>
+      </div>
+      <div class="one_quarter">
+      
+        <div class="btn-group">
+        
+          <button class="btn btn-secondary btn-lg dropdown-toggle" type="button"
+          id="dropdownMenuClickableInside" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false"
+          style="width: 200px; height: 50px; font-size: 20px">
+            편의시설
+          </button>
+          
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuClickableInside" style="font-size: 15px">
+            <c:forEach var="amenityType" items="${amenityTypes}">
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" name="amenityType" value="${amenityType.id}">
+                <label class="form-check-label">${amenityType.name}</label>
+              </div>
+            </c:forEach>
+          </div>
+          
+        </div>
+      </div>
+      
+      <div class="one_quarter">
+        <div class="btn-group">
+        
+          <button class="btn btn-secondary btn-lg dropdown-toggle" type="button"
+          id="dropdownMenuClickableInside" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false"
+          style="width: 200px; height: 50px; font-size: 20px">
+            기타사항
+          </button>
+          
+          
+          <div class="dropdown-menu list-group" aria-labelledby="dropdownMenuClickableInside">
+            <div class="list-group-item button-group form-check form-check-inline" style="font-size: 20px;">
+              <input type="button" class="btn form-check-label" value="-">
+              <input class="form-control form-check-label" type="number" name="guestCount"
+                value="${param.guestCount == null ? 100 : param.guestCount}" min="0"
+                readonly style="width: 100px;">
+              <input type="button" class="btn form-check-label" value="+">
+            </div>
+          </div>
+        </div>
+      </div>
   </section>
-</div> -->
+</div>
+
+</form>
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
 <div class="wrapper row3">
-  <main class="hoc container clear"> 
+  <div class="hoc container clear"> 
     <!-- main body -->
     <!-- ################################################################################################ -->
     <div class="content"> 
       <!-- ################################################################################################ -->
-      <h2>Half</h2>
+      <h2>${param.addressKey} 주변의 숙소 목록</h2>
       <!-- ################################################################################################ -->
       <div class="group btmspace-50 demo">
         <div class="one_half first">
@@ -135,7 +262,7 @@ Licence URI: https://www.os-templates.com/template-terms
 	      <!-- ################################################################################################ -->
 	      <div id="gallery">
 	        <figure>
-	          <header class="heading">Gallery Title Goes Here</header>
+	          <header class="heading"></header>
 	          <hr>
 	          <!-- 숙소리스트 영역 -->
 	          <ul class="nospace clear" >
@@ -188,9 +315,9 @@ Licence URI: https://www.os-templates.com/template-terms
           <script type="text/javascript" src="/resources/map/kakao_map_test.js"></script>
         </div>
       </div>
-      </div>
-      </main>
-      </div>
+    </div>
+  </div>
+</div>
       
       
       
@@ -311,5 +438,6 @@ Licence URI: https://www.os-templates.com/template-terms
 <!-- <script src="../layout/scripts/jquery.min.js"></script>
 <script src="../layout/scripts/jquery.backtotop.js"></script>
 <script src="../layout/scripts/jquery.mobilemenu.js"></script> -->
+
 </body>
 </html>

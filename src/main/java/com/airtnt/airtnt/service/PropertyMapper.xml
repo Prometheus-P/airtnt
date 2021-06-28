@@ -41,6 +41,9 @@
 	<result property="isUse" column="is_use"/>
 	<result property="regDate" column="reg_date"/>
 	<result property="modDate" column="mod_date"/>
+	
+	<collection property="subPropertyTypes" ofType="subPropertyTypeDTO"
+	columnPrefix="sub_property_type_" resultMap="subPropertyTypeMap"/>
 </resultMap>
 
 <resultMap type="subPropertyTypeDTO" id="subPropertyTypeMap">
@@ -60,19 +63,19 @@
 	<result property="modDate" column="mod_date"/>
 </resultMap>
 
-<resultMap type="amenityDTO" id="amenityMap">
-	<id property="id" column="id"/>
-	<result property="propertyId" column="property_id"/>
-	<association property="amenityType" column="amenity_type_id"
-	columnPrefix="type_" resultMap="amenityTypeMap"/>
-</resultMap>
-
 <resultMap type="amenityTypeDTO" id="amenityTypeMap">
 	<id property="id" column="id"/>
 	<result property="name" column="name"/>
 	<result property="isUse" column="is_use"/>
 	<result property="regDate" column="reg_date"/>
 	<result property="modDate" column="mod_date"/>
+</resultMap>
+
+<resultMap type="amenityDTO" id="amenityMap">
+	<id property="id" column="id"/>
+	<result property="propertyId" column="property_id"/>
+	<association property="amenityType" column="amenity_type_id"
+	columnPrefix="type_" resultMap="amenityTypeMap"/>
 </resultMap>
 
 <resultMap type="imageDTO" id="imageMap">
@@ -214,24 +217,35 @@ where
 </select>
 
 <select id="selectPropertyTypes" resultMap="propertyTypeMap">
-select * from property_type
-</select>
+select
+	pt.*,
+	
+	spt.id sub_property_type_id,
+	spt.name sub_property_type_name,
+	spt.is_use sub_property_type_is_use,
+	spt.reg_date sub_property_type_reg_date,
+	spt.mod_date sub_property_type_mod_date
 
-<select id="selectSubPropertyTypes" resultMap="subPropertyTypeMap">
-select * from sub_property_type
+from
+	property_type pt, sub_property_type spt
+where
+	pt.id=spt.property_type_id and
+	pt.is_use='Y' and
+	spt.is_use='Y'
 </select>
 
 <select id="selectRoomTypes" resultMap="roomTypeMap">
-select * from property_type
+select * from room_type
+order by id asc
+</select>
+
+<select id="selectAmenityTypes" resultMap="amenityTypeMap">
+select * from amenity_type
+order by id asc
 </select>
 
 <select id="selectImages" resultMap="imageMap">
 select * from image
-</select>
-
-<select id="selectAmenityType" parameterType="int" resultMap="amenityTypeMap">
-select * from amenity_type
-where amenity_type_id=#{amenityTypeId}
 </select>
 
 <select id="selectAmenities" parameterType="int" resultMap="amenityMap">
@@ -242,7 +256,6 @@ select
 	at.is_use type_is_use,
 	at.reg_date type_reg_date,
 	at.mod_date type_mod_date
-
 from
 	amenity a, amenity_type at
 where
@@ -267,7 +280,6 @@ values(
 
 <select id="selectSameBooking" parameterType="bookingDTO" resultMap="bookingMap">
 select * from booking
-
 where
 	property_id=#{propertyId} and
 	guest_id=#{guestId} and

@@ -7,8 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.airtnt.airtnt.model.AmenityDTO;
+import com.airtnt.airtnt.model.AmenityTypeDTO;
 import com.airtnt.airtnt.model.BookingDTO;
 import com.airtnt.airtnt.model.PropertyDTO;
+import com.airtnt.airtnt.model.PropertyTypeDTO;
+import com.airtnt.airtnt.model.RoomTypeDTO;
+import com.airtnt.airtnt.model.SubPropertyTypeDTO;
 import com.airtnt.airtnt.model.TransactionDTO;
 import com.airtnt.airtnt.model.ImageDTO;
 
@@ -21,16 +25,28 @@ public class PropertyMapper {
 	public List<PropertyDTO> searchPropertiesByAddress(String addressKey) {
 		addressKey = "%" + addressKey + "%";
 		List<PropertyDTO> properties = sqlSession.selectList("searchPropertiesByAddress", addressKey);
-		for(PropertyDTO property : properties) {
-			int propertyId = property.getId();
-			
+//		for(PropertyDTO property : properties) {
+//			int propertyId = property.getId();
+//			
 //			List<ImageDTO> images = selectRoomImages(propertyId);
 //			property.setImages(images);
-			
+//			
 //			List<AmenityDTO> amenities = selectAmenities(propertyId);
 //			property.setAmenities(amenities);
-		}
+//		}
 		return properties;
+	}
+	
+	public List<PropertyTypeDTO> selectPropertyTypes() {
+		return sqlSession.selectList("selectPropertyTypes");
+	}
+	
+	public List<RoomTypeDTO> selectRoomTypes(){
+		return sqlSession.selectList("selectRoomTypes");
+	}
+	
+	public List<AmenityTypeDTO> selectAmenityTypes(){
+		return sqlSession.selectList("selectAmenityTypes");
 	}
 	
 	public PropertyDTO selectPropertyById(int propertyId) {
@@ -38,15 +54,15 @@ public class PropertyMapper {
 		
 //		List<ImageDTO> images = selectRoomImages(propertyId);
 //		property.setImages(images);
-		
+//		
 //		List<AmenityDTO> amenities = selectAmenities(propertyId);
 //		property.setAmenities(amenities);
-		for(ImageDTO image : property.getImages()) {
-			System.out.println(image);
-		}
-		for(AmenityDTO amenity : property.getAmenities()) {
-			System.out.println(amenity);
-		}
+//		for(ImageDTO image : property.getImages()) {
+//			System.out.println(image);
+//		}
+//		for(AmenityDTO amenity : property.getAmenities()) {
+//			System.out.println(amenity);
+//		}
 		
 		return property;
 	}

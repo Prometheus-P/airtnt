@@ -12,8 +12,12 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.airtnt.airtnt.model.AmenityTypeDTO;
 import com.airtnt.airtnt.model.BookingDTO;
 import com.airtnt.airtnt.model.PropertyDTO;
+import com.airtnt.airtnt.model.PropertyTypeDTO;
+import com.airtnt.airtnt.model.RoomTypeDTO;
+import com.airtnt.airtnt.model.SubPropertyTypeDTO;
 import com.airtnt.airtnt.model.TransactionDTO;
 import com.airtnt.airtnt.service.PropertyMapper;
 
@@ -31,8 +35,16 @@ public class PropertyController {
 			addressKey = "노원";
 		}
 		List<PropertyDTO> properties = propertyMapper.searchPropertiesByAddress(addressKey);
+		List<PropertyTypeDTO> propertyTypes = propertyMapper.selectPropertyTypes();
+		List<RoomTypeDTO> roomTypes = propertyMapper.selectRoomTypes();
+		List<AmenityTypeDTO> amenityTypes = propertyMapper.selectAmenityTypes();
 		
 		req.setAttribute("properties", properties);
+		
+		// search filters
+		req.setAttribute("propertyTypes", propertyTypes);
+		req.setAttribute("roomTypes", roomTypes);
+		req.setAttribute("amenityTypes", amenityTypes);
 		
 		return "property/property_list";
 	}
@@ -59,7 +71,7 @@ public class PropertyController {
 
 	@RequestMapping("booking-confirm")
 	public String bookingConfirm(HttpServletRequest req, @ModelAttribute BookingDTO booking) {
-//		System.out.println(booking);
+		System.out.println(booking);
 		int propertyId;
 		try {
 			propertyId = Integer.parseInt(req.getParameter("propertyId"));
@@ -73,14 +85,13 @@ public class PropertyController {
 		bookingNumber += String.valueOf((int)(Math.random() * 10));
 		booking.setPropertyId(propertyId);
 		booking.setBookingNumber(bookingNumber);
-		booking.setGuestId("ParkHaSung");
 		if(propertyMapper.insertBooking(booking) < 1) {
 			req.setAttribute("msg", "예약 실패(DB 오류)");
 			req.setAttribute("url", "/property/detail?propertyId=" + propertyId);
 			return "message";
 		}
 		booking = propertyMapper.selectSameBooking(booking);
-//		System.out.println(booking);
+		System.out.println(booking);
 		
 		TransactionDTO transaction = new TransactionDTO();
 		transaction.setBookingId(booking.getId());

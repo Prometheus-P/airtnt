@@ -256,7 +256,7 @@ function setTotalPrice(){
 	      -->
 	     <form action="<c:url value='/property/booking?propertyId=${property.id}'/>" method="post">
 	       <input type="hidden" name="hostId" value="${property.hostId}">
-	       <input type="hidden" name="guestId" value="${sessionScope.id}">
+	       <input type="hidden" name="guestId" value="${sessionScope.member_id}">
 	       <input id="day_count" type="hidden" name="dayCount">
 	       <input id="total_price" type="hidden" name="totalPrice">
 	       <table>

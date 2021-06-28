@@ -1,6 +1,7 @@
 package com.airtnt.airtnt.model;
 
 import java.sql.Date;
+import java.util.List;
 
 public class PropertyTypeDTO {
 	private int id;
@@ -8,7 +9,10 @@ public class PropertyTypeDTO {
 	private char isUse;
 	private Date regDate;
 	private Date modDate;
-
+	
+	
+	private List<SubPropertyTypeDTO> subPropertyTypes;
+	
 	public int getId() {
 		return id;
 	}
@@ -40,9 +44,17 @@ public class PropertyTypeDTO {
 		this.modDate = modDate;
 	}
 	
+	
+	public List<SubPropertyTypeDTO> getSubPropertyTypes() {
+		return subPropertyTypes;
+	}
+	public void setSubPropertyTypes(List<SubPropertyTypeDTO> subPropertyTypes) {
+		this.subPropertyTypes = subPropertyTypes;
+	}
+	
 	@Override
 	public String toString() {
 		return "PropertyTypeDTO [id=" + id + ", name=" + name + ", isUse=" + isUse + ", regDate=" + regDate
-				+ ", modDate=" + modDate + "]";
+				+ ", modDate=" + modDate + ", subPropertyTypes=" + subPropertyTypes + "]";
 	}
 }
