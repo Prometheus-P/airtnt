@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.airtnt.airtnt.model.AmenityDTO;
 import com.airtnt.airtnt.model.BookingDTO;
 import com.airtnt.airtnt.model.GuideDTO;
+import com.airtnt.airtnt.model.MemberDTO;
 import com.airtnt.airtnt.model.PropertyDTO;
 import com.airtnt.airtnt.model.PropertyTypeDTO;
 import com.airtnt.airtnt.model.RoomTypeDTO;
@@ -76,9 +77,10 @@ public class HostMapper implements HostMapperInterface {
 	}
 
 	@Override
-	public List<PropertyDTO> getPropertyList() {
-		// TODO Auto-generated method stub
-		return null;
+	public List<PropertyDTO> getPropertyList(String hostId) {
+		List<PropertyDTO> listProperty = sqlSession.selectList("listProperty", hostId);
+		
+		return listProperty;
 	}
 
 	@Override
@@ -94,14 +96,20 @@ public class HostMapper implements HostMapperInterface {
 	}
 
 	@Override
-	public List<TransactionDTO> getTransactionList(int bookingId) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<TransactionDTO> getTransactionList(String hostId) {
+		List<TransactionDTO> listTransaction = sqlSession.selectList("listTransaction", hostId);
+		return listTransaction;
 	}
 
 	@Override
 	public List<AmenityDTO> getAmenityTypeList() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public MemberDTO getMemberDTO(String memberId) {
+		MemberDTO dto = sqlSession.selectOne("getMemberDTO", memberId);
+		return dto;
 	}
 }
