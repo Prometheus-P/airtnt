@@ -63,3 +63,87 @@
       <!-- ################################################################################################ -->
     </nav>
   </header>
+
+<!-- LoginModal-->
+<div id="LoginModal" class="modal fade">
+	<div class="modal-dialog modal-login">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="avatar">
+				</div>				
+				<h4 class="modal-title">AirTnT에 오신걸 환영합니다</h4>	
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			</div>
+			<div class="modal-body">
+				<form action="/login" method="post">
+					<div class="form-group">
+						<c:if test="${empty value}">		
+							<input type="text" class="form-control" name="member_id" placeholder="ID" required="required">
+						</c:if>
+						<c:if test="${not empty value}">
+							<input type="text" class="form-control" name="member_id" placeholder="ID" required="required" value="${value}">		
+						</c:if>
+					</div>
+					<div class="form-group">
+						<input type="password" class="form-control" name="passwd" placeholder="Password" required="required">	
+					</div>        
+					<div class="form-group">
+						<button type="submit" class="btn btn-primary btn-lg btn-block login-btn">로그인</button>
+					</div>
+					<div class="form-group">
+						<c:if test="${empty value}">			
+							<input type="checkbox" name="saveId">
+						</c:if>	
+						<c:if test="${not empty value}">
+							<input type="checkbox" name="saveId" checked>
+						</c:if>
+						<p>아이디 기억하기</p>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<a href="findMember">Forgot Password?</a>
+			</div>
+		</div>
+	</div>
+</div> 
+<!-- SignUpModal-->
+<div id="SignUpModal" class="modal fade">
+	<div class="modal-dialog modal-lg modal-login ">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">회 원 가 입</h4>	
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			</div>
+			<div class="modal-body">
+				<form action="/signUp" method="post">
+					<div class="form-group">
+						<input type="text" class="form-control" name="member_id" placeholder="ID" required="required">		
+					</div>
+					<div class="form-group">
+						<input type="password" class="form-control" name="passwd" placeholder="Password" required="required">	
+					</div>        
+					<div class="form-group">
+						<input type="text" class="form-control" name="member_name" placeholder="이름" required="required">	
+					</div>
+					<div class="form-group">
+						<input type="text" class="form-control" name="birth" placeholder="생년월일 (8자리)" required="required">	
+					</div>
+					<div class="form-group">
+						<input type="text" class="form-control" name="tel" placeholder="연락처(11자리)" required="required">	
+					</div>
+					<div class="form-group">
+						<label><input type="checkbox" class="center" name="gender" value="1" checked="checked"> 남</label>
+      					<label><input type="checkbox" class="center" name="gender" value="2"> 여</label>
+					</div>
+					<div class="form-group">
+						<button type="submit" class="btn btn-primary btn-lg btn-block login-btn" style="font-size: 15px">동의 및 계속하기</button>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+						<p>위의 동의 및 계속하기 버튼을 선택하면, 에어티앤티의 서비스 약관, 결제 서비스 약관, 개인정보 처리방침, 차별 금지 정책에 동의하는 것입니다.</p>
+			</div>
+		</div>
+	</div>
+</div> 
