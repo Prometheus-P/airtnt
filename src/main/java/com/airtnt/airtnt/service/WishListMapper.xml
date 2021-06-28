@@ -7,22 +7,33 @@
 		insert into wishlist values(seq_wish_id.nextval, #{name}, #{member_id}, #{is_admin}, sysdate, #{mod_date, jdbcType=VARCHAR})	
 	</insert>
 	<select id="getWish" resultType="WishList_PropertyDTO" parameterType="String"> 
- 		Select name,wish_id,min(property_id),path 
-		From wishlist_view
-        where member_id=#{member_id}
-		Group by name,wish_id,member_id,path
-        order by wish_id
- 	</select>
-	<select id="getAdminWish" resultType="WishList_PropertyDTO"> 
- 		Select name,wish_id,property_id,path 
+ 		Select name,wish_id,property_id,path
 		From wishlist_view
 		Where (property_id , wish_id ) in (
 		Select min(property_id), wish_id
 		From wishlist_view
 		Group by wish_id
-		) and is_admin='Y' and is_main='Y'
+		) and member_id=#{member_id} and is_main='Y' or (member_id =#{member_id} and property_id is null)
+ 	</select>
+	<select id="getAdminWish" resultType="WishList_PropertyDTO"> 
+ 		Select name,wish_id,property_id,path
+		From wishlist_view
+		Where (property_id , wish_id ) in (
+		Select min(property_id), wish_id
+		From wishlist_view
+		Group by wish_id
+		) and is_main='Y' or (is_admin ='Y' and property_id is null)
  	</select>
  	<select id="getWishRoom" resultType="WishList_PropertyDTO" parameterType="String"> 
- 		select property_id from wishlist_property where wish_id=#{wish_id}
+ 		select * from wishlist_room_view where wish_id=#{wish_id}
  	</select>
+ 	<update id="updateWish" parameterType="java.util.Map">
+ 		update wishlist set name=#{wish_name} where id =#{wish_id}
+ 	</update>
+ 	<delete id="deleteWish" parameterType="String">
+ 		delete from wishlist where id =#{wish_id}
+ 	</delete>
+ 	<delete id="deleteWishRoom" parameterType="String">
+ 		delete from wishlist_property where wish_id =#{wish_id}
+ 	</delete>
  </mapper>

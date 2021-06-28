@@ -33,6 +33,8 @@ public class PropertyDTO {
 	private List<RoomImageDTO> images;
 	private List<AmenityDTO> amenities;
 	
+	// wishList
+	
 	public int getId() {
 		return id;
 	}

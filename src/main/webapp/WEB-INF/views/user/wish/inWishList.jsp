@@ -23,7 +23,7 @@
 			    </div>
 			</div>
 				<div class="container-sm fl_left" style="margin-top: 30px;">
-					<div class="bold" style="font-size: 3vh; margin-bottom:2vh;">50${wish_name}</div>
+					<div class="bold" style="font-size: 3vh; margin-bottom:2vh;">${wish_name}</div>
 				    <div  id="btn_group" class="btn-group" role="group" aria-label="Basic outlined example">
 						<a href="#Date" data-toggle="modal">
 							<button id="test_btn2" style="font-size:20px; padding-left:15px; padding-right:15px;" type="button" class="btn btn-outline-primary">날짜</button>
@@ -44,23 +44,23 @@
 					</a>
 				</c:if>
 				<!-- 위시리스트에 숙소가 있다면  -->
-				<%-- <c:if test="${not empty properties}">
-					<ul class="nospace clear" >
-			            <c:forEach var="property" items="${properties}">
+				<c:if test="${not empty properties}">
+					<ul class="nospace clear " style="margin-top: 50px;">
+			            <c:forEach var="dto" items="${properties}">
 			            <li style="height: 150px;">
 			              <div class="one_third first" >
-			                <a href="<c:url value='/guest/property-detail?propertyId=${property.id}'/>"><img src="/resources/room_img/room_ex.jpg" alt="" ></a>
+			                <a href="/guest/property-detail?propertyId=${dto.property_id}"><img src="${dto.path}" alt="" ></a>
 			              </div>
 			              <div class="two_third">
-			                <h2><a href="<c:url value='/guest/property-detail?propertyId=${property.id}'/>">${property.name}</a></h2>
-			                <h4>${property.propertyTypeName}/${property.subPropertyTypeName} ${property.roomTypeName}</h4>
-			                <h4>${property.address}</h4>
+			                <h2><a href="/guest/property-detail?propertyId=${dto.property_id}">${dto.property_name}</a></h2>
+			                <h4>${dto.type_name}/${dto.sub_type_name} ${dto.room_type_name}</h4>
+			                <h4>${dto.property_address}</h4>
 			              </div>
 			            </li>
 			            <hr>
 			            </c:forEach>
 			          </ul>
-			    </c:if> --%>
+			    </c:if>
 			    </div>
 	    </div>
 	</div>
@@ -76,7 +76,7 @@
 				<form action="updateWish" method="post">
 					<input type="hidden" name="wish_id" value="${wish_id}">
 					<div class="form-group">
-							<input type="text" class="form-control" name="wish_name" placeholder="이름" required="required">
+							<input type="text" class="form-control" name="wish_name" placeholder="${wish_name}" required="required">
 					</div>
 					<!-- <div class="form-group">
 							<select class="form-control" aria-label="Default select example" required="required" name="is_public">
@@ -90,7 +90,7 @@
 				</form>
 			</div>
 			<div class="modal-footer">
-				<a href="deleteWish">위시리스트 삭제하기</a>
+				<a href="deleteWish?wish_id=${wish_id}">위시리스트 삭제하기</a>
 			</div>
 		</div>
 	</div>
