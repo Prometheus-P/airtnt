@@ -17,9 +17,12 @@
 	      	<c:forEach var="dto" items="${user_wishList}">
 		        <li class="one_third">
 		        	<div>
-		        		<a href="inWishList?wish_id=${dto.wish_id}"><img src="<c:url value='/resources/img/main3.jpg'/>"></a>
+		        		<a href="inWishList?wish_id=${dto.wish_id}"><img src="${dto.path}"></a>
+		        		<c:if test="${empty dto.path}">
+		        		<a href="inWishList?wish_id=${dto.wish_id}"><img src="/resources/img/main2.jpg"></a>
+		        		</c:if>
 		        	</div>
-		            <footer><span class="bold " style="font-size: 2vh;">${dto.wish_name}</span></footer>
+		            <footer><span class="bold " style="font-size: 2vh;">${dto.name}</span></footer>
 		        </li>
 			</c:forEach>
 		</c:if>
@@ -27,9 +30,12 @@
 	      	<c:forEach var="dto" items="${admin_wishList}">
 		        <li class="one_third">
 		        	<div>
-		        		<a href="inWishList?wish_id=${dto.wish_id}"><img src="<c:url value='/resources/img/main3.jpg'/>"></a>
+		        		<a href="inWishList?wish_id=${dto.wish_id}"><img src="${dto.path}"></a>
+		        		<c:if test="${empty dto.path}">
+		        		<a href="inWishList?wish_id=${dto.wish_id}"><img src="/resources/img/main2.jpg"></a>
+		        		</c:if>
 		        	</div>
-		            <footer><span class="bold " style="font-size: 2vh;">${dto.wish_name}</span></footer>
+		            <footer><span class="bold " style="font-size: 2vh;">${dto.name}</span></footer>
 		        </li>
 			</c:forEach>
 		</c:if>
@@ -50,9 +56,8 @@
 			</div>
 			<div class="modal-body">
 				<form action="makeWish" method="post">
-					<input type="hidden" name="member_id" value="${member_id}">
 					<div class="form-group">
-							<input type="text" class="form-control" name="wish_name" placeholder="이름" required="required">
+							<input type="text" class="form-control" name="name" placeholder="이름" required="required">
 					</div>
 					<!-- <div class="form-group">
 							<select class="form-control" aria-label="Default select example" required="required" name="is_public">
