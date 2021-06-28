@@ -7,6 +7,6 @@
 		insert into member values(#{id}, #{name, jdbcType=VARCHAR}, #{passwd}, #{birth, jdbcType=VARCHAR}, #{tel, jdbcType=VARCHAR}, 1, #{gender, jdbcType=VARCHAR}, #{member_image, jdbcType=VARCHAR}, sysdate, sysdate)
 	</insert>
 	<select id="getMember" parameterType="String" resultType="memberDTO">
-		select * from member where id = #{member_id}
+		select * from member where member_id = #{member_id}
 	</select>
  </mapper>
