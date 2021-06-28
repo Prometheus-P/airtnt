@@ -56,20 +56,58 @@
 	</select>
 	<select id="listBooking" parameterType="String" resultType="BookingDTO">
 		select 
-			id, 
-			property_id as propertyId, 
-			guest_id as guestId, 
-			host_id as hostId, 
-			guest_count as guestCount, 
-			day_count as dayCount, 
-			total_price as totalPrice, 
-			booking_number as bookingNumber, 
-			check_in_date as checkInDate, 
-			check_out_date as checkOutDate, 
-			confirm_date as confirmDate, 
-			reg_date as regDate, 
-			mod_date as modDate 
-		from booking where hostId = #{hostId}
+			booking.id, 
+			booking.property_id as propertyId, 
+			booking.guest_id as guestId, 
+			booking.host_id as hostId, 
+			booking.guest_count as guestCount, 
+			booking.day_count as dayCount, 
+			booking.total_price as totalPrice, 
+			booking.booking_number as bookingNumber, 
+			booking.check_in_date as checkInDate, 
+			booking.check_out_date as checkOutDate, 
+			booking.confirm_date as confirmDate, 
+			booking.reg_date as regDate, 
+			booking.mod_date as modDate, 
+			member.name as guestName,
+            member.id as memberId 
+		from booking, member
+        where booking.guest_id = member.id
+        and booking.host_id = #{hostId}
+        </select>
+	<select id="getMemberDTO" parameterType="String" resultType="MemberDTO">
+		select * from member where id = #{memberId};
+	</select>
+	<select id="listProperty" parameterType="String" resultType="PropertyDTO">
+		select 
+			id, name,
+			host_id as hostId,
+			address,
+			price,
+			bed_count as bedCount,
+			max_guest as maxGuest,
+			reg_date as regDate,
+			mod_date as modDate,
+			room_type_id as roomTypeId,
+            sub_property_type_id as subPropertyTypeId
+		from property where host_id = #{hostId}
+	</select>
+	<select id="listTransaction" parameterType="String" resultType="TransactionDTO">
+		select 
+			booking.id, 
+			booking.host_id as hostId, 
+			booking.total_price as totalPrice,
+			booking.confirm_date as confirmDate,
+			transaction.id,
+			transaction.booking_id as bookingId,
+			transaction.is_refund as isReFund,
+			transaction.site_fee as siteFee,
+			transaction.pay_expt_date as payExptDate,
+			transaction.reg_date as regDate,
+			transaction.mod_date as modDate
+		from transaction, booking
+        where booking.id = transaction.booking_id
+        and booking.host_id = #{hostId}
 	</select>
 	<!-- <insert id="saveImage" parameterType="java.util.Map">
     I	insert into img_table VALUES #{img}    

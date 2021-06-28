@@ -4,6 +4,7 @@ import java.io.File;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Formatter;
 import java.util.HashMap;
@@ -28,9 +29,12 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.airtnt.airtnt.model.BookingDTO;
 import com.airtnt.airtnt.model.GuideDTO;
+import com.airtnt.airtnt.model.MemberDTO;
+import com.airtnt.airtnt.model.PropertyDTO;
 import com.airtnt.airtnt.model.PropertyTypeDTO;
 import com.airtnt.airtnt.model.RoomTypeDTO;
 import com.airtnt.airtnt.model.SubPropertyTypeDTO;
+import com.airtnt.airtnt.model.TransactionDTO;
 import com.airtnt.airtnt.service.HostMapper;
 
 @Controller
@@ -197,15 +201,18 @@ public class HostController implements HostControllerInterface {
 	@RequestMapping("host/host_mode")
 	public ModelAndView host_mode(HttpServletRequest req) {
 		HttpSession session = req.getSession();
-		String hostId = (String) session.getAttribute("memeber_id");
+		String hostId = (String) session.getAttribute("member_id");
 		List<BookingDTO> listBooking = hostMapper.getBookingList(hostId);
-		return new ModelAndView("/host/host_mode/host_mode","listBooking",listBooking);
+		return new ModelAndView("/host/host_mode/host_mode", "listBooking", listBooking);
 	}
 
 	@Override
+	@RequestMapping("host/host_properties_list")
 	public ModelAndView host_properties_list(HttpServletRequest req) {
-		// TODO Auto-generated method stub
-		return null;
+		HttpSession session = req.getSession();
+		String hostId = (String) session.getAttribute("member_id");
+		List<PropertyDTO> listProperty = hostMapper.getPropertyList(hostId);
+		return new ModelAndView("/host/host_mode/host_properties_list", "listProperty", listProperty);
 	}
 
 	@Override
@@ -221,15 +228,12 @@ public class HostController implements HostControllerInterface {
 	}
 
 	@Override
-	public ModelAndView total_earnings(HttpServletRequest req) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public ModelAndView trasaction_list(HttpServletRequest req) {
-		// TODO Auto-generated method stub
-		return null;
+	@RequestMapping("/host/transaction_list")
+	public ModelAndView transaction_list(HttpServletRequest req) {
+		HttpSession session = req.getSession();
+		String hostId = (String) session.getAttribute("member_id");
+		List<TransactionDTO> listTransaction = hostMapper.getTransactionList(hostId);
+		return new ModelAndView("host/host_mode/transaction_list","listTransaction", listTransaction);
 	}
 
 	@Override
