@@ -15,8 +15,32 @@ Licence URI: https://www.os-templates.com/template-terms
 <head>
 <title>AirTnT/숙소검색(키워드:${param.addressKey})</title>
 <meta charset="utf-8">
+<script type="text/javascript">
+function setPropertyTypeFilter(propertyTypeId){
+	var propertyTypeTag = document.getElementById("propertyType-" + propertyTypeId);
+	var subPropertyTypeTagArray = document.getElementsByName("subPropertyType");
+	for(var i = 0; i < subPropertyTypeTagArray.length; i++){
+		var subPropertyTypeTag = subPropertyTypeTagArray[i];
+		var id = subPropertyTypeTag.getAttribute("id");
+		if(id.split('-')[1] == propertyTypeId){
+			if(propertyTypeTag.getAttribute("checked") == "checked") {
+				subPropertyTypeTag.removeAttribute("disabled");
+			} else {
+				subPropertyTypeTag.setAttribute("disabled", "disabled");
+			}
+		}
+	}
+	
+	if(propertyTypeTag.getAttribute("checked") == "checked") {
+		propertyTypeTag.removeAttribute("checked");
+	} else {
+		propertyTypeTag.setAttribute("checked", "checked");
+	}
+}
+</script>
 
 <!-- drop down -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
 
 </head>
 <body id="top">
@@ -27,11 +51,9 @@ Licence URI: https://www.os-templates.com/template-terms
 
 <!-- 상단 로그인 바 -->
 <jsp:include page="/WEB-INF/views/top.jsp"/>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-
 
 <form class="d-flex" action="<c:url value='/property/search'/>" method="get">
-<!-- 검색 -->
+<!-- 검색 네비게이션 바 -->
 <div id="pageintro" class="hoc clear justify-content-center" style="padding-top: 1vh; padding-bottom: 1vh;"> 
     <!-- ################################################################################################ -->
 	<div class="position-absolute top-0 start-50 translate-middle-x">
@@ -45,127 +67,41 @@ Licence URI: https://www.os-templates.com/template-terms
 	    </div>
 	  </nav>
 	</div>
-		<%--   <!-- 방 유형 -->
-		<div id="roomType" class="modal fade">
-			<div class="modal-dialog modal-login">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h4 class="modal-title">방 유형</h4>	
-		                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-					</div>
-					<div class="modal-body">
-						
-						<div class="form-group">
-						<c:forEach var="roomType" items="${roomTypes}">
-          					<label><input type="checkbox" name="roomTypeId" value="${roomType.id}">${roomType.name}</label><br>
-       					</c:forEach>
-						</div>
-						
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">확인</button>
-					</div>
-				</div>
-			</div>
-		</div> --%>
-		
-		
-		
-	
-<!-- ################################################################################################ -->
 </div>
-<%-- <div class="bgded overlay padtop" style="background-image:url('<c:url value='/resources/images/demo/backgrounds/01.png'/>')"> 
-  <!-- ################################################################################################ -->
-  <!-- ################################################################################################ -->
-  <!-- ################################################################################################ -->
-  <header id="header" class="hoc clear">
-    <div id="logo" class="fl_left"> 
-      <!-- ################################################################################################ -->
-      <h1><a href="index">Nekmit</a></h1>
-      <!-- ################################################################################################ -->
-    </div>
-    <nav id="mainav" class="fl_right"> 
-      <!-- ################################################################################################ -->
-      <ul class="clear">
-        <li><a href="index">Home</a></li>
-        <li class="active"><a class="drop" href="#">Pages</a>
-          <ul>
-            <li><a href="gallery.html">Gallery</a></li>
-            <li><a href="full-width.html">Full Width</a></li>
-            <li><a href="sidebar-left.html">Sidebar Left</a></li>
-            <li><a href="sidebar-right.html">Sidebar Right</a></li>
-            <li class="active"><a href="basic-grid.html">Basic Grid</a></li>
-            <li><a href="font-icons.html">Font Icons</a></li>
-          </ul>
-        </li>
-        <li><a class="drop" href="#">Dropdown</a>
-          <ul>
-            <li><a href="#">Level 2</a></li>
-            <li><a class="drop" href="#">Level 2 + Drop</a>
-              <ul>
-                <li><a href="#">Level 3</a></li>
-                <li><a href="#">Level 3</a></li>
-                <li><a href="#">Level 3</a></li>
-              </ul>
-            </li>
-            <li><a href="#">Level 2</a></li>
-          </ul>
-        </li>
-        <li><a href="#">Link Text</a></li>
-        <li><a href="#">Link Text</a></li>
-        <li><a href="#">Link Text</a></li>
-      </ul>
-      <!-- ################################################################################################ -->
-    </nav>
-  </header>
-  <!-- ################################################################################################ -->
-  <!-- ################################################################################################ -->
-  <!-- ################################################################################################ -->
-  <div id="breadcrumb" class="hoc clear"> 
-    <!-- ################################################################################################ -->
-    <ul>
-      <li><a href="#">Home</a></li>
-      <li><a href="#">Lorem</a></li>
-      <li><a href="#">Ipsum</a></li>
-      <li><a href="#">Dolor</a></li>
-    </ul>
-    <!-- ################################################################################################ -->
-  </div>
-  <!-- ################################################################################################ -->
-</div> --%>
-<!-- End Top Background Image Wrapper -->
-<!-- ################################################################################################ -->
-<!-- ################################################################################################ -->
-<!-- ################################################################################################ -->
+
+<!-- 검색 필터 -->
 <div class="wrapper row1" style="height: 100px">
-  <section class="hoc container clear" style="padding-top: 20px"> 
+  <section class="hoc container clear" style="padding-top: 20px">
+  
+      <!-- 숙소 유형 검색 필터 -->
       <div class="one_quarter first" >
         
         <div class="btn-group">
         
           <button class="btn btn-secondary btn-lg dropdown-toggle" type="button"
           id="dropdownMenuClickableInside" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false"
-          style="width: 200px; height: 50px; font-size: 20px">
-            숙소 유형
-          </button>
+          style="width: 200px; height: 50px; font-size: 20px">숙소 유형</button>
           
           <ul class="dropdown-menu list-group" aria-labelledby="dropdownMenuClickableInside">
             <c:forEach var="propertyType" items="${propertyTypes}" varStatus="status">
               <li class="list-group-item">
                 <!-- Split dropend button -->
                 <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="checkbox" name="propertyType" value="${propertyType.id}">
+                  <input id="propertyType-${propertyType.id}" class="form-check-input"
+                  type="checkbox" name="propertyType" value="${propertyType.id}"
+                  onchange="setPropertyTypeFilter(${propertyType.id})">
                   <label class="form-check-label">${propertyType.name} 전체</label>
                 </div>
                 
                 <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="collapse"
-                data-bs-target="#collapseExample${status.count}" aria-expanded="false" aria-controls="collapseExample${status.count}">
+                data-bs-target="#collapseExample${propertyType.id}" aria-expanded="false" aria-controls="collapseExample${propertyType.id}">
                    ${propertyType.name} 세부유형
                 </button>
-                <div class="collapse" id="collapseExample${status.count}">
+                <div class="collapse" id="collapseExample${propertyType.id}">
                   <c:forEach var="subPropertyType" items="${propertyType.subPropertyTypes}">
                     <div class="form-check form-check-inline">
-                      <input class="form-check-input" type="checkbox" name="subPropertyType" value="${subPropertyType.id}">
+                      <input id="subPropertyType-${propertyType.id}-${subPropertyType.id}" class="form-check-input"
+                      type="checkbox" name="subPropertyType" value="${subPropertyType.id}">
                       <label class="form-check-label">${subPropertyType.name}</label>
                     </div>
                   </c:forEach>
@@ -178,15 +114,14 @@ Licence URI: https://www.os-templates.com/template-terms
         
       </div>
       
+      <!-- 방 유형 검색 필터 -->
       <div class="one_quarter">
       
         <div class="btn-group">
         
           <button class="btn btn-secondary btn-lg dropdown-toggle" type="button"
           id="dropdownMenuClickableInside" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false"
-          style="width: 200px; height: 50px; font-size: 20px">
-            방 유형
-          </button>
+          style="width: 200px; height: 50px; font-size: 20px">방 유형</button>
           
           <ul class="dropdown-menu list-group" aria-labelledby="dropdownMenuClickableInside">
             <c:forEach var="roomType" items="${roomTypes}">
@@ -201,15 +136,15 @@ Licence URI: https://www.os-templates.com/template-terms
           
         </div>
       </div>
+      
+      <!-- 편의시설 검색 필터 -->
       <div class="one_quarter">
       
         <div class="btn-group">
         
           <button class="btn btn-secondary btn-lg dropdown-toggle" type="button"
           id="dropdownMenuClickableInside" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false"
-          style="width: 200px; height: 50px; font-size: 20px">
-            편의시설
-          </button>
+          style="width: 200px; height: 50px; font-size: 20px">편의시설</button>
           
           <div class="dropdown-menu" aria-labelledby="dropdownMenuClickableInside" style="font-size: 15px">
             <c:forEach var="amenityType" items="${amenityTypes}">
@@ -223,6 +158,7 @@ Licence URI: https://www.os-templates.com/template-terms
         </div>
       </div>
       
+      <!-- 인원, 침대 수, 가격 검색 필터 -->
       <div class="one_quarter">
         <div class="btn-group">
         
@@ -266,9 +202,8 @@ Licence URI: https://www.os-templates.com/template-terms
 </div>
 
 </form>
-<!-- ################################################################################################ -->
-<!-- ################################################################################################ -->
-<!-- ################################################################################################ -->
+
+<!-- 메인 화면 -->
 <div class="wrapper row3">
   <div class="hoc container clear"> 
     <!-- main body -->
@@ -278,6 +213,8 @@ Licence URI: https://www.os-templates.com/template-terms
       <h2>${param.addressKey} 주변의 숙소 목록</h2>
       <!-- ################################################################################################ -->
       <div class="group btmspace-50 demo">
+      
+        <!-- 숙소 리스트 -->
         <div class="one_half first">
 	        <div class="content"> 
 	      <!-- ################################################################################################ -->
@@ -304,32 +241,11 @@ Licence URI: https://www.os-templates.com/template-terms
 	          <figcaption>Gallery Description Goes Here</figcaption>
 	        </figure>
 	      </div>
-	      <!-- ################################################################################################ -->
-	      <!-- ################################################################################################ -->
-	      <!-- <nav class="pagination">
-	        <ul>
-	          <li><a href="#">&laquo; Previous</a></li>
-	          <li><a href="#">1</a></li>
-	          <li><a href="#">2</a></li>
-	          <li><strong>&hellip;</strong></li>
-	          <li><a href="#">6</a></li>
-	          <li class="current"><strong>7</strong></li>
-	          <li><a href="#">8</a></li>
-	          <li><a href="#">9</a></li>
-	          <li><strong>&hellip;</strong></li>
-	          <li><a href="#">14</a></li>
-	          <li><a href="#">15</a></li>
-	          <li><a href="#">Next &raquo;</a></li>
-	        </ul>
-	      </nav> -->
-	      <!-- ################################################################################################ -->
 	    </div>
         
         </div>
         
-        
-	
-	
+        <!-- 카카오맵 -->
         <div class="one_half">
           <div id="map" style="width:600px;height:600px;"></div>
           <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=62b11c585fb341eec39dbc28ac9bad71"></script>
@@ -339,46 +255,6 @@ Licence URI: https://www.os-templates.com/template-terms
     </div>
   </div>
 </div>
-      
-      
-      
-      <!-- ################################################################################################ -->
-     <!--  <h2>Quarter</h2>
-      ################################################################################################
-      <div class="group btmspace-50 demo">
-        <div class="one_quarter first">1/4</div>
-        <div class="one_quarter">1/4</div>
-        <div class="one_quarter">1/4</div>
-        <div class="one_quarter">1/4</div>
-      </div>
-      <div class="group btmspace-50 demo">
-        <div class="one_quarter first">1/4</div>
-        <div class="one_quarter">1/4</div>
-        <div class="two_quarter">2/4 or 1/2</div>
-      </div>
-      <div class="group btmspace-50 demo">
-        <div class="one_quarter first">1/4</div>
-        <div class="three_quarter">3/4</div>
-      </div>
-      ################################################################################################
-      <h2>Third</h2>
-      ################################################################################################
-      <div class="group btmspace-50 demo">
-        <div class="one_third first">1/3</div>
-        <div class="one_third">1/3</div>
-        <div class="one_third">1/3</div>
-      </div>
-      <div class="group demo">
-        <div class="one_third first">1/3</div>
-        <div class="two_third">2/3</div>
-      </div>
-      ################################################################################################
-    </div>
-    ################################################################################################
-    / main body
-    <div class="clear"></div>
-  </main>
-</div> -->
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
