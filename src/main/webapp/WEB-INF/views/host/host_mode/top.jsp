@@ -3,7 +3,7 @@
 
 <!-- top.jsp -->
 <!DOCTYPE html>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <html>
 <head>
 <link rel="stylesheet"
@@ -24,34 +24,40 @@
 				<button type="button" class="navbar-toggle collapsed"
 					data-toggle="collapse" data-target="#navbar" aria-expanded="false"
 					aria-controls="navbar">
-					<span class="sr-only">Toggle navigation</span> <span
-						class="icon-bar"></span> <span class="icon-bar"></span> <span
-						class="icon-bar"></span>
+					<span class="sr-only">Toggle navigation</span> 
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span> 
+					<span class="icon-bar"></span>
 				</button>
 				<a class="navbar-brand">${sessionScope.member_name}님 환영합니다</a>
 			</div>
 			<div id="navbar" class="navbar-collapse collapse">
 				<ul class="nav navbar-nav">
-					<li class="active"><a href="<c:url value='/host/host_mode'/>">투데이</a></li>
+					<li><a href="<c:url value='/host/host_mode'/>">투데이</a></li>
 					<li><a href="<c:url value='/host/host_properties_list'/>">숙소</a></li>
-					<li><a href="<c:url value='/host/transaction_list'/>">대금 수령 내역</a></li>
+					<li><a href="<c:url value='/host/transaction_list'/>">대금수령 내역</a></li>
 					<li><a href="#">채팅</a></li>
-					<li class="dropdown">
-					<a id="drop4" href="#" class="dropdown-toggle" data-toggle="dropdown">메뉴
-						<span class="caret"></span>
+					<li class="dropdown"><a id="drop4" href="#" class="dropdown-toggle" data-toggle="dropdown">
+					메뉴 
+					<span class="caret"></span>
 					</a>
 						<ul class="dropdown-menu">
 							<li><a href="<c:url value='/host/host_review_list'/>">리뷰</a></li>
 							<li class="divider"></li>
 							<li class="dropdown-header">메롱</li>
-						</ul>
-					</li>
+						</ul></li>
 				</ul>
 			</div>
 			<!--/.nav-collapse -->
 		</div>
 	</nav>
 
+	<script type="text/javascript">
+		$('li').click(function() {
+			$('li').removeClass('active'); 
+			$(this).addClass('active');
+		});
+	</script>
 
 </body>
 </html>

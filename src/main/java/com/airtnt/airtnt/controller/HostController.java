@@ -1,10 +1,12 @@
 package com.airtnt.airtnt.controller;
 
 import java.io.File;
-
+import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.Formatter;
 import java.util.HashMap;
@@ -233,7 +235,12 @@ public class HostController implements HostControllerInterface {
 		HttpSession session = req.getSession();
 		String hostId = (String) session.getAttribute("member_id");
 		List<TransactionDTO> listTransaction = hostMapper.getTransactionList(hostId);
-		return new ModelAndView("host/host_mode/transaction_list","listTransaction", listTransaction);
+		//6월 29, 2021 10:31:02 오전
+		Date nowTime = hostMapper.getSysdate();
+		ModelAndView mav = new ModelAndView("/host/host_mode/transaction_list");
+		mav.addObject("listTransaction", listTransaction);
+		mav.addObject("today", nowTime);
+		return mav;
 	}
 
 	@Override

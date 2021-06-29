@@ -1,5 +1,7 @@
 package com.airtnt.airtnt.service;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
@@ -98,6 +100,7 @@ public class HostMapper implements HostMapperInterface {
 	@Override
 	public List<TransactionDTO> getTransactionList(String hostId) {
 		List<TransactionDTO> listTransaction = sqlSession.selectList("listTransaction", hostId);
+		//6월 29, 2021 10:31:02 오전
 		return listTransaction;
 	}
 
@@ -111,5 +114,10 @@ public class HostMapper implements HostMapperInterface {
 	public MemberDTO getMemberDTO(String memberId) {
 		MemberDTO dto = sqlSession.selectOne("getMemberDTO", memberId);
 		return dto;
+	}
+	
+	public Date getSysdate() {
+		Date date = sqlSession.selectOne("sysdate");
+		return date;
 	}
 }

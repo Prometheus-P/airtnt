@@ -80,34 +80,47 @@
 	</select>
 	<select id="listProperty" parameterType="String" resultType="PropertyDTO">
 		select 
-			id, name,
-			host_id as hostId,
-			address,
-			price,
-			bed_count as bedCount,
-			max_guest as maxGuest,
-			reg_date as regDate,
-			mod_date as modDate,
-			room_type_id as roomTypeId,
-            sub_property_type_id as subPropertyTypeId
-		from property where host_id = #{hostId}
+			p.id, p.name,
+			p.host_id as hostId,
+			p.address,
+			p.price,
+			p.bed_count as bedCount,
+			p.max_guest as maxGuest,
+			p.reg_date as regDate,
+			p.mod_date as modDate,
+			p.room_type_id as roomTypeId,
+			r.room_type_id as roomTypeId,
+			r.room_type_name as roomTypeName,
+            p.sub_property_type_id as subPropertyTypeId,
+            s.sub_property_type_id as subPropertyTypeId,
+            s.sub_property_type_name as subPropertyTypeName
+		from property p, sub_property_type s, room_type_name r
+		where host_id = #{hostId}
+		and r.room_type_id = p.room_type_id
+		and p.sub_property_type_id =  r.sub_property_type_id
 	</select>
 	<select id="listTransaction" parameterType="String" resultType="TransactionDTO">
 		select 
-			booking.id, 
-			booking.host_id as hostId, 
-			booking.total_price as totalPrice,
-			booking.confirm_date as confirmDate,
-			transaction.id,
-			transaction.booking_id as bookingId,
-			transaction.is_refund as isReFund,
-			transaction.site_fee as siteFee,
-			transaction.pay_expt_date as payExptDate,
-			transaction.reg_date as regDate,
-			transaction.mod_date as modDate
-		from transaction, booking
-        where booking.id = transaction.booking_id
-        and booking.host_id = #{hostId}
+			b.id as booking_table_id, 
+			b.host_id as hostId, 
+			b.total_price as totalPrice,
+			b.confirm_date as confirmDate,
+			b.property_id as propertyId,
+			b.booking_number as bookingNumber,
+			b.check_out_date as checkOutDate,
+			t.id,
+			t.booking_id as bookingId,
+			t.is_refund as isReFund,
+			t.site_fee as siteFee,
+			t.pay_expt_date as payExptDate,
+			t.reg_date as regDate,
+			t.mod_date as modDate
+		from transaction t, booking b
+        where b.id = t.booking_id
+        and b.host_id = #{hostId}
+	</select>
+	<select id="sysdate" resultType="Date">
+		select sysdate from dual
 	</select>
 	<!-- <insert id="saveImage" parameterType="java.util.Map">
     I	insert into img_table VALUES #{img}    
