@@ -1,8 +1,11 @@
 package com.airtnt.airtnt.controller;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -30,14 +33,38 @@ public class PropertyController {
 	
 	@RequestMapping("search")
 	public String search(HttpServletRequest req,
-			@RequestParam(value = "addressKey", required = false) String addressKey) {
+			@RequestParam(value = "addressKey", required = false) String addressKey,
+			@RequestParam(value = "propertyType", required = false) Integer[] propertyTypeKeyArray,
+			@RequestParam(value = "subPropertyType", required = false) Integer[] subPropertyTypeKeyArray,
+			@RequestParam(value = "roomType", required = false) Integer[] roomTypeKeyArray,
+			@RequestParam(value = "amenityType", required = false) Integer[] amenityTypeKeyArray,
+			@RequestParam(value = "guestCount", required = false) Integer guestCountKey,
+			@RequestParam(value = "bedCount", required = false) Integer bedCountKey,
+			@RequestParam(value = "minPrice", required = false) Integer minPriceKey,
+			@RequestParam(value = "maxPrice", required = false) Integer maxPriceKey) {
 		if(addressKey == null) {
 			addressKey = "노원";
 		}
+		
 		List<PropertyDTO> properties = propertyMapper.searchPropertiesByAddress(addressKey);
 		List<PropertyTypeDTO> propertyTypes = propertyMapper.selectPropertyTypes();
 		List<RoomTypeDTO> roomTypes = propertyMapper.selectRoomTypes();
 		List<AmenityTypeDTO> amenityTypes = propertyMapper.selectAmenityTypes();
+		
+		List<Integer> propertyTypeKeys = new ArrayList<Integer>();
+		for(int i = 0; i < propertyTypeKeyArray.length; i++) {
+			propertyTypeKeys.add(propertyTypeKeyArray[i]);
+		}
+		List<Integer> subPropertyTypeKeys = new ArrayList<Integer>();
+		for(int i = 0; i < subPropertyTypeKeyArray.length; i++) {
+			subPropertyTypeKeys.add(subPropertyTypeKeyArray[i]);
+		}
+		// 제작중
+		
+		
+		Map<String, Object> searchKeyMap = new Hashtable<>();
+		
+		
 		
 		req.setAttribute("properties", properties);
 		

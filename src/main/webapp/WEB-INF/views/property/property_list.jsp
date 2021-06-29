@@ -16,7 +16,7 @@ Licence URI: https://www.os-templates.com/template-terms
 <title>AirTnT/숙소검색(키워드:${param.addressKey})</title>
 <meta charset="utf-8">
 
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<!-- drop down -->
 
 </head>
 <body id="top">
@@ -27,6 +27,8 @@ Licence URI: https://www.os-templates.com/template-terms
 
 <!-- 상단 로그인 바 -->
 <jsp:include page="/WEB-INF/views/top.jsp"/>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+
 
 <form class="d-flex" action="<c:url value='/property/search'/>" method="get">
 <!-- 검색 -->
@@ -38,7 +40,8 @@ Licence URI: https://www.os-templates.com/template-terms
 	      <input name="addressKey" class="form-control me-2" type="search" 
 	      placeholder="위치" value="${param.addressKey}"
 	      aria-label="Search" style="height: 50px; width: 300px; font-size: 20px">
-	      <button class="btn btn-outline-primary" type="submit" style="background-color:#01546b; border: 0px; height: 50px; width: 100px; font-size: 20px">검색</button>
+	      <button class="btn btn-primary" type="submit"
+	      style="border: 0px; height: 50px; width: 100px; font-size: 20px">검색</button>
 	    </div>
 	  </nav>
 	</div>
@@ -143,15 +146,29 @@ Licence URI: https://www.os-templates.com/template-terms
           <button class="btn btn-secondary btn-lg dropdown-toggle" type="button"
           id="dropdownMenuClickableInside" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false"
           style="width: 200px; height: 50px; font-size: 20px">
-            방 유형
+            숙소 유형
           </button>
           
           <ul class="dropdown-menu list-group" aria-labelledby="dropdownMenuClickableInside">
-            <c:forEach var="roomType" items="${roomTypes}">
-              <li class="list-group-item" style="font-size: 20px">
+            <c:forEach var="propertyType" items="${propertyTypes}" varStatus="status">
+              <li class="list-group-item">
+                <!-- Split dropend button -->
                 <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="checkbox" name="roomType" value="${roomType.id}">
-                  <label class="form-check-label">${roomType.name}</label>
+                  <input class="form-check-input" type="checkbox" name="propertyType" value="${propertyType.id}">
+                  <label class="form-check-label">${propertyType.name} 전체</label>
+                </div>
+                
+                <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="collapse"
+                data-bs-target="#collapseExample${status.count}" aria-expanded="false" aria-controls="collapseExample${status.count}">
+                   ${propertyType.name} 세부유형
+                </button>
+                <div class="collapse" id="collapseExample${status.count}">
+                  <c:forEach var="subPropertyType" items="${propertyType.subPropertyTypes}">
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="checkbox" name="subPropertyType" value="${subPropertyType.id}">
+                      <label class="form-check-label">${subPropertyType.name}</label>
+                    </div>
+                  </c:forEach>
                 </div>
               </li>
             </c:forEach>
@@ -168,29 +185,15 @@ Licence URI: https://www.os-templates.com/template-terms
           <button class="btn btn-secondary btn-lg dropdown-toggle" type="button"
           id="dropdownMenuClickableInside" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false"
           style="width: 200px; height: 50px; font-size: 20px">
-            숙소 유형
+            방 유형
           </button>
           
           <ul class="dropdown-menu list-group" aria-labelledby="dropdownMenuClickableInside">
-            <c:forEach var="propertyType" items="${propertyTypes}" varStatus="status">
-              <li class="list-group-item">
-                <!-- Split dropend button -->
+            <c:forEach var="roomType" items="${roomTypes}">
+              <li class="list-group-item" style="font-size: 20px">
                 <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="checkbox" name="propertyType" value="${propertyType.id}">
-                  <label class="form-check-label">${propertyType.name}</label>
-                </div>
-                
-                <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="collapse"
-                data-bs-target="#collapseExample${status.count}" aria-expanded="false" aria-controls="collapseExample${status.count}">
-                   ${propertyType.name} 세부유형
-                </button>
-                <div class="collapse" id="collapseExample${status.count}">
-                  <c:forEach var="subPropertyType" items="${propertyType.subPropertyTypes}">
-                    <div class="form-check form-check-inline">
-                      <input class="form-check-input" type="checkbox" name="subPropertyType" value="${subPropertyType.id}">
-                      <label class="form-check-label">${subPropertyType.name}</label>
-                    </div>
-                  </c:forEach>
+                  <input class="form-check-input" type="checkbox" name="roomType" value="${roomType.id}">
+                  <label class="form-check-label">${roomType.name}</label>
                 </div>
               </li>
             </c:forEach>
@@ -230,13 +233,31 @@ Licence URI: https://www.os-templates.com/template-terms
           </button>
           
           
-          <div class="dropdown-menu list-group" aria-labelledby="dropdownMenuClickableInside">
-            <div class="list-group-item button-group form-check form-check-inline" style="font-size: 20px;">
-              <input type="button" class="btn form-check-label" value="-">
-              <input class="form-control form-check-label" type="number" name="guestCount"
-                value="${param.guestCount == null ? 100 : param.guestCount}" min="0"
-                readonly style="width: 100px;">
-              <input type="button" class="btn form-check-label" value="+">
+          <div class="dropdown-menu list-group" aria-labelledby="dropdownMenuClickableInside" style="width: 400px;">
+            <div class="btn-group list-group-item" style="font-size: 20px; padding-bottom: 50px; padding-left: 20px">
+              <h3>최대 인원</h3>
+              <input id="increase-guest" type="button" class="btn" value="-">
+              <input id="guest-count" class="form-control btn" type="number" name="guestCount"
+                value="${empty param.guestCount ? 0 : param.guestCount}" min="0"
+                readonly style="width: 50px;">
+              <input id="decrease-guest" type="button" class="btn" value="+">
+            </div>
+            <div class="btn-group list-group-item" style="font-size: 20px; padding-bottom: 50px; padding-left: 20px">
+              <h3>침대 수</h3>
+              <input id="increase-bed" type="button" class="btn" value="-">
+              <input id="bed-count" class="form-control btn" type="number" name="bedCount"
+                value="${empty param.bedCount ? 0 : param.bedCount}" min="0"
+                readonly style="width: 50px;">
+              <input id="decrease-bed" type="button" class="btn" value="+">
+            </div>
+            <div class="list-group-item form-check form-check-inline" style="font-size: 20px;">
+              <h3>가격 범위</h3>
+              ₩<input id="min-price" class="form-control form-check-label nobr" type="number" name="minPrice"
+                value="${empty param.minPrice ? 0 : param.guestCount}"
+                min="0" style="width: 100px; display: inline;"> ~&nbsp;
+              ₩<input id="max-price" class="form-control form-check-label nobr" type="number" name="maxPrice"
+                value="${empty param.maxPrice ? (empty param.minPrice ? 0 : param.minPrice + 10000) : param.maxPrice}"
+                min="0" style="width: 100px; display: inline;">
             </div>
           </div>
         </div>
