@@ -16,7 +16,10 @@ public class TransactionDTO {
 	private String hostId;
 	private int totalPrice;
 	private Date confirmDate;
-
+	private Date checkOutDate;
+	private int propertyId;
+	private String bookingNumber;
+	
 	public int getId() {
 		return id;
 	}
@@ -101,6 +104,30 @@ public class TransactionDTO {
 
 	public void setConfirmDate(Date confirmDate) {
 		this.confirmDate = confirmDate;
+	}
+
+	public int getPropertyId() {
+		return propertyId;
+	}
+
+	public void setPropertyId(int propertyId) {
+		this.propertyId = propertyId;
+	}
+
+	public String getBookingNumber() {
+		return bookingNumber;
+	}
+
+	public void setBookingNumber(String bookingNumber) {
+		this.bookingNumber = bookingNumber;
+	}
+
+	public Date getCheckOutDate() {
+		return checkOutDate;
+	}
+
+	public void setCheckOutDate(Date checkOutDate) {
+		this.checkOutDate = checkOutDate;
 	}
 
 }

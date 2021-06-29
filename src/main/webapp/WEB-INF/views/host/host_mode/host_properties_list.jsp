@@ -11,25 +11,23 @@
 <body>
 	
 		<div class="container theme-showcase" role="main">
-		<div class="col-md-6" style="width: 80%">
+		<div class="col-md-6">
 		<div class="page-header">
 		<br><br><br>
-			<h1>List groups</h1>
+			<h1>숙소 목록</h1>
 		</div>
 		<div class="list-group">
-			<a href="#" class="list-group-item active">
-				<h4 class="list-group-item-heading">List group item heading</h4>
-				<p class="list-group-item-text">Donec id elit non mi porta
-					gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
-			</a> <a href="#" class="list-group-item">
-				<h4 class="list-group-item-heading">List group item heading</h4>
-				<p class="list-group-item-text">Donec id elit non mi porta
-					gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
-			</a> <a href="#" class="list-group-item">
-				<h4 class="list-group-item-heading">List group item heading</h4>
-				<p class="list-group-item-text">Donec id elit non mi porta
-					gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
+		<c:forEach var="dto" items="${listProperty}">
+			<a href="#modal" class="list-group-item">
+				<h4 class="list-group-item-heading">${dto.name}</h4>
+				<p class="list-group-item-text">
+				가격: ${dto.price}<br>
+				등록일: ${dto.regDate}<br>
+				최대인원: ${dto.maxGuest}<br>
+				숙소유형: ${dto.roomTypeName}
+				</p>
 			</a>
+		</c:forEach>
 		</div>
 	</div>
 	</div>
