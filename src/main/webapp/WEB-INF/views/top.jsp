@@ -10,7 +10,7 @@
 	<!--basic-->
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
-	<link href='<c:url value='/resources/layout/styles/layout.css'/>' rel="stylesheet" type="text/css" media="all">
+	<link href="/resources/layout/styles/layout.css" rel="stylesheet" type="text/css" media="all">
 	<!--loginModal-->
 	<link href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round" rel="stylesheet">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -43,19 +43,19 @@
           <ul>
             <li><a href="#LoginModal" class="trigger-btn" data-toggle="modal">로그인</a></li>
             <li><a href="#SignUpModal" class="trigger-btn" data-toggle="modal">회원가입</a></li>
-            <li><a href="help">도움말</a></li>
+            <li><a href="/help">도움말</a></li>
           </ul>
         </li>
           </c:if>
         <c:if test="${isLogin}">
         <li><a class="drop" href="#">MyPages</a>
           <ul>
-            <li><a href="tour">여행</a></li>
-            <li><a href="wishList">위시리스트</a></li>
-            <li><a href="pages/sidebar-right.html">호스트 되기</a></li>
-            <li><a href="mypage">계정</a></li>
-            <li><a href="help">도움말</a></li>
-            <li><a href="logout">로그아웃</a></li>
+            <li><a href="/tour">여행</a></li>
+            <li><a href="/wishList">위시리스트</a></li>
+            <li><a href="/pages/sidebar-right.html">호스트 되기</a></li>
+            <li><a href="/mypage">계정</a></li>
+            <li><a href="/help">도움말</a></li>
+            <li><a href="/logout">로그아웃</a></li>
           </ul>
           </c:if>
         </li>
@@ -63,7 +63,6 @@
       <!-- ################################################################################################ -->
     </nav>
   </header>
-  
   <!-- LoginModal-->
 <div id="LoginModal" class="modal fade">
 	<div class="modal-dialog modal-login">
@@ -75,7 +74,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 			</div>
 			<div class="modal-body">
-				<form action="login" method="post">
+				<form action="/login" method="post">
 					<div class="form-group">
 						<c:if test="${empty value}">		
 							<input type="text" class="form-control" name="id" placeholder="ID" required="required">
@@ -116,7 +115,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 			</div>
 			<div class="modal-body">
-				<form action="signUp" method="post">
+				<form action="/signUp" method="post">
 					<div class="form-group">
 						<input type="text" class="form-control" name="id" placeholder="ID" required="required">		
 					</div>

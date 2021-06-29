@@ -4,11 +4,12 @@ import java.sql.Date;
 
 public class SubPropertyTypeDTO {
 	private int id;
-	private int propertyTypeId;
 	private String name;
 	private char isUse;
 	private Date regDate;
 	private Date modDate;
+	
+	private int propertyTypeId;
 	private String propertyTypeName;
 	
 	public int getId() {
@@ -57,6 +58,7 @@ public class SubPropertyTypeDTO {
 	@Override
 	public String toString() {
 		return "SubPropertyTypeDTO [id=" + id + ", propertyTypeId=" + propertyTypeId + ", name=" + name + ", isUse="
-				+ isUse + ", regDate=" + regDate + ", modDate=" + modDate + "]";
+				+ isUse + ", regDate=" + regDate + ", modDate=" + modDate + ", propertyTypeName=" + propertyTypeName
+				+ "]";
 	}
 }

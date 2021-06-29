@@ -1,8 +1,11 @@
 package com.airtnt.airtnt.controller;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -12,8 +15,12 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.airtnt.airtnt.model.AmenityTypeDTO;
 import com.airtnt.airtnt.model.BookingDTO;
 import com.airtnt.airtnt.model.PropertyDTO;
+import com.airtnt.airtnt.model.PropertyTypeDTO;
+import com.airtnt.airtnt.model.RoomTypeDTO;
+import com.airtnt.airtnt.model.SubPropertyTypeDTO;
 import com.airtnt.airtnt.model.TransactionDTO;
 import com.airtnt.airtnt.service.PropertyMapper;
 
@@ -26,13 +33,45 @@ public class PropertyController {
 	
 	@RequestMapping("search")
 	public String search(HttpServletRequest req,
-			@RequestParam(value = "addressKey", required = false) String addressKey) {
+			@RequestParam(value = "addressKey", required = false) String addressKey,
+			@RequestParam(value = "propertyType", required = false) Integer[] propertyTypeKeyArray,
+			@RequestParam(value = "subPropertyType", required = false) Integer[] subPropertyTypeKeyArray,
+			@RequestParam(value = "roomType", required = false) Integer[] roomTypeKeyArray,
+			@RequestParam(value = "amenityType", required = false) Integer[] amenityTypeKeyArray,
+			@RequestParam(value = "guestCount", required = false) Integer guestCountKey,
+			@RequestParam(value = "bedCount", required = false) Integer bedCountKey,
+			@RequestParam(value = "minPrice", required = false) Integer minPriceKey,
+			@RequestParam(value = "maxPrice", required = false) Integer maxPriceKey) {
 		if(addressKey == null) {
 			addressKey = "노원";
 		}
+		
 		List<PropertyDTO> properties = propertyMapper.searchPropertiesByAddress(addressKey);
+		List<PropertyTypeDTO> propertyTypes = propertyMapper.selectPropertyTypes();
+		List<RoomTypeDTO> roomTypes = propertyMapper.selectRoomTypes();
+		List<AmenityTypeDTO> amenityTypes = propertyMapper.selectAmenityTypes();
+		
+		List<Integer> propertyTypeKeys = new ArrayList<Integer>();
+		for(int i = 0; i < propertyTypeKeyArray.length; i++) {
+			propertyTypeKeys.add(propertyTypeKeyArray[i]);
+		}
+		List<Integer> subPropertyTypeKeys = new ArrayList<Integer>();
+		for(int i = 0; i < subPropertyTypeKeyArray.length; i++) {
+			subPropertyTypeKeys.add(subPropertyTypeKeyArray[i]);
+		}
+		// 제작중
+		
+		
+		Map<String, Object> searchKeyMap = new Hashtable<>();
+		
+		
 		
 		req.setAttribute("properties", properties);
+		
+		// search filters
+		req.setAttribute("propertyTypes", propertyTypes);
+		req.setAttribute("roomTypes", roomTypes);
+		req.setAttribute("amenityTypes", amenityTypes);
 		
 		return "property/property_list";
 	}
@@ -59,7 +98,7 @@ public class PropertyController {
 
 	@RequestMapping("booking-confirm")
 	public String bookingConfirm(HttpServletRequest req, @ModelAttribute BookingDTO booking) {
-//		System.out.println(booking);
+		System.out.println(booking);
 		int propertyId;
 		try {
 			propertyId = Integer.parseInt(req.getParameter("propertyId"));
@@ -73,14 +112,13 @@ public class PropertyController {
 		bookingNumber += String.valueOf((int)(Math.random() * 10));
 		booking.setPropertyId(propertyId);
 		booking.setBookingNumber(bookingNumber);
-		booking.setGuestId("ParkHaSung");
 		if(propertyMapper.insertBooking(booking) < 1) {
 			req.setAttribute("msg", "예약 실패(DB 오류)");
 			req.setAttribute("url", "/property/detail?propertyId=" + propertyId);
 			return "message";
 		}
 		booking = propertyMapper.selectSameBooking(booking);
-//		System.out.println(booking);
+		System.out.println(booking);
 		
 		TransactionDTO transaction = new TransactionDTO();
 		transaction.setBookingId(booking.getId());
