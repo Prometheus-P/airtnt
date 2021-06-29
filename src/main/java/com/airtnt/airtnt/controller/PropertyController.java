@@ -1,11 +1,7 @@
 package com.airtnt.airtnt.controller;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -15,13 +11,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.airtnt.airtnt.model.AmenityTypeDTO;
-import com.airtnt.airtnt.model.BookingDTO;
-import com.airtnt.airtnt.model.PropertyDTO;
-import com.airtnt.airtnt.model.PropertyTypeDTO;
-import com.airtnt.airtnt.model.RoomTypeDTO;
-import com.airtnt.airtnt.model.SubPropertyTypeDTO;
-import com.airtnt.airtnt.model.TransactionDTO;
+import com.airtnt.airtnt.model.*;
 import com.airtnt.airtnt.service.PropertyMapper;
 
 @Controller
@@ -34,10 +24,10 @@ public class PropertyController {
 	@RequestMapping("search")
 	public String search(HttpServletRequest req,
 			@RequestParam(value = "addressKey", required = false) String addressKey,
-			@RequestParam(value = "propertyType", required = false) Integer[] propertyTypeKeyArray,
-			@RequestParam(value = "subPropertyType", required = false) Integer[] subPropertyTypeKeyArray,
-			@RequestParam(value = "roomType", required = false) Integer[] roomTypeKeyArray,
-			@RequestParam(value = "amenityType", required = false) Integer[] amenityTypeKeyArray,
+			@RequestParam(value = "propertyTypeId", required = false) Integer[] propertyTypeIdKeyArray,
+			@RequestParam(value = "subPropertyTypeId", required = false) Integer[] subPropertyTypeIdKeyArray,
+			@RequestParam(value = "roomTypeId", required = false) Integer[] roomTypeIdKeyArray,
+			@RequestParam(value = "amenityTypeId", required = false) Integer[] amenityTypeIdKeyArray,
 			@RequestParam(value = "guestCount", required = false) Integer guestCountKey,
 			@RequestParam(value = "bedCount", required = false) Integer bedCountKey,
 			@RequestParam(value = "minPrice", required = false) Integer minPriceKey,
@@ -46,22 +36,21 @@ public class PropertyController {
 			addressKey = "노원";
 		}
 		
+		System.out.println(Arrays.toString(propertyTypeIdKeyArray));
+		System.out.println(Arrays.toString(subPropertyTypeIdKeyArray));
+		System.out.println(Arrays.toString(roomTypeIdKeyArray));
+		System.out.println(Arrays.toString(amenityTypeIdKeyArray));
+		
+		// 파라미터 처리는 자바에서 해야함
+		
 		List<PropertyDTO> properties = propertyMapper.searchPropertiesByAddress(addressKey);
+		
 		List<PropertyTypeDTO> propertyTypes = propertyMapper.selectPropertyTypes();
 		List<RoomTypeDTO> roomTypes = propertyMapper.selectRoomTypes();
 		List<AmenityTypeDTO> amenityTypes = propertyMapper.selectAmenityTypes();
 		
-//		List<Integer> propertyTypeKeys = new ArrayList<Integer>();
-//		for(int i = 0; i < propertyTypeKeyArray.length; i++) {
-//			propertyTypeKeys.add(propertyTypeKeyArray[i]);
-//		}
-//		List<Integer> subPropertyTypeKeys = new ArrayList<Integer>();
-//		for(int i = 0; i < subPropertyTypeKeyArray.length; i++) {
-//			subPropertyTypeKeys.add(subPropertyTypeKeyArray[i]);
-//		}
+		
 		// 제작중
-		
-		
 		Map<String, Object> searchKeyMap = new Hashtable<>();
 		
 		
