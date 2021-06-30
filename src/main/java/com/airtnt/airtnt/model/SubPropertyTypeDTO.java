@@ -14,7 +14,7 @@ public class SubPropertyTypeDTO {
 	private int propertyTypeId;
 	private String propertyTypeName;
 	
-	// 검색 화면에 띄우기 위한 필드. db랑 상관없음
+	// 검색 필터 input 태그 내에 속성을 설정하기 위한 필드. db랑 상관없음
 	// 태그 속성값 하나만 넣을 때 사용
 	private String tagAttribute;
 	private String tagAttributeValue;

@@ -1,4 +1,4 @@
-package com.airtnt.airtnt.model;
+package com.airtnt.airtnt.util;
 
 public class TagAttribute {
 	// input 태그 속성 값

@@ -64,32 +64,34 @@ onsubmit="setParametersOnSubmit()">
           style="width: 200px; height: 50px; font-size: 20px">숙소 유형</button>
           
           <ul class="dropdown-menu list-group" aria-labelledby="dropdownMenuClickableInside">
-            <c:forEach var="propertyType" items="${propertyTypes}" varStatus="status">
+            <c:forEach var="propertyType" items="${propertyTypes}">
               <li class="list-group-item">
                 <!-- Split dropend button -->
                 <div class="form-check form-check-inline">
                   <input id="propertyType-${propertyType.id}" class="form-check-input"
                   type="checkbox" name="propertyTypeId" value="${propertyType.id}"
+                  onchange="modPropertyTypeFilters(this)"
                     <c:forEach var='tagAttribute' items='${propertyType.tagAttributes}'>
                       ${tagAttribute}="${propertyType.getTagAttributeMapValue(tagAttribute)}"
                     </c:forEach>
-                  onchange="setPropertyTypeFilter(this)">
+                  >
                   <label class="form-check-label">${propertyType.name} 전체</label>
                 </div>
                 
                 <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="collapse"
-                data-bs-target="#collapseExample${propertyType.id}" aria-expanded="false" aria-controls="collapseExample${propertyType.id}">
+                data-bs-target="#collapse${propertyType.id}" aria-expanded="false" aria-controls="collapseExample${propertyType.id}">
                    ${propertyType.name} 세부유형
                 </button>
-                <div class="collapse" id="collapseExample${propertyType.id}">
+                <div class="collapse" id="collapse${propertyType.id}">
                   <c:forEach var="subPropertyType" items="${propertyType.subPropertyTypes}">
                     <div class="form-check form-check-inline">
                       <input id="subPropertyType-${propertyType.id}-${subPropertyType.id}"
                       class="form-check-input" type="checkbox" name="subPropertyTypeId"
+                      value="${subPropertyType.id}"
                         <c:forEach var='tagAttribute' items='${subPropertyType.tagAttributes}'>
                           ${tagAttribute}="${subPropertyType.getTagAttributeMapValue(tagAttribute)}"
                         </c:forEach>
-                      value="${subPropertyType.id}">
+                      >
                       <label class="form-check-label">${subPropertyType.name}</label>
                     </div>
                   </c:forEach>
@@ -190,10 +192,12 @@ onsubmit="setParametersOnSubmit()">
               <h3>가격 범위</h3>
               ₩<input id="min-price" class="form-control form-check-label" type="number"
                 name="minPrice" value="${param.minPrice}" min="10000" step="10000" placeholder="10000+"
-                oninput="changePrice(this)" style="width: 150px; display: inline; font-size: 20px"> ~&nbsp;
+                oninput="modMinMaxPrice(this)" onchange="modUnderPrice(this)"
+                style="width: 150px; display: inline; font-size: 20px"> ~&nbsp;
               ₩<input id="max-price" class="form-control form-check-label" type="number"
                 name="maxPrice" value="${param.maxPrice}" min="10000" step="10000" placeholder="10000+"
-                oninput="changePrice(this)" style="width: 150px; display: inline; font-size: 20px">
+                oninput="modMinMaxPrice(this)" onchange="modUnderPrice(this)"
+                style="width: 150px; display: inline; font-size: 20px">
             </div>
           </div>
         </div>

@@ -19,22 +19,22 @@ function setParametersOnSubmit(){
 	}
 }
 
-function setPropertyTypeFilter(propertyTypeTag){
+function modPropertyTypeFilters(propertyTypeTag){
 	var subPropertyTypeTagArray = document.getElementsByName("subPropertyTypeId");
 	for(var i = 0; i < subPropertyTypeTagArray.length; i++){
 		var subPropertyTypeTag = subPropertyTypeTagArray[i];
 		if(subPropertyTypeTag.id.split('-')[1] == propertyTypeTag.value){
-			if(propertyTypeTag.getAttribute("checked").value == "checked"){
+			if(propertyTypeTag.getAttribute("checked") == "checked") {
 				// propertyType이 checked이면 ckeck를 해제할 것이기 때문에 하위항목을 활성화
-				subPropertyTypeTag.setAttribute("disabled", "disabled");
+				subPropertyTypeTag.removeAttribute("disabled");
 			} else {
 				// propertyType이 unchecked이면 checked해줄 것이기 때문에 하위항목을 비활성화
-				subPropertyTypeTag.removeAttribute("disabled");
+				subPropertyTypeTag.setAttribute("disabled", "disabled");
 			}
 		}
 	}
 	
-	if(propertyTypeTag.getAttribute("checked").value == "checked"){
+	if(propertyTypeTag.getAttribute("checked") == "checked"){
 		propertyTypeTag.removeAttribute("checked");
 	} else {
 		propertyTypeTag.setAttribute("checked", "checked");
@@ -67,16 +67,42 @@ function changeCount(button){
 	}
 }
 
-function changePrice(priceTag){
+function modMinMaxPrice(priceTag){
 	var minPriceTag, maxPriceTag;
 	switch(priceTag.id){
 	case "min-price":
 		minPriceTag = priceTag; // event source
 		maxPriceTag = document.getElementById("max-price");
+		var minPrice = parseInt(minPriceTag.value);
+		var maxPrice;
+		if(maxPriceTag.value != ""){
+			maxPrice = parseInt(maxPriceTag.value);
+			if(minPrice > maxPrice){
+				maxPriceTag.value = minPrice + 10000;
+			}
+		}
 		break;
-	case "ma-price":
+	case "max-price":
 		minPriceTag = document.getElementById("min-price");
 		maxPriceTag = priceTag; // event source
+		var minPrice;
+		var maxPrice = parseInt(maxPriceTag.value);
+		if(minPriceTag.value != ""){
+			minPrice = parseInt(minPriceTag.value);
+			if(minPrice > maxPrice){
+				minPrice = maxPrice - 10000;
+				if(minPrice < 10000){
+					minPrice = 10000;
+				}
+			}
+			minPriceTag.value = minPrice;
+		}
 		break;
+	}
+}
+
+function modUnderPrice(priceTag){
+	if(parseInt(priceTag.value) < 10000){
+		priceTag.value = 10000;
 	}
 }
