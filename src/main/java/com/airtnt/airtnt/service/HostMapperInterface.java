@@ -1,6 +1,6 @@
 package com.airtnt.airtnt.service;
 
-import java.util.List;
+import java.util.*;
 
 import com.airtnt.airtnt.model.AmenityDTO;
 import com.airtnt.airtnt.model.BookingDTO;
@@ -27,6 +27,7 @@ public interface HostMapperInterface {
 	public List<RoomTypeDTO> getRoomType();
 	public List<TransactionDTO> getTransactionList(String hostId);
 	public MemberDTO getMemberDTO(String memberId);
+	public List<TransactionDTO> getTotalEarning(String memberId);
 	//public List<QuestionDTO> getQuestionList(int hostId);
 	//pubilc List<ReviewDTO> getReiewList(int bookingId);
 	//public SuperHostDTO checkSuperHost(int hostId);

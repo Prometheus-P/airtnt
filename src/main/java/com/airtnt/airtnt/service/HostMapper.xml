@@ -89,15 +89,15 @@
 			p.reg_date as regDate,
 			p.mod_date as modDate,
 			p.room_type_id as roomTypeId,
-			r.room_type_id as roomTypeId,
-			r.room_type_name as roomTypeName,
+			r.id,
+			r.name as roomTypeName,
             p.sub_property_type_id as subPropertyTypeId,
-            s.sub_property_type_id as subPropertyTypeId,
-            s.sub_property_type_name as subPropertyTypeName
-		from property p, sub_property_type s, room_type_name r
+            s.id,
+            s.name as subPropertyTypeName
+		from property p, sub_property_type s, room_type r
 		where host_id = #{hostId}
-		and r.room_type_id = p.room_type_id
-		and p.sub_property_type_id =  r.sub_property_type_id
+		and r.id = p.room_type_id
+		and p.sub_property_type_id =  s.id
 	</select>
 	<select id="listTransaction" parameterType="String" resultType="TransactionDTO">
 		select 
@@ -119,8 +119,19 @@
         where b.id = t.booking_id
         and b.host_id = #{hostId}
 	</select>
-	<select id="sysdate" resultType="Date">
-		select sysdate from dual
+	<select id="totalEarningMap" parameterType="String" resultType="TransactionDTO"> 
+		select 
+			b.total_price as totalPrice,
+			b.id,
+			b.host_id as hostId,
+			t.site_fee as siteFee,
+			t.booking_id,
+			t.is_refund as isRefund,
+			t.pay_expt_date as payExptDate
+		from booking b, transaction t
+		where b.id = t.id
+        and sysdate > t.pay_expt_date
+		and host_id = #{hostId}
 	</select>
 	<!-- <insert id="saveImage" parameterType="java.util.Map">
     I	insert into img_table VALUES #{img}    

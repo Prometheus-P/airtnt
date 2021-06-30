@@ -1,8 +1,8 @@
 package com.airtnt.airtnt.service;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,7 @@ import com.airtnt.airtnt.model.RoomTypeDTO;
 import com.airtnt.airtnt.model.SubPropertyTypeDTO;
 import com.airtnt.airtnt.model.TransactionDTO;
 
-@Service //
+@Service 
 public class HostMapper implements HostMapperInterface {
 	@Autowired
 	private SqlSession sqlSession;
@@ -81,7 +81,6 @@ public class HostMapper implements HostMapperInterface {
 	@Override
 	public List<PropertyDTO> getPropertyList(String hostId) {
 		List<PropertyDTO> listProperty = sqlSession.selectList("listProperty", hostId);
-		
 		return listProperty;
 	}
 
@@ -115,9 +114,10 @@ public class HostMapper implements HostMapperInterface {
 		MemberDTO dto = sqlSession.selectOne("getMemberDTO", memberId);
 		return dto;
 	}
-	
-	public Date getSysdate() {
-		Date date = sqlSession.selectOne("sysdate");
-		return date;
+
+	@Override
+	public List<TransactionDTO> getTotalEarning(String memberId) {
+		List<TransactionDTO> list = sqlSession.selectList("totalEarningMap", memberId);
+		return list;
 	}
 }
