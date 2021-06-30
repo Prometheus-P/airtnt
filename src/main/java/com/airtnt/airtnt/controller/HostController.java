@@ -1,17 +1,10 @@
 package com.airtnt.airtnt.controller;
 
 import java.io.File;
-import java.sql.Timestamp;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
-import java.util.Enumeration;
-import java.util.Formatter;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -21,17 +14,13 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.multipart.MultipartRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.airtnt.airtnt.model.BookingDTO;
 import com.airtnt.airtnt.model.GuideDTO;
-import com.airtnt.airtnt.model.MemberDTO;
 import com.airtnt.airtnt.model.PropertyDTO;
 import com.airtnt.airtnt.model.PropertyTypeDTO;
 import com.airtnt.airtnt.model.RoomTypeDTO;
@@ -125,59 +114,61 @@ public class HostController implements HostControllerInterface {
 	}
 
 	private static final int RESULT_EXCEED_SIZE = -2;
-    private static final int RESULT_UNACCEPTED_EXTENSION = -1;
-    private static final int RESULT_SUCCESS = 1;
-    private static final long LIMIT_SIZE = 10 * 1024 * 1024;
+	private static final int RESULT_UNACCEPTED_EXTENSION = -1;
+	private static final int RESULT_SUCCESS = 1;
+	private static final long LIMIT_SIZE = 10 * 1024 * 1024;
+
 	@Override
 	@ResponseBody
-	@RequestMapping(value= "/host/image_upload")
-	public int image_upload(HttpServletRequest req, @RequestParam("files")List<MultipartFile> images) {
-		  long sizeSum = 0;
-	        for(MultipartFile image : images) {
-	            String originalName = image.getOriginalFilename();
-	            //확장자 검사
-	            if(!isValidExtension(originalName)){
-	                return RESULT_UNACCEPTED_EXTENSION;
-	            }
-	            
-	            //용량 검사
-	            sizeSum += image.getSize();
-	            if(sizeSum >= LIMIT_SIZE) {
-	                return RESULT_EXCEED_SIZE;
-	            }
-	        }
-	        for(MultipartFile image : images) {
-	        	String originalName = image.getOriginalFilename();
-	        	if(originalName != null && !originalName.trim().equals("")) {
-	        		originalName += "_" + System.currentTimeMillis();
-	        	}
-	        	try {
-	        		image.transferTo(new File("/resources/property_img/" + originalName));
-	        		System.out.print(originalName);
-	        	}catch(Exception e) {
-	        		e.printStackTrace();
-	        	}
-	        }
-	        return RESULT_SUCCESS;
+	@RequestMapping(value = "/host/image_upload")
+	public int image_upload(HttpServletRequest req, @RequestParam("files") List<MultipartFile> images) {
+		long sizeSum = 0;
+		for (MultipartFile image : images) {
+			String originalName = image.getOriginalFilename();
+			// 확장자 검사
+			if (!isValidExtension(originalName)) {
+				return RESULT_UNACCEPTED_EXTENSION;
+			}
+
+			// 용량 검사
+			sizeSum += image.getSize();
+			if (sizeSum >= LIMIT_SIZE) {
+				return RESULT_EXCEED_SIZE;
+			}
+		}
+		for (MultipartFile image : images) {
+			String originalName = image.getOriginalFilename();
+			if (originalName != null && !originalName.trim().equals("")) {
+				originalName += "_" + System.currentTimeMillis();
+			}
+			try {
+				image.transferTo(new File("/resources/property_img/" + originalName));
+				System.out.print(originalName);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return RESULT_SUCCESS;
 	}
+
 	private boolean isValidExtension(String originalName) {
-        String originalNameExtension = originalName.substring(originalName.lastIndexOf(".") + 1);
-        switch(originalNameExtension) {
-        case "jpg":
-        case "png":
-        case "gif":
-            return true;
-        }
-        return false;
-    }
-	
+		String originalNameExtension = originalName.substring(originalName.lastIndexOf(".") + 1);
+		switch (originalNameExtension) {
+		case "jpg":
+		case "png":
+		case "gif":
+			return true;
+		}
+		return false;
+	}
+
 	@Override
 	@RequestMapping("/host/property_preview_5")
 	public String property_preview_5(HttpServletRequest req) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	@Override
 	@RequestMapping("/host/publish_celebration_6")
 	public String publish_celebration_6(HttpServletRequest req) {
@@ -235,18 +226,18 @@ public class HostController implements HostControllerInterface {
 		HttpSession session = req.getSession();
 		String hostId = (String) session.getAttribute("member_id");
 		List<TransactionDTO> listTransaction = hostMapper.getTransactionList(hostId);
-		//6월 29, 2021 10:31:02 오전
+		// 6월 29, 2021 10:31:02 오전
 		int count = 0;
 		ModelAndView mav = new ModelAndView("/host/host_mode/transaction_list");
-		for(TransactionDTO dto : listTransaction) { // 대금예정이 없습니다 
-			if(dto.getPayExptDate()==null) {
+		for (TransactionDTO dto : listTransaction) { // 대금예정이 없습니다
+			if (dto.getPayExptDate() == null) {
 				count++;
 			}
 		}
-		if(count==listTransaction.size()) {
+		if (count == listTransaction.size()) {
 			mav.addObject("isTran", true);
 		}
-		Date nowTime = hostMapper.getSysdate();
+		Date nowTime = new Date();
 		mav.addObject("listTransaction", listTransaction);
 		mav.addObject("today", nowTime);
 		mav.addObject("isTran", false);
@@ -257,6 +248,41 @@ public class HostController implements HostControllerInterface {
 	public ModelAndView host_review_list(HttpServletRequest req) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public Date addMonth(Date date, int months) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.add(Calendar.MONTH, months);
+		return cal.getTime();
+	}
+
+	@Override
+	@RequestMapping("/host/total_earning")
+	public ModelAndView total_earning(HttpServletRequest req) {
+		HttpSession session = req.getSession();
+		String hostId = (String) session.getAttribute("member_id");
+		List<TransactionDTO> list = hostMapper.getTotalEarning(hostId);
+		Date date = new Date();
+		Date beM[] = new Date[13];
+		ModelAndView mav = new ModelAndView("/host/host_mode/total_earning");
+		List<Integer> listTotal = new ArrayList<>();
+		int total[] = new int[12];
+		for (int i = 0; i < 13; ++i) {
+				beM[i] = addMonth(date, -i);
+		}
+		for (TransactionDTO dto : list) { // 6개월 전
+			for(int i =0; i<12; ++i) {
+				if(beM[i+1].before(dto.getPayExptDate()) && dto.getPayExptDate().before(beM[i])) {
+					total[i] += dto.getTotalPrice();
+				}
+			}
+		}//total[0]: 가장 최근 달 >> total1
+		for (int i =11 ; i >= 0; --i) {
+			listTotal.add(total[i]);
+		}
+		mav.addObject("listTotal", listTotal);
+		return mav;
 	}
 
 }

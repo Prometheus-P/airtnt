@@ -21,9 +21,9 @@
 			<a href="#modal" class="list-group-item">
 				<h4 class="list-group-item-heading">${dto.name}</h4>
 				<p class="list-group-item-text">
-				가격: ${dto.price}<br>
-				등록일: ${dto.regDate}<br>
-				최대인원: ${dto.maxGuest}<br>
+				가격: ${dto.price}  
+				등록일: ${dto.regDate}  
+				최대인원: ${dto.maxGuest}  
 				숙소유형: ${dto.roomTypeName}
 				</p>
 			</a>
