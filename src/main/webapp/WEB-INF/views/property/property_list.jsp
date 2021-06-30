@@ -15,32 +15,12 @@ Licence URI: https://www.os-templates.com/template-terms
 <head>
 <title>AirTnT/숙소검색(키워드:${param.addressKey})</title>
 <meta charset="utf-8">
-<script type="text/javascript">
-function setPropertyTypeFilter(propertyTypeId){
-	var propertyTypeTag = document.getElementById("propertyType-" + propertyTypeId);
-	var subPropertyTypeTagArray = document.getElementsByName("subPropertyType");
-	for(var i = 0; i < subPropertyTypeTagArray.length; i++){
-		var subPropertyTypeTag = subPropertyTypeTagArray[i];
-		var id = subPropertyTypeTag.getAttribute("id");
-		if(id.split('-')[1] == propertyTypeId){
-			if(propertyTypeTag.getAttribute("checked") == "checked") {
-				subPropertyTypeTag.removeAttribute("disabled");
-			} else {
-				subPropertyTypeTag.setAttribute("disabled", "disabled");
-			}
-		}
-	}
-	
-	if(propertyTypeTag.getAttribute("checked") == "checked") {
-		propertyTypeTag.removeAttribute("checked");
-	} else {
-		propertyTypeTag.setAttribute("checked", "checked");
-	}
-}
-</script>
 
 <!-- drop down -->
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+
+<!-- 검색필터 이벤트 처리와 초기화를 제어하는 커스텀 파일 -->
+<script src="/resources/script/search-control.js"></script>
 
 </head>
 <body id="top">
@@ -52,7 +32,8 @@ function setPropertyTypeFilter(propertyTypeId){
 <!-- 상단 로그인 바 -->
 <jsp:include page="/WEB-INF/views/top.jsp"/>
 
-<form class="d-flex" action="<c:url value='/property/search'/>" method="get">
+<form class="d-flex" action="<c:url value='/property/search'/>" method="get"
+onsubmit="setParametersOnSubmit()">
 <!-- 검색 네비게이션 바 -->
 <div id="pageintro" class="hoc clear justify-content-center" style="padding-top: 1vh; padding-bottom: 1vh;"> 
     <!-- ################################################################################################ -->
@@ -88,8 +69,8 @@ function setPropertyTypeFilter(propertyTypeId){
                 <!-- Split dropend button -->
                 <div class="form-check form-check-inline">
                   <input id="propertyType-${propertyType.id}" class="form-check-input"
-                  type="checkbox" name="propertyType" value="${propertyType.id}"
-                  onchange="setPropertyTypeFilter(${propertyType.id})">
+                  type="checkbox" name="propertyTypeId" value="${propertyType.id}"
+                  onchange="setPropertyTypeFilter(this)">
                   <label class="form-check-label">${propertyType.name} 전체</label>
                 </div>
                 
@@ -101,7 +82,7 @@ function setPropertyTypeFilter(propertyTypeId){
                   <c:forEach var="subPropertyType" items="${propertyType.subPropertyTypes}">
                     <div class="form-check form-check-inline">
                       <input id="subPropertyType-${propertyType.id}-${subPropertyType.id}" class="form-check-input"
-                      type="checkbox" name="subPropertyType" value="${subPropertyType.id}">
+                      type="checkbox" name="subPropertyTypeId" value="${subPropertyType.id}">
                       <label class="form-check-label">${subPropertyType.name}</label>
                     </div>
                   </c:forEach>
@@ -127,7 +108,7 @@ function setPropertyTypeFilter(propertyTypeId){
             <c:forEach var="roomType" items="${roomTypes}">
               <li class="list-group-item" style="font-size: 20px">
                 <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="checkbox" name="roomType" value="${roomType.id}">
+                  <input class="form-check-input" type="checkbox" name="roomTypeId" value="${roomType.id}">
                   <label class="form-check-label">${roomType.name}</label>
                 </div>
               </li>
@@ -149,7 +130,7 @@ function setPropertyTypeFilter(propertyTypeId){
           <div class="dropdown-menu" aria-labelledby="dropdownMenuClickableInside" style="font-size: 15px">
             <c:forEach var="amenityType" items="${amenityTypes}">
               <div class="form-check form-check-inline">
-                <input class="form-check-input" type="checkbox" name="amenityType" value="${amenityType.id}">
+                <input class="form-check-input" type="checkbox" name="amenityTypeId" value="${amenityType.id}">
                 <label class="form-check-label">${amenityType.name}</label>
               </div>
             </c:forEach>
@@ -169,35 +150,40 @@ function setPropertyTypeFilter(propertyTypeId){
           </button>
           
           
-          <div class="dropdown-menu list-group" aria-labelledby="dropdownMenuClickableInside" style="width: 400px;">
-            <div class="btn-group list-group-item" style="font-size: 20px; padding-bottom: 50px; padding-left: 20px">
-              <h3>최대 인원</h3>
-              <input id="increase-guest" type="button" class="btn" value="-">
+          <div class="dropdown-menu list-group" aria-labelledby="dropdownMenuClickableInside" style="width: 500px;">
+            <div class="btn-group list-group-item" style="padding-bottom: 50px; padding-left: 20px">
+              <h3>인원</h3>
+              <input id="decrease-guest" type="button" class="btn"
+              value="-" onclick="changeCount(this)" style="font-size: 20px;">
               <input id="guest-count" class="form-control btn" type="number" name="guestCount"
-                value="${empty param.guestCount ? 0 : param.guestCount}" min="0"
-                readonly style="width: 50px;">
-              <input id="decrease-guest" type="button" class="btn" value="+">
+                value="${param.guestCount}" min="1"
+                readonly style="width: 80px; height: 44px;font-size: 30px;">
+              <input id="increase-guest" type="button" class="btn"
+              value="+" onclick="changeCount(this)" style="font-size: 20px;">
             </div>
-            <div class="btn-group list-group-item" style="font-size: 20px; padding-bottom: 50px; padding-left: 20px">
+            <div class="btn-group list-group-item" style="padding-bottom: 50px; padding-left: 20px">
               <h3>침대 수</h3>
-              <input id="increase-bed" type="button" class="btn" value="-">
+              <input id="decrease-bed" type="button" class="btn"
+              value="-" onclick="changeCount(this)" style="font-size: 20px;">
               <input id="bed-count" class="form-control btn" type="number" name="bedCount"
-                value="${empty param.bedCount ? 0 : param.bedCount}" min="0"
-                readonly style="width: 50px;">
-              <input id="decrease-bed" type="button" class="btn" value="+">
+                value="${param.bedCount}" min="1"
+                readonly style="width: 80px; height: 44px;font-size: 30px;">
+              <input id="increase-bed" type="button" class="btn"
+              value="+" onclick="changeCount(this)"  style="font-size: 20px;">
             </div>
             <div class="list-group-item form-check form-check-inline" style="font-size: 20px;">
               <h3>가격 범위</h3>
-              ₩<input id="min-price" class="form-control form-check-label nobr" type="number" name="minPrice"
-                value="${empty param.minPrice ? 0 : param.guestCount}"
-                min="0" style="width: 100px; display: inline;"> ~&nbsp;
-              ₩<input id="max-price" class="form-control form-check-label nobr" type="number" name="maxPrice"
-                value="${empty param.maxPrice ? (empty param.minPrice ? 0 : param.minPrice + 10000) : param.maxPrice}"
-                min="0" style="width: 100px; display: inline;">
+              ₩<input id="min-price" class="form-control form-check-label" type="number"
+                name="minPrice" value="${param.minPrice}" min="10000" step="10000" placeholder="10000+"
+                oninput="changePrice(this)" style="width: 150px; display: inline; font-size: 20px"> ~&nbsp;
+              ₩<input id="max-price" class="form-control form-check-label" type="number"
+                name="maxPrice" value="${param.maxPrice}" min="10000" step="10000" placeholder="10000+"
+                oninput="changePrice(this)" style="width: 150px; display: inline; font-size: 20px">
             </div>
           </div>
         </div>
       </div>
+      
   </section>
 </div>
 
