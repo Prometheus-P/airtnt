@@ -75,8 +75,10 @@ public class PropertyController {
 		List<RoomTypeDTO> roomTypes = propertyMapper.selectRoomTypes();
 		List<AmenityTypeDTO> amenityTypes = propertyMapper.selectAmenityTypes();
 		
-		if(propertyTypeIdKeyArray != null) {
-			outer: for(PropertyTypeDTO propertyType : propertyTypes) {
+		outer: for(PropertyTypeDTO propertyType : propertyTypes) {
+			// 숙소유형값이 없어도 숙소세부유형값이 있을 수 있기 때문에
+			// null 체크 조건문을 for 안에 써준다.
+			if(propertyTypeIdKeyArray != null) {
 				for(int i = 0; i < propertyTypeIdKeyArray.length; i++) {
 					if(propertyType.getId() == propertyTypeIdKeyArray[i]) {
 						propertyType.putTagAttributeMapValue(TagAttribute.CHECKED);
@@ -87,14 +89,15 @@ public class PropertyController {
 						continue outer;
 					}
 				}
-				
-				// 현재 숙소유형이 체크된 숙소유형 파라미터값이 아니면 여기로 넘어옴
-				if(subPropertyTypeIdKeyArray != null) {
-					for(SubPropertyTypeDTO subPropertyType : propertyType.getSubPropertyTypes()) {
-						for(int i = 0; i < subPropertyTypeIdKeyArray.length; i++) {
-							if(subPropertyType.getId() == subPropertyTypeIdKeyArray[i]) {
-								subPropertyType.putTagAttributeMapValue(TagAttribute.CHECKED);
-							}
+			}
+			// 현재 숙소유형이 체크된 숙소유형 파라미터값이 아니면 여기로 넘어옴.
+			// 숙소세부유형값이 없으면 반복문을 실행하지 않아도 되기 때문에
+			// null 체크 조건문을 for문 밖에 써준다.
+			if(subPropertyTypeIdKeyArray != null) {
+				for(SubPropertyTypeDTO subPropertyType : propertyType.getSubPropertyTypes()) {
+					for(int i = 0; i < subPropertyTypeIdKeyArray.length; i++) {
+						if(subPropertyType.getId() == subPropertyTypeIdKeyArray[i]) {
+							subPropertyType.putTagAttributeMapValue(TagAttribute.CHECKED);
 						}
 					}
 				}

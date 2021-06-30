@@ -68,13 +68,12 @@ onsubmit="setParametersOnSubmit()">
               <li class="list-group-item">
                 <!-- Split dropend button -->
                 <div class="form-check form-check-inline">
-                  <input id="propertyType-${propertyType.id}" class="form-check-input"
-                  type="checkbox" name="propertyTypeId" value="${propertyType.id}"
-                  onchange="modPropertyTypeFilters(this)"
+                  <input type="checkbox" id="propertyType-${propertyType.id}"
+                  class="form-check-input" name="propertyTypeId" value="${propertyType.id}"
                     <c:forEach var='tagAttribute' items='${propertyType.tagAttributes}'>
                       ${tagAttribute}="${propertyType.getTagAttributeMapValue(tagAttribute)}"
                     </c:forEach>
-                  >
+                  onchange="modSubPropertyTypes(this)">
                   <label class="form-check-label">${propertyType.name} 전체</label>
                 </div>
                 
@@ -85,9 +84,8 @@ onsubmit="setParametersOnSubmit()">
                 <div class="collapse" id="collapse${propertyType.id}">
                   <c:forEach var="subPropertyType" items="${propertyType.subPropertyTypes}">
                     <div class="form-check form-check-inline">
-                      <input id="subPropertyType-${propertyType.id}-${subPropertyType.id}"
-                      class="form-check-input" type="checkbox" name="subPropertyTypeId"
-                      value="${subPropertyType.id}"
+                      <input type="checkbox" id="subPropertyType-${propertyType.id}-${subPropertyType.id}"
+                      class="form-check-input" name="subPropertyTypeId" value="${subPropertyType.id}"
                         <c:forEach var='tagAttribute' items='${subPropertyType.tagAttributes}'>
                           ${tagAttribute}="${subPropertyType.getTagAttributeMapValue(tagAttribute)}"
                         </c:forEach>
@@ -98,8 +96,11 @@ onsubmit="setParametersOnSubmit()">
                 </div>
               </li>
             </c:forEach>
+            <li>
+              <input type="button" class="btn btn-secondary"
+              value="초기화" onclick="resetTags('propertyTypes')">
+            </li>
           </ul>
-          
         </div>
         
       </div>
@@ -117,17 +118,20 @@ onsubmit="setParametersOnSubmit()">
             <c:forEach var="roomType" items="${roomTypes}">
               <li class="list-group-item" style="font-size: 20px">
                 <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="checkbox" name="roomTypeId"
+                  <input type="checkbox" class="form-check-input" name="roomTypeId" value="${roomType.id}"
                     <c:forEach var='tagAttribute' items='${roomType.tagAttributes}'>
                       ${tagAttribute}="${roomType.getTagAttributeMapValue(tagAttribute)}"
                     </c:forEach>
-                  value="${roomType.id}">
+                  >
                   <label class="form-check-label">${roomType.name}</label>
                 </div>
               </li>
             </c:forEach>
+            <li>
+              <input type="button" class="btn btn-secondary"
+              value="초기화" onclick="resetTags('roomTypes')">
+            </li>
           </ul>
-          
         </div>
       </div>
       
@@ -143,14 +147,16 @@ onsubmit="setParametersOnSubmit()">
           <div class="dropdown-menu" aria-labelledby="dropdownMenuClickableInside" style="font-size: 15px">
             <c:forEach var="amenityType" items="${amenityTypes}">
               <div class="form-check form-check-inline">
-                <input class="form-check-input" type="checkbox" name="amenityTypeId"
+                <input type="checkbox" class="form-check-input" name="amenityTypeId" value="${amenityType.id}"
                   <c:forEach var='tagAttribute' items='${amenityType.tagAttributes}'>
                     ${tagAttribute}="${amenityType.getTagAttributeMapValue(tagAttribute)}"
                   </c:forEach>
-                value="${amenityType.id}">
+                onchange="modChecked(this)">
                 <label class="form-check-label">${amenityType.name}</label>
               </div>
             </c:forEach>
+            <input type="button" class="btn btn-secondary"
+            value="초기화" onclick="resetTags('amenityTypes')">
           </div>
           
         </div>
@@ -199,10 +205,19 @@ onsubmit="setParametersOnSubmit()">
                 oninput="modMinMaxPrice(this)" onchange="modUnderPrice(this)"
                 style="width: 150px; display: inline; font-size: 20px">
             </div>
+            <div class="list-group-item">
+              <input type="button" class="btn btn-secondary"
+              value="초기화" onclick="resetTags('etc')">
+            </div>
           </div>
         </div>
       </div>
-      
+      <div>
+        <div class="position-absolute bottom-0 start-0" style="padding-left: 100px">
+          <input type="button" class="btn btn-secondary"
+          value="전체 초기화" onclick="resetTags('all')">
+        </div>
+      </div>
   </section>
 </div>
 
