@@ -19,6 +19,7 @@
 				<table class="table table-striped">
 					<thead>
 						<tr>
+							<th>#</th>
 							<th>예약번호</th>
 							<th>결재금</th>
 							<th>차감 수수료</th>
@@ -30,7 +31,9 @@
 					<tbody>
 					<c:forEach var="dto" items="${listTransaction}">
 					<c:if test="${dto.checkOutDate.before(today)}">
+						<c:set var="count" value="${count+1}"/>
 						<tr>
+							<td>${count}</td>
 							<td>${dto.bookingNumber}</td>
 							<td>₩${dto.totalPrice}</td>
 							<td>₩${dto.totalPrice * dto.siteFee}</td>
@@ -59,6 +62,7 @@
 				<table class="table table-striped">
 					<thead>
 						<tr>
+							<th>#</th>
 							<th>예약번호</th>
 							<th>예정 결재대금</th>
 							<th>숙소 ID</th>
@@ -75,7 +79,9 @@
 						<c:forEach var="dto" items="${listTransaction}">
 						<!--  confirmDate<  today <checkOutDate -->
 						<c:if test="${dto.confirmDate.before(today) && today.before(dto.checkOutDate)}">
+							<c:set var="count" value="${count+1}"/>
 							<tr>
+								<td>${count}</td>
 								<td>${dto.bookingNumber}</td>
 								<td>₩${dto.totalPrice - dto.totalPrice * dto.siteFee}</td>
 								<td>${dto.propertyId}</td>

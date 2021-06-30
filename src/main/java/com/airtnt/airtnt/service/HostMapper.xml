@@ -26,7 +26,6 @@
 		#{maxGuest})<!-- modeDate==null -->
 	</insert>
 	<delete id="deleteProperty" parameterType="int">
-		
 	</delete>
 	<select id="propertyType" resultType="propertyTypeDTO">
 		select 

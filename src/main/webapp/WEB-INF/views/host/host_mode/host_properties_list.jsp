@@ -16,21 +16,41 @@
 		<br><br><br>
 			<h1>숙소 목록</h1>
 		</div>
-		<div class="list-group">
-		<c:forEach var="dto" items="${listProperty}">
-			<a href="#modal" class="list-group-item">
-				<h4 class="list-group-item-heading">${dto.name}</h4>
-				<p class="list-group-item-text">
-				가격: ${dto.price}  
-				등록일: ${dto.regDate}  
-				최대인원: ${dto.maxGuest}  
-				숙소유형: ${dto.roomTypeName}
-				</p>
-			</a>
-		</c:forEach>
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th>#</th>
+							<th>가격</th>
+							<th>등록일</th>
+							<th>최대인원</th>
+							<th rowspan="2">숙소유형</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+					<c:forEach var="dto" items="${listProperty}">
+					<c:set var="count" value="${count+1}"/>
+						<tr>
+							<td>${count}</td>
+							<td>${dto.price}</td>
+							<td>${dto.regDate}</td>
+							<td>${dto.maxGuest}</td>
+							<td>${dto.roomTypeName}</td>
+							<td><button type="button" class="btn btn-sm btn-primary">세부정보</button></td>
+						</tr>
+					</c:forEach>
+					</tbody>
+				</table>
+			</div>
 		</div>
-	</div>
-	</div>
 </body>
 </html>
 <!--< include file="../bottom.jsp" %>-->
+							
+							
+							
+							
+							
+							
+							
+							
