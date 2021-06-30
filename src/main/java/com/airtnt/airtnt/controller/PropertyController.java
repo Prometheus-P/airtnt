@@ -51,14 +51,14 @@ public class PropertyController {
 		List<RoomTypeDTO> roomTypes = propertyMapper.selectRoomTypes();
 		List<AmenityTypeDTO> amenityTypes = propertyMapper.selectAmenityTypes();
 		
-		List<Integer> propertyTypeKeys = new ArrayList<Integer>();
-		for(int i = 0; i < propertyTypeKeyArray.length; i++) {
-			propertyTypeKeys.add(propertyTypeKeyArray[i]);
-		}
-		List<Integer> subPropertyTypeKeys = new ArrayList<Integer>();
-		for(int i = 0; i < subPropertyTypeKeyArray.length; i++) {
-			subPropertyTypeKeys.add(subPropertyTypeKeyArray[i]);
-		}
+//		List<Integer> propertyTypeKeys = new ArrayList<Integer>();
+//		for(int i = 0; i < propertyTypeKeyArray.length; i++) {
+//			propertyTypeKeys.add(propertyTypeKeyArray[i]);
+//		}
+//		List<Integer> subPropertyTypeKeys = new ArrayList<Integer>();
+//		for(int i = 0; i < subPropertyTypeKeyArray.length; i++) {
+//			subPropertyTypeKeys.add(subPropertyTypeKeyArray[i]);
+//		}
 		// 제작중
 		
 		
