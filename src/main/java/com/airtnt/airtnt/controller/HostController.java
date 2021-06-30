@@ -236,10 +236,20 @@ public class HostController implements HostControllerInterface {
 		String hostId = (String) session.getAttribute("member_id");
 		List<TransactionDTO> listTransaction = hostMapper.getTransactionList(hostId);
 		//6월 29, 2021 10:31:02 오전
-		Date nowTime = hostMapper.getSysdate();
+		int count = 0;
 		ModelAndView mav = new ModelAndView("/host/host_mode/transaction_list");
+		for(TransactionDTO dto : listTransaction) { // 대금예정이 없습니다 
+			if(dto.getPayExptDate()==null) {
+				count++;
+			}
+		}
+		if(count==listTransaction.size()) {
+			mav.addObject("isTran", true);
+		}
+		Date nowTime = hostMapper.getSysdate();
 		mav.addObject("listTransaction", listTransaction);
 		mav.addObject("today", nowTime);
+		mav.addObject("isTran", false);
 		return mav;
 	}
 

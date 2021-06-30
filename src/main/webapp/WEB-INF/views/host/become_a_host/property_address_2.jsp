@@ -22,6 +22,20 @@
 	</script>
 </head>
 <body>
+	<script type="text/javascript">
+		function display(){
+			document.getElementById("check").style.display="block";
+		}
+		function check(){
+			if (f.address.value==""){
+				alert("주소를 입력해 주세요!!")
+				f.address.focus()
+				return false;
+			}
+			document.f.submit()
+			return true;
+		}
+	</script>
 	<h2>주소 입력페이지!</h2>
 	<form action="<c:url value='/host/property_detail_3'/>" onsubmit="return check()" name="f" method="post">
 	<input type="text" id="address" name = "address" placeholder="주소" readonly
@@ -33,8 +47,7 @@
 		<input type="submit" value="위치 확인!">
 	</div>
 	</form>
-	
-	
+
 
 	<div>
 		<script

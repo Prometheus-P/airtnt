@@ -44,6 +44,7 @@
 						<ul class="dropdown-menu">
 							<li><a href="<c:url value='/host/host_review_list'/>">리뷰</a></li>
 							<li class="divider"></li>
+							<li><a href="<c:url value='/host/property_type_0'/>">새 숙소 생성</a></li>
 							<li class="dropdown-header">메롱</li>
 						</ul></li>
 				</ul>

@@ -30,36 +30,38 @@
 				<br> <br> <br>
 				<h1>대금수령 완료</h1>
 			</div>
-			<div class="list-group">
-				<c:set var="count" value="0" scope="page" />
-				<c:forEach var="dto" items="${listTransaction}">
-					<c:if test="${dto.checkOutDate.compareTo(today) == -1}">
-						<a href="#modal" class="list-group-item">
-							<h4 class="list-group-item-heading">예약번호 ${bookingNumber}</h4>
-							<p class="list-group-item-text">
-								결재금: ₩${dto.totalPrice}<br> 차감 수수료${dto.totalPrice * dto.siteFee}<br>
-								총 결재대금: ₩${dto.totalPrice - dto.totalPrice * dto.siteFee}
-							</p>
-							<p class="list-group-item-text">숙소 ID: ${propertyId}</p>
-							<p class="list-group-item-text">대금수령일: ${dto.payExptDate}</p> <c:if
-								test="${dto.isRefund.equals('Y')}">
-								<p class="list-group-item-text">
-									*환불 되었습니다.<br> 환불일: ${dto.modDate}
-								</p>
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th>예약번호</th>
+							<th>결재금</th>
+							<th>차감 수수료</th>
+							<th>총 결재대금</th>
+							<th>숙소 ID</th>
+							<th rowspan="3">대금수령일</th>
+						</tr>
+					</thead>
+					<tbody>
+					<c:forEach var="dto" items="${listTransaction}">
+					<c:if test="${dto.checkOutDate.before(today)}">
+						<tr>
+							<td>${dto.bookingNumber}</td>
+							<td>₩${dto.totalPrice}</td>
+							<td>₩${dto.totalPrice * dto.siteFee}</td>
+							<td>₩${dto.totalPrice - dto.totalPrice * dto.siteFee}</td>
+							<td>${dto.propertyId}</td>
+							<td>${dto.payExptDate}</td>
+							<c:if test="${Character.compare(dto.isRefund, y) == 0}">
+								<td>*환불 되었습니다</td>
+								<td>환불일: ${dto.modDate}</td>
 							</c:if>
-						</a>
-						<c:set var="count" value="${count+1}" scope="page" />
+						</tr>
 					</c:if>
-					<c:if test="">
-						<c:set var="" value="" scope="page"/>
-					</c:if>
-				</c:forEach>
-				<c:if test="${count == listTransaction.size()}">
-					<a href="#modal" class="list-group-item active">
-						<h4 class="list-group-item-heading">수령된 대금이 없습니다.</h4>
-					</a>
-				</c:if>
-			</div>
+					
+					<c:set var="graph1" value="" scope="page"/>
+					</c:forEach>
+					</tbody>
+				</table>
 		</div>
 
 		<div class="col-md-6" style="width: 80%">
@@ -68,29 +70,38 @@
 				<h1>대금 수령 예정 내역</h1>
 			</div>
 			<div class="list-group">
-				<c:forEach var="dto" items="${listTransaction}">
-					<c:choose>
-					<c:when test="${dto.checkOutDate.compareTo(today) != -1 && dto.confirmDate!=null}">
-						<c:set var="count" value="${count+1}" scope="page"/>
-					</c:when>
-					<c:otherwise>
-					<c:if test="${dto.confirmDate.compareTo(today) == -1 && today.compareTo(dto.checkOutDate) == s1}">
-						<a href="#" class="list-group-item active">
-							<h4 class="list-group-item-heading">예약번호 ${bookingNumber}</h4>
-							<p class="list-group-item-text">예정 결재대금: ₩${dto.totalPrice - dto.totalPrice * dto.siteFee}
-							</p>
-							<p class="list-group-item-text">숙소 ID: ${propertyId}</p>
-							<p class="list-group-item-text">
-								예약확정일: ${dto.confirmDate}<br> 대금 수령 예정일: ${dto.payExptDate}
-							</p>
-						</a>
-					</c:if>
-					</c:otherwise>
-					</c:choose>
-				</c:forEach>
-				<c:if test="${pageScope.count -1 == listTransaction.size()}">
-					<h4 class="list-group-item-heading">예정 내역이 없습니다.</h4>
-				</c:if>
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th>예약번호</th>
+							<th>예정 결재대금</th>
+							<th>숙소 ID</th>
+							<th>예약확정일</th>
+							<th>대금수령 예정일</th>
+						</tr>
+					</thead>
+					<tbody>
+						<c:if test="${isTran == true}">
+							<h4 class="list-group-item-heading">예정 내역이 없습니다.</h4>
+						</c:if>
+						
+						<c:if test="${isTran == false}">
+						<c:forEach var="dto" items="${listTransaction}">
+						<!--  confirmDate<  today <checkOutDate -->
+						<c:if test="${dto.confirmDate.before(today) && today.before(dto.checkOutDate)}">
+							<tr>
+								<td>${dto.bookingNumber}</td>
+								<td>₩${dto.totalPrice - dto.totalPrice * dto.siteFee}</td>
+								<td>${dto.propertyId}</td>
+								<td>${dto.confirmDate}</td>
+								<td>${dto.payExptDate}</td>
+							</tr>
+							</c:if>
+						</c:forEach>
+						</c:if>
+				
+					</tbody>
+				</table>
 			</div>
 		</div>
 		
@@ -109,7 +120,7 @@
 				var label = [];
 				for (var i = 0; i < 6; ++i) {
 					label[i] = month - 5 + i;
-					if (label[i] < 0) {
+					if (label[i] <= 0) {
 						label[i] += 12;
 					}
 				}
@@ -125,7 +136,7 @@
 							label : '총 수입',
 							backgroundColor : 'transparent',
 							borderColor : 'red',
-							data : [ 0, 10, 5, 2, 20, 30, 45 ]
+							data : [ 700, 70000, 70000, 6000, 50000, 90000, 80000 ]
 						} ]
 					},
 					// 옵션
@@ -135,6 +146,6 @@
 		<br><br><br><br><br><br><br><br><br><br><br><br>
 		</div>
 	</div>
+	<%@ include file="../../bottom.jsp" %>
 </body>
 </html>
-<!--< include file="../bottom.jsp" %>-->
