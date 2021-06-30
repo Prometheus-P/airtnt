@@ -70,6 +70,9 @@ onsubmit="setParametersOnSubmit()">
                 <div class="form-check form-check-inline">
                   <input id="propertyType-${propertyType.id}" class="form-check-input"
                   type="checkbox" name="propertyTypeId" value="${propertyType.id}"
+                    <c:forEach var='tagAttribute' items='${propertyType.tagAttributes}'>
+                      ${tagAttribute}="${propertyType.getTagAttributeMapValue(tagAttribute)}"
+                    </c:forEach>
                   onchange="setPropertyTypeFilter(this)">
                   <label class="form-check-label">${propertyType.name} 전체</label>
                 </div>
@@ -81,8 +84,12 @@ onsubmit="setParametersOnSubmit()">
                 <div class="collapse" id="collapseExample${propertyType.id}">
                   <c:forEach var="subPropertyType" items="${propertyType.subPropertyTypes}">
                     <div class="form-check form-check-inline">
-                      <input id="subPropertyType-${propertyType.id}-${subPropertyType.id}" class="form-check-input"
-                      type="checkbox" name="subPropertyTypeId" value="${subPropertyType.id}">
+                      <input id="subPropertyType-${propertyType.id}-${subPropertyType.id}"
+                      class="form-check-input" type="checkbox" name="subPropertyTypeId"
+                        <c:forEach var='tagAttribute' items='${subPropertyType.tagAttributes}'>
+                          ${tagAttribute}="${subPropertyType.getTagAttributeMapValue(tagAttribute)}"
+                        </c:forEach>
+                      value="${subPropertyType.id}">
                       <label class="form-check-label">${subPropertyType.name}</label>
                     </div>
                   </c:forEach>
@@ -108,7 +115,11 @@ onsubmit="setParametersOnSubmit()">
             <c:forEach var="roomType" items="${roomTypes}">
               <li class="list-group-item" style="font-size: 20px">
                 <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="checkbox" name="roomTypeId" value="${roomType.id}">
+                  <input class="form-check-input" type="checkbox" name="roomTypeId"
+                    <c:forEach var='tagAttribute' items='${roomType.tagAttributes}'>
+                      ${tagAttribute}="${roomType.getTagAttributeMapValue(tagAttribute)}"
+                    </c:forEach>
+                  value="${roomType.id}">
                   <label class="form-check-label">${roomType.name}</label>
                 </div>
               </li>
@@ -130,7 +141,11 @@ onsubmit="setParametersOnSubmit()">
           <div class="dropdown-menu" aria-labelledby="dropdownMenuClickableInside" style="font-size: 15px">
             <c:forEach var="amenityType" items="${amenityTypes}">
               <div class="form-check form-check-inline">
-                <input class="form-check-input" type="checkbox" name="amenityTypeId" value="${amenityType.id}">
+                <input class="form-check-input" type="checkbox" name="amenityTypeId"
+                  <c:forEach var='tagAttribute' items='${amenityType.tagAttributes}'>
+                    ${tagAttribute}="${amenityType.getTagAttributeMapValue(tagAttribute)}"
+                  </c:forEach>
+                value="${amenityType.id}">
                 <label class="form-check-label">${amenityType.name}</label>
               </div>
             </c:forEach>

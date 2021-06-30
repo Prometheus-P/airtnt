@@ -24,17 +24,17 @@ function setPropertyTypeFilter(propertyTypeTag){
 	for(var i = 0; i < subPropertyTypeTagArray.length; i++){
 		var subPropertyTypeTag = subPropertyTypeTagArray[i];
 		if(subPropertyTypeTag.id.split('-')[1] == propertyTypeTag.value){
-			if(propertyTypeTag.getAttribute("checked") == "checked"){
+			if(propertyTypeTag.getAttribute("checked").value == "checked"){
 				// propertyType이 checked이면 ckeck를 해제할 것이기 때문에 하위항목을 활성화
-				subPropertyTypeTag.removeAttribute("disabled");
+				subPropertyTypeTag.setAttribute("disabled", "disabled");
 			} else {
 				// propertyType이 unchecked이면 checked해줄 것이기 때문에 하위항목을 비활성화
-				subPropertyTypeTag.setAttribute("disabled", "disabled");
+				subPropertyTypeTag.removeAttribute("disabled");
 			}
 		}
 	}
 	
-	if(propertyTypeTag.getAttribute("checked") == "checked"){
+	if(propertyTypeTag.getAttribute("checked").value == "checked"){
 		propertyTypeTag.removeAttribute("checked");
 	} else {
 		propertyTypeTag.setAttribute("checked", "checked");

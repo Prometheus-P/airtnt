@@ -41,23 +41,69 @@ public class PropertyController {
 		System.out.println(Arrays.toString(roomTypeIdKeyArray));
 		System.out.println(Arrays.toString(amenityTypeIdKeyArray));
 		
-		// 파라미터 처리는 자바에서 해야함
-		
+		// 숙소 목록
 		List<PropertyDTO> properties = propertyMapper.searchPropertiesByAddress(addressKey);
 		
+		// 검색 필터 목록
 		List<PropertyTypeDTO> propertyTypes = propertyMapper.selectPropertyTypes();
 		List<RoomTypeDTO> roomTypes = propertyMapper.selectRoomTypes();
 		List<AmenityTypeDTO> amenityTypes = propertyMapper.selectAmenityTypes();
 		
+		if(propertyTypeIdKeyArray != null) {
+			outer: for(PropertyTypeDTO propertyType : propertyTypes) {
+				for(int i = 0; i < propertyTypeIdKeyArray.length; i++) {
+					if(propertyType.getId() == propertyTypeIdKeyArray[i]) {
+						propertyType.putTagAttributeMapValue(TagAttribute.CHECKED);
+						// 숙소유형이 checked 되어있으면 하위항목을 모두 disabled함
+						for(SubPropertyTypeDTO subPropertyType : propertyType.getSubPropertyTypes()) {
+							subPropertyType.putTagAttributeMapValue(TagAttribute.DISABLED);
+						}
+						continue outer;
+					}
+				}
+				
+				// 현재 숙소유형이 체크된 숙소유형 파라미터값이 아니면 여기로 넘어옴
+				if(subPropertyTypeIdKeyArray != null) {
+					for(SubPropertyTypeDTO subPropertyType : propertyType.getSubPropertyTypes()) {
+						for(int i = 0; i < subPropertyTypeIdKeyArray.length; i++) {
+							if(subPropertyType.getId() == subPropertyTypeIdKeyArray[i]) {
+								subPropertyType.putTagAttributeMapValue(TagAttribute.CHECKED);
+							}
+						}
+					}
+				}
+			}
+		}
 		
-		// 제작중
+		if(roomTypeIdKeyArray != null) {
+			for(RoomTypeDTO roomType : roomTypes) {
+				for(int i = 0; i < roomTypeIdKeyArray.length; i++) {
+					if(roomType.getId() == roomTypeIdKeyArray[i]) {
+						roomType.putTagAttributeMapValue(TagAttribute.CHECKED);
+						roomType.putTagAttributeMapValue(TagAttribute.DISABLED);
+					}
+				}
+			}
+		}
+		
+		if(amenityTypeIdKeyArray != null) {
+			for(AmenityTypeDTO amenityType : amenityTypes) {
+				for(int i = 0; i < amenityTypeIdKeyArray.length; i++) {
+					if(amenityType.getId() == amenityTypeIdKeyArray[i]) {
+						amenityType.putTagAttributeMapValue(TagAttribute.CHECKED);
+					}
+				}
+			}
+		}
+		
+		// sql 조건문 맵(제작중)
 		Map<String, Object> searchKeyMap = new Hashtable<>();
 		
 		
-		
+		// 숙소 목록
 		req.setAttribute("properties", properties);
 		
-		// search filters
+		// 검색 필터 목록
 		req.setAttribute("propertyTypes", propertyTypes);
 		req.setAttribute("roomTypes", roomTypes);
 		req.setAttribute("amenityTypes", amenityTypes);
