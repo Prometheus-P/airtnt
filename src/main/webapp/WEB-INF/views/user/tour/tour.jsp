@@ -42,9 +42,9 @@
 		        <h5>과거 여행이 없습니다. 하지만 여행을 완료하면 여기에서 확인하실 수 있습니다. </h5><br>
 		        <h1 style="font-size: 400px">AirTnT</h1>
 		    </c:if>
-		    <c:if test="${not empty previousBookinglist}">
+		    <c:if test="${not empty preBookinglist}">
 		    	<ul class="nospace clear " style="margin-top: 50px;">
-			            <c:forEach var="dto" items="${previousBookinglist}">
+			            <c:forEach var="dto" items="${preBookinglist}">
 			            <li style="height: 150px;">
 			              <div class="one_third first" >
 			                <a href="/guest/property-detail?propertyId=${dto.property_id}"><img src="${dto.path}" alt="" ></a>

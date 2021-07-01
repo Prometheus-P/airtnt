@@ -112,7 +112,6 @@ public class UserController {
 	@RequestMapping("makeWish")
 	public String makeWish(HttpServletRequest req, @ModelAttribute WishListDTO dto) {
 		dto.setMember_id((String) req.getSession().getAttribute("member_id"));
-		System.out.println(dto.getMember_id());
 		int res = wishListMapper.makeWish(dto);
 		
 		

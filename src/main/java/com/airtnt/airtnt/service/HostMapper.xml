@@ -5,11 +5,11 @@
 
 <mapper namespace="com.airtnt.airtnt.service.HostMapper">
 	
-	<insert id="insertProperty" parameterType="propertyDTO">
+	<!-- <insert id="insertProperty" parameterType="propertyDTO">
 		insert into property values(property_seq.nextval, #{name}, #{hostId}, 
 		#{propertyDesc}, #{address}, #{latitude}, #{longitude}, #{price}, #{bedCount}, 
-		#{maxGuest}, sysdate)<!-- modeDate==null -->
-	</insert>
+		#{maxGuest}, sysdate)modeDate==null
+	</insert> -->
 	<!-- <select >
 		
 	</select>
