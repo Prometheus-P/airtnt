@@ -5,33 +5,35 @@
 	
 <mapper namespace="com.airtnt.airtnt.service.AdminMapper">
 
-	<select id="listDashboard" resultType="dashboardDTO">
-		        SELECT  C.CAL as transactionDate,
-                NVL(A.TOT_SITE_FEE, 0) as thisTotSiteFee,
-                NVL(B.TOT_SITE_FEE, 0)  as lastTotSiteFee
-        FROM (
-                    SELECT TO_CHAR(TRANSACTION_DATE, 'YYYYMMDD') AS transaction_date
-                         , NVL(SUM(SITE_FEES),0) AS tot_site_fee 
-                    FROM TRANSACTIONS
-                    WHERE TRANSACTION_DATE BETWEEN SYSDATE-7 AND SYSDATE
-                    GROUP BY TO_CHAR(TRANSACTION_DATE, 'YYYYMMDD')
-                    ORDER BY TRANSACTION_DATE
-            ) A, --올해
-            (
-                    SELECT TO_CHAR(TRANSACTION_DATE+365, 'YYYYMMDD') AS transaction_date
-                         , NVL(SUM(SITE_FEES),0) AS tot_site_fee 
-                    FROM TRANSACTIONS
-                    WHERE TRANSACTION_DATE BETWEEN SYSDATE-7-365 AND SYSDATE-365
-                    GROUP BY TO_CHAR(TRANSACTION_DATE+365, 'YYYYMMDD')
-                    ORDER BY TRANSACTION_DATE
-            ) B, --작년
-            (   SELECT TO_CHAR(SYSDATE-6,'YYYYMMDD') + LEVEL - 1 AS CAL
-                FROM dual 
-                CONNECT BY LEVEL <![CDATA[ <= ]]> TO_CHAR(SYSDATE,'YYYYMMDD') - TO_CHAR(SYSDATE-7,'YYYYMMDD')
-            ) C --날짜대상
-        WHERE A.TRANSACTION_DATE = B.TRANSACTION_DATE(+) 
-        AND C.CAL = A.TRANSACTION_DATE(+)
-        ORDER BY C.CAL
+	<select id="listCheckInDateCntGroupByMonth" resultType="dashboardDTO">
+		--체크인 날짜 기준 월별 카운트(올해, 작년)
+		select c.months as checkInMonth,
+			   nvl(a.cnt,0) as thisYearCheckInMonthCnt,
+			   nvl(b.cnt,0) as lastYearCheckInMonthCnt
+		from (
+		        select to_char(check_in_date, 'yyyymm') as checkInDate,
+		               count(*) as cnt
+		        from booking
+		        where check_in_date between to_char(sysdate,'yyyy')||'0101' and to_char(sysdate,'yyyy')||'1231'
+		        group by to_char(check_in_date, 'yyyymm')       
+		    ) a, -- 올해
+		    (
+		        select to_char(add_months(check_in_date,+12), 'yyyymm') as checkInDate,
+		               count(*) as cnt
+		        from booking
+		        where check_in_date between to_char(add_months(sysdate,-12),'yyyy')||'0101' and to_char(add_months(sysdate,-12),'yyyy')||'1231'
+		        group by to_char(add_months(check_in_date,+12), 'yyyymm')
+		        order by to_char(add_months(check_in_date,+12), 'yyyymm')
+		    ) b, -- 작년
+		    (
+		        SELECT TO_CHAR(ADD_MONTHS(TO_DATE((select to_char(sysdate,'yyyy') from dual)||'01', 'yyyymm') , LEVEL - 1 ),'yyyymm') AS MONTHS
+		        FROM DUAL
+		        CONNECT BY LEVEL <![CDATA[ <= ]]> MONTHS_BETWEEN( TO_DATE((select to_char(sysdate,'yyyy') from dual)||'12','yyyymm'), 
+		                                            TO_DATE((select to_char(sysdate,'yyyy') from dual)||'01', 'yyyymm')) + 1      
+		    ) C --날짜대상
+		where c.months = a.checkInDate(+)
+		and  c.months = b.checkInDate(+)
+		order by c.months
 	</select>
 	
 	<select id = "selectRoomTypeList" resultType="roomTypeDTO">
@@ -152,7 +154,7 @@
 	</insert>
 	
 	<select id = "selectBoardList" resultType="guideDTO">
-		select id as contentId,
+		select id,
 			   subject,
 			   reg_date as regDate
 		from guide
@@ -160,14 +162,14 @@
 	</select>
 	
 	<select id = "getSelectedBoard" resultType="guideDTO" parameterType="String">
-		select id as contentId,
+		select id,
 			   subject,
 			   explanation,
 			   content1,
 			   content2,
 			   content3
 		from guide
-		where id = #{contentId}
+		where id = #{id}
 	</select>
 	
 	<delete id = "deleteBoard" parameterType="String">
@@ -182,7 +184,7 @@
 			content2 = #{content2},
 			content3 = #{content3},
 			mod_date = sysdate
-		where id = #{contentId}
+		where id = #{id}
 	</update>
 	
 </mapper>

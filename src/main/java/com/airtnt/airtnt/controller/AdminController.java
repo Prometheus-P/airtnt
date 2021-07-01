@@ -4,7 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,15 +24,18 @@ import com.airtnt.airtnt.model.RoomTypeDTO;
 import com.airtnt.airtnt.model.SubPropertyTypeDTO;
 import com.airtnt.airtnt.model.GuideDTO;
 import com.airtnt.airtnt.service.AdminMapper;
+import com.airtnt.airtnt.service.MemberMapper;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 @Controller
 @RequestMapping("admin")
-public class AdminController {
+public class AdminController extends UserController {
 
 	@Autowired
 	AdminMapper adminMapper;
+
+	UserController userController = new UserController();
 	
 	/*
 	 * [main] : admin 계정 로그인 화면
@@ -40,23 +46,68 @@ public class AdminController {
 	}
 	
 	/*
-	 * [main] : login 체크  
+	 * [main] : login
 	 */
+	@RequestMapping(value = "loginCheck", method = RequestMethod.POST)
+	public String loginCheck(HttpServletRequest req, @RequestParam Map<String, String> params, 
+			HttpServletResponse resp, final HttpSession session) {
+		
+		MemberDTO dto = memberMapper.getMember(params.get("id"));
+		
+		if(dto == null) {
+			req.setAttribute("msg", "아이디가 존재하지 않습니다");
+			req.setAttribute("url", "../admin");
+			return "message";
+		}else if(!dto.getPasswd().equals(params.get("passwd"))) {
+			req.setAttribute("msg", "비밀번호가 틀렸습니다");
+			req.setAttribute("url", "../admin");
+			return "message";
+		}else if(dto.getMember_mode().equals("1") || dto.getMember_mode().equals("2")){
+			req.setAttribute("msg", "관리자만 로그인 가능");
+			req.setAttribute("url", "../admin");
+			return "message";
+		}else {
+			//로그인 빈에 로그인한 멤버의 정보 담고 세션에 저장
+			session.setAttribute("member_id", dto.getId());
+			session.setAttribute("member_name", dto.getName());
+			session.setAttribute("member_ip", req.getRemoteAddr());
+			
+			//아이디저장하기 버튼 클릭시 아이디 쿠키에 저장
+			Cookie ck = new Cookie("saveId", dto.getId());
+			if(params.get("saveId")==null){
+				ck.setMaxAge(0);
+			}else{
+				ck.setMaxAge(24*60*60);
+			}
+			resp.addCookie(ck);
+			return "redirect:dashboard"; //로그인 성공시 admin dashboard 페이지로 보낸다
+		}
+	}
 	
+	/*
+	 * [공통] : logout
+	 */
+	@RequestMapping("logout")
+	public String logout(HttpServletRequest req) {
+		HttpSession session = req.getSession();
+		session.invalidate();
+		return "redirect:/admin";
+	}
 
 	/*
 	 * [dashboard] : 대시보드 필요 데이터 조회 및 넘긴다
 	 */
 	@RequestMapping(value = "dashboard", method = RequestMethod.GET)
 	public String listDashboard(HttpServletRequest req) throws Exception {
-		List<DashBoardDTO> list = adminMapper.listDashboard();
+		//월별 체크인 카운트
+		List<DashBoardDTO> list = adminMapper.listCheckInDateCntGroupByMonth();
 		ArrayList<String> key = new ArrayList<>();
 		ArrayList<Integer> this_value = new ArrayList<>();
 		ArrayList<Integer> last_value = new ArrayList<>();
 		for (int i = 0; i < list.size(); i++) {
-			key.add(list.get(i).getTransactionDate());
-			this_value.add(list.get(i).getThisTotSiteFee());
-			last_value.add(list.get(i).getLastTotSiteFee());
+			key.add(list.get(i).getCheckInMonth());
+			this_value.add(list.get(i).getThisYearCheckInMonthCnt());
+			last_value.add(list.get(i).getLastYearCheckInMonthCnt());
 		}
 		req.setAttribute("keylist", key); // 라벨날짜
 		req.setAttribute("this_valuelist", this_value); // 올해
@@ -172,14 +223,14 @@ public class AdminController {
 	}
 	
 	@RequestMapping(value = "guideDelete", method = RequestMethod.GET)
-	public String deleteBoardList(HttpServletRequest req, @RequestParam String contentId) throws Exception {
-		int res = adminMapper.deleteBoard(contentId);
+	public String deleteBoardList(HttpServletRequest req, @RequestParam String id) throws Exception {
+		int res = adminMapper.deleteBoard(id);
 		return "redirect:guidelist";
 	}
 	
 	@RequestMapping(value = "guideView", method = RequestMethod.GET)
-	public String getSelectedBoard(HttpServletRequest req, @RequestParam String contentId) throws Exception {
-		List<GuideDTO> list = adminMapper.getSelectedBoard(contentId);
+	public String getSelectedBoard(HttpServletRequest req, @RequestParam String id) throws Exception {
+		List<GuideDTO> list = adminMapper.getSelectedBoard(id);
 		req.setAttribute("boardList", list);
 		return "admin/guide_view";
 	}
@@ -189,76 +240,5 @@ public class AdminController {
 		int res = adminMapper.updateSelectedBoard(dto);
 		return "redirect:guidelist";
 	}
-	
-	
-	
-	/*
-	 * 
-	 * /* [filter] : ȭ�� ���� ��ȸ�� ī�װ������� ��ȸ
-	 * 
-	 * @RequestMapping(value="filter2", method = RequestMethod.GET) public String
-	 * listfilterMaster(HttpServletRequest req) throws Exception {
-	 * List<FilterPropDTO> propertyList = adminMapper.listProperty();
-	 * List<FilterSubPropDTO> subPropertyList = adminMapper.listSubProperty();
-	 * req.setAttribute("propertyList", propertyList);
-	 * req.setAttribute("subPropertyList", subPropertyList); return "admin/filter";
-	 * }
-	 * 
-	 * 
-	 * [filter] : ������ ��з��� �ߺз� ���̺� ����
-	 * 
-	 * @RequestMapping(value = "filter2", method = RequestMethod.POST)
-	 * 
-	 * @ResponseBody public List<FilterSubPropDTO> getSubProperty(HttpServletRequest
-	 * req, @RequestParam String propertyTypeId) throws Exception {
-	 * List<FilterSubPropDTO> selectedSubProperty =
-	 * adminMapper.getSubProperty(propertyTypeId); return selectedSubProperty; }
-	 * 
-	 * 
-	 * [filter] : ��з� �߰�/���� ��Ʈ�ѷ������� �Ѿ�� �����͸� String ������ �޾Ƽ�
-	 * Object�� JSONArray ���·� ��ȯ�Ͽ� ó���մϴ�. �̶� ����� Json ���̺귯���� Gson
-	 * ���̺귯���� �̿��� ����� ����ϸ� �˴ϴ�. Gson�� JSON������ ����ȭ�� �����͸� JAVA��
-	 * ��ü�� ������ȭ, ����ȭ ���ִ� �ڹ� ���̺귯�� �Դϴ�. JSON Object -> Java Object �Ǵ�
-	 * �� �ݴ��� ������ ���� ���̺귯�� �Դϴ�.
-	 * 
-	 * @RequestMapping(value="filter2/update/prop", method = RequestMethod.POST)
-	 * 
-	 * @ResponseBody public int updatePropertyList(HttpServletRequest
-	 * req, @RequestParam String data) throws Exception { int res = 0; try {
-	 * List<Map<String, String>> datalist = new
-	 * Gson().fromJson(String.valueOf(data), new TypeToken<List<Map<String,
-	 * String>>>(){}.getType());
-	 * 
-	 * System.out.println(data); //
-	 * [{"id":"2","name":"CATE02","isUse":"Y"},{"id":"4","name":"tttttttt","isUse":
-	 * "Y"}]
-	 * 
-	 * //json���� �޾ƿ� �����͵� �ű��߰� / ���� �ϳ��� ���� for (Map<String, String>
-	 * prop : datalist) { if(prop.get("id").equals("") || prop.get("id") == null) {
-	 * //�űԵ�ϰǰ� ������ ���� FilterPropDTO dto = new FilterPropDTO(prop.get("name"),
-	 * prop.get("isUse")); res += adminMapper.insertProperty(dto); }else {
-	 * FilterPropDTO dto = new FilterPropDTO(prop.get("id"), prop.get("name"),
-	 * prop.get("isUse")); res += adminMapper.updateProperty(dto); } } } catch
-	 * (Exception e) { e.printStackTrace(); } return res; }
-	 * 
-	 * 
-	 * [filter] : �ߺз� �߰�/����
-	 * 
-	 * @RequestMapping(value="filter2/update/subprop", method = RequestMethod.POST)
-	 * 
-	 * @ResponseBody public int updateSubPropertyList(HttpServletRequest
-	 * req, @RequestParam String data) throws Exception { int res = 0;
-	 * FilterSubPropDTO dto; System.out.println(data); try { List<Map<String,
-	 * String>> datalist = new Gson().fromJson(String.valueOf(data), new
-	 * TypeToken<List<Map<String, String>>>(){}.getType());
-	 * 
-	 * for (Map<String, String> sub : datalist) { if(sub.get("id").equals("") ||
-	 * sub.get("id") == null) { dto = new
-	 * FilterSubPropDTO(sub.get("propertyTypeId"), sub.get("name"),
-	 * sub.get("isUse")); res += adminMapper.insertSubProperty(dto); }else { dto =
-	 * new FilterSubPropDTO(sub.get("id"), sub.get("name"), sub.get("isUse")); res
-	 * += adminMapper.updateSubProperty(dto); } } } catch (Exception e) {
-	 * e.printStackTrace(); } return res; }
-	 */
 
 }

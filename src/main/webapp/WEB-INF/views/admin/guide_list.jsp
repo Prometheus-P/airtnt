@@ -32,10 +32,10 @@
 			</c:if>
 			<c:forEach var="dto" items="${boardList}">
 				<tr>
-					<td>${dto.contentId}</td>
-					<td><a href="guideView?contentId=${dto.contentId}">${dto.subject}</a></td>
+					<td>${dto.id}</td>
+					<td><a href="guideView?id=${dto.id}">${dto.subject}</a></td>
 					<td>${dto.regDate}</td>
-					<td><a href="guideDelete?contentId=${dto.contentId}">삭제</a></td>
+					<td><a href="guideDelete?id=${dto.id}">삭제</a></td>
 				</tr>			
 			</c:forEach>
 		</table>

@@ -21,8 +21,9 @@ public class AdminMapper {
 	@Autowired
 	private SqlSession sqlSession;
 	
-	public List<DashBoardDTO> listDashboard(){
-		List<DashBoardDTO> list = sqlSession.selectList("listDashboard");
+	//[dashboard] :월별 체크인 카운트
+	public List<DashBoardDTO> listCheckInDateCntGroupByMonth(){
+		List<DashBoardDTO> list = sqlSession.selectList("listCheckInDateCntGroupByMonth");
 		return list;
 	}
 	
