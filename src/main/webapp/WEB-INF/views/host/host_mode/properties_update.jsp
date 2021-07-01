@@ -5,9 +5,9 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>숙소 수정</title>
 </head>
 <body>
-
+	
 </body>
 </html>

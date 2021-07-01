@@ -19,7 +19,7 @@ public interface HostMapperInterface {
 	public int deleteProperty();
 	public int updateProperty();
 	public List<PropertyDTO> getPropertyList(String hostId);
-	public PropertyDTO getPropertyDetail(int propertyId);
+	public PropertyDTO getProperty(int propertyId);
 	public List<BookingDTO> getBookingList(String hostId);
 	public List<PropertyTypeDTO> getPropertyType();
 	public List<SubPropertyTypeDTO> getSubPropertyType(int propertyTypeId);
