@@ -10,7 +10,6 @@ public class PropertyTypeDTO {
 	private char isUse;
 	private Date regDate;
 	private Date modDate;
-	
 	private List<SubPropertyTypeDTO> subPropertyTypes;
 	
 	// 검색 필터 input 태그 내에 속성을 설정하기 위한 필드. db랑 상관없음
@@ -20,6 +19,17 @@ public class PropertyTypeDTO {
 	
 	// 태그 속성값 여러개 넣을 때 사용
 	private Hashtable<String, String> tagAttributeMap;
+	
+	public PropertyTypeDTO() {};
+	public PropertyTypeDTO(String name, String isUse) {
+		this.name = name;
+		this.isUse = isUse.charAt(0);
+	}
+	public PropertyTypeDTO(String id, String name, String isUse) {
+		this.id = Integer.parseInt(id);
+		this.name = name;
+		this.isUse = isUse.charAt(0);
+	}
 	
 	public int getId() {
 		return id;
@@ -52,14 +62,12 @@ public class PropertyTypeDTO {
 		this.modDate = modDate;
 	}
 	
-	
 	public List<SubPropertyTypeDTO> getSubPropertyTypes() {
 		return subPropertyTypes;
 	}
 	public void setSubPropertyTypes(List<SubPropertyTypeDTO> subPropertyTypes) {
 		this.subPropertyTypes = subPropertyTypes;
 	}
-	
 	
 	// 태그 속성값 하나만 넣을 때 사용
 	public String getTagAttribute() {
