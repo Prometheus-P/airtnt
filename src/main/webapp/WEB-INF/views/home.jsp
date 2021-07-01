@@ -40,7 +40,20 @@
     <nav id="mainav" class="fl_right" > 
       <!-- ################################################################################################ -->
       <ul class="clear">
-        <li class="active"><a href="index">호스트 되기</a></li>
+      
+        <li class="active">
+        <c:if test="${isLogin}">
+        	<c:if test="${member_mode == 1}">
+       			<a href="<c:url value='/host/guide_home'/>">호스트 되기</a>
+        	</c:if>
+        	<c:if test="${member_mode == 2}">
+        		<a href="<c:url value='/host/host_mode'/>">호스트 모드로 전환</a>
+        	</c:if>
+        </c:if>
+        <c:if test="${!isLogin}">
+         <a href="#LoginModal" class="trigger-btn" data-toggle="modal">호스트 되기</a>
+        </c:if>
+        </li>
         <c:if test="${!isLogin}">
         <li><a class="drop" href="#">로그인 하기</a>
           <ul>
@@ -59,8 +72,8 @@
             <li><a href="help">도움말</a></li>
             <li><a href="logout">로그아웃</a></li>
           </ul>
-          </c:if>
         </li>
+        </c:if>
       </ul>
       <!-- ################################################################################################ -->
     </nav>
@@ -72,7 +85,7 @@
     <!-- ################################################################################################ -->
         <nav class="navbar navbar-light">
 		  <div class="container-fluid">
-		    <form class="d-flex" action="<c:url value='/property/search'/>" method="post">
+		    <form class="d-flex" action="/property/search" method="post">
 		      <input name="addressKey" class="form-control me-2" type="search" placeholder="위치" aria-label="Search">
 		      <button  class="btn btn-outline-primary" type="submit" style="background-color:#01546b; border: 0px;">Search</button>
 		    </form>
@@ -352,10 +365,10 @@
 				<form action="login" method="post">
 					<div class="form-group">
 						<c:if test="${empty value}">		
-							<input type="text" class="form-control" name="member_id" placeholder="ID" required="required">
+							<input type="text" class="form-control" name="id" placeholder="ID" required="required">
 						</c:if>
 						<c:if test="${not empty value}">
-							<input type="text" class="form-control" name="member_id" placeholder="ID" required="required" value="${value}">		
+							<input type="text" class="form-control" name="id" placeholder="ID" required="required" value="${value}">		
 						</c:if>
 					</div>
 					<div class="form-group">
@@ -392,23 +405,23 @@
 			<div class="modal-body">
 				<form action="signUp" method="post">
 					<div class="form-group">
-						<input type="text" class="form-control" name="member_id" placeholder="ID" required="required">		
+						<input type="text" class="form-control" name="id" placeholder="ID" required="required">		
 					</div>
 					<div class="form-group">
 						<input type="password" class="form-control" name="passwd" placeholder="Password" required="required">	
 					</div>        
 					<div class="form-group">
-						<input type="text" class="form-control" name="member_name" placeholder="이름" required="required">	
+						<input type="text" class="form-control" name="name" placeholder="이름">	
 					</div>
 					<div class="form-group">
-						<input type="text" class="form-control" name="birth" placeholder="생년월일 (8자리)" required="required">	
+						<input type="text" class="form-control" name="birth" placeholder="생년월일 (2000/01/01)">	
 					</div>
 					<div class="form-group">
-						<input type="text" class="form-control" name="tel" placeholder="연락처(11자리)" required="required">	
+						<input type="text" class="form-control" name="tel" placeholder="연락처(010/0000/0000)">	
 					</div>
 					<div class="form-group">
-						<label><input type="checkbox" class="center" name="gender" value="1" checked="checked"> 남</label>
-      					<label><input type="checkbox" class="center" name="gender" value="2"> 여</label>
+						<label><input type="radio" class="center" name="gender" value="1" checked="checked"> 남</label>
+      					<label><input type="radio" class="center" name="gender" value="2"> 여</label>
 					</div>
 					<div class="form-group">
 						<button type="submit" class="btn btn-primary btn-lg btn-block login-btn" style="font-size: 15px">동의 및 계속하기</button>

@@ -114,6 +114,34 @@
 			<version>1.2</version>
 		</dependency>
 		
+		<!-- property_image(Apache Commons Upload) -->
+		<dependency>
+        	<groupId>commons-fileupload</groupId>
+        	<artifactId>commons-fileupload</artifactId>
+        	<version>1.3.1</version>
+    	</dependency>
+   		<dependency>
+        <groupId>commons-io</groupId>
+       	 	<artifactId>commons-io</artifactId>
+       	 	<version>2.4</version>
+   		 </dependency>
+   		 
+   		 <!-- property_image(jackson json converter) -->
+    <dependency>
+        <groupId>org.codehaus.jackson</groupId>
+        <artifactId>jackson-mapper-asl</artifactId>
+        <version>1.9.13</version>
+    </dependency>
+    <dependency>
+        <groupId>org.codehaus.jackson</groupId>
+        <artifactId>jackson-core-asl</artifactId>
+        <version>1.9.13</version>
+    </dependency>
+    <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-databind</artifactId>
+        <version>2.9.2</version>
+    </dependency>
 		<!--mybatis -->
 		<dependency>
 		    <groupId>org.mybatis</groupId>

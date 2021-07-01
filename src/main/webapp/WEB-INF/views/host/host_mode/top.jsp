@@ -3,64 +3,74 @@
 
 <!-- top.jsp -->
 <!DOCTYPE html>
-<html lang="en" class="no-js">
-	<head>
-		<meta charset="UTF-8" />
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<meta name="description" content="An open collection of menu styles that use the line as a creative design element" />
-		<meta name="keywords" content="web design, styles, inspiration, line, pseudo-element, SVG, animation" />
-		<meta name="author" content="Codrops" />
-		<link rel="stylesheet" type="text/css" href="/resources_host/host_mode/css/normalize.css" />
-		<link rel="stylesheet" type="text/css" href="/resources_host/host_mode/css/demo.css" />
-		<link rel="stylesheet" type="text/css" href="/resources_host/host_mode/css/component.css" />
-		<!--[if IE]>
-			<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-		<![endif]-->
-	</head>
-	<body>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<html>
+<head>
+<title>호스트 페이지</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<body>
 
-	<div class="container">
-			<section class="section section--menu" id="Prospero">
-				<nav class="menu menu--prospero">
-					<ul class="menu__list">
-						<li class="menu__item menu__item--current"><a href="#" class="menu__link">투데이</a></li>
-						<li class="menu__item"><a href="#" class="menu__link">인사이트</a></li>
-						<li class="menu__item"><a href="#" class="menu__link">달력</a></li>
-						<li class="menu__item"><a href="#" class="menu__link">숙소</a></li>
-						<li class="menu__item"><a href="#" class="menu__link">대금 수령 내역</a></li>
+	<nav class="navbar navbar-inverse navbar-fixed-top">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed"
+					data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+					aria-controls="navbar">
+					<span class="sr-only">Toggle navigation</span> 
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span> 
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" style="font-size: 20px ;font:italic; font-family:fantasy;">
+				${sessionScope.member_name}님 환영합니다</a>
+			</div>
+			<div id="navbar" class="navbar-collapse collapse">
+				<ul class="nav navbar-nav" style="font-size: 30px ;font:bold; font-family:fantasy;">
+					<li>
+					<a href="<c:url value='/host/host_mode'/>">투데이</a></li>
+					<li>
+					<a href="<c:url value='/host/host_properties_list'/>">숙소</a></li>
+					<li>
+					<a href="<c:url value='/host/transaction_list'/>">대금수령 내역</a></li>
+					<li>
+					<ul class="nav nav-pills" role="tablist">
+						<li role="presentation">
+						<a href="#">채팅 <span class="badge">3</span></a>
+						</li>
 					</ul>
-				</nav>
-			</section>
-			
+					</li >
+					<li class="dropdown" style="font-size: 30px ;font:bold;">
+					<a id="drop4" href="#" class="dropdown-toggle" data-toggle="dropdown">
+					메뉴 
+					<span class="caret"></span>
+					</a>
+						<ul class="dropdown-menu" style="font-size: 20px; font-family:fantasy;">
+							<li>
+							<a href="<c:url value='/host/host_review_list'/>">리뷰</a></li>
+							<li>
+							<a href="<c:url value='/host/total_earning'/>">총 수입</a></li>
+							<li class="divider"></li>
+							<li>
+							<a href="<c:url value='/host/property_type_0'/>">새 숙소 생성</a></li>
+							<li class="dropdown-header">메롱</li>
+						</ul></li>
+				</ul>
+			</div>
+			<!--/.nav-collapse -->
 		</div>
-	<!-- /container -->
-		<script src="/resources_host/host_mode/js/classie.js"></script>
-		<script src="/resources_host/host_mode/js/clipboard.min.js"></script>
-		<script>
-		(function() {
-			[].slice.call(document.querySelectorAll('.menu')).forEach(function(menu) {
-				var menuItems = menu.querySelectorAll('.menu__link'),
-					setCurrent = function(ev) {
-						ev.preventDefault();
+	</nav>
 
-						var item = ev.target.parentNode; // li
+	<script type="text/javascript">
+		$('li').click(function() {
+			$('li').removeClass('active'); 
+			$(this).addClass('active');
+		});
+	</script>
 
-						// return if already current
-						if (classie.has(item, 'menu__item--current')) {
-							return false;
-						}
-						// remove current
-						classie.remove(menu.querySelector('.menu__item--current'), 'menu__item--current');
-						// set current
-						classie.add(item, 'menu__item--current');
-					};
-
-				[].slice.call(menuItems).forEach(function(el) {
-					el.addEventListener('click', setCurrent);
-				});
-			});
-		})(window);
-		</script>
 </body>
 </html>

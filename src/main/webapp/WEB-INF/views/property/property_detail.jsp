@@ -148,19 +148,19 @@ function setTotalPrice(){
     <div class="container">
       <!-- 숙소 이미지 -->
       <div class="one_half first">
-        <img class="imgl borderedbox inspace-5" src="${property.images.get(0).fileName}" alt="" >
+        <img class="imgl borderedbox inspace-5" src="${property.images.get(0).path}" alt="" >
       </div>
       <div class="one_half">
         <c:forEach var="image" items="${property.images}" begin="1" end="4" varStatus="status">
           <c:choose>
             <c:when test="${status.count % 2 == 1}">
               <div class="one_half first">
-                <img class="imgl borderedbox inspace-5" src="${image.fileName}" alt="" >
+                <img class="imgl borderedbox inspace-5" src="${image.path}" alt="" >
               </div>
             </c:when>
             <c:otherwise>
               <div class="one_half">
-                <img class="imgl borderedbox inspace-5" src="${image.fileName}" alt="" >
+                <img class="imgl borderedbox inspace-5" src="${image.path}" alt="" >
               </div>
             </c:otherwise>
           </c:choose>
@@ -173,8 +173,8 @@ function setTotalPrice(){
 	        <div>
 	          <h1>숙소 유형</h1>
 	          <p>
-	            ${property.propertyTypeName}/${property.subPropertyTypeName}<br>
-	            ${property.roomTypeName}
+	            ${property.propertyType.name}/${property.subPropertyType.name}<br>
+	            ${property.roomType.name}
 	          </p>
 	        </div>
 	        
@@ -192,7 +192,7 @@ function setTotalPrice(){
 	          <c:forEach var="amenity" items="${property.amenities}">
 	            <ul>
 	              <li>
-	                ${amenity.name}
+	                ${amenity.amenityType.name}
 	              </li>
 	            </ul>
 	          </c:forEach>
@@ -256,7 +256,7 @@ function setTotalPrice(){
 	      -->
 	     <form action="<c:url value='/property/booking?propertyId=${property.id}'/>" method="post">
 	       <input type="hidden" name="hostId" value="${property.hostId}">
-	       <input type="hidden" name="guestId" value="${sessionScope.id}">
+	       <input type="hidden" name="guestId" value="${sessionScope.member_id}">
 	       <input id="day_count" type="hidden" name="dayCount">
 	       <input id="total_price" type="hidden" name="totalPrice">
 	       <table>

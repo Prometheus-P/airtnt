@@ -1,17 +1,175 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<!DOCTYPE html>
+<%@ page language="java" contentType="text/html; charset=EUC-KR" pageEncoding="EUC-KR"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<html>
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
+
+<title>¿ÃπÃ¡ˆ √∑∫Œ</title>
+ 
+<style>
+#preview img {
+    width: 100px;
+    height: 100px;
+}
+#preview p {
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+.preview-box {
+    border: 1px solid;
+    padding: 5px;
+    border-radius: 2px;
+    margin-bottom: 10px;
+}
+</style>
 </head>
+ 
 <body>
- <form method="post" action="<c:url value='host/save_image'/>" enctype="multipart/form-data">
- <!-- testÎ°ú Ìï¥Î¥Ñ -->
-	<input type="file" name="imageFile">
-	<input type="submit" value="Ïù¥ÎØ∏ÏßÄ Ï†ÄÏû•">
-</form>
+    <div class="wrapper">
+        <div class="header">
+            <h1>ªÁ¡¯ √∑∫Œ</h1>
+        </div>
+        <div class="body">
+            <!-- √∑∫Œ πˆ∆∞ -->
+            <div id="attach">
+                <label class="waves-effect waves-teal btn-flat" for="uploadInputBox">ªÁ¡¯√∑∫Œ</label>
+                <input id="uploadInputBox" style="display: none" type="file" name="filedata" multiple />
+            </div>
+            
+            <!-- πÃ∏Æ∫∏±‚ øµø™ -->
+            <div id="preview" class="content"></div>
+            
+            <!-- multipart æ˜∑ŒµÂΩ√ øµø™ -->
+            <form id="uploadForm" style="display: none;" />
+        </div>
+        <div class="footer">
+            <button class="submit"><a href="<c:url value='/host/image_upload'/>" title="µÓ∑œ" class="btnlink">µÓ∑œ</a></button>
+        </div>
+    </div>
+    
+    
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.2.2/jquery.form.min.js"></script> -->
+    <script>
+        //¿”¿«¿« file objectøµø™
+        var files = {};
+        var previewIndex = 0;
+ 
+        // image preview ±‚¥… ±∏«ˆ
+        // input = file object[]
+        function addPreview(input) {
+            if (input[0].files) {
+                //∆ƒ¿œ º±≈√¿Ã ø©∑Ø∞≥ø¥¿ª Ω√¿« ¥Î¿¿
+                for (var fileIndex = 0; fileIndex < input[0].files.length; fileIndex++) {
+                    var file = input[0].files[fileIndex];
+ 
+                    if (validation(file.name))
+                        continue;
+ 
+                    var reader = new FileReader();
+                    reader.onload = function(img) {
+                        //div id="preview" ≥ªø° µø¿˚ƒ⁄µÂ√ﬂ∞°.
+                        //¿Ã ∫Œ∫–¿ª ºˆ¡§«ÿº≠ ¿ÃπÃ¡ˆ ∏µ≈© ø‹ ∆ƒ¿œ∏Ì, ªÁ¿Ã¡Ó µÓ¿« ∫Œ∞°º≥∏Ì¿ª «“ ºˆ ¿÷¿ª ∞Õ¿Ã¥Ÿ.
+                        var imgNum = previewIndex++;
+                        $("#preview")
+                                .append(
+                                        "<div class=\"preview-box\" value=\"" + imgNum +"\">"
+                                                + "<img class=\"thumbnail\" src=\"" + img.target.result + "\"\/>"
+                                                + "<p>"
+                                                + file.name
+                                                + "</p>"
+                                                + "<a href=\"#\" value=\""
+                                                + imgNum
+                                                + "\" onclick=\"deletePreview(this)\">"
+                                                + "ªË¡¶" + "</a>" + "</div>");
+                        files[imgNum] = file;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            } else
+                alert('invalid file input'); // √∑∫Œ≈¨∏Ø »ƒ √Îº“Ω√¿« ¥Î¿¿√•¿∫ ººøÏ¡ˆ æ æ“¥Ÿ.
+        }
+ 
+        //preview øµø™ø°º≠ ªË¡¶ πˆ∆∞ ≈¨∏ØΩ√ «ÿ¥Á πÃ∏Æ∫∏±‚¿ÃπÃ¡ˆ øµø™ ªË¡¶
+        function deletePreview(obj) {
+            var imgNum = obj.attributes['value'].value;
+            delete files[imgNum];
+            $("#preview .preview-box[value=" + imgNum + "]").remove();
+            resizeHeight();
+        }
+ 
+        //client-side validation
+        //always server-side validation required
+        function validation(fileName) {
+            fileName = fileName + "";
+            var fileNameExtensionIndex = fileName.lastIndexOf('.') + 1;
+            var fileNameExtension = fileName.toLowerCase().substring(
+                    fileNameExtensionIndex, fileName.length);
+            if (!((fileNameExtension === 'jpg')
+                    || (fileNameExtension === 'gif') || (fileNameExtension === 'png'))) {
+                alert('jpg, gif, png »Æ¿Â¿⁄∏∏ æ˜∑ŒµÂ ∞°¥…«’¥œ¥Ÿ.');
+                return true;
+            } else {
+                return false;
+            }
+        }
+ 
+        $(document).ready(function() {
+            //submit µÓ∑œ. Ω«¡¶∑Œ submit type¿∫ æ∆¥œ¥Ÿ.
+            $('.submit a').on('click',function() {                        
+                var form = $('#uploadForm')[0];
+                var formData = new FormData(form);
+    
+                for (var index = 0; index < Object.keys(files).length; index++) {
+                    //formData ∞¯∞£ø° files∂Û¥¬ ¿Ã∏ß¿∏∑Œ ∆ƒ¿œ¿ª √ﬂ∞°«—¥Ÿ.
+                    //µø¿œ∏Ì¿∏∑Œ ∞Ëº” √ﬂ∞°«“ ºˆ ¿÷¥Ÿ.
+                    formData.append('files',files[index]);
+                }
+ 
+                //ajax ≈ÎΩ≈¿∏∑Œ multipart form¿ª ¿¸º€«—¥Ÿ.
+                $.ajax({
+                    type : 'POST',
+                    enctype : 'multipart/form-data',
+                    processData : false,
+                    contentType : false,
+                    cache : false,
+                    timeout : 600000,
+                    url : '/host/image_upload',
+                    dataType : 'JSON',
+                    data : formData,
+                    success : function(result) {
+                        //¿Ã ∫Œ∫–¿ª ºˆ¡§«ÿº≠ ¥ŸæÁ«— «‡µø¿ª «“ ºˆ ¿÷¿∏∏Á,
+                        //ø©±‚º≠¥¬ µ•¿Ã≈Õ∏¶ ¿¸º€πﬁæ“¥Ÿ∏È º¯ºˆ«œ∞‘ OK ∏∏¿ª ∫∏≥ª±‚∑Œ «œø¥¥Ÿ.
+                        //-1 = ¿ﬂ∏¯µ» »Æ¿Â¿⁄ æ˜∑ŒµÂ, -2 = øÎ∑Æ√ ∞˙, ±◊ø‹ = º∫∞¯(1)
+                        if (result === -1) {
+                            alert('jpg, gif, png, bmp »Æ¿Â¿⁄∏∏ æ˜∑ŒµÂ ∞°¥…«’¥œ¥Ÿ.');
+                            // ¿Ã»ƒ µø¿€ ...
+                        } else if (result === -2) {
+                            alert('∆ƒ¿œ¿Ã 10MB∏¶ √ ∞˙«œø¥Ω¿¥œ¥Ÿ.');
+                            // ¿Ã»ƒ µø¿€ ...
+                        } else {
+                            alert('¿ÃπÃ¡ˆ æ˜∑ŒµÂ º∫∞¯');
+                            // ¿Ã»ƒ µø¿€ ...
+                            location.href="/host/property_preview";
+                        }
+                    }
+                    //¿¸º€Ω«∆–ø°¥Î«— «⁄µÈ∏µ¿∫ ∞Ì∑¡«œ¡ˆ æ ¿Ω
+                });
+            });
+            // <input type=file> ≈¬±◊ ±‚¥… ±∏«ˆ
+            $('#attach input[type=file]').change(function() {
+                addPreview($(this)); //preview form √ﬂ∞°«œ±‚
+            });
+        });
+    </script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+

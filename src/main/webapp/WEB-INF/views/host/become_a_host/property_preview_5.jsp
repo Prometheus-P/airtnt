@@ -4,9 +4,10 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>preview</title>
 </head>
 <body>
-
+<!-- /host/publish_celebration_6 -->
+<H2>미리보기!</H2>
 </body>
 </html>

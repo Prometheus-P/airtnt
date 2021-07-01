@@ -1,5 +1,6 @@
 package com.airtnt.airtnt.service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -8,30 +9,42 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.airtnt.airtnt.model.AmenityDTO;
+import com.airtnt.airtnt.model.BookingDTO;
 import com.airtnt.airtnt.model.GuideDTO;
+import com.airtnt.airtnt.model.MemberDTO;
 import com.airtnt.airtnt.model.PropertyDTO;
 import com.airtnt.airtnt.model.PropertyTypeDTO;
 import com.airtnt.airtnt.model.RoomTypeDTO;
 import com.airtnt.airtnt.model.SubPropertyTypeDTO;
+import com.airtnt.airtnt.model.TransactionDTO;
 
-@Service //
-public class HostMapper {
+@Service 
+public class HostMapper implements HostMapperInterface {
 	@Autowired
 	private SqlSession sqlSession;
 
-	public List<GuideDTO> getGuideList(){
-		List<GuideDTO> guideList = sqlSession.selectList("guideList");
-		return guideList;
+	@Override
+	public List<GuideDTO> getGuideList() {
+		List<GuideDTO> listGuide = sqlSession.selectList("listGuide");
+		if (listGuide == null) {
+			System.out.print("ok");
+		}
+		return listGuide;
 	}
-	public GuideDTO getGuide(int contentId) {
-		GuideDTO guideDTO = sqlSession.selectOne("getGuide", contentId);
+
+	@Override
+	public GuideDTO getGuide(int id) {
+		GuideDTO guideDTO = sqlSession.selectOne("getGuide", id);
 		return guideDTO;
 	}
+
+	@Override
 	public int insertProperty(PropertyDTO dto) {
 		int res = sqlSession.insert("insertProperty", dto);
 		return res;
 	}
 
+	@Override
 	public int deleteProperty() {
 		int res = sqlSession.delete("deleteProperty");
 		return res;
@@ -41,16 +54,70 @@ public class HostMapper {
 	 * public void saveImage(Map<String, Object> hmap) { int res =
 	 * sqlSession.insert("saveImage", hmap); }
 	 */
+	@Override
 	public List<PropertyTypeDTO> getPropertyType() {
 		List<PropertyTypeDTO> propertyType = sqlSession.selectList("propertyType");
 		return propertyType;
 	}
+
+	@Override
 	public List<SubPropertyTypeDTO> getSubPropertyType(int propertyTypeId) {
 		List<SubPropertyTypeDTO> subPropertyType = sqlSession.selectList("subPropertyType", propertyTypeId);
 		return subPropertyType;
 	}
-	public List<RoomTypeDTO> getRoomType(){
+
+	@Override
+	public List<RoomTypeDTO> getRoomType() {
 		List<RoomTypeDTO> roomType = sqlSession.selectList("roomType");
 		return roomType;
+	}
+
+	@Override
+	public int updateProperty() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public List<PropertyDTO> getPropertyList(String hostId) {
+		List<PropertyDTO> listProperty = sqlSession.selectList("listProperty", hostId);
+		return listProperty;
+	}
+
+	@Override
+	public PropertyDTO getPropertyDetail(int propertyId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<BookingDTO> getBookingList(String hostId) {
+		List<BookingDTO> listBooking = sqlSession.selectList("listBooking", hostId);
+		return listBooking;
+	}
+
+	@Override
+	public List<TransactionDTO> getTransactionList(String hostId) {
+		List<TransactionDTO> listTransaction = sqlSession.selectList("listTransaction", hostId);
+		//6월 29, 2021 10:31:02 오전
+		return listTransaction;
+	}
+
+	@Override
+	public List<AmenityDTO> getAmenityTypeList() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public MemberDTO getMemberDTO(String memberId) {
+		MemberDTO dto = sqlSession.selectOne("getMemberDTO", memberId);
+		return dto;
+	}
+
+	@Override
+	public List<TransactionDTO> getTotalEarning(String memberId) {
+		List<TransactionDTO> list = sqlSession.selectList("totalEarningMap", memberId);
+		return list;
 	}
 }

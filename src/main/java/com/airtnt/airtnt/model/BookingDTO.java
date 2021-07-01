@@ -18,6 +18,10 @@ public class BookingDTO {
 	private Date regDate;
 	private Date modDate;
 	
+	//host_mode페이지에서 사용한답니다 *^^*
+	private String memberId;
+	private String guestName;
+	
 	public int getId() {
 		return id;
 	}
@@ -102,5 +106,17 @@ public class BookingDTO {
 				+ ", guestCount=" + guestCount + ", dayCount=" + dayCount + ", totalPrice=" + totalPrice
 				+ ", bookingNumber=" + bookingNumber + ", checkInDate=" + checkInDate + ", checkOutDate=" + checkOutDate
 				+ ", confirmDate=" + confirmDate + ", regDate=" + regDate + ", modDate=" + modDate + "]";
+	}
+	public String getMemberId() {
+		return memberId;
+	}
+	public void setMemberId(String memberId) {
+		this.memberId = memberId;
+	}
+	public String getGuestName() {
+		return guestName;
+	}
+	public void setGuestName(String guestName) {
+		this.guestName = guestName;
 	}
 }

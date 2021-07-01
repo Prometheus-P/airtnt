@@ -1,27 +1,25 @@
 package com.airtnt.airtnt.model;
 
 public class WishListDTO {
-	private int wish_id;
-	private String wish_name;
+	private int id;
+	private String name;
 	private String member_id;
 	private String is_admin;
 	private String reg_date;
 	private String mod_date;
-	//select 변수
-	private int room_id;
-	private String image_path;
 	
-	public int getWish_id() {
-		return wish_id;
+	
+	public int getId() {
+		return id;
 	}
-	public void setWish_id(int wish_id) {
-		this.wish_id = wish_id;
+	public void setId(int id) {
+		this.id = id;
 	}
-	public String getWish_name() {
-		return wish_name;
+	public String getName() {
+		return name;
 	}
-	public void setWish_name(String wish_name) {
-		this.wish_name = wish_name;
+	public void setName(String name) {
+		this.name = name;
 	}
 	public String getMember_id() {
 		return member_id;
@@ -46,18 +44,6 @@ public class WishListDTO {
 	}
 	public void setMod_date(String mod_date) {
 		this.mod_date = mod_date;
-	}
-	public int getRoom_id() {
-		return room_id;
-	}
-	public void setRoom_id(int room_id) {
-		this.room_id = room_id;
-	}
-	public String getImage_path() {
-		return image_path;
-	}
-	public void setImage_path(String image_path) {
-		this.image_path = image_path;
 	}
 	
 }

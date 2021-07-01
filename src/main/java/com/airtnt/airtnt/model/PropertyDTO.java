@@ -30,8 +30,13 @@ public class PropertyDTO {
 	private int roomTypeId;	// fk
 	private String roomTypeName;
 	
-	private List<RoomImageDTO> images;
+	
+	private PropertyTypeDTO propertyType;
+	private SubPropertyTypeDTO subPropertyType;
+	private RoomTypeDTO roomType;
+	
 	private List<AmenityDTO> amenities;
+	private List<ImageDTO> images;
 	
 	public int getId() {
 		return id;
@@ -141,16 +146,38 @@ public class PropertyDTO {
 	public void setRoomTypeName(String roomTypeName) {
 		this.roomTypeName = roomTypeName;
 	}
-	public List<RoomImageDTO> getImages() {
-		return images;
+	
+	
+	public PropertyTypeDTO getPropertyType() {
+		return propertyType;
 	}
-	public void setImages(List<RoomImageDTO> images) {
-		this.images = images;
+	public void setPropertyType(PropertyTypeDTO propertyType) {
+		this.propertyType = propertyType;
 	}
+	public SubPropertyTypeDTO getSubPropertyType() {
+		return subPropertyType;
+	}
+	public void setSubPropertyType(SubPropertyTypeDTO subPropertyType) {
+		this.subPropertyType = subPropertyType;
+	}
+	public RoomTypeDTO getRoomType() {
+		return roomType;
+	}
+	public void setRoomType(RoomTypeDTO roomType) {
+		this.roomType = roomType;
+	}
+	
+	
 	public List<AmenityDTO> getAmenities() {
 		return amenities;
 	}
 	public void setAmenities(List<AmenityDTO> amenities) {
 		this.amenities = amenities;
+	}
+	public List<ImageDTO> getImages() {
+		return images;
+	}
+	public void setImages(List<ImageDTO> images) {
+		this.images = images;
 	}
 }

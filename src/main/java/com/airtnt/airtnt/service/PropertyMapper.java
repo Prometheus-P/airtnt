@@ -1,15 +1,13 @@
 package com.airtnt.airtnt.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.airtnt.airtnt.model.AmenityDTO;
-import com.airtnt.airtnt.model.BookingDTO;
-import com.airtnt.airtnt.model.PropertyDTO;
-import com.airtnt.airtnt.model.RoomImageDTO;
+import com.airtnt.airtnt.model.*;
 
 @Service
 public class PropertyMapper {
@@ -17,51 +15,47 @@ public class PropertyMapper {
 	@Autowired
 	private SqlSession sqlSession;
 	
-	public List<PropertyDTO> searchPropertiesByAddress(String addressKey) {
-		addressKey = "%" + addressKey + "%";
-		List<PropertyDTO> properties = sqlSession.selectList("searchPropertiesByAddress", addressKey);
-		for(PropertyDTO property : properties) {
-			int propertyId = property.getId();
-			
-			List<RoomImageDTO> images = selectRoomImages(propertyId);
-			property.setImages(images);
-			
-			List<AmenityDTO> amenities = selectAmenities(propertyId);
-			property.setAmenities(amenities);
-		}
-		return properties;
+	public List<PropertyDTO> searchProperties(Map<String, Object> searchKeyMap) {
+		return sqlSession.selectList("searchProperties", searchKeyMap);
 	}
 	
-	public PropertyDTO selectPropertyById(int propertyId) {
-		PropertyDTO property = sqlSession.selectOne("selectPropertyById", propertyId);
-		
-		List<RoomImageDTO> images = selectRoomImages(propertyId);
-		property.setImages(images);
-		
-		List<AmenityDTO> amenities = selectAmenities(propertyId);
-		property.setAmenities(amenities);
-		
-		return property;
+	public PropertyDTO selectProperty(int propertyId) {
+		return sqlSession.selectOne("selectProperty", propertyId);
 	}
 	
-	public List<RoomImageDTO> selectRoomImages(int propertyId){
-		List<RoomImageDTO> images = sqlSession.selectList("selectRoomImages", propertyId);
-		for(RoomImageDTO image : images) {
-			System.out.println(image);
-		}
-		return images;
+	public List<ImageDTO> selectRoomImages(int propertyId){
+		return sqlSession.selectList("selectRoomImages", propertyId);
 	}
 	
 	public List<AmenityDTO> selectAmenities(int propertyId){
-		List<AmenityDTO> amenities = sqlSession.selectList("selectAmenities", propertyId);
-		for(AmenityDTO amenity : amenities) {
-			System.out.println(amenity);
-		}
-		return amenities;
+		return sqlSession.selectList("selectAmenities", propertyId);
+	}
+	
+	public List<PropertyTypeDTO> selectPropertyTypes() {
+		return sqlSession.selectList("selectPropertyTypes");
+	}
+	
+	public List<RoomTypeDTO> selectRoomTypes(){
+		return sqlSession.selectList("selectRoomTypes");
+	}
+	
+	public List<AmenityTypeDTO> selectAmenityTypes(){
+		return sqlSession.selectList("selectAmenityTypes");
 	}
 	
 	public int insertBooking(BookingDTO booking) {
 		return sqlSession.insert("insertBooking", booking);
 	}
 	
+	public BookingDTO selectSameBooking(BookingDTO booking) {
+		return sqlSession.selectOne("selectSameBooking", booking);
+	}
+	
+	public int insertTransaction(TransactionDTO transaction) {
+		return sqlSession.insert("insertTransaction", transaction);
+	}
+	
+	public TransactionDTO selectSameTransaction(TransactionDTO transaction) {
+		return sqlSession.selectOne("selectSameTransaction", transaction);
+	}
 }

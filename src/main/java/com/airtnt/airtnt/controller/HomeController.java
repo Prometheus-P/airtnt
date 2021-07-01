@@ -27,6 +27,7 @@ public class HomeController {
 	/**
 	 * Simply selects the home view to render by returning its name.
 	 */
+
 	@RequestMapping(value = {"/", "index"}, method = RequestMethod.GET)
 	public String home(Locale locale, Model model, final HttpSession session, HttpServletRequest req) {
 		logger.info("Welcome home! The client locale is {}.", locale);
@@ -51,6 +52,10 @@ public class HomeController {
 				}
 			}
 		}
+		
+		// 우리 프로젝트 내에 파일 저장되는 실제 경로
+		System.out.println(req.getSession().getServletContext().getRealPath(req.getContextPath()));
+		
 		return "home";
 	}
 	
