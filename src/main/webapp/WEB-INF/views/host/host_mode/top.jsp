@@ -15,9 +15,9 @@
 </head>
 <body>
 
-	<nav class="navbar navbar-inverse navbar-fixed-top">
-		<div class="container">
-			<div class="navbar-header">
+	<nav class="navbar navbar-inverse navbar-fixed-top" style="color: #01546b;border-color: #01546b; background-color: #01546b">
+		<div class="container"  style="color: #01546b;border-color: #01546b; background-color: #01546b">
+			<div class="navbar-header" >
 				<button type="button" class="navbar-toggle collapsed"
 					data-toggle="collapse" data-target="#navbar" aria-expanded="false"
 					aria-controls="navbar">
@@ -26,23 +26,39 @@
 					<span class="icon-bar"></span> 
 					<span class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand">${sessionScope.member_name}님 환영합니다</a>
+				<a class="navbar-brand" style="font-size: 20px ;font:italic; font-family:fantasy;">
+				${sessionScope.member_name}님 환영합니다</a>
 			</div>
-			<div id="navbar" class="navbar-collapse collapse">
-				<ul class="nav navbar-nav">
-					<li><a href="<c:url value='/host/host_mode'/>">투데이</a></li>
-					<li><a href="<c:url value='/host/host_properties_list'/>">숙소</a></li>
-					<li><a href="<c:url value='/host/transaction_list'/>">대금수령 내역</a></li>
-					<li><a href="#">채팅</a></li>
-					<li class="dropdown"><a id="drop4" href="#" class="dropdown-toggle" data-toggle="dropdown">
+			<div id="navbar" class="navbar-collapse collapse" >
+				<ul class="nav navbar-nav" style="font-size: 30px ;font:bold; font-family:fantasy;">
+					<li>
+					<a href="<c:url value='/host/host_mode'/>">투데이</a></li>
+					<li>
+					<a href="<c:url value='/host/host_properties_list'/>">숙소</a></li>
+					<li>
+					<a href="<c:url value='/host/transaction_list'/>">대금수령 내역</a></li>
+					<li>
+					<ul class="nav nav-pills" role="tablist">
+						<li role="presentation">
+						<a href="#">채팅 <span class="badge">3</span></a>
+						</li>
+					</ul>
+					</li >
+					<li class="dropdown" style="font-size: 30px ;font:bold;">
+					<a id="drop4" href="#" class="dropdown-toggle" data-toggle="dropdown">
 					메뉴 
 					<span class="caret"></span>
 					</a>
-						<ul class="dropdown-menu">
-							<li><a href="<c:url value='/host/host_review_list'/>">리뷰</a></li>
-							<li><a href="<c:url value='/host/total_earning'/>">총 수입</a></li>
+						<ul class="dropdown-menu" style="font-size: 20px; font-family:fantasy;">
+							<li>
+							<a href="<c:url value='/host/host_review_list'/>">리뷰</a></li>
+							<li>
+							<a href="<c:url value='/host/total_earning'/>">총 수입</a></li>
+							<li>
+							<a href="<c:url value='/host/property_type_0'/>">새 숙소 생성</a></li>
 							<li class="divider"></li>
-							<li><a href="<c:url value='/host/property_type_0'/>">새 숙소 생성</a></li>
+							<li>
+							<a href="<c:url value='/index'/>">게스트 모드로 전환</a></li>
 							<li class="dropdown-header">메롱</li>
 						</ul></li>
 				</ul>

@@ -36,13 +36,13 @@
           <div class="sidebar-sticky">
             <ul class="nav flex-column">
               <li class="nav-item">
-                <a class="nav-link active" href="/airtnt/admin">
+                <a class="nav-link active" href="/admin/dashboard">
                   <span data-feather="home"></span>
                   Dashboard <span class="sr-only">(current)</span>
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="/airtnt/member">
+                <a class="nav-link" href="/admin/member">
                   <span data-feather="users"></span>
                   Member
                 </a>
@@ -54,7 +54,7 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="/airtnt/filter">
+                <a class="nav-link" href="/admin/filter">
                   <span data-feather="filter"></span>
                   Room Filter
                 </a>
@@ -66,9 +66,9 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link" href="/admin/guidelist">
                   <span data-feather="info"></span>
-                  Information Board
+                  Guide Board
                 </a>
               </li>
             </ul>

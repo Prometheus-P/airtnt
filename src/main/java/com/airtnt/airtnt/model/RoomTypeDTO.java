@@ -19,6 +19,17 @@ public class RoomTypeDTO {
 	// 태그 속성값 여러개 넣을 때 사용
 	private Hashtable<String, String> tagAttributeMap;
 	
+	public RoomTypeDTO() {};
+	public RoomTypeDTO(String name, String isUse) {
+		this.name = name;
+		this.isUse = isUse.charAt(0);
+	}
+	public RoomTypeDTO(String id, String name, String isUse) {
+		this.id = Integer.parseInt(id);
+		this.name = name;
+		this.isUse = isUse.charAt(0);
+	}
+	
 	public int getId() {
 		return id;
 	}

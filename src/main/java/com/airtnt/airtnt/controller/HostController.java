@@ -14,6 +14,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
@@ -209,14 +210,17 @@ public class HostController implements HostControllerInterface {
 	}
 
 	@Override
-	public ModelAndView host_property_detail(HttpServletRequest req, int propertyId) {
-		// TODO Auto-generated method stub
-		return null;
+	@RequestMapping(value= "host/properties_update", method = RequestMethod.GET)
+	public ModelAndView host_getProperty(HttpServletRequest req, int propertyId) {
+		PropertyDTO dto = hostMapper.getProperty(propertyId);
+		return new ModelAndView("/host/host_mode/properties_update", "propertyDTO", dto);
 	}
 
 	@Override
-	public ModelAndView host_property_update(HttpServletRequest req, int propertyId) {
-		// TODO Auto-generated method stub
+	@RequestMapping(value = "host/properties_update", method = RequestMethod.POST)
+	public ModelAndView host_property_update
+	(HttpServletRequest req, @RequestParam Map<String, String> map, @RequestParam("files")List<MultipartFile> images) {
+		
 		return null;
 	}
 
