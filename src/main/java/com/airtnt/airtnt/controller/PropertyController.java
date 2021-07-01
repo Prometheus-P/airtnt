@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.airtnt.airtnt.model.*;
 import com.airtnt.airtnt.service.PropertyMapper;
+import com.airtnt.airtnt.util.TagAttribute;
 
 @Controller
 @RequestMapping("property")
@@ -36,21 +37,48 @@ public class PropertyController {
 			addressKey = "노원";
 		}
 		
-		System.out.println(Arrays.toString(propertyTypeIdKeyArray));
-		System.out.println(Arrays.toString(subPropertyTypeIdKeyArray));
-		System.out.println(Arrays.toString(roomTypeIdKeyArray));
-		System.out.println(Arrays.toString(amenityTypeIdKeyArray));
+		System.out.println("----- 검색 ------");
+		System.out.println("property type : " + Arrays.toString(propertyTypeIdKeyArray));
+		System.out.println("sub-property type : " + Arrays.toString(subPropertyTypeIdKeyArray));
+		System.out.println("room type : " + Arrays.toString(roomTypeIdKeyArray));
+		System.out.println("amenity type : " + Arrays.toString(amenityTypeIdKeyArray));
+		System.out.println("guest count : " + guestCountKey);
+		System.out.println("bed count : " + bedCountKey);
+		System.out.println("min price : " + minPriceKey);
+		System.out.println("max price : " + maxPriceKey);
+		System.out.println("-----------------");
+		
+		// sql 조건문 맵
+		Map<String, Object> searchKeyMap = new Hashtable<>();
+		searchKeyMap.put("addressKey", addressKey);
+		Object[][] paramArray = new Object[][] {
+				{"propertyTypeIdKeyArray", propertyTypeIdKeyArray},
+				{"subPropertyTypeIdKeyArray", subPropertyTypeIdKeyArray},
+				{"roomTypeIdKeyArray", roomTypeIdKeyArray},
+				{"amenityTypeIdKeyArray", amenityTypeIdKeyArray},
+				{"guestCountKey", guestCountKey},
+				{"bedCountKey", bedCountKey},
+				{"minPriceKey", minPriceKey},
+				{"maxPriceKey", maxPriceKey}
+		};
+		for(int i = 0; i < paramArray.length; i++) {
+			if(paramArray[i][1] != null) {
+				searchKeyMap.put((String)paramArray[i][0], paramArray[i][1]);
+			}
+		}
 		
 		// 숙소 목록
-		List<PropertyDTO> properties = propertyMapper.searchPropertiesByAddress(addressKey);
+		List<PropertyDTO> properties = propertyMapper.searchProperties(searchKeyMap);
 		
 		// 검색 필터 목록
 		List<PropertyTypeDTO> propertyTypes = propertyMapper.selectPropertyTypes();
 		List<RoomTypeDTO> roomTypes = propertyMapper.selectRoomTypes();
 		List<AmenityTypeDTO> amenityTypes = propertyMapper.selectAmenityTypes();
 		
-		if(propertyTypeIdKeyArray != null) {
-			outer: for(PropertyTypeDTO propertyType : propertyTypes) {
+		outer: for(PropertyTypeDTO propertyType : propertyTypes) {
+			// 숙소유형값이 없어도 숙소세부유형값이 있을 수 있기 때문에
+			// null 체크 조건문을 for 안에 써준다.
+			if(propertyTypeIdKeyArray != null) {
 				for(int i = 0; i < propertyTypeIdKeyArray.length; i++) {
 					if(propertyType.getId() == propertyTypeIdKeyArray[i]) {
 						propertyType.putTagAttributeMapValue(TagAttribute.CHECKED);
@@ -61,14 +89,15 @@ public class PropertyController {
 						continue outer;
 					}
 				}
-				
-				// 현재 숙소유형이 체크된 숙소유형 파라미터값이 아니면 여기로 넘어옴
-				if(subPropertyTypeIdKeyArray != null) {
-					for(SubPropertyTypeDTO subPropertyType : propertyType.getSubPropertyTypes()) {
-						for(int i = 0; i < subPropertyTypeIdKeyArray.length; i++) {
-							if(subPropertyType.getId() == subPropertyTypeIdKeyArray[i]) {
-								subPropertyType.putTagAttributeMapValue(TagAttribute.CHECKED);
-							}
+			}
+			// 현재 숙소유형이 체크된 숙소유형 파라미터값이 아니면 여기로 넘어옴.
+			// 숙소세부유형값이 없으면 반복문을 실행하지 않아도 되기 때문에
+			// null 체크 조건문을 for문 밖에 써준다.
+			if(subPropertyTypeIdKeyArray != null) {
+				for(SubPropertyTypeDTO subPropertyType : propertyType.getSubPropertyTypes()) {
+					for(int i = 0; i < subPropertyTypeIdKeyArray.length; i++) {
+						if(subPropertyType.getId() == subPropertyTypeIdKeyArray[i]) {
+							subPropertyType.putTagAttributeMapValue(TagAttribute.CHECKED);
 						}
 					}
 				}
@@ -80,7 +109,6 @@ public class PropertyController {
 				for(int i = 0; i < roomTypeIdKeyArray.length; i++) {
 					if(roomType.getId() == roomTypeIdKeyArray[i]) {
 						roomType.putTagAttributeMapValue(TagAttribute.CHECKED);
-						roomType.putTagAttributeMapValue(TagAttribute.DISABLED);
 					}
 				}
 			}
@@ -96,10 +124,6 @@ public class PropertyController {
 			}
 		}
 		
-		// sql 조건문 맵(제작중)
-		Map<String, Object> searchKeyMap = new Hashtable<>();
-		
-		
 		// 숙소 목록
 		req.setAttribute("properties", properties);
 		
@@ -114,7 +138,7 @@ public class PropertyController {
 	@RequestMapping("detail")
 	public String detail(HttpServletRequest req,
 			@RequestParam("propertyId") int propertyId) {
-		PropertyDTO property = propertyMapper.selectPropertyById(propertyId);
+		PropertyDTO property = propertyMapper.selectProperty(propertyId);
 		
 		req.setAttribute("tomorrow", getTomorrowString());
 		req.setAttribute("dayAfterTomorrow", getDayAfterTomorrowString());
@@ -125,7 +149,7 @@ public class PropertyController {
 
 	@RequestMapping("booking")
 	public String booking(HttpServletRequest req, @ModelAttribute BookingDTO booking) {
-		PropertyDTO property = propertyMapper.selectPropertyById(booking.getPropertyId());
+		PropertyDTO property = propertyMapper.selectProperty(booking.getPropertyId());
 		req.setAttribute("booking", booking);
 		req.setAttribute("property", property);
 		return "property/booking";
