@@ -115,7 +115,6 @@
 	</resultMap>
 	
 	<select id="searchProperties" parameterType="java.util.Map" resultMap="propertyMap">
-		<bind name="addressKey" value="'%' + addressKey + '%'"/>
 		select
 			p.*,
 			
@@ -159,39 +158,48 @@
 			property p, property_type pt, sub_property_type spt, room_type rt,
 			amenity a, amenity_type at, image i
 		
+		<bind name="addressKey" value="'%' + addressKey + '%'"/>
 		where
 			p.address like #{addressKey} and
 			p.property_type_id=pt.id and p.sub_property_type_id=spt.id and p.room_type_id=rt.id and
 			a.property_id=p.id and a.amenity_type_id=at.id and at.is_use='Y' and
 			i.property_id=p.id
 		<if test="propertyTypeIdKeyArray != null">
-			<foreach item="propertyTypeIdKey" collection="propertyTypeIdKeyArray">
-				and pt.id=#{propertyTypeIdKey}
+			and pt.id in
+			<foreach item="propertyTypeIdKey" collection="propertyTypeIdKeyArray"
+			open="(" separator="," close=")">
+				#{propertyTypeIdKey}
 			</foreach>
 		</if>
 		<if test="subPropertyTypeIdKeyArray != null">
-			<foreach item="subPropertyTypeIdKey" collection="subPropertyTypeIdKeyArray">
-				and spt.id=#{subPropertyTypeIdKey}
+			and spt.id in
+			<foreach item="subPropertyTypeIdKey" collection="subPropertyTypeIdKeyArray"
+			open="(" separator="," close=")">
+				#{subPropertyTypeIdKey}
 			</foreach>
 		</if>
 		<if test="roomTypeIdKeyArray != null">
-			<foreach item="roomTypeIdKey" collection="roomTypeIdKeyArray">
-				and rt.id=#{roomTypeIdKey}
+			and rt.id in
+			<foreach item="roomTypeIdKey" collection="roomTypeIdKeyArray"
+			open="(" separator="," close=")">
+				#{roomTypeIdKey}
 			</foreach>
 		</if>
 		<if test="amenityTypeIdKeyArray != null">
-			<foreach item="amenityTypeIdKey" collection="amenityTypeIdKeyArray">
-				and at.id=#{amenityTypeIdKey}
+			and at.id in
+			<foreach item="amenityTypeIdKey" collection="amenityTypeIdKeyArray"
+			open="(" separator="," close=")">
+				#{amenityTypeIdKey}
 			</foreach>
 		</if>
 		<if test="guestCountKey != null">
-			and p.max_guest >= #{guestCountKey}
+			and p.max_guest <![CDATA[ >= ]]> #{guestCountKey}
 		</if>
 		<if test="bedCountKey != null">
-			and p.bed_count >= #{bedCountKey}
+			and p.bed_count <![CDATA[ >= ]]> #{bedCountKey}
 		</if>
 		<if test="minPriceKey != null">
-			and p.price >= #{minPriceKey}
+			and p.price <![CDATA[ >= ]]> #{minPriceKey}
 		</if>
 		<if test="maxPriceKey != null">
 			and p.price <![CDATA[ <= ]]> #{maxPriceKey}
