@@ -32,12 +32,17 @@ public class AdminController {
 	AdminMapper adminMapper;
 	
 	/*
-	 * main : admin 계정 로그인
+	 * [main] : admin 계정 로그인 화면
 	 */
 	@RequestMapping(value = "", method = RequestMethod.GET)
 	public String goMainView() {
 		return "admin/main";
 	}
+	
+	/*
+	 * [main] : login 체크  
+	 */
+	
 
 	/*
 	 * [dashboard] : 대시보드 필요 데이터 조회 및 넘긴다

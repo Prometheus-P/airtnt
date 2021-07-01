@@ -14,7 +14,7 @@
     <link href="../resources/css/signin.css" rel="stylesheet">
 </head>
 <body class="text-center">
-    <form class="form-signin">
+    <form class="form-signin" name="f" action="loginCheck">
       <img class="mb-4" src="https://getbootstrap.com/docs/4.0/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72">
       <h1 class="h3 mb-3 font-weight-normal">AirTnT ADMIN PAGE</h1>
       <label for="inputEmail" class="sr-only">Email address</label>
