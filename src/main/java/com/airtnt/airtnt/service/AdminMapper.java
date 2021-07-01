@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.airtnt.airtnt.model.AmenityTypeDTO;
 import com.airtnt.airtnt.model.DashBoardDTO;
+import com.airtnt.airtnt.model.GuideDTO;
 import com.airtnt.airtnt.model.MemberDTO;
 import com.airtnt.airtnt.model.PropertyTypeDTO;
 import com.airtnt.airtnt.model.RoomTypeDTO;
@@ -55,10 +56,61 @@ public class AdminMapper {
 		return list;
 	}
 	
-	//[member] : 멤버 전체 조회
-	public List<MemberDTO> selectMemberList(){
-		List<MemberDTO> list = sqlSession.selectList("selectMemberList");
+	//[filter] : roomTypeList > insert/update
+	public int updateRoomTypeDTO(String mode, RoomTypeDTO dto){
+		int res = 0;
+		if(mode.equals("I")) res = sqlSession.insert("insertRoomTypeDTO", dto);
+		else res = sqlSession.update("updateRoomTypeDTO", dto);
+		return res;
+	}
+	
+	//[filter] : amenityTypeList > insert/update
+	public int updateAmenityTypeDTO(String mode, AmenityTypeDTO dto){
+		int res = 0;
+		if(mode.equals("I")) res = sqlSession.insert("insertAmenityTypeDTO", dto);
+		else res = sqlSession.update("updateAmenityTypeDTO", dto);
+		return res;
+	}
+	
+	//[filter] : propertyTypeList > insert/update
+		public int updatePropertyTypeDTO(String mode, PropertyTypeDTO dto){
+			int res = 0;
+			if(mode.equals("I")) res = sqlSession.insert("insertPropertyTypeDTO", dto);
+			else res = sqlSession.update("updatePropertyTypeDTO", dto);
+			return res;
+		}
+	
+	//[member] : 멤버 조회
+	public List<MemberDTO> selectMemberList(String member_mode){
+		List<MemberDTO> list = sqlSession.selectList("selectMemberList", member_mode);
 		return list;
+	}
+	
+	//[guide] : 게시글 등록
+	public int insertBoard(GuideDTO dto) {
+		int res = sqlSession.update("insertBoard", dto);
+		return res;
+	}
+	
+	//[guide] : 게시글 등록
+	public List<GuideDTO> selectBoardList(){
+		List<GuideDTO> list = sqlSession.selectList("selectBoardList");
+		return list;
+	}
+	
+	public int deleteBoard(String id) {
+		int res = sqlSession.delete("deleteBoard", id);
+		return res;
+	}
+	
+	public List<GuideDTO> getSelectedBoard(String id){
+		List<GuideDTO> list = sqlSession.selectList("getSelectedBoard", id);
+		return list;
+	}
+	
+	public int updateSelectedBoard(GuideDTO dto) {
+		int res = sqlSession.update("updateSelectedBoard", dto);
+		return res;
 	}
 	
 }

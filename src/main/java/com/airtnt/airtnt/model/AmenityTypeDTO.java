@@ -9,6 +9,19 @@ public class AmenityTypeDTO {
 	private Date regDate;
 	private Date modDate;
 	
+	public AmenityTypeDTO() {};
+	
+	public AmenityTypeDTO(String name, String isUse) {
+		this.name = name;
+		this.isUse = isUse.charAt(0);
+	}
+	
+	public AmenityTypeDTO(String id, String name, String isUse) {
+		this.id = Integer.parseInt(id);
+		this.name = name;
+		this.isUse = isUse.charAt(0);
+	}
+	
 	public int getId() {
 		return id;
 	}

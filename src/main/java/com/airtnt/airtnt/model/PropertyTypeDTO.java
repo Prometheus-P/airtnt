@@ -8,6 +8,19 @@ public class PropertyTypeDTO {
 	private char isUse;
 	private Date regDate;
 	private Date modDate;
+	
+	public PropertyTypeDTO() {};
+	
+	public PropertyTypeDTO(String name, String isUse) {
+		this.name = name;
+		this.isUse = isUse.charAt(0);
+	}
+	
+	public PropertyTypeDTO(String id, String name, String isUse) {
+		this.id = Integer.parseInt(id);
+		this.name = name;
+		this.isUse = isUse.charAt(0);
+	}
 
 	public int getId() {
 		return id;

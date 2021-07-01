@@ -9,6 +9,19 @@ public class RoomTypeDTO {
 	private Date regDate;
 	private Date modDate;
 	
+	public RoomTypeDTO() {};
+	
+	public RoomTypeDTO(String name, String isUse) {
+		this.name = name;
+		this.isUse = isUse.charAt(0);
+	}
+	
+	public RoomTypeDTO(String id, String name, String isUse) {
+		this.id = Integer.parseInt(id);
+		this.name = name;
+		this.isUse = isUse.charAt(0);
+	}
+	
 	public int getId() {
 		return id;
 	}
