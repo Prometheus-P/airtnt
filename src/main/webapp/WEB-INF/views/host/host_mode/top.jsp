@@ -14,9 +14,9 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 </head>
 <body>
-
-	<nav class="navbar navbar-inverse navbar-fixed-top" style="color: #01546b;border-color: #01546b; background-color: #01546b">
-		<div class="container"  style="color: #01546b;border-color: #01546b; background-color: #01546b">
+ <!-- style="color: #01546b;border-color: #01546b; background-color: #01546b" -->
+	<nav class="navbar navbar-inverse navbar-fixed-top">
+		<div class="container">
 			<div class="navbar-header" >
 				<button type="button" class="navbar-toggle collapsed"
 					data-toggle="collapse" data-target="#navbar" aria-expanded="false"

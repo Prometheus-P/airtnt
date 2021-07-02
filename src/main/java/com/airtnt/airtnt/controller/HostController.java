@@ -197,7 +197,11 @@ public class HostController implements HostControllerInterface {
 		HttpSession session = req.getSession();
 		String hostId = (String) session.getAttribute("member_id");
 		List<BookingDTO> listBooking = hostMapper.getBookingList(hostId);
-		return new ModelAndView("/host/host_mode/host_mode", "listBooking", listBooking);
+		Date today = new Date();
+		ModelAndView mav = new ModelAndView("/host/host_mode/host_mode");
+		mav.addObject("listBooking", listBooking);
+		mav.addObject("today", today);
+		return mav;
 	}
 
 	@Override
