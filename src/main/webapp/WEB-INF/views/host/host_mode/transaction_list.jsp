@@ -14,31 +14,32 @@
 		<div class="col-md-6" style="width: 80%">
 			<div class="page-header">
 				<br> <br> <br>
-				<h1>대금수령 완료</h1>
+				<h1 style="font-style:italic; font-weight: bold;">대금수령 완료</h1>
 			</div>
-				<table class="table table-striped">
+				<table class="table table-striped" style="font-size: 20px">
 					<thead>
 						<tr>
 							<th>#</th>
 							<th>예약번호</th>
+							<th>숙소명</th>
 							<th>결재금</th>
 							<th>차감 수수료</th>
 							<th>총 결재대금</th>
-							<th>숙소 ID</th>
+							
 							<th rowspan="3">대금수령일</th>
 						</tr>
 					</thead>
 					<tbody>
 					<c:forEach var="dto" items="${listTransaction}">
 					<c:if test="${dto.checkOutDate.before(today)}">
-						<c:set var="count" value="${count+1}"/>
+						<c:set var="count_1" value="${count_1+1}"/>
 						<tr>
-							<td>${count}</td>
+							<td>${count_1}</td>
 							<td>${dto.bookingNumber}</td>
+							<td>${dto.propertyName}</td>
 							<td>₩${dto.totalPrice}</td>
 							<td>₩${dto.totalPrice * dto.siteFee}</td>
 							<td>₩${dto.totalPrice - dto.totalPrice * dto.siteFee}</td>
-							<td>${dto.propertyId}</td>
 							<td>${dto.payExptDate}</td>
 							<c:if test="${Character.compare(dto.isRefund, y) == 0}">
 								<td>*환불 되었습니다</td>
@@ -47,19 +48,28 @@
 						</tr>
 					</c:if>
 					
-					<c:set var="graph1" value="" scope="page"/>
+					<c:set var="total" value="${total + dto.totalPrice - dto.totalPrice * dto.siteFee}" />
 					</c:forEach>
 					</tbody>
 				</table>
+		</div>
+		<div class="col-sm-4">
+		<br><br><br>
+			<div class="panel panel-info" style="font-weight: bold; font-size: 20px">
+					<div class="panel-heading">
+						<h3 class="panel-title" >총 수익 합계</h3>
+					</div>
+					<div class="panel-body">₩${total}</div>
+			</div>
 		</div>
 
 		<div class="col-md-6" style="width: 80%">
 			<div class="page-header">
 				<br> <br> <br>
-				<h1>대금 수령 예정 내역</h1>
+				<h1 style="font-style:italic; font-weight: bold;">대금 수령 예정 내역</h1>
 			</div>
 			<div class="list-group">
-				<table class="table table-striped">
+				<table class="table table-striped" style="font-size: 20px">
 					<thead>
 						<tr>
 							<th>#</th>
@@ -71,17 +81,17 @@
 						</tr>
 					</thead>
 					<tbody>
-						<c:if test="${isTran == true}">
-							<h4 class="list-group-item-heading">예정 내역이 없습니다.</h4>
+						<c:if test="${isReserv == null}">
+							<td rowspan="5">예정 내역이 없습니다.</td>
 						</c:if>
 						
-						<c:if test="${isTran == false}">
 						<c:forEach var="dto" items="${listTransaction}">
 						<!--  confirmDate<  today <checkOutDate -->
-						<c:if test="${dto.confirmDate.before(today) && today.before(dto.checkOutDate)}">
-							<c:set var="count" value="${count+1}"/>
+						<c:if test="${dto.confirmDate!=null && dto.payExptDate != null}">
+						<c:if test="${dto.confirmDate.before(today) && today.before(dto.payExptDate)}">
+							<c:set var="count_2" value="${count_2+1}"/>
 							<tr>
-								<td>${count}</td>
+								<td>${count_2}</td>
 								<td>${dto.bookingNumber}</td>
 								<td>₩${dto.totalPrice - dto.totalPrice * dto.siteFee}</td>
 								<td>${dto.propertyId}</td>
@@ -89,9 +99,8 @@
 								<td>${dto.payExptDate}</td>
 							</tr>
 							</c:if>
-						</c:forEach>
 						</c:if>
-				
+						</c:forEach>
 					</tbody>
 				</table>
 			</div>

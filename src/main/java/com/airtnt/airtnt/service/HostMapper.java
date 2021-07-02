@@ -1,6 +1,6 @@
 package com.airtnt.airtnt.service;
 
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -117,7 +117,13 @@ public class HostMapper implements HostMapperInterface {
 
 	@Override
 	public List<TransactionDTO> getTotalEarning(String memberId) {
-		List<TransactionDTO> list = sqlSession.selectList("totalEarningMap", memberId);
+		List<TransactionDTO> list = sqlSession.selectList("totalEarningList", memberId);
 		return list;
+	}
+
+	@Override
+	public java.sql.Date getSysdate() {
+		java.sql.Date date = sqlSession.selectOne("getSysdate");
+		return date;
 	}
 }

@@ -1,6 +1,7 @@
 package com.airtnt.airtnt.controller;
 
 import java.io.File;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -197,7 +198,7 @@ public class HostController implements HostControllerInterface {
 		HttpSession session = req.getSession();
 		String hostId = (String) session.getAttribute("member_id");
 		List<BookingDTO> listBooking = hostMapper.getBookingList(hostId);
-		Date today = new Date();
+		java.sql.Date today = hostMapper.getSysdate();
 		ModelAndView mav = new ModelAndView("/host/host_mode/host_mode");
 		mav.addObject("listBooking", listBooking);
 		mav.addObject("today", today);
@@ -235,20 +236,18 @@ public class HostController implements HostControllerInterface {
 		String hostId = (String) session.getAttribute("member_id");
 		List<TransactionDTO> listTransaction = hostMapper.getTransactionList(hostId);
 		// 6월 29, 2021 10:31:02 오전
-		int count = 0;
 		ModelAndView mav = new ModelAndView("/host/host_mode/transaction_list");
-		for (TransactionDTO dto : listTransaction) { // 대금예정이 없습니다
-			if (dto.getPayExptDate() == null) {
-				count++;
+		java.util.Date today = new Date();
+		for(TransactionDTO dto : listTransaction) {
+			if(dto.getConfirmDate()!=null && dto.getPayExptDate() != null) {
+				if(dto.getConfirmDate().before(today) && today.before(dto.getPayExptDate())) {
+					mav.addObject("isReserv", 1);
+					break;
+				}
 			}
 		}
-		if (count == listTransaction.size()) {
-			mav.addObject("isTran", true);
-		}
-		Date nowTime = new Date();
 		mav.addObject("listTransaction", listTransaction);
-		mav.addObject("today", nowTime);
-		mav.addObject("isTran", false);
+		mav.addObject("today", today);
 		return mav;
 	}
 
@@ -259,7 +258,7 @@ public class HostController implements HostControllerInterface {
 		return new ModelAndView("/host/host_mode/host_review_list");
 	}
 
-	public Date addMonth(Date date, int months) {
+	public java.util.Date addMonth(Date date, int months) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
 		cal.add(Calendar.MONTH, months);
@@ -272,8 +271,8 @@ public class HostController implements HostControllerInterface {
 		HttpSession session = req.getSession();
 		String hostId = (String) session.getAttribute("member_id");
 		List<TransactionDTO> list = hostMapper.getTotalEarning(hostId);
-		Date date = new Date();
-		Date beM[] = new Date[13];
+		java.util.Date date = new Date();
+		java.util.Date beM[] = new Date[13];
 		ModelAndView mav = new ModelAndView("/host/host_mode/total_earning");
 		List<Integer> listTotal = new ArrayList<>();
 		int total[] = new int[12];
@@ -283,7 +282,9 @@ public class HostController implements HostControllerInterface {
 		for (TransactionDTO dto : list) { // 6개월 전
 			for (int i = 0; i < 12; ++i) {
 				if (beM[i + 1].before(dto.getPayExptDate()) && dto.getPayExptDate().before(beM[i])) {
-					total[i] += dto.getTotalPrice();
+					if(Character.compare(dto.getIsRefund(), 'N') == 0) {
+						total[i] += dto.getTotalPrice() - dto.getTotalPrice() * dto.getSiteFee();
+					}
 				}
 			}
 		} // total[0]: 가장 최근 달 >> total1
@@ -300,5 +301,6 @@ public class HostController implements HostControllerInterface {
 		// TODO Auto-generated method stub
 		return new ModelAndView("/host/host_mode/host_support");
 	}
+
 
 }

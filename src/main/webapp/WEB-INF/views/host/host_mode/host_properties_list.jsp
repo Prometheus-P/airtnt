@@ -89,13 +89,13 @@
 							<td>${dto.subPropertyTypeName}</td>
 							<td>
 								<button type="button" class="btn btn-sm btn-info"
-									data-toggle="modal" data-target="#myModal"
+									data-toggle="modal" data-target="#${dto.id}"
 									title="숙소 상세 내용을 확인 할 수 있습니다." data-placement="right">
 									세부정보
 								</button>
 							</td>
 						</tr>
-						<div id="myModal" class="modal fade" role="dialog">
+						<div id="${dto.id}" class="modal fade" role="dialog">
 							<div class="modal-dialog">
 								<!-- Modal content-->
 								<div class="modal-content">
