@@ -210,7 +210,7 @@ public class HostController implements HostControllerInterface {
 	}
 
 	@Override
-	@RequestMapping(value= "host/properties_update", method = RequestMethod.GET)
+	@RequestMapping(value = "host/properties_update", method = RequestMethod.GET)
 	public ModelAndView host_getProperty(HttpServletRequest req, int propertyId) {
 		PropertyDTO dto = hostMapper.getProperty(propertyId);
 		return new ModelAndView("/host/host_mode/properties_update", "propertyDTO", dto);
@@ -218,10 +218,10 @@ public class HostController implements HostControllerInterface {
 
 	@Override
 	@RequestMapping(value = "host/properties_update", method = RequestMethod.POST)
-	public ModelAndView host_property_update
-	(HttpServletRequest req, @RequestParam Map<String, String> map, @RequestParam("files")List<MultipartFile> images) {
-		
-		return null;
+	public ModelAndView host_property_update(HttpServletRequest req, @RequestParam Map<String, String> map,
+		@RequestParam("files") List<MultipartFile> images) {
+		//msg, url
+		return new ModelAndView("/message");
 	}
 
 	@Override
@@ -249,9 +249,10 @@ public class HostController implements HostControllerInterface {
 	}
 
 	@Override
+	@RequestMapping("/host/host_review_list")
 	public ModelAndView host_review_list(HttpServletRequest req) {
 		// TODO Auto-generated method stub
-		return null;
+		return new ModelAndView("/host/host_mode/host_review_list");
 	}
 
 	public Date addMonth(Date date, int months) {
@@ -273,20 +274,27 @@ public class HostController implements HostControllerInterface {
 		List<Integer> listTotal = new ArrayList<>();
 		int total[] = new int[12];
 		for (int i = 0; i < 13; ++i) {
-				beM[i] = addMonth(date, -i);
+			beM[i] = addMonth(date, -i);
 		}
 		for (TransactionDTO dto : list) { // 6개월 전
-			for(int i =0; i<12; ++i) {
-				if(beM[i+1].before(dto.getPayExptDate()) && dto.getPayExptDate().before(beM[i])) {
+			for (int i = 0; i < 12; ++i) {
+				if (beM[i + 1].before(dto.getPayExptDate()) && dto.getPayExptDate().before(beM[i])) {
 					total[i] += dto.getTotalPrice();
 				}
 			}
-		}//total[0]: 가장 최근 달 >> total1
-		for (int i =11 ; i >= 0; --i) {
+		} // total[0]: 가장 최근 달 >> total1
+		for (int i = 11; i >= 0; --i) {
 			listTotal.add(total[i]);
 		}
 		mav.addObject("listTotal", listTotal);
 		return mav;
+	}
+
+	@Override
+	@RequestMapping("/host/host_support")
+	public ModelAndView host_support(HttpServletRequest req) {
+		// TODO Auto-generated method stub
+		return new ModelAndView("/host/host_mode/host_support");
 	}
 
 }

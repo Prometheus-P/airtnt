@@ -28,4 +28,5 @@ public interface HostControllerInterface {
 	public ModelAndView transaction_list(HttpServletRequest req);
 	public ModelAndView total_earning(HttpServletRequest req);
 	public ModelAndView host_review_list(HttpServletRequest req);
+	public ModelAndView host_support(HttpServletRequest req);
 }

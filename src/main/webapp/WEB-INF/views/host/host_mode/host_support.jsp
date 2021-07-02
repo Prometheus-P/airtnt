@@ -5,9 +5,10 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>호스트 지원</title>
 </head>
 <body>
-
+	<%@include file="top.jsp" %>
+	<h2>화이팅</h2>
 </body>
 </html>
