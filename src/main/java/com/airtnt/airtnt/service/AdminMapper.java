@@ -1,6 +1,8 @@
 package com.airtnt.airtnt.service;
 
+import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,13 @@ public class AdminMapper {
 	public List<DashBoardDTO> listCheckInDateCntGroupByMonth(){
 		List<DashBoardDTO> list = sqlSession.selectList("listCheckInDateCntGroupByMonth");
 		return list;
+	}
+	
+	//[member] : 멤버 조회
+	public List<MemberDTO> selectMemberList(String member_mode){
+		Map<String, String> selectKeyMap = new Hashtable<>();
+		selectKeyMap.put("member_mode", member_mode);
+		return sqlSession.selectList("selectMemberList", selectKeyMap);
 	}
 	
 	//[filter] : roomTypeList 
@@ -80,12 +89,6 @@ public class AdminMapper {
 			else res = sqlSession.update("updatePropertyTypeDTO", dto);
 			return res;
 		}
-	
-	//[member] : 멤버 조회
-	public List<MemberDTO> selectMemberList(String member_mode){
-		List<MemberDTO> list = sqlSession.selectList("selectMemberList", member_mode);
-		return list;
-	}
 	
 	//[guide] : 게시글 등록
 	public int insertBoard(GuideDTO dto) {

@@ -114,6 +114,20 @@ public class AdminController extends UserController {
 		req.setAttribute("last_valuelist", last_value); // 작년
 		return "admin/dashboard";
 	}
+	
+	/*
+	 * [member] : 회원정보 조회
+	 * param : "mode" > 회원구분  ( default "all" 로 세팅 > 처음 전체조회시 )
+	 */
+	@RequestMapping(value = "member", method = RequestMethod.GET)
+	public String selectMemberList(HttpServletRequest req, @RequestParam(defaultValue="0") String member_mode) throws Exception {
+		System.out.println("mode::" + member_mode);
+		List<MemberDTO> list = adminMapper.selectMemberList(member_mode);
+		req.setAttribute("memberList", list);
+		req.setAttribute("member_mode", member_mode);
+		return "admin/member";
+	}
+	
 	/*
 	 * [filter] : 필터 화면 첫 조회시 전체 데이터 불러온다
 	 */
@@ -187,20 +201,7 @@ public class AdminController extends UserController {
 		}
 		return res;	
 	}
-	
-	/*
-	 * [member] : 회원정보 조회
-	 * param : "mode" > 회원구분  ( default "all" 로 세팅 > 전체조회 )
-	 * 
-	 */
-	@RequestMapping(value = "member", method = RequestMethod.GET)
-	public String selectMemberList(HttpServletRequest req, @RequestParam(defaultValue="all") String member_mode) throws Exception {
-		System.out.println("mode::" + member_mode);
-		List<MemberDTO> list = adminMapper.selectMemberList(member_mode);
-		req.setAttribute("memberList", list);
-		return "admin/member";
-	}
-	
+
 	/*
 	 * [Guide]
 	 */

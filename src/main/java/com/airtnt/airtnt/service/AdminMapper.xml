@@ -36,6 +36,25 @@
 		order by c.months
 	</select>
 	
+	<select id= "selectMemberList" resultType="memberDTO" parameterType="java.util.Map">
+		select (CASE WHEN member_mode = 1 THEN 'GUEST'
+		            WHEN member_mode = 2 THEN 'HOST'
+		       END) AS member_mode
+			 , id
+			 , name as name
+			 , REGEXP_REPLACE(tel, '(.{3})(.+)(.{4})', '\1-\2-\3') as tel
+			 , (CASE WHEN gender = '1' THEN '남성'
+		            WHEN gender = '2' THEN '여성'
+		       END) AS gender
+			 , to_char(reg_date,'YYYY-MM-DD') as reg_date
+		from member
+		where 1=1
+		<if test="member_mode != 0">
+		and member_mode = #{member_mode}
+		</if>
+		order by reg_date desc
+	</select>
+	
 	<select id = "selectRoomTypeList" resultType="roomTypeDTO">
 		select 	id,
 				name,
@@ -120,25 +139,6 @@
 			is_use = #{isUse}
 		where id = #{id}
 	</update>
-	
-	<select id= "selectMemberList" resultType="memberDTO" parameterType="String">
-		select (CASE WHEN member_mode = 1 THEN 'GUEST'
-		            WHEN member_mode = 2 THEN 'HOST'
-		       END) AS member_mode
-			 , id
-			 , name as name
-			 , REGEXP_REPLACE(tel, '(.{3})(.+)(.{4})', '\1-\2-\3') as tel
-			 , (CASE WHEN gender = '1' THEN '남성'
-		            WHEN gender = '2' THEN '여성'
-		       END) AS gender
-			 , to_char(reg_date,'YYYY-MM-DD') as reg_date
-		from member
-		where 1=1
-		<if test='value!="all"'>
-		and member_mode = #{value}
-		</if>
-		order by reg_date desc
-	</select>
 	
 	<insert id ="insertBoard" parameterType="guideDTO">
 		insert into guide values(
