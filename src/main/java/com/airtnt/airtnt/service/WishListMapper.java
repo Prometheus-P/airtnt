@@ -1,11 +1,15 @@
 package com.airtnt.airtnt.service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.airtnt.airtnt.model.AmenityDTO;
+import com.airtnt.airtnt.model.PropertyDTO;
 import com.airtnt.airtnt.model.WishListDTO;
 import com.airtnt.airtnt.model.WishList_PropertyDTO;
 
@@ -35,6 +39,18 @@ public class WishListMapper {
 	public List<WishList_PropertyDTO> getWishRoom(String wish_id) {
 		List<WishList_PropertyDTO> list = sqlSession.selectList("getWishRoom", wish_id);
 		return list;
+	}
+	public int updateWish(Map<String, String> params) {
+		int res = sqlSession.update("updateWish",params);
+		return res;
+	}
+	public int deleteWish(String wish_id) {
+		int res = sqlSession.delete("deleteWish", wish_id);
+		return res;
+	}
+	public int deleteWishRoom(String wish_id) {
+		int res = sqlSession.delete("deleteWishRoom", wish_id);
+		return res;
 	}
 
 }

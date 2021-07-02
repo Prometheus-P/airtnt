@@ -14,6 +14,13 @@ public class WishList_PropertyDTO {
 	private String is_main;
 	private String name;
 	
+	//wishlist_room_view 담을거
+	private String property_name;
+	private String property_address;
+	private String type_name;
+	private String sub_type_name;
+	private String room_type_name;
+	
 	public String getName() {
 		return name;
 	}
@@ -73,6 +80,36 @@ public class WishList_PropertyDTO {
 	}
 	public void setIs_main(String is_main) {
 		this.is_main = is_main;
+	}
+	public String getProperty_name() {
+		return property_name;
+	}
+	public void setProperty_name(String property_name) {
+		this.property_name = property_name;
+	}
+	public String getProperty_address() {
+		return property_address;
+	}
+	public void setProperty_address(String property_address) {
+		this.property_address = property_address;
+	}
+	public String getType_name() {
+		return type_name;
+	}
+	public void setType_name(String type_name) {
+		this.type_name = type_name;
+	}
+	public String getSub_type_name() {
+		return sub_type_name;
+	}
+	public void setSub_type_name(String sub_type_name) {
+		this.sub_type_name = sub_type_name;
+	}
+	public String getRoom_type_name() {
+		return room_type_name;
+	}
+	public void setRoom_type_name(String room_type_name) {
+		this.room_type_name = room_type_name;
 	}
 	
 }

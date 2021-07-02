@@ -56,7 +56,7 @@
             <li><a href="/tour">여행</a></li>
             <li><a href="/wishList">위시리스트</a></li>
             <li><a href="/pages/sidebar-right.html">호스트 되기</a></li>
-            <li><a href="/mypage">계정</a></li>
+            <li><a href="/myPage">계정</a></li>
             <li><a href="/help">도움말</a></li>
             <li><a href="/logout">로그아웃</a></li>
           </ul>
@@ -104,7 +104,7 @@
 				</form>
 			</div>
 			<div class="modal-footer">
-				<a href="findMember">Forgot Password?</a>
+				<a href="/findMember">Forgot Password?</a>
 			</div>
 		</div>
 	</div>
