@@ -12,6 +12,7 @@
 			mod_date as modDate, 
 			explanation, content1, content2, content3 from guide
 	</select>
+	
 	<select id="getGuide" parameterType="int" resultType="guideDTO">
 		select 
 			id, subject, 
@@ -20,13 +21,16 @@
 			explanation, content1, content2, content3 
 		from guide where id = #{id}
 	</select>
+	
 	<insert id="insertProperty" parameterType="propertyDTO">
 		insert into property values(property_seq.nextval, #{name}, #{hostId}, 
 		#{propertyDesc}, #{address}, #{latitude}, #{longitude}, #{price}, #{bedCount}, 
 		#{maxGuest})<!-- modeDate==null -->
 	</insert>
+	
 	<delete id="deleteProperty" parameterType="int">
 	</delete>
+	
 	<select id="propertyType" resultType="propertyTypeDTO">
 		select 
 			id, name, 
@@ -35,16 +39,16 @@
 			mod_date as modDate 
 		from property_type order by id
 	</select>
+	
 	<select id="subPropertyType" parameterType="int" resultType="subPropertyTypeDTO">
-
 		select 
 			id, name, 
 			property_type_id as propertyTypeId,
 			is_use as isUse, 
 			reg_date as regDate, 
 			mod_date as modDate from sub_property_type where property_type_id = #{propertyTypeId}
-
 	</select>
+	
 	<select id="roomType" resultType="roomTypeDTO">
 		select 
 			id, name, 
@@ -53,6 +57,7 @@
 			mod_date as modDate 
 		from room_type
 	</select>
+	
 	<select id="listBooking" parameterType="String" resultType="BookingDTO">
 		select 
 			booking.id, 
@@ -74,9 +79,11 @@
         where booking.guest_id = member.id
         and booking.host_id = #{hostId}
         </select>
+        
 	<select id="getMemberDTO" parameterType="String" resultType="MemberDTO">
 		select * from member where id = #{memberId};
 	</select>
+	
 	<select id="listProperty" parameterType="String" resultType="PropertyDTO">
 		select 
 			p.id, p.name,
@@ -98,6 +105,7 @@
 		and r.id = p.room_type_id
 		and p.sub_property_type_id =  s.id
 	</select>
+	
 	<select id="listTransaction" parameterType="String" resultType="TransactionDTO">
 		select 
 			b.id as booking_table_id, 
@@ -118,6 +126,7 @@
         where b.id = t.booking_id
         and b.host_id = #{hostId}
 	</select>
+	
 	<select id="totalEarningMap" parameterType="String" resultType="TransactionDTO"> 
 		select 
 			b.total_price as totalPrice,
@@ -131,6 +140,28 @@
 		where b.id = t.id
         and sysdate > t.pay_expt_date
 		and host_id = #{hostId}
+	</select>
+	
+	<select id="getProperty" parameterType="int" resultType="PropertyDTO">
+		select 
+			p.id, p.name,
+			p.host_id as hostId,
+			p.address,
+			p.price,
+			p.bed_count as bedCount,
+			p.max_guest as maxGuest,
+			p.reg_date as regDate,
+			p.mod_date as modDate,
+			p.room_type_id as roomTypeId,
+			r.id,
+			r.name as roomTypeName,
+            p.sub_property_type_id as subPropertyTypeId,
+            s.id,
+            s.name as subPropertyTypeName
+		from property p, sub_property_type s, room_type r
+		where p.id = #{propertyId}
+		and r.id = p.room_type_id
+		and p.sub_property_type_id =  s.id                                                  
 	</select>
 	<!-- <insert id="saveImage" parameterType="java.util.Map">
     I	insert into img_table VALUES #{img}    

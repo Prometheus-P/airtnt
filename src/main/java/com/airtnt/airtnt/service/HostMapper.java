@@ -85,9 +85,9 @@ public class HostMapper implements HostMapperInterface {
 	}
 
 	@Override
-	public PropertyDTO getPropertyDetail(int propertyId) {
-		// TODO Auto-generated method stub
-		return null;
+	public PropertyDTO getProperty(int propertyId) {
+		PropertyDTO dto = sqlSession.selectOne("getProperty", propertyId);
+		return dto;
 	}
 
 	@Override

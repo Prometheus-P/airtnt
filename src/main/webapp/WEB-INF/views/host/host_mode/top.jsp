@@ -14,10 +14,10 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 </head>
 <body>
-
+ <!-- style="color: #01546b;border-color: #01546b; background-color: #01546b" -->
 	<nav class="navbar navbar-inverse navbar-fixed-top">
 		<div class="container">
-			<div class="navbar-header">
+			<div class="navbar-header" >
 				<button type="button" class="navbar-toggle collapsed"
 					data-toggle="collapse" data-target="#navbar" aria-expanded="false"
 					aria-controls="navbar">
@@ -29,7 +29,7 @@
 				<a class="navbar-brand" style="font-size: 20px ;font:italic; font-family:fantasy;">
 				${sessionScope.member_name}님 환영합니다</a>
 			</div>
-			<div id="navbar" class="navbar-collapse collapse">
+			<div id="navbar" class="navbar-collapse collapse" >
 				<ul class="nav navbar-nav" style="font-size: 30px ;font:bold; font-family:fantasy;">
 					<li>
 					<a href="<c:url value='/host/host_mode'/>">투데이</a></li>
@@ -54,9 +54,13 @@
 							<a href="<c:url value='/host/host_review_list'/>">리뷰</a></li>
 							<li>
 							<a href="<c:url value='/host/total_earning'/>">총 수입</a></li>
-							<li class="divider"></li>
 							<li>
 							<a href="<c:url value='/host/property_type_0'/>">새 숙소 생성</a></li>
+							<li class="divider"></li>
+							<li>
+							<a href="<c:url value='/logout'/>">로그아웃</a>
+							<a href="<c:url value='/index'/>">게스트 모드로 전환</a></li>
+							<li><a href="<c:url value='/mypage'/>">계정</a></li>
 							<li class="dropdown-header">메롱</li>
 						</ul></li>
 				</ul>

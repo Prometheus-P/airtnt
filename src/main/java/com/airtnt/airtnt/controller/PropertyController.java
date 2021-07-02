@@ -51,7 +51,7 @@ public class PropertyController {
 		// sql 조건문 맵
 		Map<String, Object> searchKeyMap = new Hashtable<>();
 		searchKeyMap.put("addressKey", addressKey);
-		Object[][] paramArray = new Object[][] {
+		Object[][] paramMatrix = new Object[][] {
 				{"propertyTypeIdKeyArray", propertyTypeIdKeyArray},
 				{"subPropertyTypeIdKeyArray", subPropertyTypeIdKeyArray},
 				{"roomTypeIdKeyArray", roomTypeIdKeyArray},
@@ -61,9 +61,9 @@ public class PropertyController {
 				{"minPriceKey", minPriceKey},
 				{"maxPriceKey", maxPriceKey}
 		};
-		for(int i = 0; i < paramArray.length; i++) {
-			if(paramArray[i][1] != null) {
-				searchKeyMap.put((String)paramArray[i][0], paramArray[i][1]);
+		for(int i = 0; i < paramMatrix.length; i++) {
+			if(paramMatrix[i][1] != null) {
+				searchKeyMap.put((String)paramMatrix[i][0], paramMatrix[i][1]);
 			}
 		}
 		
@@ -137,7 +137,7 @@ public class PropertyController {
 
 	@RequestMapping("detail")
 	public String detail(HttpServletRequest req,
-			@RequestParam("propertyId") int propertyId) {
+			@RequestParam("propertyId") Integer propertyId) {
 		PropertyDTO property = propertyMapper.selectProperty(propertyId);
 		
 		req.setAttribute("tomorrow", getTomorrowString());
