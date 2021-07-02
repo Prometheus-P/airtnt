@@ -43,19 +43,19 @@
           <ul>
             <li><a href="#LoginModal" class="trigger-btn" data-toggle="modal">로그인</a></li>
             <li><a href="#SignUpModal" class="trigger-btn" data-toggle="modal">회원가입</a></li>
-            <li><a href="help">도움말</a></li>
+            <li><a href="/help">도움말</a></li>
           </ul>
         </li>
           </c:if>
         <c:if test="${isLogin}">
         <li><a class="drop" href="#">MyPages</a>
           <ul>
-            <li><a href="tour">여행</a></li>
-            <li><a href="wishList">위시리스트</a></li>
-            <li><a href="pages/sidebar-right.html">호스트 되기</a></li>
-            <li><a href="mypage">계정</a></li>
-            <li><a href="help">도움말</a></li>
-            <li><a href="logout">로그아웃</a></li>
+            <li><a href="/tour">여행</a></li>
+            <li><a href="/wishList">위시리스트</a></li>
+            <li><a href="/pages/sidebar-right.html">호스트 되기</a></li>
+            <li><a href="/myPage">계정</a></li>
+            <li><a href="/help">도움말</a></li>
+            <li><a href="/logout">로그아웃</a></li>
           </ul>
           </c:if>
         </li>
@@ -75,7 +75,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 			</div>
 			<div class="modal-body">
-				<form action="login" method="post">
+				<form action="/login" method="post">
 					<div class="form-group">
 						<c:if test="${empty value}">		
 							<input type="text" class="form-control" name="id" placeholder="ID" required="required">
@@ -102,7 +102,7 @@
 				</form>
 			</div>
 			<div class="modal-footer">
-				<a href="findMember">Forgot Password?</a>
+				<a href="/findMember">Forgot Password?</a>
 			</div>
 		</div>
 	</div>
@@ -116,7 +116,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 			</div>
 			<div class="modal-body">
-				<form action="signUp" method="post">
+				<form action="/signUp" method="post">
 					<div class="form-group">
 						<input type="text" class="form-control" name="id" placeholder="ID" required="required">		
 					</div>

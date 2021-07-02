@@ -15,9 +15,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.airtnt.airtnt.guest.LoginOKBean;
+import com.airtnt.airtnt.model.BookingDTO;
 import com.airtnt.airtnt.model.MemberDTO;
+import com.airtnt.airtnt.model.PropertyDTO;
 import com.airtnt.airtnt.model.WishListDTO;
 import com.airtnt.airtnt.model.WishList_PropertyDTO;
+import com.airtnt.airtnt.service.BookingMapper;
 import com.airtnt.airtnt.service.MemberMapper;
 import com.airtnt.airtnt.service.WishListMapper;
 
@@ -28,6 +31,8 @@ public class UserController {
 	MemberMapper memberMapper;
 	@Autowired
 	WishListMapper wishListMapper;
+	@Autowired
+	BookingMapper bookingMapper;
 	
 	// 회원가입
 	@RequestMapping("signUp")
@@ -61,13 +66,12 @@ public class UserController {
 			return "message";
 		}else {
 			//로그인 빈에 로그인한 멤버의 정보 담고 세션에 저장
-			//LoginOKBean loginOk = new LoginOKBean();
-			//loginOk.login_setting(dto);
+			LoginOKBean login = LoginOKBean.getInstance();
+			login.login_setting(dto);
 			session.setAttribute("member_id", dto.getId());
 			session.setAttribute("member_name", dto.getName());
 			session.setAttribute("member_mode", dto.getMember_mode());
 			session.setAttribute("member_image", dto.getMember_image());
-			
 			//아이디저장하기 버튼 클릭시 아이디 쿠키에 저장
 			Cookie ck = new Cookie("saveId", dto.getId());
 			if(params.get("saveId")==null){
@@ -88,6 +92,15 @@ public class UserController {
 		
 		return "redirect:/index";
 	}
+	//마이페이지
+	@RequestMapping("myPage")
+	public String mypage(HttpServletRequest req) {
+		LoginOKBean memberData = LoginOKBean.getInstance();
+		System.out.println(memberData.getName());
+		req.setAttribute("memberData", memberData);
+		
+		return "user/user/myPage";
+	}
 	
 	// 위시리스트
 	@RequestMapping("wishList")
@@ -107,7 +120,6 @@ public class UserController {
 	@RequestMapping("makeWish")
 	public String makeWish(HttpServletRequest req, @ModelAttribute WishListDTO dto) {
 		dto.setMember_id((String) req.getSession().getAttribute("member_id"));
-		System.out.println(dto.getMember_id());
 		int res = wishListMapper.makeWish(dto);
 		
 		
@@ -117,14 +129,37 @@ public class UserController {
 	@RequestMapping("inWishList")
 	public String inWishList(HttpServletRequest req, @RequestParam Map<String, String> params) {
 		List<WishList_PropertyDTO> list = wishListMapper.getWishRoom(params.get("wish_id"));
+		req.setAttribute("wish_name", params.get("wish_name"));
+		req.setAttribute("wish_id", params.get("wish_id"));
 		
+		req.setAttribute("properties", list);
 		return "user/wish/inWishList";
+	}
+	
+	@RequestMapping("updateWish")
+	public String updateWish(HttpServletRequest req, @RequestParam Map<String, String> params) {
+		int res = wishListMapper.updateWish(params);
+		
+		return "redirect:/wishList";
+	}
+	
+	@RequestMapping("deleteWish")
+	public String deleteWish(HttpServletRequest req, @RequestParam Map<String, String> params) {
+		int res1 = wishListMapper.deleteWishRoom(params.get("wish_id"));
+		int res2 = wishListMapper.deleteWish(params.get("wish_id"));
+		
+		return "redirect:/wishList";
 	}
 	
 	//여행
 	@RequestMapping("tour")
-	public String tour(HttpServletRequest req, @RequestParam Map<String, String> params) {
+	public String tour(HttpServletRequest req) {
+		String member_id=(String) req.getSession().getAttribute("member_id");
+		List<BookingDTO> planed = bookingMapper.getPlanedBooking(member_id);
+		List<BookingDTO> pre = bookingMapper.getPreBooking(member_id);
 		
+		req.setAttribute("planedBookinglist", planed);
+		req.setAttribute("preBookinglist", pre);
 		return "user/tour/tour";
 	}
 }

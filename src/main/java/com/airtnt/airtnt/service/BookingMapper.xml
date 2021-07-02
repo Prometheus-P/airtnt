@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <mapper namespace="com.airtnt.airtnt.service.BookingMapper">
+ 	<select id="getPlanedBooking" resultType="BookingDTO" parameterType="String"> 
+ 		select *
+		from booking_view
+		where guest_id=#{member_id} and check_out_date > sysdate
+ 	</select>
+ 	<select id="getPreBooking" resultType="BookingDTO" parameterType="String"> 
+		select *
+		from booking_view
+		where guest_id=#{member_id} and sysdate > check_out_date
+ 	</select>
+ </mapper>
