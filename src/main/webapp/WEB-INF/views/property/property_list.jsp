@@ -256,7 +256,7 @@ onsubmit="setParametersOnSubmit()">
       
         <!-- 숙소 리스트 -->
         <div class="one_half first">
-	        <div class="content"> 
+	      <div class="content"> 
 	      <!-- ################################################################################################ -->
 	      <div id="gallery">
 	        <figure>
@@ -274,11 +274,11 @@ onsubmit="setParametersOnSubmit()">
 	              </div>
 	              <div class="position-relative two_third">
 	                <div class="position-absolute top-0 end-0">
-	                  <%-- <c:set var="isWished" value="${false}"/>
-	                  <c:forEach var="wishList_property" items="${sessionScope.wishList_Properties}">
-	                    <c:if test="${wish.id == property}"></c:if>
-	                  </c:forEach> --%>
-	                  
+	                  <!-- Button trigger modal -->
+                      <button id="wish-button" type="button" class="btn btn-primary"
+                      data-bs-toggle="modal" data-bs-target="#wish-modal">
+                        좋아요오
+                      </button>
 	                </div>
 	                <h2><a href="<c:url value='/property/detail?propertyId=${property.id}'/>">${property.name}</a></h2>
 	                <h4>${property.propertyType.name}/${property.subPropertyType.name}</h4>
@@ -293,7 +293,6 @@ onsubmit="setParametersOnSubmit()">
 	        </figure>
 	      </div>
 	    </div>
-        
         </div>
 
         <!-- 카카오맵 -->
@@ -306,6 +305,7 @@ onsubmit="setParametersOnSubmit()">
     </div>
   </div>
 </div>
+
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
@@ -388,4 +388,5 @@ onsubmit="setParametersOnSubmit()">
 <script src="../layout/scripts/jquery.mobilemenu.js"></script> -->
 
 </body>
+<jsp:include page="/WEB-INF/views/property/wish-modal.jsp"/>
 </html>
