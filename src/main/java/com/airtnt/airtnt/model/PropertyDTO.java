@@ -36,7 +36,8 @@ public class PropertyDTO {
 
 	private List<AmenityDTO> amenities;
 	private List<ImageDTO> images;
-
+	
+	// wishList
 	public int getId() {
 		return id;
 	}

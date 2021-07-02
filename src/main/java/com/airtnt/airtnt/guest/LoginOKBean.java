@@ -14,6 +14,11 @@ public class LoginOKBean {
 	private String reg_date;
 	private String mod_date;
 	
+	private LoginOKBean() {}
+	private static LoginOKBean instance = new LoginOKBean();
+	public static LoginOKBean getInstance() {
+		return instance;
+	}
 	
 	public void login_setting(MemberDTO dto) {
 		this.id = dto.getId();

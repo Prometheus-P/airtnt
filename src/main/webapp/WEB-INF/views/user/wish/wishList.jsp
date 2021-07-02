@@ -17,9 +17,9 @@
 	      	<c:forEach var="dto" items="${user_wishList}">
 		        <li class="one_third">
 		        	<div>
-		        		<a href="inWishList?wish_id=${dto.wish_id}"><img src="${dto.path}"></a>
+		        		<a href="inWishList?wish_id=${dto.wish_id}&wish_name=${dto.name}"><img src="${dto.path}"></a>
 		        		<c:if test="${empty dto.path}">
-		        		<a href="inWishList?wish_id=${dto.wish_id}"><img src="/resources/img/main2.jpg"></a>
+		        		<a href="inWishList?wish_id=${dto.wish_id}&wish_name=${dto.name}"><img src="/resources/img/avatar.png"></a>
 		        		</c:if>
 		        	</div>
 		            <footer><span class="bold " style="font-size: 2vh;">${dto.name}</span></footer>
@@ -30,9 +30,9 @@
 	      	<c:forEach var="dto" items="${admin_wishList}">
 		        <li class="one_third">
 		        	<div>
-		        		<a href="inWishList?wish_id=${dto.wish_id}"><img src="${dto.path}"></a>
+		        		<a href="inWishList?wish_id=${dto.wish_id}&wish_name=${dto.name}"><img src="${dto.path}"></a>
 		        		<c:if test="${empty dto.path}">
-		        		<a href="inWishList?wish_id=${dto.wish_id}"><img src="/resources/img/main2.jpg"></a>
+		        		<a href="inWishList?wish_id=${dto.wish_id}&wish_name=${dto.name}"><img src="/resources/img/avatar.png"></a>
 		        		</c:if>
 		        	</div>
 		            <footer><span class="bold " style="font-size: 2vh;">${dto.name}</span></footer>
