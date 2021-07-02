@@ -4,291 +4,306 @@
  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.airtnt.airtnt.service.PropertyMapper">
 
-<resultMap type="propertyDTO" id="propertyMap">
-	<id property="id" column="id" />
-	<result property="name" column="name"/>
-	<result property="hostId" column="host_id"/>
-	<result property="propertyDesc" column="property_desc"/>
-	<result property="address" column="address"/>
-	<result property="latitude" column="latitude"/>
-	<result property="longitude" column="longitude"/>
-	<result property="price" column="price"/>
-	<result property="bedCount" column="bed_count"/>
-	<result property="maxGuest" column="max_guest"/>
-	<result property="regDate" column="reg_date"/>
-	<result property="modDate" column="mod_date"/>
+	<resultMap type="propertyDTO" id="propertyMap">
+		<id property="id" column="id" />
+		<result property="name" column="name"/>
+		<result property="hostId" column="host_id"/>
+		<result property="propertyDesc" column="property_desc"/>
+		<result property="address" column="address"/>
+		<result property="latitude" column="latitude"/>
+		<result property="longitude" column="longitude"/>
+		<result property="price" column="price"/>
+		<result property="bedCount" column="bed_count"/>
+		<result property="maxGuest" column="max_guest"/>
+		<result property="regDate" column="reg_date"/>
+		<result property="modDate" column="mod_date"/>
+		
+		<association property="propertyType" column="property_type_id"
+			columnPrefix="property_type_" resultMap="propertyTypeMap"/>
+		
+		<association property="subPropertyType" column="sub_property_type_id"
+			columnPrefix="sub_property_type_" resultMap="subPropertyTypeMap"/>
+		
+		<association property="roomType" column="room_type_id"
+			columnPrefix="room_type_" resultMap="roomTypeMap"/>
+		
+		<collection property="amenities" ofType="amenityDTO"
+			columnPrefix="amenity_" resultMap="amenityMap"/>
+		
+		<collection property="images" ofType="imageDTO"
+			columnPrefix="image_" resultMap="imageMap"/>
+		
+	</resultMap>
 	
-	<association property="propertyType" column="property_type_id"
-		columnPrefix="property_type_" resultMap="propertyTypeMap"/>
-	
-	<association property="subPropertyType" column="sub_property_type_id"
+	<resultMap type="propertyTypeDTO" id="propertyTypeMap">
+		<id property="id" column="id"/>
+		<result property="name" column="name"/>
+		<result property="isUse" column="is_use"/>
+		<result property="regDate" column="reg_date"/>
+		<result property="modDate" column="mod_date"/>
+		
+		<collection property="subPropertyTypes" ofType="subPropertyTypeDTO"
 		columnPrefix="sub_property_type_" resultMap="subPropertyTypeMap"/>
+	</resultMap>
 	
-	<association property="roomType" column="room_type_id"
-		columnPrefix="room_type_" resultMap="roomTypeMap"/>
+	<resultMap type="subPropertyTypeDTO" id="subPropertyTypeMap">
+		<id property="id" column="id"/>
+		<result property="propertyTypeId" column="property_type_id"/>
+		<result property="name" column="name"/>
+		<result property="isUse" column="is_use"/>
+		<result property="regDate" column="reg_date"/>
+		<result property="modDate" column="mod_date"/>
+	</resultMap>
 	
-	<collection property="amenities" ofType="amenityDTO"
-		columnPrefix="amenity_" resultMap="amenityMap"/>
+	<resultMap type="roomTypeDTO" id="roomTypeMap">
+		<id property="id" column="id"/>
+		<result property="name" column="name"/>
+		<result property="isUse" column="is_use"/>
+		<result property="regDate" column="reg_date"/>
+		<result property="modDate" column="mod_date"/>
+	</resultMap>
 	
-	<collection property="images" ofType="imageDTO"
-		columnPrefix="image_" resultMap="imageMap"/>
+	<resultMap type="amenityTypeDTO" id="amenityTypeMap">
+		<id property="id" column="id"/>
+		<result property="name" column="name"/>
+		<result property="isUse" column="is_use"/>
+		<result property="regDate" column="reg_date"/>
+		<result property="modDate" column="mod_date"/>
+	</resultMap>
 	
-</resultMap>
-
-<resultMap type="propertyTypeDTO" id="propertyTypeMap">
-	<id property="id" column="id"/>
-	<result property="name" column="name"/>
-	<result property="isUse" column="is_use"/>
-	<result property="regDate" column="reg_date"/>
-	<result property="modDate" column="mod_date"/>
-</resultMap>
-
-<resultMap type="subPropertyTypeDTO" id="subPropertyTypeMap">
-	<id property="id" column="id"/>
-	<result property="propertyTypeId" column="property_type_id"/>
-	<result property="name" column="name"/>
-	<result property="isUse" column="is_use"/>
-	<result property="regDate" column="reg_date"/>
-	<result property="modDate" column="mod_date"/>
-</resultMap>
-
-<resultMap type="roomTypeDTO" id="roomTypeMap">
-	<id property="id" column="id"/>
-	<result property="name" column="name"/>
-	<result property="isUse" column="is_use"/>
-	<result property="regDate" column="reg_date"/>
-	<result property="modDate" column="mod_date"/>
-</resultMap>
-
-<resultMap type="amenityDTO" id="amenityMap">
-	<id property="id" column="id"/>
-	<result property="propertyId" column="property_id"/>
-	<association property="amenityType" column="amenity_type_id"
-	columnPrefix="type_" resultMap="amenityTypeMap"/>
-</resultMap>
-
-<resultMap type="amenityTypeDTO" id="amenityTypeMap">
-	<id property="id" column="id"/>
-	<result property="name" column="name"/>
-	<result property="isUse" column="is_use"/>
-	<result property="regDate" column="reg_date"/>
-	<result property="modDate" column="mod_date"/>
-</resultMap>
-
-<resultMap type="imageDTO" id="imageMap">
-	<id property="id" column="id"/>
-	<result property="propertyId" column="property_id"/>
-	<result property="isMain" column="is_main"/>
-	<result property="path" column="path"/>
-	<result property="fileSize" column="file_size"/>
-	<result property="regDate" column="reg_date"/>
-	<result property="modDate" column="mod_date"/>
-</resultMap>
-
-<resultMap type="bookingDTO" id="bookingMap">
-	<id property="id" column="id"/>
-	<result property="propertyId" column="property_id"/>
-	<result property="guestId" column="guest_id"/>
-	<result property="hostId" column="host_id"/>
-	<result property="guestCount" column="guest_count"/>
-	<result property="dayCount" column="day_count"/>
-	<result property="totalPrice" column="total_price"/>
-	<result property="bookingNumber" column="booking_number"/>
-	<result property="checkInDate" column="check_in_date"/>
-	<result property="checkOutDate" column="check_out_date"/>
-	<result property="confirmDate" column="confirm_date"/>
-	<result property="regDate" column="reg_date"/>
-	<result property="modDate" column="mod_date"/>
-</resultMap>
-
-<resultMap type="transactionDTO" id="transactionMap">
-	<id property="id" column="id"/>
-	<result property="bookingId" column="booking_id"/>
-	<result property="isRefund" column="is_refund"/>
-	<result property="siteFee" column="site_fee"/>
-	<result property="payExptDate" column="pay_expt_date"/>
-	<result property="regDate" column="reg_date"/>
-	<result property="modDate" column="mod_date"/>
-</resultMap>
-
-<select id="searchPropertiesByAddress" parameterType="String" resultMap="propertyMap">
-select
-	p.*,
+	<resultMap type="amenityDTO" id="amenityMap">
+		<id property="id" column="id"/>
+		<result property="propertyId" column="property_id"/>
+		<association property="amenityType" column="amenity_type_id"
+		columnPrefix="type_" resultMap="amenityTypeMap"/>
+	</resultMap>
 	
-	pt.id property_type_id,
-	pt.name property_type_name,
-	pt.is_use property_type_is_use,
-	pt.reg_date property_type_reg_date,
-	pt.mod_date property_type_mod_date,
+	<resultMap type="imageDTO" id="imageMap">
+		<id property="id" column="id"/>
+		<result property="propertyId" column="property_id"/>
+		<result property="isMain" column="is_main"/>
+		<result property="path" column="path"/>
+		<result property="fileSize" column="file_size"/>
+		<result property="regDate" column="reg_date"/>
+		<result property="modDate" column="mod_date"/>
+	</resultMap>
 	
-	spt.id sub_property_type_id,
-	spt.property_type_id,
-	spt.name sub_property_type_name,
-	spt.is_use sub_property_type_is_use,
-	spt.reg_date sub_property_type_reg_date,
-	spt.mod_date sub_property_type_mod_date,
+	<resultMap type="bookingDTO" id="bookingMap">
+		<id property="id" column="id"/>
+		<result property="propertyId" column="property_id"/>
+		<result property="guestId" column="guest_id"/>
+		<result property="hostId" column="host_id"/>
+		<result property="guestCount" column="guest_count"/>
+		<result property="dayCount" column="day_count"/>
+		<result property="totalPrice" column="total_price"/>
+		<result property="bookingNumber" column="booking_number"/>
+		<result property="checkInDate" column="check_in_date"/>
+		<result property="checkOutDate" column="check_out_date"/>
+		<result property="confirmDate" column="confirm_date"/>
+		<result property="regDate" column="reg_date"/>
+		<result property="modDate" column="mod_date"/>
+	</resultMap>
 	
-	rt.id room_type_id,
-	rt.name room_type_name,
-	rt.is_use room_type_is_use,
-	rt.reg_date room_type_reg_date,
-	rt.mod_date room_type_mod_date,
+	<resultMap type="transactionDTO" id="transactionMap">
+		<id property="id" column="id"/>
+		<result property="bookingId" column="booking_id"/>
+		<result property="isRefund" column="is_refund"/>
+		<result property="siteFee" column="site_fee"/>
+		<result property="payExptDate" column="pay_expt_date"/>
+		<result property="regDate" column="reg_date"/>
+		<result property="modDate" column="mod_date"/>
+	</resultMap>
 	
-	a.id amenity_id,
-	a.property_id amenity_property_id,
+	<select id="selectProperty" parameterType="java.util.Map" resultMap="propertyMap">
+		select
+			p.*,
+			
+			pt.id property_type_id,
+			pt.name property_type_name,
+			pt.is_use property_type_is_use,
+			pt.reg_date property_type_reg_date,
+			pt.mod_date property_type_mod_date,
+			
+			spt.id sub_property_type_id,
+			spt.property_type_id,
+			spt.name sub_property_type_name,
+			spt.is_use sub_property_type_is_use,
+			spt.reg_date sub_property_type_reg_date,
+			spt.mod_date sub_property_type_mod_date,
+			
+			rt.id room_type_id,
+			rt.name room_type_name,
+			rt.is_use room_type_is_use,
+			rt.reg_date room_type_reg_date,
+			rt.mod_date room_type_mod_date,
+			
+			a.id amenity_id,
+			a.property_id amenity_property_id,
+			
+			at.id amenity_type_id,
+			at.name amenity_type_name,
+			at.is_use amenity_type_is_use,
+			at.reg_date amenity_type_reg_date,
+			at.mod_date amenity_type_mod_date,
+			
+			i.id image_id,
+			i.property_id image_property_id,
+			i.is_main image_is_main,
+			i.path image_path,
+			i.file_size image_file_size,
+			i.reg_date image_reg_date,
+			i.mod_date image_mod_date
+		
+		from
+			property p, property_type pt, sub_property_type spt, room_type rt,
+			amenity a, amenity_type at, image i
+		
+		where
+		<choose>
+			<when test="addressKey != null">
+				<bind name="addressKey" value="'%' + addressKey + '%'"/>
+				p.address like #{addressKey} and
+			</when>
+			<when test="propertyId != null">
+				p.id=#{propertyId} and
+			</when>
+			<!-- 주소나 숙소아이디가 없으면 강제로 bad grammar 오류를 발생시킬 것임 -->
+			<otherwise>
+				and
+			</otherwise>
+		</choose>
+			p.property_type_id=pt.id and p.sub_property_type_id=spt.id and p.room_type_id=rt.id and
+			a.property_id=p.id and a.amenity_type_id=at.id and at.is_use='Y' and
+			i.property_id=p.id
+		<if test="propertyTypeIdKeyArray != null">
+			and pt.id in
+			<foreach item="propertyTypeIdKey" collection="propertyTypeIdKeyArray"
+			open="(" separator="," close=")">
+				#{propertyTypeIdKey}
+			</foreach>
+		</if>
+		<if test="subPropertyTypeIdKeyArray != null">
+			and spt.id in
+			<foreach item="subPropertyTypeIdKey" collection="subPropertyTypeIdKeyArray"
+			open="(" separator="," close=")">
+				#{subPropertyTypeIdKey}
+			</foreach>
+		</if>
+		<if test="roomTypeIdKeyArray != null">
+			and rt.id in
+			<foreach item="roomTypeIdKey" collection="roomTypeIdKeyArray"
+			open="(" separator="," close=")">
+				#{roomTypeIdKey}
+			</foreach>
+		</if>
+		<if test="amenityTypeIdKeyArray != null">
+			and at.id in
+			<foreach item="amenityTypeIdKey" collection="amenityTypeIdKeyArray"
+			open="(" separator="," close=")">
+				#{amenityTypeIdKey}
+			</foreach>
+		</if>
+		<if test="guestCountKey != null">
+			and p.max_guest <![CDATA[ >= ]]> #{guestCountKey}
+		</if>
+		<if test="bedCountKey != null">
+			and p.bed_count <![CDATA[ >= ]]> #{bedCountKey}
+		</if>
+		<if test="minPriceKey != null">
+			and p.price <![CDATA[ >= ]]> #{minPriceKey}
+		</if>
+		<if test="maxPriceKey != null">
+			and p.price <![CDATA[ <= ]]> #{maxPriceKey}
+		</if>
+	</select>
 	
-	at.id amenity_type_id,
-	at.name amenity_type_name,
-	at.is_use amenity_type_is_use,
-	at.reg_date amenity_type_reg_date,
-	at.mod_date amenity_type_mod_date,
+	<select id="selectPropertyTypes" resultMap="propertyTypeMap">
+		select
+			pt.*,
+			
+			spt.id sub_property_type_id,
+			spt.name sub_property_type_name,
+			spt.is_use sub_property_type_is_use,
+			spt.reg_date sub_property_type_reg_date,
+			spt.mod_date sub_property_type_mod_date
+		
+		from
+			property_type pt, sub_property_type spt
+		where
+			pt.id=spt.property_type_id and
+			pt.is_use='Y' and
+			spt.is_use='Y'
+	</select>
 	
-	i.id image_id,
-	i.property_id image_property_id,
-	i.is_main image_is_main,
-	i.path image_path,
-	i.file_size image_file_size,
-	i.reg_date image_reg_date,
-	i.mod_date image_mod_date
-
-from
-	property p, property_type pt, sub_property_type spt, room_type rt,
-	amenity a, amenity_type at, image i
-
-where
-	p.address like #{addressKey} and
-	p.property_type_id=pt.id and p.sub_property_type_id=spt.id and p.room_type_id=rt.id and
-	a.property_id=p.id and a.amenity_type_id=at.id and at.is_use='Y' and
-	i.property_id=p.id
-</select>
-
-<select id="selectPropertyById" parameterType="int" resultMap="propertyMap">
-select
-	p.*,
+	<select id="selectRoomTypes" resultMap="roomTypeMap">
+		select * from room_type
+		where is_use='Y'
+		order by id asc
+	</select>
 	
-	pt.id property_type_id,
-	pt.name property_type_name,
-	pt.is_use property_type_is_use,
-	pt.reg_date property_type_reg_date,
-	pt.mod_date property_type_mod_date,
+	<select id="selectAmenityTypes" resultMap="amenityTypeMap">
+		select * from amenity_type
+		where is_use='Y'
+		order by id asc
+	</select>
 	
-	spt.id sub_property_type_id,
-	spt.property_type_id,
-	spt.name sub_property_type_name,
-	spt.is_use sub_property_type_is_use,
-	spt.reg_date sub_property_type_reg_date,
-	spt.mod_date sub_property_type_mod_date,
+	<select id="selectImages" resultMap="imageMap">
+		select * from image
+	</select>
 	
-	rt.id room_type_id,
-	rt.name room_type_name,
-	rt.is_use room_type_is_use,
-	rt.reg_date room_type_reg_date,
-	rt.mod_date room_type_mod_date,
+	<select id="selectAmenities" parameterType="int" resultMap="amenityMap">
+		select
+			a.*,
+			at.id type_id,
+			at.name type_name,
+			at.is_use type_is_use,
+			at.reg_date type_reg_date,
+			at.mod_date type_mod_date
+		from
+			amenity a, amenity_type at
+		where
+			a.property_id=#{propertyId} and a.amenity_type_id=at.id and
+			at.is_use='Y'
+	</select>
 	
-	a.id amenity_id,
-	a.property_id amenity_property_id,
+	<insert id="insertBooking" parameterType="bookingDTO">
+		insert into booking(
+			id,property_id,guest_id,host_id,
+			guest_count,day_count,total_price,
+			booking_number,
+			check_in_date,check_out_date
+		)
+		values(
+			booking_id_seq.nextval,#{propertyId},#{guestId},#{hostId},
+			#{guestCount},#{dayCount},#{totalPrice},
+			#{bookingNumber} || booking_number_seq.nextval,
+			#{checkInDate},#{checkOutDate}
+		)
+	</insert>
 	
-	at.id amenity_type_id,
-	at.name amenity_type_name,
-	at.is_use amenity_type_is_use,
-	at.reg_date amenity_type_reg_date,
-	at.mod_date amenity_type_mod_date,
+	<select id="selectSameBooking" parameterType="bookingDTO" resultMap="bookingMap">
+		select * from booking
+		where
+			property_id=#{propertyId} and
+			guest_id=#{guestId} and
+			host_id=#{hostId} and
+			substr(booking_number,0,length(booking_number) - 1)=#{bookingNumber} and
+			to_date(check_in_date)=to_date(#{checkInDate}) and
+			to_date(check_out_date)=to_date(#{checkOutDate})
+	</select>
 	
-	i.id image_id,
-	i.property_id image_property_id,
-	i.is_main image_is_main,
-	i.path image_path,
-	i.file_size image_file_size,
-	i.reg_date image_reg_date,
-	i.mod_date image_mod_date
-
-from
-	property p, property_type pt, sub_property_type spt, room_type rt,
-	amenity a, amenity_type at, image i
-
-where
-	p.id=#{propertyId} and
-	p.property_type_id=pt.id and p.sub_property_type_id=spt.id and p.room_type_id=rt.id and
-	a.property_id=p.id and a.amenity_type_id=at.id and at.is_use='Y' and
-	i.property_id=p.id
-</select>
-
-<select id="selectPropertyTypes" resultMap="propertyTypeMap">
-select * from property_type
-</select>
-
-<select id="selectSubPropertyTypes" resultMap="subPropertyTypeMap">
-select * from sub_property_type
-</select>
-
-<select id="selectRoomTypes" resultMap="roomTypeMap">
-select * from property_type
-</select>
-
-<select id="selectImages" resultMap="imageMap">
-select * from image
-</select>
-
-<select id="selectAmenityType" parameterType="int" resultMap="amenityTypeMap">
-select * from amenity_type
-where amenity_type_id=#{amenityTypeId}
-</select>
-
-<select id="selectAmenities" parameterType="int" resultMap="amenityMap">
-select
-	a.*,
-	at.id type_id,
-	at.name type_name,
-	at.is_use type_is_use,
-	at.reg_date type_reg_date,
-	at.mod_date type_mod_date
-
-from
-	amenity a, amenity_type at
-where
-	a.property_id=#{propertyId} and a.amenity_type_id=at.id and
-	at.is_use='Y'
-</select>
-
-<insert id="insertBooking" parameterType="bookingDTO">
-insert into booking(
-	id,property_id,guest_id,host_id,
-	guest_count,day_count,total_price,
-	booking_number,
-	check_in_date,check_out_date
-)
-values(
-	booking_id_seq.nextval,#{propertyId},#{guestId},#{hostId},
-	#{guestCount},#{dayCount},#{totalPrice},
-	#{bookingNumber} || booking_number_seq.nextval,
-	#{checkInDate},#{checkOutDate}
-)
-</insert>
-
-<select id="selectSameBooking" parameterType="bookingDTO" resultMap="bookingMap">
-select * from booking
-
-where
-	property_id=#{propertyId} and
-	guest_id=#{guestId} and
-	host_id=#{hostId} and
-	substr(booking_number,0,length(booking_number) - 1)=#{bookingNumber} and
-	to_date(check_in_date)=to_date(#{checkInDate}) and
-	to_date(check_out_date)=to_date(#{checkOutDate})
-</select>
-
-<insert id="insertTransaction" parameterType="transactionDTO">
-insert into transaction(
-	id,booking_id,site_fee
-)
-values(
-	transaction_id_seq.nextval,#{bookingId},#{siteFee}
-)
-</insert>
-
-<select id="selectSameTransaction" parameterType="transactionDTO" resultMap="transactionMap">
-select * from transaction
-where booking_id=#{bookingId}
-</select>
+	<insert id="insertTransaction" parameterType="transactionDTO">
+		insert into transaction(
+			id,booking_id,site_fee
+		)
+		values(
+			transaction_id_seq.nextval,#{bookingId},#{siteFee}
+		)
+	</insert>
+	
+	<select id="selectSameTransaction" parameterType="transactionDTO" resultMap="transactionMap">
+		select * from transaction
+		where booking_id=#{bookingId}
+	</select>
 
 </mapper>

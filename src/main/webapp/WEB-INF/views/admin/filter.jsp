@@ -28,6 +28,128 @@
             getSubPropertyType(selectedPropCode);
 	    });
 		
+		//[저장] json 세팅 메소드
+		function setJsonObj(checkbox, mode, jsonArray){
+			// 체크된 체크박스 값을 가져온다
+			// checkbox.parent() : checkbox의 부모는 <td>. checkbox.parent().parent() : <td>의 부모이므로 <tr>
+			checkbox.each(function(i) {
+				
+				var tr = checkbox.parent().parent().eq(i);
+				var td = tr.children();
+				
+				var jsonObj	= new Object();
+			    
+				if(mode != 'SUB_PROPERTY'){
+					//(1) 대분류ID
+					jsonObj.id = td.eq(1).text();
+					//(2) 대분류명
+					jsonObj.name = td.eq(2).children().val();
+					//(3) 대분류 사용여부  : checkbox 체크 여부 확인
+					if(td.eq(3).children().is(":checked") == true) jsonObj.isUse = "Y";
+					else jsonObj.isUse = "Y";
+					
+				}else{
+					jsonObj.propertyTypeId = td.eq(1).text();
+					jsonObj.id = td.eq(3).text();
+					jsonObj.name = td.eq(4).children().val();
+					if(td.eq(5).children().is(":checked") == true) jsonObj.isUse = "Y";
+					
+					else jsonObj.isUse = "Y";
+				}
+				console.log(jsonObj);	
+				jsonObj = JSON.stringify(jsonObj);
+				//String 형태로 파싱한 객체를 다시 json으로 변환
+				jsonArray.push(JSON.parse(jsonObj));
+			});
+		}
+		
+	 // [공통] 저장
+	   	$("#saveRoomTypeBtn, #saveAmenityTypeBtn, #savePropertyTypeBtn").click(function(){
+	   		//저장 대상으로 선택된 테이블 분류
+	   		var selectedId = $(this).attr("id");
+	   		var url = "filter/update/master";
+	   		var type = null;
+	   		
+	   		var rowData = new Array();
+			var tdArr = new Array();
+			var checkbox = $("input[name=chk]:checked");
+			
+			if(selectedId == 'saveRoomTypeBtn'){
+				type = "ROOM";
+			}else if(selectedId == 'saveAmenityTypeBtn'){
+				type = "AMENITY";
+			}else if(selectedId == 'savePropertyTypeBtn'){
+				type = "PROPERTY";
+			}else if(selectedId == 'saveSubPropertyTypeBtn'){
+				type = "SUB_PROPERTY";
+				url = "filter/update/sub";
+			}else{
+				alert("저장버튼 다시 눌러주세요");
+				return;
+			}
+	
+			var jsonArray 	= new Array();
+			setJsonObj(checkbox, type, jsonArray);
+			
+			$.ajax({
+	  		        url: url,
+	  		        type: "POST",
+	  		        beforeSend : function(xhr)
+	  		        {
+	  		        	xhr.setRequestHeader(header, token);
+	  		        },
+	  		        data: {
+	  		        	data : JSON.stringify(jsonArray),
+	  		      		type : type
+	  		        },
+	  		        success: function(res){
+	  		        	$("#alertArea").addClass("alert alert-success");
+	  		        	$("#alertArea").text(res);
+	  	                $("#alertArea").fadeTo(3000, 3000).slideUp(3000, function(){
+	  	                });
+	  		        	document.location.href = document.location.href; //페이지 새로고침
+	  		        },
+	  		        error: function(){
+	  		            alert("err발생");
+	  		        }
+	  		});
+	   		
+	   	});
+		
+	  	//[공통] 마스터 테이블 추가 버튼 실행시
+   		$("#addRoomTypeBtn, #addAmenityTypeBtn, #addPropertyTypeBtn").click(function() {
+   			var row = null;
+				row = "<tr>";
+				row += "<td><input type='checkbox' name='chk' checked></td>";
+				row += '<td><input type="button" id="rowDelete" value="del"></input></td>';
+				row += "<td><input type='text' class='form-control' style='text-align:center; height:23px; font-size:13px' value=''/></td>";
+				row += "<td><input type='checkbox' checked></td>";
+				row += "</tr>";
+			var selectedId = $(this).attr("id");
+			if(selectedId == 'addRoomTypeBtn'){
+				$("#roomTypeTable").append(row);
+			}else if(selectedId == 'addAmenityTypeBtn'){
+				$("#amenityTypeTable").append(row);
+			}else if(selectedId == 'addPropertyTypeBtn'){
+				$("#propertyTypeTable").append(row);
+			}
+			
+	   	});
+	  	
+   		//[SUB PROPERTY TYPE] 테이블 추가 버튼 실행시
+   		$("#addSubPropertyTypeBtn").click(function() {
+   			var row = "<tr>";
+				row += "<td><input type='checkbox' name='chk' checked></td>";
+				row += "<td>"+selectedPropCode+"</td>";
+				row += "<td>"+selectedPropName+"</td>";
+				row += "<td></td>";
+				row += "<td><input type='text' class='form-control' style='text-align:center; height:23px; font-size:13px' value=''/></td>";
+				row += "<td><input type='checkbox' checked></td>";
+				row += "</tr>";
+			$("#subPropertyTypeTable").append(row);
+	 	});
+   		
+	  	
 		//[PROPERTY TYPE] 선택한 row에 대한 sub property list를 가져온다.
    	 	function getSubPropertyType(selectedId) {
   		    $.ajax({
@@ -66,20 +188,20 @@
   		            alert("err");
   		        }
   		  });
-	   		 
+  		    
    		}
     })
   </script>
 	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 	<main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
 	
-	<!-- (1) 방유형코드 -->		 
+	<!-- (1) 방유형코드 : ROOM TYPE -->		 
 		 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
 		 	<h5 style="font-weight:bold">ROOM TYPE</h5>
             <div class="btn-toolbar mb-2 mb-md-0">
               <div class="btn-group mr-2">
-                <button class="btn btn-sm btn-outline-secondary" id="addPropertyList">추가</button>
-                <button class="btn btn-sm btn-outline-secondary" id="savePropertyBtn">저장</button>
+                <button class="btn btn-sm btn-outline-secondary" id="addRoomTypeBtn">추가</button>
+                <button class="btn btn-sm btn-outline-secondary" id="saveRoomTypeBtn">저장</button>
               </div>
             </div>
          </div>
@@ -119,8 +241,8 @@
 		 	<h5 style="font-weight:bold">AMENITY TYPE</h5>
             <div class="btn-toolbar mb-2 mb-md-0">
               <div class="btn-group mr-2">
-                <button class="btn btn-sm btn-outline-secondary" id="addPropertyList">추가</button>
-                <button class="btn btn-sm btn-outline-secondary" id="savePropertyBtn">저장</button>
+                <button class="btn btn-sm btn-outline-secondary" id="addAmenityTypeBtn">추가</button>
+                <button class="btn btn-sm btn-outline-secondary" id="saveAmenityTypeBtn">저장</button>
               </div>
             </div>
          </div>
@@ -161,8 +283,8 @@
 			 	<h5 style="font-weight:bold">PROPERTY TYPE</h5>
 	            <div class="btn-toolbar mb-2 mb-md-0">
 	              <div class="btn-group mr-2">
-	                <button class="btn btn-sm btn-outline-secondary" id="addPropertyList">추가</button>
-	                <button class="btn btn-sm btn-outline-secondary" id="savePropertyBtn">저장</button>
+	                <button class="btn btn-sm btn-outline-secondary" id="addPropertyTypeBtn">추가</button>
+	                <button class="btn btn-sm btn-outline-secondary" id="savePropertyTypeBtn">저장</button>
 	              </div>
 	            </div>
 	         </div>
@@ -202,8 +324,8 @@
 			 	<h5 style="font-weight:bold">SUB PROPERTY TYPE</h5>
 	            <div class="btn-toolbar mb-2 mb-md-0">
 	              <div class="btn-group mr-2">
-	                <button class="btn btn-sm btn-outline-secondary" id="addPropertyList">추가</button>
-	                <button class="btn btn-sm btn-outline-secondary" id="savePropertyBtn">저장</button>
+	                <button class="btn btn-sm btn-outline-secondary" id="addSubPropertyTypeBtn">추가</button>
+	                <button class="btn btn-sm btn-outline-secondary" id="saveSubPropertyTypeBtn">저장</button>
 	              </div>
 	            </div>
 	         </div>

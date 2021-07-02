@@ -5,9 +5,10 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>리뷰 목록</title>
 </head>
 <body>
-
+	<%@include file="top.jsp" %>
+	<h2>리뷰목록</h2>
 </body>
 </html>

@@ -34,6 +34,10 @@ public class BookingDTO {
 	private String path;
 	private String is_main;
 	
+	//host_mode페이지에서 사용한답니다 *^^*
+	private String memberId;
+	private String guestName;
+	
 	public int getId() {
 		return id;
 	}
@@ -204,5 +208,17 @@ public class BookingDTO {
 	}
 	public void setIs_main(String is_main) {
 		this.is_main = is_main;
+	}
+	public String getMemberId() {
+		return memberId;
+	}
+	public void setMemberId(String memberId) {
+		this.memberId = memberId;
+	}
+	public String getGuestName() {
+		return guestName;
+	}
+	public void setGuestName(String guestName) {
+		this.guestName = guestName;
 	}
 }

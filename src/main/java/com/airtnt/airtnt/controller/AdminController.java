@@ -1,10 +1,8 @@
 package com.airtnt.airtnt.controller;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -17,11 +15,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.airtnt.airtnt.model.AmenityTypeDTO;
 import com.airtnt.airtnt.model.DashBoardDTO;
-import com.airtnt.airtnt.model.FilterPropDTO;
-import com.airtnt.airtnt.model.FilterSubPropDTO;
+import com.airtnt.airtnt.model.MemberDTO;
 import com.airtnt.airtnt.model.PropertyTypeDTO;
 import com.airtnt.airtnt.model.RoomTypeDTO;
 import com.airtnt.airtnt.model.SubPropertyTypeDTO;
+import com.airtnt.airtnt.model.GuideDTO;
 import com.airtnt.airtnt.service.AdminMapper;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -32,6 +30,19 @@ public class AdminController {
 
 	@Autowired
 	AdminMapper adminMapper;
+	
+	/*
+	 * [main] : admin 계정 로그인 화면
+	 */
+	@RequestMapping(value = "", method = RequestMethod.GET)
+	public String goMainView() {
+		return "admin/main";
+	}
+	
+	/*
+	 * [main] : login 체크  
+	 */
+	
 
 	/*
 	 * [dashboard] : 대시보드 필요 데이터 조회 및 넘긴다
@@ -52,7 +63,9 @@ public class AdminController {
 		req.setAttribute("last_valuelist", last_value); // 작년
 		return "admin/dashboard";
 	}
-
+	/*
+	 * [filter] : 필터 화면 첫 조회시 전체 데이터 불러온다
+	 */
 	@RequestMapping(value = "filter", method = RequestMethod.GET)
 	public String selectFilterTables(HttpServletRequest req) throws Exception {
 		List<RoomTypeDTO> roomTypeList = adminMapper.selectRoomTypeList();
@@ -67,13 +80,118 @@ public class AdminController {
 		return "admin/filter";
 	}
 	
+	/*
+	 * [filter] : property type > 대분류 선택시 해당하는 sub 데이터 리스트 불러온다
+	 */
 	@RequestMapping(value = "filter", method = RequestMethod.POST)
-	@ResponseBody public List<SubPropertyTypeDTO> getSubProperty(
-			HttpServletRequest req, @RequestParam String propertyTypeId) throws Exception {
+	@ResponseBody
+	public List<SubPropertyTypeDTO> getSubProperty(HttpServletRequest req, @RequestParam String propertyTypeId) throws Exception {
 		List<SubPropertyTypeDTO> selectedSubProperty = adminMapper.getSubPropertyType(propertyTypeId); 
 		return selectedSubProperty; 
 	}
-
+	
+	/*
+	 * [filter] : 공통 > 대분류 데이터 추가 및 변경
+	 */
+	@RequestMapping(value="filter/update/master", method = RequestMethod.POST)
+	@ResponseBody
+	public int updateFilterMasterList(HttpServletRequest req, @RequestParam String type, @RequestParam String data) {
+		int res = 0;
+		List<Map<String, String>> datalist 
+			= new Gson().fromJson(String.valueOf(data), new TypeToken<List<Map<String, String>>>(){}.getType());
+		System.out.println(data); 
+		
+		if(type.equals("ROOM")) {
+			for (Map<String, String> obj : datalist) {
+				if(obj.get("id").equals("") || obj.get("id") == null) { //신규건
+					RoomTypeDTO dto = new RoomTypeDTO(obj.get("name"), obj.get("isUse"));
+					res += adminMapper.updateRoomTypeDTO("I", dto); //insert
+				}else {													 //변경건
+					RoomTypeDTO dto = new RoomTypeDTO(obj.get("id"), obj.get("name"), obj.get("isUse"));
+					res += adminMapper.updateRoomTypeDTO("U", dto); //update
+				}
+			}
+		}else if(type.equals("AMENITY")) {
+			for (Map<String, String> obj : datalist) {
+				if(obj.get("id").equals("") || obj.get("id") == null) {
+					AmenityTypeDTO dto = new AmenityTypeDTO(obj.get("name"), obj.get("isUse"));
+					res += adminMapper.updateAmenityTypeDTO("I", dto);
+				}else {
+					AmenityTypeDTO dto = new AmenityTypeDTO(obj.get("id"), obj.get("name"), obj.get("isUse"));
+					res += adminMapper.updateAmenityTypeDTO("U", dto);
+				}
+			}
+		}else if(type.equals("PROPERTY")) {
+			for (Map<String, String> obj : datalist) {
+				if(obj.get("id").equals("") || obj.get("id") == null) {
+					PropertyTypeDTO dto = new PropertyTypeDTO(obj.get("name"), obj.get("isUse"));
+					res += adminMapper.updatePropertyTypeDTO("I", dto);
+				}else {
+					PropertyTypeDTO dto = new PropertyTypeDTO(obj.get("id"), obj.get("name"), obj.get("isUse"));
+					res += adminMapper.updatePropertyTypeDTO("U", dto);
+				}
+			}
+		}else {
+			return 0;
+		}
+		return res;	
+	}
+	
+	/*
+	 * [member] : 회원정보 조회
+	 * param : "mode" > 회원구분  ( default "all" 로 세팅 > 전체조회 )
+	 * 
+	 */
+	@RequestMapping(value = "member", method = RequestMethod.GET)
+	public String selectMemberList(HttpServletRequest req, @RequestParam(defaultValue="all") String member_mode) throws Exception {
+		System.out.println("mode::" + member_mode);
+		List<MemberDTO> list = adminMapper.selectMemberList(member_mode);
+		req.setAttribute("memberList", list);
+		return "admin/member";
+	}
+	
+	/*
+	 * [Guide]
+	 */
+	@RequestMapping(value = "guideWrite", method = RequestMethod.GET)
+	public String goWriteForm(HttpServletRequest req) throws Exception {
+		return "admin/guide_write";
+	}
+	
+	@RequestMapping(value = "guideWrite", method = RequestMethod.POST)
+	public String insertBoard(GuideDTO dto) throws Exception {
+		int res = adminMapper.insertBoard(dto);
+		return "redirect:guidelist";
+	}
+	
+	@RequestMapping(value = "guidelist", method = RequestMethod.GET)
+	public String selectBoardList(HttpServletRequest req) throws Exception {
+		List<GuideDTO> list = adminMapper.selectBoardList();
+		req.setAttribute("boardList", list);
+		return "admin/guide_list";
+	}
+	
+	@RequestMapping(value = "guideDelete", method = RequestMethod.GET)
+	public String deleteBoardList(HttpServletRequest req, @RequestParam String contentId) throws Exception {
+		int res = adminMapper.deleteBoard(contentId);
+		return "redirect:guidelist";
+	}
+	
+	@RequestMapping(value = "guideView", method = RequestMethod.GET)
+	public String getSelectedBoard(HttpServletRequest req, @RequestParam String contentId) throws Exception {
+		List<GuideDTO> list = adminMapper.getSelectedBoard(contentId);
+		req.setAttribute("boardList", list);
+		return "admin/guide_view";
+	}
+	
+	@RequestMapping(value = "guideUpdate", method = RequestMethod.POST)
+	public String updateSelectedBoard(GuideDTO dto) throws Exception {
+		int res = adminMapper.updateSelectedBoard(dto);
+		return "redirect:guidelist";
+	}
+	
+	
+	
 	/*
 	 * 
 	 * /* [filter] : ȭ�� ���� ��ȸ�� ī�װ������� ��ȸ

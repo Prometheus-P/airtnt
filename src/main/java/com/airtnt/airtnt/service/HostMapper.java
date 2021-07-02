@@ -1,6 +1,8 @@
 package com.airtnt.airtnt.service;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,13 +11,14 @@ import org.springframework.stereotype.Service;
 import com.airtnt.airtnt.model.AmenityDTO;
 import com.airtnt.airtnt.model.BookingDTO;
 import com.airtnt.airtnt.model.GuideDTO;
+import com.airtnt.airtnt.model.MemberDTO;
 import com.airtnt.airtnt.model.PropertyDTO;
 import com.airtnt.airtnt.model.PropertyTypeDTO;
 import com.airtnt.airtnt.model.RoomTypeDTO;
 import com.airtnt.airtnt.model.SubPropertyTypeDTO;
 import com.airtnt.airtnt.model.TransactionDTO;
 
-@Service //
+@Service 
 public class HostMapper implements HostMapperInterface {
 	@Autowired
 	private SqlSession sqlSession;
@@ -76,15 +79,15 @@ public class HostMapper implements HostMapperInterface {
 	}
 
 	@Override
-	public List<PropertyDTO> getPropertyList() {
-		// TODO Auto-generated method stub
-		return null;
+	public List<PropertyDTO> getPropertyList(String hostId) {
+		List<PropertyDTO> listProperty = sqlSession.selectList("listProperty", hostId);
+		return listProperty;
 	}
 
 	@Override
-	public PropertyDTO getPropertyDetail(int propertyId) {
-		// TODO Auto-generated method stub
-		return null;
+	public PropertyDTO getProperty(int propertyId) {
+		PropertyDTO dto = sqlSession.selectOne("getProperty", propertyId);
+		return dto;
 	}
 
 	@Override
@@ -94,14 +97,27 @@ public class HostMapper implements HostMapperInterface {
 	}
 
 	@Override
-	public List<TransactionDTO> getTransactionList(int bookingId) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<TransactionDTO> getTransactionList(String hostId) {
+		List<TransactionDTO> listTransaction = sqlSession.selectList("listTransaction", hostId);
+		//6월 29, 2021 10:31:02 오전
+		return listTransaction;
 	}
 
 	@Override
 	public List<AmenityDTO> getAmenityTypeList() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public MemberDTO getMemberDTO(String memberId) {
+		MemberDTO dto = sqlSession.selectOne("getMemberDTO", memberId);
+		return dto;
+	}
+
+	@Override
+	public List<TransactionDTO> getTotalEarning(String memberId) {
+		List<TransactionDTO> list = sqlSession.selectList("totalEarningMap", memberId);
+		return list;
 	}
 }

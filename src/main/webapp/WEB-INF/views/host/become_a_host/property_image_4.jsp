@@ -1,9 +1,10 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=EUC-KR" pageEncoding="EUC-KR"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>ì´ë¯¸ì§€ ì²¨ë¶€</title>
+
+<title>ÀÌ¹ÌÁö Ã·ºÎ</title>
  
 <style>
 #preview img {
@@ -26,23 +27,23 @@
 <body>
     <div class="wrapper">
         <div class="header">
-            <h1>ì‚¬ì§„ ì²¨ë¶€</h1>
+            <h1>»çÁø Ã·ºÎ</h1>
         </div>
         <div class="body">
-            <!-- ì²¨ë¶€ ë²„íŠ¼ -->
+            <!-- Ã·ºÎ ¹öÆ° -->
             <div id="attach">
-                <label class="waves-effect waves-teal btn-flat" for="uploadInputBox">ì‚¬ì§„ì²¨ë¶€</label>
+                <label class="waves-effect waves-teal btn-flat" for="uploadInputBox">»çÁøÃ·ºÎ</label>
                 <input id="uploadInputBox" style="display: none" type="file" name="filedata" multiple />
             </div>
             
-            <!-- ë¯¸ë¦¬ë³´ê¸° ì˜ì—­ -->
+            <!-- ¹Ì¸®º¸±â ¿µ¿ª -->
             <div id="preview" class="content"></div>
             
-            <!-- multipart ì—…ë¡œë“œì‹œ ì˜ì—­ -->
+            <!-- multipart ¾÷·Îµå½Ã ¿µ¿ª -->
             <form id="uploadForm" style="display: none;" />
         </div>
         <div class="footer">
-            <button class="submit"><a href="/imageupload" title="ë“±ë¡" class="btnlink">ë“±ë¡</a></button>
+            <button class="submit"><a href="<c:url value='/host/image_upload'/>" title="µî·Ï" class="btnlink">µî·Ï</a></button>
         </div>
     </div>
     
@@ -50,15 +51,15 @@
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.2.2/jquery.form.min.js"></script> -->
     <script>
-        //ì„ì˜ì˜ file objectì˜ì—­
+        //ÀÓÀÇÀÇ file object¿µ¿ª
         var files = {};
         var previewIndex = 0;
  
-        // image preview ê¸°ëŠ¥ êµ¬í˜„
+        // image preview ±â´É ±¸Çö
         // input = file object[]
         function addPreview(input) {
             if (input[0].files) {
-                //íŒŒì¼ ì„ íƒì´ ì—¬ëŸ¬ê°œì˜€ì„ ì‹œì˜ ëŒ€ì‘
+                //ÆÄÀÏ ¼±ÅÃÀÌ ¿©·¯°³¿´À» ½ÃÀÇ ´ëÀÀ
                 for (var fileIndex = 0; fileIndex < input[0].files.length; fileIndex++) {
                     var file = input[0].files[fileIndex];
  
@@ -67,8 +68,8 @@
  
                     var reader = new FileReader();
                     reader.onload = function(img) {
-                        //div id="preview" ë‚´ì— ë™ì ì½”ë“œì¶”ê°€.
-                        //ì´ ë¶€ë¶„ì„ ìˆ˜ì •í•´ì„œ ì´ë¯¸ì§€ ë§í¬ ì™¸ íŒŒì¼ëª…, ì‚¬ì´ì¦ˆ ë“±ì˜ ë¶€ê°€ì„¤ëª…ì„ í•  ìˆ˜ ìˆì„ ê²ƒì´ë‹¤.
+                        //div id="preview" ³»¿¡ µ¿ÀûÄÚµåÃß°¡.
+                        //ÀÌ ºÎºĞÀ» ¼öÁ¤ÇØ¼­ ÀÌ¹ÌÁö ¸µÅ© ¿Ü ÆÄÀÏ¸í, »çÀÌÁî µîÀÇ ºÎ°¡¼³¸íÀ» ÇÒ ¼ö ÀÖÀ» °ÍÀÌ´Ù.
                         var imgNum = previewIndex++;
                         $("#preview")
                                 .append(
@@ -80,16 +81,16 @@
                                                 + "<a href=\"#\" value=\""
                                                 + imgNum
                                                 + "\" onclick=\"deletePreview(this)\">"
-                                                + "ì‚­ì œ" + "</a>" + "</div>");
+                                                + "»èÁ¦" + "</a>" + "</div>");
                         files[imgNum] = file;
                     };
                     reader.readAsDataURL(file);
                 }
             } else
-                alert('invalid file input'); // ì²¨ë¶€í´ë¦­ í›„ ì·¨ì†Œì‹œì˜ ëŒ€ì‘ì±…ì€ ì„¸ìš°ì§€ ì•Šì•˜ë‹¤.
+                alert('invalid file input'); // Ã·ºÎÅ¬¸¯ ÈÄ Ãë¼Ò½ÃÀÇ ´ëÀÀÃ¥Àº ¼¼¿ìÁö ¾Ê¾Ò´Ù.
         }
  
-        //preview ì˜ì—­ì—ì„œ ì‚­ì œ ë²„íŠ¼ í´ë¦­ì‹œ í•´ë‹¹ ë¯¸ë¦¬ë³´ê¸°ì´ë¯¸ì§€ ì˜ì—­ ì‚­ì œ
+        //preview ¿µ¿ª¿¡¼­ »èÁ¦ ¹öÆ° Å¬¸¯½Ã ÇØ´ç ¹Ì¸®º¸±âÀÌ¹ÌÁö ¿µ¿ª »èÁ¦
         function deletePreview(obj) {
             var imgNum = obj.attributes['value'].value;
             delete files[imgNum];
@@ -106,7 +107,7 @@
                     fileNameExtensionIndex, fileName.length);
             if (!((fileNameExtension === 'jpg')
                     || (fileNameExtension === 'gif') || (fileNameExtension === 'png'))) {
-                alert('jpg, gif, png í™•ì¥ìë§Œ ì—…ë¡œë“œ ê°€ëŠ¥í•©ë‹ˆë‹¤.');
+                alert('jpg, gif, png È®ÀåÀÚ¸¸ ¾÷·Îµå °¡´ÉÇÕ´Ï´Ù.');
                 return true;
             } else {
                 return false;
@@ -114,18 +115,18 @@
         }
  
         $(document).ready(function() {
-            //submit ë“±ë¡. ì‹¤ì œë¡œ submit typeì€ ì•„ë‹ˆë‹¤.
+            //submit µî·Ï. ½ÇÁ¦·Î submit typeÀº ¾Æ´Ï´Ù.
             $('.submit a').on('click',function() {                        
                 var form = $('#uploadForm')[0];
                 var formData = new FormData(form);
     
                 for (var index = 0; index < Object.keys(files).length; index++) {
-                    //formData ê³µê°„ì— filesë¼ëŠ” ì´ë¦„ìœ¼ë¡œ íŒŒì¼ì„ ì¶”ê°€í•œë‹¤.
-                    //ë™ì¼ëª…ìœ¼ë¡œ ê³„ì† ì¶”ê°€í•  ìˆ˜ ìˆë‹¤.
+                    //formData °ø°£¿¡ files¶ó´Â ÀÌ¸§À¸·Î ÆÄÀÏÀ» Ãß°¡ÇÑ´Ù.
+                    //µ¿ÀÏ¸íÀ¸·Î °è¼Ó Ãß°¡ÇÒ ¼ö ÀÖ´Ù.
                     formData.append('files',files[index]);
                 }
  
-                //ajax í†µì‹ ìœ¼ë¡œ multipart formì„ ì „ì†¡í•œë‹¤.
+                //ajax Åë½ÅÀ¸·Î multipart formÀ» Àü¼ÛÇÑ´Ù.
                 $.ajax({
                     type : 'POST',
                     enctype : 'multipart/form-data',
@@ -133,32 +134,42 @@
                     contentType : false,
                     cache : false,
                     timeout : 600000,
-                    url : '/imageupload',
+                    url : '/host/image_upload',
                     dataType : 'JSON',
                     data : formData,
                     success : function(result) {
-                        //ì´ ë¶€ë¶„ì„ ìˆ˜ì •í•´ì„œ ë‹¤ì–‘í•œ í–‰ë™ì„ í•  ìˆ˜ ìˆìœ¼ë©°,
-                        //ì—¬ê¸°ì„œëŠ” ë°ì´í„°ë¥¼ ì „ì†¡ë°›ì•˜ë‹¤ë©´ ìˆœìˆ˜í•˜ê²Œ OK ë§Œì„ ë³´ë‚´ê¸°ë¡œ í•˜ì˜€ë‹¤.
-                        //-1 = ì˜ëª»ëœ í™•ì¥ì ì—…ë¡œë“œ, -2 = ìš©ëŸ‰ì´ˆê³¼, ê·¸ì™¸ = ì„±ê³µ(1)
+                        //ÀÌ ºÎºĞÀ» ¼öÁ¤ÇØ¼­ ´Ù¾çÇÑ Çàµ¿À» ÇÒ ¼ö ÀÖÀ¸¸ç,
+                        //¿©±â¼­´Â µ¥ÀÌÅÍ¸¦ Àü¼Û¹Ş¾Ò´Ù¸é ¼ø¼öÇÏ°Ô OK ¸¸À» º¸³»±â·Î ÇÏ¿´´Ù.
+                        //-1 = Àß¸øµÈ È®ÀåÀÚ ¾÷·Îµå, -2 = ¿ë·®ÃÊ°ú, ±×¿Ü = ¼º°ø(1)
                         if (result === -1) {
-                            alert('jpg, gif, png, bmp í™•ì¥ìë§Œ ì—…ë¡œë“œ ê°€ëŠ¥í•©ë‹ˆë‹¤.');
-                            // ì´í›„ ë™ì‘ ...
+                            alert('jpg, gif, png, bmp È®ÀåÀÚ¸¸ ¾÷·Îµå °¡´ÉÇÕ´Ï´Ù.');
+                            // ÀÌÈÄ µ¿ÀÛ ...
                         } else if (result === -2) {
-                            alert('íŒŒì¼ì´ 10MBë¥¼ ì´ˆê³¼í•˜ì˜€ìŠµë‹ˆë‹¤.');
-                            // ì´í›„ ë™ì‘ ...
+                            alert('ÆÄÀÏÀÌ 10MB¸¦ ÃÊ°úÇÏ¿´½À´Ï´Ù.');
+                            // ÀÌÈÄ µ¿ÀÛ ...
                         } else {
-                            alert('ì´ë¯¸ì§€ ì—…ë¡œë“œ ì„±ê³µ');
-                            // ì´í›„ ë™ì‘ ...
+                            alert('ÀÌ¹ÌÁö ¾÷·Îµå ¼º°ø');
+                            // ÀÌÈÄ µ¿ÀÛ ...
+                            location.href="/host/property_preview";
                         }
                     }
-                    //ì „ì†¡ì‹¤íŒ¨ì—ëŒ€í•œ í•¸ë“¤ë§ì€ ê³ ë ¤í•˜ì§€ ì•ŠìŒ
+                    //Àü¼Û½ÇÆĞ¿¡´ëÇÑ ÇÚµé¸µÀº °í·ÁÇÏÁö ¾ÊÀ½
                 });
             });
-            // <input type=file> íƒœê·¸ ê¸°ëŠ¥ êµ¬í˜„
+            // <input type=file> ÅÂ±× ±â´É ±¸Çö
             $('#attach input[type=file]').change(function() {
-                addPreview($(this)); //preview form ì¶”ê°€í•˜ê¸°
+                addPreview($(this)); //preview form Ãß°¡ÇÏ±â
             });
         });
     </script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
