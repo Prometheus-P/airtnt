@@ -66,13 +66,12 @@ public class UserController {
 			return "message";
 		}else {
 			//로그인 빈에 로그인한 멤버의 정보 담고 세션에 저장
-			//LoginOKBean loginOk = new LoginOKBean();
-			//loginOk.login_setting(dto);
+			LoginOKBean login = LoginOKBean.getInstance();
+			login.login_setting(dto);
 			session.setAttribute("member_id", dto.getId());
 			session.setAttribute("member_name", dto.getName());
 			session.setAttribute("member_mode", dto.getMember_mode());
 			session.setAttribute("member_image", dto.getMember_image());
-			
 			//아이디저장하기 버튼 클릭시 아이디 쿠키에 저장
 			Cookie ck = new Cookie("saveId", dto.getId());
 			if(params.get("saveId")==null){
@@ -92,6 +91,15 @@ public class UserController {
 		session.invalidate();
 		
 		return "redirect:/index";
+	}
+	//마이페이지
+	@RequestMapping("myPage")
+	public String mypage(HttpServletRequest req) {
+		LoginOKBean memberData = LoginOKBean.getInstance();
+		System.out.println(memberData.getName());
+		req.setAttribute("memberData", memberData);
+		
+		return "user/user/myPage";
 	}
 	
 	// 위시리스트
