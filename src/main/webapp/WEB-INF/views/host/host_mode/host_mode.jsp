@@ -47,16 +47,8 @@
 					<c:forEach var="dto" items="${listBooking}">
 						<tr>
 							<td>
-							<c:if test="${dto.regDate.before(today) && today.before(dto.confirmDate)}">
-								<a href="#modal" style="font-color: red"><b>승인대기 중</b></a>
-							</c:if>
-							<c:if test="${dto.confirmDate.before(today) && today.before(dto.checkInDate)}">
-								<font color="blue"><b>확정</b></font>
-							</c:if>
-							<c:if test="${dto.checkInDate.before(today) && today.before(dto.checkOutDate)}">
-								<font color="green"><b>이용중</b></font>
-							</c:if>
-						
+							<c:if test="${dto.confirmDate ==null}"><a href="#modal" style="font-color: red"><b>승인대기 중</b></a></c:if>
+							<c:if test="${dto.confirmDate != null}"><a href="#modal" style="font-color: blue"><b>확정</b></a></c:if>
 							</td>
 							<td><b>${dto.guestName}</b><br>${dto.guestCount}명</td>
 							<td><b>${dto.checkInDate} ~ ${dto.checkOutDate}</b><br>${dto.dayCount}박</td>
@@ -85,16 +77,16 @@
 												<div class="calendar"></div>
 											</div>
 											<div class="media-body">
-												<h3 class="media-heading">${dto.name}</h3>
+												<h3 class="media-heading"></h3>
 												<br>
-												<p>숙소 유형 : ${dto.roomTypeName}</p>
-												<p>대여 유형 : ${dto.roomTypeName}</p>
-												<p>최대 수용 인원 : ${dto.maxGuest}</p>
-												<p>침대 수 : ${dto.bedCount}</p>
-												<p>가격 : ${dto.price}</p>
-												<p>주소 : ${dto.address}</p>
-												<p>숙소 설명 : ${dto.propertyDesc}</p>
-												<p>수정일 : ${dto.modDate}</p>
+												<p></p>
+												<p></p>
+												<p></p>
+												<p></p>
+												<p></p>
+												<p></p>
+												<p></p>
+												<p></p>
 												<p>
 												<button onclick="location.href='<c:url value="/host/properties_update"/>?id=${dto.id}'" 
 												type="button" class="btn btn-warning"  formmethod="get">
