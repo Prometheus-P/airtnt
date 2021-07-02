@@ -1,5 +1,6 @@
 package com.airtnt.airtnt.service;
 
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
@@ -16,11 +17,13 @@ public class PropertyMapper {
 	private SqlSession sqlSession;
 	
 	public List<PropertyDTO> searchProperties(Map<String, Object> searchKeyMap) {
-		return sqlSession.selectList("searchProperties", searchKeyMap);
+		return sqlSession.selectList("selectProperty", searchKeyMap);
 	}
 	
 	public PropertyDTO selectProperty(int propertyId) {
-		return sqlSession.selectOne("selectProperty", propertyId);
+		Map<String, Integer> selectKeyMap = new Hashtable<>();
+		selectKeyMap.put("propertyId", propertyId);
+		return sqlSession.selectOne("selectProperty", selectKeyMap);
 	}
 	
 	public List<ImageDTO> selectRoomImages(int propertyId){

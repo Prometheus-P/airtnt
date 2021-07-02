@@ -114,7 +114,7 @@
 		<result property="modDate" column="mod_date"/>
 	</resultMap>
 	
-	<select id="searchProperties" parameterType="java.util.Map" resultMap="propertyMap">
+	<select id="selectProperty" parameterType="java.util.Map" resultMap="propertyMap">
 		select
 			p.*,
 			
@@ -158,9 +158,20 @@
 			property p, property_type pt, sub_property_type spt, room_type rt,
 			amenity a, amenity_type at, image i
 		
-		<bind name="addressKey" value="'%' + addressKey + '%'"/>
 		where
-			p.address like #{addressKey} and
+		<choose>
+			<when test="addressKey != null">
+				<bind name="addressKey" value="'%' + addressKey + '%'"/>
+				p.address like #{addressKey} and
+			</when>
+			<when test="propertyId != null">
+				p.id=#{propertyId} and
+			</when>
+			<!-- 주소나 숙소아이디가 없으면 강제로 bad grammar 오류를 발생시킬 것임 -->
+			<otherwise>
+				and
+			</otherwise>
+		</choose>
 			p.property_type_id=pt.id and p.sub_property_type_id=spt.id and p.room_type_id=rt.id and
 			a.property_id=p.id and a.amenity_type_id=at.id and at.is_use='Y' and
 			i.property_id=p.id
@@ -204,57 +215,6 @@
 		<if test="maxPriceKey != null">
 			and p.price <![CDATA[ <= ]]> #{maxPriceKey}
 		</if>
-	</select>
-	
-	<select id="selectProperty" parameterType="int" resultMap="propertyMap">
-		select
-			p.*,
-			
-			pt.id property_type_id,
-			pt.name property_type_name,
-			pt.is_use property_type_is_use,
-			pt.reg_date property_type_reg_date,
-			pt.mod_date property_type_mod_date,
-			
-			spt.id sub_property_type_id,
-			spt.property_type_id,
-			spt.name sub_property_type_name,
-			spt.is_use sub_property_type_is_use,
-			spt.reg_date sub_property_type_reg_date,
-			spt.mod_date sub_property_type_mod_date,
-			
-			rt.id room_type_id,
-			rt.name room_type_name,
-			rt.is_use room_type_is_use,
-			rt.reg_date room_type_reg_date,
-			rt.mod_date room_type_mod_date,
-			
-			a.id amenity_id,
-			a.property_id amenity_property_id,
-			
-			at.id amenity_type_id,
-			at.name amenity_type_name,
-			at.is_use amenity_type_is_use,
-			at.reg_date amenity_type_reg_date,
-			at.mod_date amenity_type_mod_date,
-			
-			i.id image_id,
-			i.property_id image_property_id,
-			i.is_main image_is_main,
-			i.path image_path,
-			i.file_size image_file_size,
-			i.reg_date image_reg_date,
-			i.mod_date image_mod_date
-		
-		from
-			property p, property_type pt, sub_property_type spt, room_type rt,
-			amenity a, amenity_type at, image i
-		
-		where
-			p.id=#{propertyId} and
-			p.property_type_id=pt.id and p.sub_property_type_id=spt.id and p.room_type_id=rt.id and
-			a.property_id=p.id and a.amenity_type_id=at.id and at.is_use='Y' and
-			i.property_id=p.id
 	</select>
 	
 	<select id="selectPropertyTypes" resultMap="propertyTypeMap">

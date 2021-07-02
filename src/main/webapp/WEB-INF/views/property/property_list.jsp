@@ -16,11 +16,29 @@ Licence URI: https://www.os-templates.com/template-terms
 <title>AirTnT/숙소검색(키워드:${param.addressKey})</title>
 <meta charset="utf-8">
 
-<!-- drop down -->
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<!-- drop down, popup, ... -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+crossorigin="anonymous"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
+crossorigin="anonymous"></script> -->
+
+<!-- <script src="/resources/script/wish-control.js"></script> -->
 
 <!-- 검색필터 이벤트 처리와 초기화를 제어하는 커스텀 파일 -->
 <script src="/resources/script/search-control.js"></script>
+
+<script type="text/javascript">
+var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+  return new bootstrap.Popover(popoverTriggerEl)
+})
+var popover = new bootstrap.Popover(document.querySelector('.popover-dismiss'), {
+	trigger: 'focus'
+});
+</script>
 
 </head>
 <body id="top">
@@ -223,6 +241,8 @@ onsubmit="setParametersOnSubmit()">
 
 </form>
 
+
+
 <!-- 메인 화면 -->
 <div class="wrapper row3">
   <div class="hoc container clear"> 
@@ -246,12 +266,23 @@ onsubmit="setParametersOnSubmit()">
 	          <ul class="nospace clear" >
 	            <c:forEach var="property" items="${properties}">
 	            <li style="height: 150px;">
+	              
 	              <div class="one_third first" >
-	                <a href="<c:url value='/property/detail?propertyId=${property.id}'/>"><img src="${property.images.get(0).path}" alt="" ></a>
+	                <a href="<c:url value='/property/detail?propertyId=${property.id}'/>">
+	                  <img src="${property.images.get(0).path}" alt="" >
+	                </a>
 	              </div>
-	              <div class="two_third">
+	              <div class="position-relative two_third">
+	                <div class="position-absolute top-0 end-0">
+	                  <%-- <c:set var="isWished" value="${false}"/>
+	                  <c:forEach var="wishList_property" items="${sessionScope.wishList_Properties}">
+	                    <c:if test="${wish.id == property}"></c:if>
+	                  </c:forEach> --%>
+	                  
+	                </div>
 	                <h2><a href="<c:url value='/property/detail?propertyId=${property.id}'/>">${property.name}</a></h2>
-	                <h4>${property.propertyType.name}/${property.subPropertyType.name} ${property.roomType.name}</h4>
+	                <h4>${property.propertyType.name}/${property.subPropertyType.name}</h4>
+	                <h4>${property.roomType.name}</h4>
 	                <h4>${property.address}</h4>
 	              </div>
 	            </li>
@@ -264,7 +295,7 @@ onsubmit="setParametersOnSubmit()">
 	    </div>
         
         </div>
-        
+
         <!-- 카카오맵 -->
         <div class="one_half">
           <div id="map" style="width:600px;height:600px;"></div>
