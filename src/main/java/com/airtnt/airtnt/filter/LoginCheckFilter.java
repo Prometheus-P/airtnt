@@ -23,7 +23,7 @@ public class LoginCheckFilter implements Filter {
 		String excludePattern = config.getInitParameter("excludedUrls");
 		excludeUrls = Arrays.asList(excludePattern.split(","));
 
-		//resources
+		//resources url
 		staticReosurceList = new ArrayList<String>();
 		staticReosurceList.add("/resources/");
 		staticReosurceList.add("/resources_host/");
@@ -36,9 +36,6 @@ public class LoginCheckFilter implements Filter {
 
 		httpRequest.setCharacterEncoding("UTF-8");
 		String path = ((HttpServletRequest) request).getServletPath();
-		
-        System.out.println("user path : " + path);
-        System.out.println(!excludeUrls.contains(path));
         
 		boolean login = false;
 		if (session != null) {
@@ -47,14 +44,11 @@ public class LoginCheckFilter implements Filter {
 			}
 		}
 		if (login) {
-			System.out.println("login true");
 			// 세션변수가 null이 아닐경우, 필터 체인을 거친 후, 요청한 페이지로 이동한다.
 			chain.doFilter(request, response);
 		} else {
 			// 세션변수가 null일 경우, 로그인 폼으로 이동한다.
-			System.out.println("login false");
-			if(!excludeUrls.contains(path)) { 
-				//제외한 url이 아니면
+			if(!excludeUrls.contains(path)) { //제외한 url이 아니면 로그인 체크(web.xml)
 				boolean isURIResource = false;
 				for(String staticResource : staticReosurceList) {
 					if (path.startsWith(staticResource)) {
@@ -62,18 +56,14 @@ public class LoginCheckFilter implements Filter {
 						break;
 					}
 				}
-				if(!isURIResource) { //resource url 이 아니면
+				if(!isURIResource) { //resource url이 아닌 경우만 체크
 					RequestDispatcher dispatcher = null;
-					if(path.contains("admin")) {
-						dispatcher = request.getRequestDispatcher("/admin");
-					}else {
-						dispatcher = request.getRequestDispatcher("/index");
-					}
+					if(path.contains("admin")) dispatcher = request.getRequestDispatcher("/admin");
+					else dispatcher = request.getRequestDispatcher("/index");
 					dispatcher.forward(request, response);
 				}else {
 					chain.doFilter(request, response);
 				}
-				
 			}else{
 				chain.doFilter(request, response);
 			}
