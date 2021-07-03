@@ -29,7 +29,7 @@
 		<br><br><br><br>
 		<!-- Main jumbotron for a primary marketing message or call to action -->
 		<div class="jumbotron">
-			<h1>총 수입!</h1>
+			<h1><i class="bi bi-bar-chart"></i>총 수입!</h1>
 			<p>
 				수입을 알아봅시다!
 			</p>
@@ -37,7 +37,7 @@
 	<div class="col-md-6" style="width: 80%">
 			<div class="page-header">
 				<br> <br> <br>
-				<h1>총 수입(₩)</h1>
+				<h1<i class="bi bi-cash-stack"></i>>총 수입(₩)<i class="bi bi-cash-stack"></i></h1>
 			</div>
 			<!-- 차트 -->
 			<div class="container"> <canvas id="myChart"> </canvas> </div> 

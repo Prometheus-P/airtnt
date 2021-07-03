@@ -63,7 +63,13 @@ public class HostController implements HostControllerInterface {
 		mav.addObject("guideList", guideList);
 		return mav;
 	}
-
+	@RequestMapping(value="/property_insert", method=RequestMethod.POST)
+	@ResponseBody
+	public List<SubPropertyTypeDTO> property_insert(int propertyTypeId) {
+		List<SubPropertyTypeDTO> list = hostMapper.getSubPropertyType(propertyTypeId);
+		return list;
+	}
+	
 	// 2. property_type_0으로 이동해서 분류 시작
 	@Override
 	@RequestMapping("host/property_type_0")
