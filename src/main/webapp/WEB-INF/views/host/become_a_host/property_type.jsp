@@ -30,7 +30,7 @@
 	<%@include file='bottom.jsp'%>
 	<script>
 		function send(id){
-			location.href="/host/property_detail_1?propertyTypeId="+id;
+			location.href="/host/sub_property_type?propertyTypeId="+id;
 		}
 		/* $('.list-group-item').click(function() {
 			$('.list-group-item').not(this).removeClass('active');

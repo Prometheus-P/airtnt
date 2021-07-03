@@ -18,6 +18,17 @@
 	src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <link rel="stylesheet"
 	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+<script src="http://code.jquery.com/jquery-1.11.3.min.js" type="text/javascript" charset="utf-8"></script>
+<style>
+footer{ 
+	position:fixed; 
+	left:0px; 
+	bottom:0px; 
+	height:20%; 
+	width:100%; 
+	background: #01546b ; 
+	color: white; }
+</style>
 </head>
 <body>
 

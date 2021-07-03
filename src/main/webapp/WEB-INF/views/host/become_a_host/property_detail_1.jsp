@@ -8,9 +8,13 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>숙소등록</title>
 </head>
 <body>
+<%@include file="top.jsp" %>
+<%@include file="../../top.jsp"%>
+	
+<input type="text" class="form-control" placeholder="Text input">
 <form method="post" action="<c:url value='/host/property_address_2'/>" name="f">
 <table>
 	<tr>

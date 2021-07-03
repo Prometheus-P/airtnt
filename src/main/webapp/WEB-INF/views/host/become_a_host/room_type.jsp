@@ -14,10 +14,10 @@
 		<div class="container theme-showcase" role="main">
 			<div class="page-header">
 				<h1 style="font-style: italic; font-weight: bold; font-family: fantasy;">
-				호스팅 할 숙소 유형을 알려주세요</h1>
+				다음 중 가장 비슷하다고 생각하는 유형을 골라주세요</h1>
 			</div>
 			<div class="col-sm-4">
-				<c:forEach var="dto" items="${propertyTypeList}">
+				<c:forEach var="dto" items="${roomTypeList}">
 					<div class="list-group" style="font-family: fantasy;">
 						<a href="javascript:void(0)" id="${dto.id}"
 							class="list-group-item" onclick="send(${dto.id})">
@@ -30,26 +30,8 @@
 	<%@include file='bottom.jsp'%>
 	<script>
 		function send(id){
-			location.href="/host/property_detail_1?propertyTypeId="+id;
+			location.href="/host/location?roomTypeId="+id;
 		}
-		/* $('.list-group-item').click(function() {
-			$('.list-group-item').not(this).removeClass('active');
-			$(this).toggleClass('active');
-		}); */
-
-		 /* function send() {
-			var propertyId = document
-					.getElementsByClassName("list-group-item active")[0].value
-			if (propertyId == null) {
-				alert("숙소 유형을 선택해 주세요!");
-				return;
-			}
-			var input = $("<input>").attr("type", "hidden").attr("name",
-					"propertyTypeId").val(propertyId);
-			$("#f").append($(input));
-			document.f.method = "post"
-			document.f.submit();
-		} */ 
 	</script>
 </body>
 </html>
