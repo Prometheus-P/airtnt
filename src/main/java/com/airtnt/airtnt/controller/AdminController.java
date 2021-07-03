@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.airtnt.airtnt.guest.LoginOKBean;
 import com.airtnt.airtnt.model.AmenityTypeDTO;
 import com.airtnt.airtnt.model.DashBoardDTO;
 import com.airtnt.airtnt.model.MemberDTO;
@@ -68,6 +69,8 @@ public class AdminController extends UserController {
 			return "message";
 		}else {
 			//로그인 빈에 로그인한 멤버의 정보 담고 세션에 저장
+			LoginOKBean login = LoginOKBean.getInstance();
+			login.login_setting(dto);
 			session.setAttribute("member_id", dto.getId());
 			session.setAttribute("member_name", dto.getName());
 			session.setAttribute("member_ip", req.getRemoteAddr());

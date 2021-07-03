@@ -65,7 +65,7 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link" href="/wishList">
                   <span data-feather="star"></span>
                   Wish-List
                 </a>

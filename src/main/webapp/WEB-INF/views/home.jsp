@@ -10,7 +10,7 @@
 	<!--basic-->
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
-	<link href='<c:url value='/resources/layout/styles/layout.css'/>' rel="stylesheet" type="text/css" media="all">
+	<link href="/resources/layout/styles/layout.css" rel="stylesheet" type="text/css" media="all">
 	<!--loginModal-->
 	<link href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round" rel="stylesheet">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -26,7 +26,6 @@
 <body>
 	<c:set var="isLogin" value="false"/>
 	<c:if test="${not empty member_id && not empty member_name}"><c:set var="isLogin" value="true"/></c:if>
-	
 <div class="bgded overlay padtop" style="background-image:url('<c:url value='/resources/img/main3.jpg'/>');">
   <!-- ################################################################################################ -->
   <!-- ################################################################################################ -->
@@ -51,7 +50,7 @@
         	</c:if>
         </c:if>
         <c:if test="${!isLogin}">
-         <a href="#LoginModal" class="trigger-btn" data-toggle="modal">호스트 되기</a>
+         <a href="#LoginModal" data-toggle="modal">호스트 되기</a>
         </c:if>
         </li>
         <c:if test="${!isLogin}">

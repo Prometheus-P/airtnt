@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.airtnt.airtnt.guest.LoginOKBean;
@@ -49,7 +50,7 @@ public class UserController {
 	}
 	
 	// 로그인
-	@RequestMapping("login")
+	@RequestMapping(value="login")
 	public String login(HttpServletRequest req, @RequestParam Map<String, String> params, 
 			HttpServletResponse resp, final HttpSession session ) {
 		
@@ -120,8 +121,10 @@ public class UserController {
 	@RequestMapping("makeWish")
 	public String makeWish(HttpServletRequest req, @ModelAttribute WishListDTO dto) {
 		dto.setMember_id((String) req.getSession().getAttribute("member_id"));
+		LoginOKBean memberData = LoginOKBean.getInstance();
+		System.out.println("test" + memberData.getMember_mode());
+		if(memberData.getMember_mode().equals("3")) dto.setIs_admin("Y"); //admin 구별
 		int res = wishListMapper.makeWish(dto);
-		
 		
 		return "redirect:/wishList";
 	}

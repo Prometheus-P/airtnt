@@ -38,6 +38,7 @@ public class PropertyController {
 		}
 		
 		System.out.println("----- 검색 ------");
+		System.out.println(addressKey);
 		System.out.println("property type : " + Arrays.toString(propertyTypeIdKeyArray));
 		System.out.println("sub-property type : " + Arrays.toString(subPropertyTypeIdKeyArray));
 		System.out.println("room type : " + Arrays.toString(roomTypeIdKeyArray));
