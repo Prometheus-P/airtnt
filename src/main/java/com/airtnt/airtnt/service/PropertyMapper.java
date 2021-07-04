@@ -45,20 +45,4 @@ public class PropertyMapper {
 	public List<AmenityTypeDTO> selectAmenityTypes(){
 		return sqlSession.selectList("selectAmenityTypes");
 	}
-	
-	public int insertBooking(BookingDTO booking) {
-		return sqlSession.insert("insertBooking", booking);
-	}
-	
-	public BookingDTO selectSameBooking(BookingDTO booking) {
-		return sqlSession.selectOne("selectSameBooking", booking);
-	}
-	
-	public int insertTransaction(TransactionDTO transaction) {
-		return sqlSession.insert("insertTransaction", transaction);
-	}
-	
-	public TransactionDTO selectSameTransaction(TransactionDTO transaction) {
-		return sqlSession.selectOne("selectSameTransaction", transaction);
-	}
 }

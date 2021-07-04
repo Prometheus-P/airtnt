@@ -2,38 +2,86 @@
 <!DOCTYPE mapper
  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
- <mapper namespace="com.airtnt.airtnt.service.WishListMapper">
- 	<insert id="makeWish" parameterType="WishListDTO">
+<mapper namespace="com.airtnt.airtnt.service.WishListMapper">
+	<insert id="makeWish" parameterType="WishListDTO">
 		insert into wishlist values(seq_wish_id.nextval, #{name}, #{member_id}, #{is_admin}, sysdate, #{mod_date, jdbcType=VARCHAR})	
 	</insert>
 	<select id="getWish" resultType="WishList_PropertyDTO" parameterType="String"> 
- 		Select name,wish_id,property_id,path
+		Select name,wish_id,property_id,path
 		From wishlist_view
 		Where (property_id , wish_id ) in (
 		Select min(property_id), wish_id
 		From wishlist_view
 		Group by wish_id
 		) and member_id=#{member_id} and is_main='Y' or (member_id =#{member_id} and property_id is null)
- 	</select>
+	</select>
 	<select id="getAdminWish" resultType="WishList_PropertyDTO"> 
- 		Select name,wish_id,property_id,path
+		Select name,wish_id,property_id,path
 		From wishlist_view
 		Where (property_id , wish_id ) in (
 		Select min(property_id), wish_id
 		From wishlist_view
 		Group by wish_id
 		) and is_main='Y' or (is_admin ='Y' and property_id is null)
- 	</select>
- 	<select id="getWishRoom" resultType="WishList_PropertyDTO" parameterType="String"> 
- 		select * from wishlist_room_view where wish_id=#{wish_id}
- 	</select>
- 	<update id="updateWish" parameterType="java.util.Map">
- 		update wishlist set name=#{wish_name} where id =#{wish_id}
- 	</update>
- 	<delete id="deleteWish" parameterType="String">
- 		delete from wishlist where id =#{wish_id}
- 	</delete>
- 	<delete id="deleteWishRoom" parameterType="String">
- 		delete from wishlist_property where wish_id =#{wish_id}
- 	</delete>
- </mapper>
+	</select>
+	<select id="getWishRoom" resultType="WishList_PropertyDTO" parameterType="String"> 
+		select * from wishlist_room_view where wish_id=#{wish_id}
+	</select>
+	<update id="updateWish" parameterType="java.util.Map">
+		update wishlist set name=#{wish_name} where id =#{wish_id}
+	</update>
+	<delete id="deleteWish" parameterType="String">
+		delete from wishlist where id =#{wish_id}
+	</delete>
+	<delete id="deleteWishRoom" parameterType="String">
+		delete from wishlist_property where wish_id =#{wish_id}
+	</delete>
+	
+	
+	
+	<!-- 뷰가 내머릿속에 없어서 헷갈려서 만듬 -->
+	<!-- 화면에 띄울 숙소 id들 중 위시리스트에 등록된 숙소id가 있는지만 판별하는 용도임 -->
+	<resultMap type="wishListDTO" id="wishListMap">
+		<id property="id" column="id"/>
+		<result property="name" column="name"/>
+		<result property="member_id" column="member_id"/>
+		<result property="is_admin" column="is_admin"/>
+		<result property="reg_date" column="reg_date"/>
+		<result property="mod_date" column="mod_date"/>
+		<collection property="properties" javaType="java.util.List" ofType="propertyDTO"
+		columnPrefix="property_">
+			<id property="id" column="id"/>
+			<result property="name" column="name"/>
+			<collection property="images" javaType="java.util.List" ofType="imageDTO"
+			columnPrefix="image_">
+				<id property="id" column="id"/>
+				<result property="path" column="path"/>
+			</collection>
+		</collection>
+	</resultMap>
+	
+	<select id="selectWishLists" parameterType="java.util.Map" resultMap="wishListMap">
+		select
+			wl.*,
+			wlp.property_id,
+			p.name property_name,
+			i.id property_image_id,
+			i.path property_image_path
+			
+		from
+			wishlist wl
+			left join wishlist_property wlp on wl.id=wlp.wish_id
+			left join property p on wlp.property_id=p.id
+			left join image i on p.id=i.property_id
+		
+		where
+		<choose>
+			<when test="member_id != null">
+				wl.member_id=#{member_id}
+			</when>
+			<otherwise>
+				wl.is_admin='Y'
+			</otherwise>
+		</choose>
+	</select>
+</mapper>
