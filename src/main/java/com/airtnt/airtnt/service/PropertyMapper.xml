@@ -88,32 +88,6 @@
 		<result property="modDate" column="mod_date"/>
 	</resultMap>
 	
-	<resultMap type="bookingDTO" id="bookingMap">
-		<id property="id" column="id"/>
-		<result property="propertyId" column="property_id"/>
-		<result property="guestId" column="guest_id"/>
-		<result property="hostId" column="host_id"/>
-		<result property="guestCount" column="guest_count"/>
-		<result property="dayCount" column="day_count"/>
-		<result property="totalPrice" column="total_price"/>
-		<result property="bookingNumber" column="booking_number"/>
-		<result property="checkInDate" column="check_in_date"/>
-		<result property="checkOutDate" column="check_out_date"/>
-		<result property="confirmDate" column="confirm_date"/>
-		<result property="regDate" column="reg_date"/>
-		<result property="modDate" column="mod_date"/>
-	</resultMap>
-	
-	<resultMap type="transactionDTO" id="transactionMap">
-		<id property="id" column="id"/>
-		<result property="bookingId" column="booking_id"/>
-		<result property="isRefund" column="is_refund"/>
-		<result property="siteFee" column="site_fee"/>
-		<result property="payExptDate" column="pay_expt_date"/>
-		<result property="regDate" column="reg_date"/>
-		<result property="modDate" column="mod_date"/>
-	</resultMap>
-	
 	<select id="selectProperty" parameterType="java.util.Map" resultMap="propertyMap">
 		select
 			p.*,
@@ -153,28 +127,27 @@
 			i.file_size image_file_size,
 			i.reg_date image_reg_date,
 			i.mod_date image_mod_date
-		
+			
 		from
-			property p, amenity a, image i,
-			property_type pt, sub_property_type spt, room_type rt, amenity_type at
-		
+			property p
+			left join property_type pt on p.property_type_id=pt.id
+			left join sub_property_type spt on p.sub_property_type_id=spt.id
+			left join room_type rt on p.room_type_id=rt.id
+			left join amenity a on p.id=a.property_id
+			left join amenity_type at on at.id=a.amenity_type_id
+			left join image i on p.id=i.property_id
+			
 		where
 		<choose>
+			<!-- choose절 안의 파라미터가 없으면 bad grammar 예외 발생 -->
 			<when test="addressKey != null">
 				<bind name="addressKey" value="'%' + addressKey + '%'"/>
-				p.address like #{addressKey} and
+				p.address like #{addressKey}
 			</when>
 			<when test="propertyId != null">
-				p.id=#{propertyId} and
+				p.id=#{propertyId}
 			</when>
-			<!-- 주소나 숙소아이디가 없으면 강제로 bad grammar 오류를 발생시킬 것임 -->
-			<otherwise>
-				and
-			</otherwise>
 		</choose>
-			p.property_type_id=pt.id and p.sub_property_type_id=spt.id and p.room_type_id=rt.id and
-			a.property_id=p.id and a.amenity_type_id=at.id and at.is_use='Y' and
-			i.property_id=p.id
 		<if test="propertyTypeIdKeyArray != null">
 			and pt.id in
 			<foreach item="propertyTypeIdKey" collection="propertyTypeIdKeyArray"
@@ -182,6 +155,7 @@
 				#{propertyTypeIdKey}
 			</foreach>
 		</if>
+		and pt.is_use='Y'
 		<if test="subPropertyTypeIdKeyArray != null">
 			and spt.id in
 			<foreach item="subPropertyTypeIdKey" collection="subPropertyTypeIdKeyArray"
@@ -189,13 +163,15 @@
 				#{subPropertyTypeIdKey}
 			</foreach>
 		</if>
+		and spt.is_use='Y'
 		<if test="roomTypeIdKeyArray != null">
-			and rt.id in
+			 and rt.id in
 			<foreach item="roomTypeIdKey" collection="roomTypeIdKeyArray"
 			open="(" separator="," close=")">
 				#{roomTypeIdKey}
 			</foreach>
 		</if>
+		and rt.is_use='Y'
 		<if test="amenityTypeIdKeyArray != null">
 			and at.id in
 			<foreach item="amenityTypeIdKey" collection="amenityTypeIdKeyArray"
@@ -203,6 +179,7 @@
 				#{amenityTypeIdKey}
 			</foreach>
 		</if>
+		and at.is_use='Y'
 		<if test="guestCountKey != null">
 			and p.max_guest <![CDATA[ >= ]]> #{guestCountKey}
 		</if>
@@ -228,9 +205,9 @@
 			spt.mod_date sub_property_type_mod_date
 		
 		from
-			property_type pt, sub_property_type spt
+			property_type pt
+			join sub_property_type spt on pt.id=spt.property_type_id
 		where
-			pt.id=spt.property_type_id and
 			pt.is_use='Y' and
 			spt.is_use='Y'
 	</select>
@@ -254,56 +231,18 @@
 	<select id="selectAmenities" parameterType="int" resultMap="amenityMap">
 		select
 			a.*,
+			
 			at.id type_id,
 			at.name type_name,
 			at.is_use type_is_use,
 			at.reg_date type_reg_date,
 			at.mod_date type_mod_date
 		from
-			amenity a, amenity_type at
+			amenity a
+			join amenity_type at on a.amenity_type_id=at.id
 		where
-			a.property_id=#{propertyId} and a.amenity_type_id=at.id and
+			a.property_id=#{propertyId} and
 			at.is_use='Y'
 	</select>
 	
-	<insert id="insertBooking" parameterType="bookingDTO">
-		insert into booking(
-			id,property_id,guest_id,host_id,
-			guest_count,day_count,total_price,
-			booking_number,
-			check_in_date,check_out_date
-		)
-		values(
-			booking_id_seq.nextval,#{propertyId},#{guestId},#{hostId},
-			#{guestCount},#{dayCount},#{totalPrice},
-			#{bookingNumber} || booking_number_seq.nextval,
-			#{checkInDate},#{checkOutDate}
-		)
-	</insert>
-	
-	<select id="selectSameBooking" parameterType="bookingDTO" resultMap="bookingMap">
-		select * from booking
-		where
-			property_id=#{propertyId} and
-			guest_id=#{guestId} and
-			host_id=#{hostId} and
-			substr(booking_number,0,length(booking_number) - 1)=#{bookingNumber} and
-			to_date(check_in_date)=to_date(#{checkInDate}) and
-			to_date(check_out_date)=to_date(#{checkOutDate})
-	</select>
-	
-	<insert id="insertTransaction" parameterType="transactionDTO">
-		insert into transaction(
-			id,booking_id,site_fee
-		)
-		values(
-			transaction_id_seq.nextval,#{bookingId},#{siteFee}
-		)
-	</insert>
-	
-	<select id="selectSameTransaction" parameterType="transactionDTO" resultMap="transactionMap">
-		select * from transaction
-		where booking_id=#{bookingId}
-	</select>
-
 </mapper>

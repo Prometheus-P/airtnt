@@ -52,5 +52,10 @@ public class WishListMapper {
 		int res = sqlSession.delete("deleteWishRoom", wish_id);
 		return res;
 	}
-
+	
+	
+	// 정석
+	public List<WishListDTO> selectWishLists(Map<String, Object> wishMap){
+		return sqlSession.selectList("selectWishLists", wishMap);
+	}
 }

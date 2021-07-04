@@ -2,15 +2,87 @@
 <!DOCTYPE mapper
  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
- <mapper namespace="com.airtnt.airtnt.service.BookingMapper">
- 	<select id="getPlanedBooking" resultType="BookingDTO" parameterType="String"> 
- 		select *
+<mapper namespace="com.airtnt.airtnt.service.BookingMapper">
+	
+	<resultMap type="bookingDTO" id="bookingMap">
+		<id property="id" column="id"/>
+		<result property="propertyId" column="property_id"/>
+		<result property="guestId" column="guest_id"/>
+		<result property="hostId" column="host_id"/>
+		<result property="guestCount" column="guest_count"/>
+		<result property="dayCount" column="day_count"/>
+		<result property="totalPrice" column="total_price"/>
+		<result property="bookingNumber" column="booking_number"/>
+		<result property="checkInDate" column="check_in_date"/>
+		<result property="checkOutDate" column="check_out_date"/>
+		<result property="confirmDate" column="confirm_date"/>
+		<result property="regDate" column="reg_date"/>
+		<result property="modDate" column="mod_date"/>
+	</resultMap>
+	
+	<resultMap type="transactionDTO" id="transactionMap">
+		<id property="id" column="id"/>
+		<result property="bookingId" column="booking_id"/>
+		<result property="isRefund" column="is_refund"/>
+		<result property="siteFee" column="site_fee"/>
+		<result property="payExptDate" column="pay_expt_date"/>
+		<result property="regDate" column="reg_date"/>
+		<result property="modDate" column="mod_date"/>
+	</resultMap>
+	
+	<!-- 여기 주인 이름 써주셈 -->
+	
+	<select id="getPlanedBooking" resultType="BookingDTO" parameterType="String"> 
+		select *
 		from booking_view
 		where guest_id=#{member_id} and check_out_date > sysdate
- 	</select>
- 	<select id="getPreBooking" resultType="BookingDTO" parameterType="String"> 
+	</select>
+	<select id="getPreBooking" resultType="BookingDTO" parameterType="String"> 
 		select *
 		from booking_view
 		where guest_id=#{member_id} and sysdate > check_out_date
- 	</select>
+	</select>
+	
+	
+	<!-- 정석 -->
+	
+	<insert id="insertBooking" parameterType="bookingDTO">
+		insert into booking(
+			id,property_id,guest_id,host_id,
+			guest_count,day_count,total_price,
+			booking_number,
+			check_in_date,check_out_date
+		)
+		values(
+			booking_id_seq.nextval,#{propertyId},#{guestId},#{hostId},
+			#{guestCount},#{dayCount},#{totalPrice},
+			#{bookingNumber} || booking_number_seq.nextval,
+			#{checkInDate},#{checkOutDate}
+		)
+	</insert>
+	
+	<select id="selectSameBooking" parameterType="bookingDTO" resultMap="bookingMap">
+		select * from booking
+		where
+			property_id=#{propertyId} and
+			guest_id=#{guestId} and
+			host_id=#{hostId} and
+			substr(booking_number,0,length(booking_number) - 1)=#{bookingNumber} and
+			to_date(check_in_date)=to_date(#{checkInDate}) and
+			to_date(check_out_date)=to_date(#{checkOutDate})
+	</select>
+	
+	<insert id="insertTransaction" parameterType="transactionDTO">
+		insert into transaction(
+			id,booking_id,site_fee
+		)
+		values(
+			transaction_id_seq.nextval,#{bookingId},#{siteFee}
+		)
+	</insert>
+	
+	<select id="selectSameTransaction" parameterType="transactionDTO" resultMap="transactionMap">
+		select * from transaction
+		where booking_id=#{bookingId}
+	</select>
  </mapper>

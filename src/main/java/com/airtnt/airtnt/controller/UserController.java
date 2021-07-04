@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.airtnt.airtnt.guest.LoginOKBean;
 import com.airtnt.airtnt.model.BookingDTO;
@@ -161,5 +162,37 @@ public class UserController {
 		req.setAttribute("planedBookinglist", planed);
 		req.setAttribute("preBookinglist", pre);
 		return "user/tour/tour";
+	}
+	
+	
+	// 정석 작성
+	@RequestMapping("wish/async")
+	@ResponseBody
+	public Integer wishPropertyAsync(HttpServletRequest req,
+			@RequestParam("memberId") String member_id,
+			@RequestParam("wishListId") Integer wishlist_id,
+			@RequestParam("wishPropertyId") Integer wish_property_id) {
+		System.out.println("사용자 아이디 : " + member_id);
+		System.out.println("위시리스트 아이디 : " + wishlist_id);
+		System.out.println("숙소 아이디 : " + wish_property_id);
+		
+		// insert 만들어주세여
+		
+		
+		Integer result = 1;// insert 결과좀 주세여
+		return result;
+	}
+	
+	@RequestMapping("unwish/async")
+	@ResponseBody
+	public Integer unwishPropertyAsync(HttpServletRequest req,
+			@RequestParam("memberId") String member_id,
+			@RequestParam("wishListId") Integer wishlist_id,
+			@RequestParam("wishPropertyId") Integer wish_property_id) {
+		
+		// delete 만들어주세여
+		
+		Integer result = 1; // delete 결과좀 주세여
+		return result;
 	}
 }

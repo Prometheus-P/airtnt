@@ -1,5 +1,7 @@
 package com.airtnt.airtnt.model;
 
+import java.util.List;
+
 public class WishListDTO {
 	private int id;
 	private String name;
@@ -8,6 +10,7 @@ public class WishListDTO {
 	private String reg_date;
 	private String mod_date;
 	
+	private List<PropertyDTO> properties;
 	
 	public int getId() {
 		return id;
@@ -46,4 +49,11 @@ public class WishListDTO {
 		this.mod_date = mod_date;
 	}
 	
+	
+	public List<PropertyDTO> getProperties() {
+		return properties;
+	}
+	public void setProperties(List<PropertyDTO> properties) {
+		this.properties = properties;
+	}
 }
