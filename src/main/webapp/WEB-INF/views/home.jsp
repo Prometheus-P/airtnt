@@ -51,7 +51,7 @@
         	</c:if>
         </c:if>
         <c:if test="${!isLogin}">
-         <a href="#LoginModal" class="trigger-btn" data-toggle="modal">호스트 되기</a>
+         <a href="#LoginModal" data-toggle="modal">호스트 되기</a>
         </c:if>
         </li>
         <c:if test="${!isLogin}">
