@@ -9,42 +9,8 @@
 <link href='/resources_host/calendar/main.css' rel='stylesheet' />
 <script src='https://github.com/mozilla-comm/ical.js/releases/download/v1.4.0/ical.js'></script>
 <script src='/resources_host/calendar/main.js'></script>
-<script src='../packages/icalendar/main.global.js'></script>
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    var calendarEl = document.getElementById('calendar');
-	var date = new Date();
-    var calendar = new FullCalendar.Calendar(calendarEl, {
-      displayEventTime: false,
-      initialDate: date,
-      navLinks: true, // can click day/week names to navigate views
-      selectable: false,
-      selectMirror: true,
-        editable: true,
-        dayMaxEvents: true, // allow "more" link when too many events
-        events: [
-          {
-            title: 'All Day Event',
-            start: '2021-07-01',
-            url:''
-          },
-          {
-            title: 'Long Event',
-            start: '2021-07-07',
-            end: '2021-07-10'
-          }
-        ],
-      headerToolbar: {
-        left: 'prev,next today',
-        center: 'title',
-        right: 'dayGridMonth,listYear'
-      },
+<!-- <script src='../packages/icalendar/main.global.js'></script> -->
 
-    });
-
-    calendar.render();
-  });
-</script>
 <style>
   #loading {
     display: none;
@@ -138,13 +104,50 @@
 					</c:forEach>
 				</tbody>
 			</table>
+			
+			<div class="calendar"></div>
 		</div>
 		<script>
 			$(document).ready(function() {
 				$('[data-toggle="modal"]').tooltip();
 			});
 		</script>
-		<div class="calendar"></div>
+		
+		<script>
+  			document.addEventListener('DOMContentLoaded', function() {
+   			var calendarEl = document.getElementById('calendar');
+			var date = new Date();
+   			var calendar = new FullCalendar.Calendar(calendarEl, {
+      		displayEventTime: false,
+      		initialDate: date,
+     		navLinks: true, // can click day/week names to navigate views
+    		selectable: false,
+     		selectMirror: true,
+       		editable: true,
+       		dayMaxEvents: true, // allow "more" link when too many events
+      		events: [
+          {
+            title: 'All Day Event',
+            start: '2021-07-01',
+            url:''
+          },
+          {
+            title: 'Long Event',
+            start: '2021-07-07',
+            end: '2021-07-10'
+          }
+        ],
+      headerToolbar: {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'dayGridMonth,listYear'
+      },
+
+    });
+
+    calendar.render();
+  });
+</script>
 	</div>
 	<%@ include file="../../bottom.jsp"%>
 </body>

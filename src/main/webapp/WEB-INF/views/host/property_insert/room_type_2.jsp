@@ -30,7 +30,7 @@
 	<%@include file='bottom.jsp'%>
 	<script>
 		function send(id){
-			location.href="/host/location?roomTypeId="+id;
+			location.href="/host/address?roomTypeId="+id;
 		}
 	</script>
 </body>

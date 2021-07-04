@@ -4,9 +4,9 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>publish celebration</title>
+<title>Insert title here</title>
 </head>
 <body>
-	<!-- /host/host_mode -->
+
 </body>
 </html>
