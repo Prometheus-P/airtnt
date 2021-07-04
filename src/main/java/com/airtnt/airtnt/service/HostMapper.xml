@@ -60,24 +60,24 @@
 	
 	<select id="listBooking" parameterType="String" resultType="BookingDTO">
 		select 
-			booking.id, 
-			booking.property_id as propertyId, 
-			booking.guest_id as guestId, 
-			booking.host_id as hostId, 
-			booking.guest_count as guestCount, 
-			booking.day_count as dayCount, 
-			booking.total_price as totalPrice, 
-			booking.booking_number as bookingNumber, 
-			booking.check_in_date as checkInDate, 
-			booking.check_out_date as checkOutDate, 
-			booking.confirm_date as confirmDate, 
-			booking.reg_date as regDate, 
-			booking.mod_date as modDate, 
-			member.name as guestName,
-            member.id as memberId 
-		from booking, member
-        where booking.guest_id = member.id
-        and booking.host_id = #{hostId}
+			b.id, 
+			b.property_id as propertyId, 
+			b.guest_id as guestId, 
+			b.host_id as hostId, 
+			b.guest_count as guestCount, 
+			b.day_count as dayCount, 
+			b.total_price as totalPrice, 
+			b.booking_number as bookingNumber, 
+			b.check_in_date as checkInDate, 
+			b.check_out_date as checkOutDate, 
+			b.confirm_date as confirmDate, 
+			b.reg_date as regDate, 
+			b.mod_date as modDate, 
+			m.name as guestName,
+            m.id as memberId 
+		from booking b, member m
+        where b.guest_id = m.id
+        and b.host_id = #{hostId}
         </select>
         
 	<select id="getMemberDTO" parameterType="String" resultType="MemberDTO">
@@ -121,19 +121,19 @@
 			t.site_fee as siteFee,
 			t.pay_expt_date as payExptDate,
 			t.reg_date as regDate,
-			t.mod_date as modDate
-		from transaction t, booking b
+			t.mod_date as modDate,
+			p.name as propertyName,
+			p.id
+		from transaction t, booking b, property p
         where b.id = t.booking_id
         and b.host_id = #{hostId}
+        and p.id = b.property_id
 	</select>
 	
-	<select id="totalEarningMap" parameterType="String" resultType="TransactionDTO"> 
+	<select id="totalEarningList" parameterType="String" resultType="TransactionDTO"> 
 		select 
 			b.total_price as totalPrice,
-			b.id,
-			b.host_id as hostId,
 			t.site_fee as siteFee,
-			t.booking_id,
 			t.is_refund as isRefund,
 			t.pay_expt_date as payExptDate
 		from booking b, transaction t
@@ -162,6 +162,9 @@
 		where p.id = #{propertyId}
 		and r.id = p.room_type_id
 		and p.sub_property_type_id =  s.id                                                  
+	</select>
+	<select id="getSysdate" resultType="java.sql.Date">
+		select sysdate from dual
 	</select>
 	<!-- <insert id="saveImage" parameterType="java.util.Map">
     I	insert into img_table VALUES #{img}    

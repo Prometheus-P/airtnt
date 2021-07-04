@@ -35,48 +35,46 @@
 				<table class="table table-striped">
 					<thead>
 						<tr>
-							<th width="15%">상태</th>
-							<th width="15%">게스트</th>
+							<th width="12%">상태</th>
+							<th width="12%">예약번호</th>
+							<th width="12%">게스트</th>
 							<th width="25%">숙박 기간</th>
 							<th width="15%">예약 접수 날짜</th>
-							<th rowspan="2" width="10%">대금</th>
-							<th width="10%"></th>
+							<th rowspan="2" width="15%">대금</th>
 						</tr>
 					</thead>
 					<tbody>
 					<c:forEach var="dto" items="${listBooking}">
+						<c:if test="${dto.checkOutDate.after(today)}">
 						<tr>
 							<td>
-							<c:if test="${dto.regDate.before(today) && today.before(dto.confirmDate)}">
-								<a href="#modal" style="font-color: red"><b>승인대기 중</b></a>
+							<c:if test="${dto.confirmDate == null}">
+								<button type="button" class="btn btn-sm btn-info"
+									data-toggle="modal" data-target="#${dto.id}"
+									title="예약을 확인해주세요!" data-placement="right">
+									승인대기
+								</button>
 							</c:if>
-							<c:if test="${dto.confirmDate.before(today) && today.before(dto.checkInDate)}">
+							<c:if test="${dto.confirmDate != null && today.before(dto.checkInDate)}">
 								<font color="blue"><b>확정</b></font>
 							</c:if>
 							<c:if test="${dto.checkInDate.before(today) && today.before(dto.checkOutDate)}">
 								<font color="green"><b>이용중</b></font>
 							</c:if>
-						
 							</td>
+							<td><b>${dto.bookingNumber}</b></td>
 							<td><b>${dto.guestName}</b><br>${dto.guestCount}명</td>
 							<td><b>${dto.checkInDate} ~ ${dto.checkOutDate}</b><br>${dto.dayCount}박</td>
 							<td>${dto.regDate}</td>
 							<td>₩${dto.totalPrice}</td>
-							<td>
-							<button type="button" class="btn btn-sm btn-info"
-									data-toggle="modal" data-target="#myModal"
-									title="예약 상세" data-placement="right">
-									더보기
-							</button>
-							</td>
 						</tr>
-						<div id="myModal" class="modal fade" role="dialog">
+						<div id="${dto.id}" class="modal fade" role="dialog">
 							<div class="modal-dialog">
 								<!-- Modal content-->
 								<div class="modal-content">
 									<div class="modal-header">
 										<button type="button" class="close" data-dismiss="modal">&times;</button>
-										<h4 class="modal-title">예약상세 정보</h4>
+										<h4 class="modal-title">예약 확인</h4>
 									</div>
 									<div class="modal-body">
 										<div class="media">
@@ -85,21 +83,19 @@
 												<div class="calendar"></div>
 											</div>
 											<div class="media-body">
-												<h3 class="media-heading">${dto.name}</h3>
+												<h3 class="media-heading"></h3>
 												<br>
-												<p>숙소 유형 : ${dto.roomTypeName}</p>
-												<p>대여 유형 : ${dto.roomTypeName}</p>
-												<p>최대 수용 인원 : ${dto.maxGuest}</p>
-												<p>침대 수 : ${dto.bedCount}</p>
-												<p>가격 : ${dto.price}</p>
-												<p>주소 : ${dto.address}</p>
-												<p>숙소 설명 : ${dto.propertyDesc}</p>
-												<p>수정일 : ${dto.modDate}</p>
 												<p>
-												<button onclick="location.href='<c:url value="/host/properties_update"/>?id=${dto.id}'" 
-												type="button" class="btn btn-warning"  formmethod="get">
-												수정하기</button>
+												<button type="button" class="btn btn-success"
+												onclick="location.href='/host/confirm?id=${dto.id}'">
+												승인</button>
+												<button type="button" class="btn btn-sm btn-info"
+													data-toggle="modal" data-target="#${dto.id + dto.guestId}"
+													title="신중히 고려해주세요!" data-placement="right">
+													반려
+												</button>
 												</p>
+												
 											</div>
 										</div>
 									</div>
@@ -110,6 +106,7 @@
 								</div>
 							</div>
 						</div>
+						</c:if>
 					</c:forEach>
 					</tbody>
 				</table>
