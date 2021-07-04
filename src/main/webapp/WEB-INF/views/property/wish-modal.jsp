@@ -23,7 +23,7 @@
         <c:set var="i" value="1"/>
         <c:forEach var="wishList" items="${wishLists}">
           <div class="one_half <c:if test='${i % 2 == 1}'>first</c:if>" align="center">
-            <a class="wish-input-button" id="wishList-${wishList.id}" role="button">
+            <a class="wishList-button" id="wishList-${wishList.id}" role="button">
               <img src="
                 <c:if test="${wishList.properties.size() > 0}">
                   ${wishList.properties.get(0).images.get(0).path}
@@ -52,32 +52,79 @@
 var wishPropertyId;
 
 $(function(){
-	$(".wish-input-button").click(function(){
-		// wishList-i 의 i를 가져옴
+	$(".wishList-button").click(function(){
+		// 위시리스트 등록
 		var wishListId = $(this).attr("id").split("-")[1];
+		console.log("member id : ${sessionScope.member_id}");
 		console.log("wish list id : " + wishListId);
 		console.log("property id : " + wishPropertyId);
 		
- 		$.ajax("/wish/async", {
+		$.ajax("/wish/async", {
 			type : "get",
 			data : {
 				memberId : "${sessionScope.member_id}",
 				wishListId : wishListId,
 				wishPropertyId : wishPropertyId
 			}
- 		})
- 		.done(function(result){
- 			console.log("sql 실행 횟수 : " + result);
- 			if(result < 1){
- 				alert("위시리스트 추가 실패 : DB 오류")
- 			}
- 		})
- 		.fail(function(){
- 			alert("서버와 통신 실패");
- 		})
- 		.always(function (){
- 			$("button#wish-close-button").click();
- 		});
+		})
+		.done(function(result){
+			console.log("sql 실행 횟수 : " + result);
+			if(result < 1){
+				alert("위시리스트 추가 실패 : DB 오류")
+			} else {
+				var imgTag = document.createElement("img");
+				// 찬 하트
+				imgTag.setAttribute("src", "https://img.icons8.com/fluent/48/000000/like.png");
+				imgTag.setAttribute("style", "width: 3rem; height: 3rem");
+				$("a#wishProperty-" + wishPropertyId)
+					.addClass("unwish")
+					.empty()
+					.append(imgTag)
+					.attr("href", "#");
+			}
+		})
+		.fail(function(){
+			alert("서버와 통신 실패");
+		})
+		.always(function (){
+			$("button#wish-close-button").click();
+		});
+	});
+	
+	$(".wish-button").click(function(){
+		if($(this).hasClass("unwish")){
+			// 위시리스트 삭제
+			var unwishPropertyId = $(this).attr("id").split('-')[1];
+			console.log("member id : ${sessionScope.member_id}");
+			console.log("property id : " + unwishPropertyId);
+			
+			$.ajax("/unwish/async", {
+				type : "get",
+				data : {
+					memberId : "${sessionScope.member_id}",
+					unwishPropertyId : unwishPropertyId
+				}
+			})
+			.done(function(result){
+				console.log("sql 실행 횟수 : " + result);
+				if(result < 1){
+					alert("위시리스트 삭제 실패 : DB 오류")
+				} else {
+					var imgTag = document.createElement("img");
+					// 빈 하트
+					imgTag.setAttribute("src", "https://img.icons8.com/fluent-systems-regular/48/000000/like--v1.png");
+					imgTag.setAttribute("style", "width: 3rem; height: 3rem");
+					$("a#wishProperty-" + unwishPropertyId)
+						.removeClass("unwish")
+						.empty()
+						.append(imgTag)
+						.attr("href", "#wish-modal");
+				}
+			})
+			.fail(function(){
+				alert("서버와 통신 실패");
+			});
+		}
 	});
 });
 </script>

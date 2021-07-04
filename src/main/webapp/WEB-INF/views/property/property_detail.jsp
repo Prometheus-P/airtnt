@@ -44,7 +44,6 @@ function setTotalPrice(){
 	document.getElementById("total_price").value = totalPrice;
 	document.getElementById("price_disp").innerHTML = totalPriceStr;
 }
-
 </script>
 </head>
 <body id="top">
@@ -281,7 +280,7 @@ function setTotalPrice(){
 	         <tr>
 	           <td colspan="2" style="font-size: 30px">
 	             총액 <span id="price_disp"></span>
-	             <script type="text/javascript">
+ 	             <script type="text/javascript">
 	               setTotalPrice();
 	             </script>
 	           </td>

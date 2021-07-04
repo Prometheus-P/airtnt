@@ -187,9 +187,9 @@ public class UserController {
 	@ResponseBody
 	public Integer unwishPropertyAsync(HttpServletRequest req,
 			@RequestParam("memberId") String member_id,
-			@RequestParam("wishListId") Integer wishlist_id,
-			@RequestParam("wishPropertyId") Integer wish_property_id) {
-		
+			@RequestParam("unwishPropertyId") Integer unwish_property_id) {
+		System.out.println("사용자 아이디 : " + member_id);
+		System.out.println("숙소 아이디 : " + unwish_property_id);
 		// delete 만들어주세여
 		
 		Integer result = 1; // delete 결과좀 주세여

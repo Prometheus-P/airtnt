@@ -274,37 +274,33 @@ crossorigin="anonymous"></script> -->
 	            </li>
 	            <div class="position-relative">
 	              <div class="position-absolute end-0 bottom-50">
-	                    <!-- Button trigger modal -->
-	                    <a href="#LoginModal" class="trigger-btn" id="wishProperty-${property.id}"
-	                    data-toggle="modal" onclick="wishPropertyId = ${property.id}">
-	                      <!-- 빈 하트 -->
-	                      <img src="https://img.icons8.com/fluent-systems-regular/48/000000/like--v1.png"
-	                      style="width: 3rem; height: 3rem">
-	                    </a>
-	                    <script type="text/javascript">
-	                    var wishButton = document.querySelector("a#wishProperty-${property.id}");
-	                    if("${sessionScope.member_id}" == ""){
-	                    	wishButton.href = "#LoginModal";
-	                    } else {
-	                    	if(${property.wished}){
-	                    		wishButton.href = "#";
-	                    		wishButton.innerHTML = "";
-	                    		var imgTag = document.createElement("img");
-	                    		// 찬 하트
-	                    		imgTag.setAttribute("src", "https://img.icons8.com/fluent/48/000000/like.png");
-	                    		imgTag.setAttribute("style", "width: 3rem; height: 3rem");
-	                    		wishButton.appendChild(imgTag);
-	                    	} else {
-	                    		wishButton.href = "#wish-modal";
-	                    	}
-	                    }
-	                    </script>
-	                    <!-- Button trigger modal -->
-	                      <!-- <a href="#wish-modal" class="trigger-btn" data-toggle="modal">
-	                        <!-- 찬 하트 -- >
-	                        <img src="https://img.icons8.com/fluent/48/000000/like.png"
-	                        style="width: 3rem; height: 3rem">
-	                      </a> -->
+	                <!-- Button trigger modal -->
+	                <a href="" class="trigger-btn wish-button" id="wishProperty-${property.id}"
+	                data-toggle="modal" onclick="wishPropertyId=${property.id}">
+	                  <!-- 빈 하트 -->
+	                  <img src="https://img.icons8.com/fluent-systems-regular/48/000000/like--v1.png"
+	                  style="width: 3rem; height: 3rem">
+	                </a>
+	                <script type="text/javascript">
+	                // 화면 로드 시 초기화하는 과정
+	                var wishButton = document.querySelector("a#wishProperty-${property.id}");
+	                if("${sessionScope.member_id}" == ""){
+	                	wishButton.href = "#LoginModal";
+	                } else {
+	                	if("${property.wished}" == "true"){
+	                		wishButton.href = "#";
+	                		wishButton.setAttribute("class", "trigger-btn wish-button unwish");
+	                		var imgTag = document.createElement("img");
+	                		// 찬 하트
+	                		imgTag.src = "https://img.icons8.com/fluent/48/000000/like.png";
+	                		imgTag.style = "width: 3rem; height: 3rem";
+	                		wishButton.innerHTML = "";
+	                		wishButton.appendChild(imgTag);
+	                	} else {
+	                		wishButton.href = "#wish-modal";
+	                	}
+	                }
+	                </script>
 	              </div>
 	            </div>
 	            <hr>
