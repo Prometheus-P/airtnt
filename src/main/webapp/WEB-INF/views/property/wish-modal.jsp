@@ -70,7 +70,7 @@ $(function(){
 		.done(function(result){
 			console.log("sql 실행 횟수 : " + result);
 			if(result < 1){
-				alert("위시리스트 추가 실패 : DB 오류")
+				alert("위시리스트 추가 실패 : DB 오류");
 			} else {
 				var imgTag = document.createElement("img");
 				// 찬 하트
@@ -108,7 +108,7 @@ $(function(){
 			.done(function(result){
 				console.log("sql 실행 횟수 : " + result);
 				if(result < 1){
-					alert("위시리스트 삭제 실패 : DB 오류")
+					alert("위시리스트 삭제 실패 : DB 오류");
 				} else {
 					var imgTag = document.createElement("img");
 					// 빈 하트
