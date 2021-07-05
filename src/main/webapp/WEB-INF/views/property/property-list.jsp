@@ -279,29 +279,11 @@ crossorigin="anonymous"></script> -->
 	                <a href="" class="trigger-btn wish-button" id="wishProperty-${property.id}"
 	                data-toggle="modal">
 	                  <!-- 빈 하트 -->
-	                  <img src="https://img.icons8.com/fluent-systems-regular/48/000000/like--v1.png"
-	                  style="width: 3rem; height: 3rem">
+	                  <img class="heart" src="" style="width: 3rem; height: 3rem">
 	                </a>
 	                <script type="text/javascript">
-	                // 화면 로드 시 초기화하는 과정
-	                wishButton = document.querySelector("a#wishProperty-${property.id}");
-	                if("${sessionScope.member_id}" == ""){
-	                	wishButton.href = "#LoginModal";
-	                } else {
-	                	if("${property.wished}" == "true"){
-	                		wishButton.href = "#";
-	                		wishButton.setAttribute("class",
-	                				"trigger-btn wish-button unwish wishList-${property.wishListId}");
-	                		var imgTag = document.createElement("img");
-	                		// 찬 하트
-	                		imgTag.src = "https://img.icons8.com/fluent/48/000000/like.png";
-	                		imgTag.style = "width: 3rem; height: 3rem";
-	                		wishButton.innerHTML = "";
-	                		wishButton.appendChild(imgTag);
-	                	} else {
-	                		wishButton.href = "#wish-modal";
-	                	}
-	                }
+	                  // 화면 로드 시 초기화하는 과정
+	                  initWish("${property.id}", "${property.wishListId}", "${property.wished}");
 	                </script>
 	              </div>
 	            </div>

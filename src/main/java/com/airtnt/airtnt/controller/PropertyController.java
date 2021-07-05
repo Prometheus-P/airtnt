@@ -211,16 +211,36 @@ public class PropertyController {
 		
 		PropertyDTO property = propertyMapper.selectProperty(propertyId);
 		
+		// 위시리스트
+		Map<String, Object> wishMap = new Hashtable<>();
+		String memberId = (String)req.getSession().getAttribute("member_id");
+		if(memberId != null && !memberId.trim().equals("")) {
+			wishMap.put("member_id", memberId);
+		}
+		List<WishListDTO> wishLists = wishListMapper.selectWishLists(wishMap);
+		
+		outer: for(WishListDTO wishList : wishLists) {
+			for(PropertyDTO wishProperty : wishList.getProperties()) {
+				if(property.getId() == wishProperty.getId()) {
+					property.setWished(true);
+					property.setWishListId(wishList.getId());
+					break outer;
+				}
+			}
+		}
+		
 		req.setAttribute("tomorrow", getTomorrowString());
 		req.setAttribute("dayAfterTomorrow", getDayAfterTomorrowString());
 		req.setAttribute("property", property);
+		
+		req.setAttribute("wishLists", wishLists);
 		
 		return "property/property-detail";
 	}
 	
 	// 1. 화면에 뿌려질 값들을 설정하는 단계
 	@PostMapping("booking")
-	public String booking(RedirectAttributes ra, HttpServletResponse resp, @ModelAttribute BookingDTO booking) {
+	public String booking(RedirectAttributes ra, @ModelAttribute BookingDTO booking) {
 		
 		PropertyDTO property = propertyMapper.selectProperty(booking.getPropertyId());
 		
@@ -244,7 +264,7 @@ public class PropertyController {
 	
 	// 1. 결제요청 처리
 	@PostMapping("booking-pay")
-	public String bookingPay(HttpServletRequest req, RedirectAttributes ra, HttpServletResponse resp,
+	public String bookingPay(HttpServletRequest req, RedirectAttributes ra,
 			@ModelAttribute BookingDTO booking) {
 		if(DEBUG) {
 			System.out.println(booking);
