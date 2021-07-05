@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -93,14 +94,62 @@ public class UserController {
 		
 		return "redirect:/index";
 	}
+	
 	//마이페이지
 	@RequestMapping("myPage")
 	public String mypage(HttpServletRequest req) {
 		LoginOKBean memberData = LoginOKBean.getInstance();
-		System.out.println(memberData.getName());
 		req.setAttribute("memberData", memberData);
 		
 		return "user/user/myPage";
+	}
+	
+	@RequestMapping("myPage/profile")
+	public String profile(HttpServletRequest req) {
+		LoginOKBean memberData = LoginOKBean.getInstance();
+		req.setAttribute("memberData", memberData);
+		
+		return "user/user/profile";
+	}
+	
+	@RequestMapping("myPage/updateMember")
+	public String updateMember(HttpServletRequest req, @ModelAttribute MemberDTO dto) {
+		String member_id = (String) req.getSession().getAttribute("member_id");
+		dto.setId(member_id);
+		int res = memberMapper.updateMember(dto);
+		
+		MemberDTO getMember = memberMapper.getMember(member_id);
+		LoginOKBean login = LoginOKBean.getInstance();
+		login.login_setting(getMember);
+		return "redirect:/myPage/profile";
+	}
+	
+	@RequestMapping("myPage/editPhoto")
+	public String editPhoto(HttpServletRequest req) {
+		LoginOKBean memberData = LoginOKBean.getInstance();
+		req.setAttribute("memberData", memberData);
+		return "user/user/editPhoto";
+	}
+	
+	@RequestMapping("myPage/updateMemberImage")
+	public String updateMemberImage(HttpServletRequest req, @RequestParam Map<String, String> params) {
+		String member_id = (String) req.getSession().getAttribute("member_id");
+		params.put("member_id", member_id);
+		int res = memberMapper.updateMemberImage(params);
+		
+		return "redirect:/myPage/editPhoto";
+	}
+	
+	@RequestMapping("myPage/review")
+	public String review(HttpServletRequest req) {
+		
+		return "user/user/review";
+	}
+	
+	@RequestMapping("myPage/payment")
+	public String payment(HttpServletRequest req) {
+		
+		return "user/user/payment";
 	}
 	
 	// 위시리스트
@@ -168,31 +217,21 @@ public class UserController {
 	// 정석 작성
 	@RequestMapping("wish/async")
 	@ResponseBody
-	public Integer wishPropertyAsync(HttpServletRequest req,
-			@RequestParam("memberId") String member_id,
-			@RequestParam("wishListId") Integer wishlist_id,
-			@RequestParam("wishPropertyId") Integer wish_property_id) {
-		System.out.println("사용자 아이디 : " + member_id);
-		System.out.println("위시리스트 아이디 : " + wishlist_id);
-		System.out.println("숙소 아이디 : " + wish_property_id);
+	public Integer wishPropertyAsync(HttpServletRequest req, @ModelAttribute WishList_PropertyDTO dto) {
 		
 		// insert 만들어주세여
+		Integer result = wishListMapper.insertWishProperty(dto);
 		
-		
-		Integer result = 1;// insert 결과좀 주세여
 		return result;
 	}
 	
 	@RequestMapping("unwish/async")
 	@ResponseBody
 	public Integer unwishPropertyAsync(HttpServletRequest req,
-			@RequestParam("memberId") String member_id,
-			@RequestParam("unwishPropertyId") Integer unwish_property_id) {
-		System.out.println("사용자 아이디 : " + member_id);
-		System.out.println("숙소 아이디 : " + unwish_property_id);
+			@RequestParam Map<String, String> params) {
 		// delete 만들어주세여
 		
-		Integer result = 1; // delete 결과좀 주세여
+		Integer result = wishListMapper.deletePropertyAsync(params);
 		return result;
 	}
 }

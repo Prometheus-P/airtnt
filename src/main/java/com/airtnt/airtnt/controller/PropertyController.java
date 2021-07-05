@@ -153,6 +153,13 @@ public class PropertyController {
 				}
 			}
 		}
+		
+		System.out.println("----- 숙소 목록 -----");
+		for(PropertyDTO property : properties) {
+			System.out.println(property.getName());
+		}
+		System.out.println("---------------------------");
+		
 		System.out.println("----- 위시리스트별 숙소 목록 -----");
 		for(WishListDTO wishList : wishLists) {
 			System.out.print("위시리스트[" + wishList.getName() + "] : ");
