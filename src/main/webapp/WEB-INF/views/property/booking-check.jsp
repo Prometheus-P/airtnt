@@ -174,7 +174,12 @@ function setTotalPrice(){
              </tr>
              <tr>
                <td>
-                 <img class="imgl borderedbox inspace-5" src="${property.images.get(0).path}" alt="" style="width: 200px;height: 150px">
+                 <img class="imgl borderedbox inspace-5"
+                 src="
+                   <c:if test='${not empty property.images}'>
+                     ${property.images.get(0).path}
+                   </c:if>
+                 " alt="" style="width: 200px;height: 150px">
                </td>
                <td>
                  <ul>

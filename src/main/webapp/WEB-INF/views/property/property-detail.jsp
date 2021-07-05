@@ -147,7 +147,12 @@ function setTotalPrice(){
     <div class="container">
       <!-- 숙소 이미지 -->
       <div class="one_half first">
-        <img class="imgl borderedbox inspace-5" src="${property.images.get(0).path}" alt="" >
+        <img class="imgl borderedbox inspace-5"
+        src="
+          <c:if test='${not empty property.images}'>
+            ${property.images.get(0).path}
+          </c:if>
+        " alt="">
       </div>
       <div class="one_half">
         <c:forEach var="image" items="${property.images}" begin="1" end="4" varStatus="status">

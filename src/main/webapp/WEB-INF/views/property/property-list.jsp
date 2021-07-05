@@ -259,7 +259,11 @@ crossorigin="anonymous"></script> -->
 	            <li style="height: 150px;">
 	                <div class="one_third first" >
 	                  <a href="<c:url value='/property/detail?propertyId=${property.id}'/>">
-	                    <img src="${property.images.get(0).path}" alt="" >
+	                    <img src="
+	                      <c:if test='${not empty property.images}'>
+	                        ${property.images.get(0).path}
+	                      </c:if>
+	                    " alt="" >
 	                  </a>
 	                </div>
 	                <div class="two_third">
