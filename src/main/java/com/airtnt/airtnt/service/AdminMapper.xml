@@ -37,22 +37,33 @@
 	</select>
 	
 	<select id= "selectMemberList" resultType="memberDTO" parameterType="java.util.Map">
-		select (CASE WHEN member_mode = 1 THEN 'GUEST'
-		            WHEN member_mode = 2 THEN 'HOST'
-		       END) AS member_mode
-			 , id
-			 , name as name
-			 , REGEXP_REPLACE(tel, '(.{3})(.+)(.{4})', '\1-\2-\3') as tel
-			 , (CASE WHEN gender = '1' THEN '남성'
-		            WHEN gender = '2' THEN '여성'
-		       END) AS gender
-			 , to_char(reg_date,'YYYY-MM-DD') as reg_date
-		from member
-		where 1=1
-		<if test="member_mode != 0">
-		and member_mode = #{member_mode}
-		</if>
-		order by reg_date desc
+		select *
+		from (select rownum rn, a.*
+		      from ( select (case when member_mode = '1' then 'GUEST'
+		                         when member_mode = '2' then 'HOST'
+		                         when member_mode = '3' THEN 'ADMIN'
+		                     end) as member_mode
+		                   , id
+		                   , name
+		                   , REGEXP_REPLACE(tel, '(.{3})(.+)(.{4})', '\1-\2-\3') as tel
+		                   , (case when gender = '1' THEN '남성'
+		                           when gender = '2' THEN '여성'
+		                      end) as gender
+		                   , to_char(reg_date,'YYYY-MM-DD') as reg_date
+		             from member
+		             where 1=1
+		             <if test="member_mode != 0">
+						and member_mode = #{member_mode}
+					 </if>
+		             order by reg_date desc
+		            ) a
+		    )
+		where rn between #{startRow} and #{endRow}
+		
+	</select>
+	
+	<select id ="selectMemberCount" resultType="Integer">
+		select count(*) from member
 	</select>
 	
 	<select id = "selectRoomTypeList" resultType="roomTypeDTO">
@@ -153,12 +164,20 @@
 		)
 	</insert>
 	
-	<select id = "selectBoardList" resultType="guideDTO">
-		select id,
-			   subject,
-			   reg_date as regDate
-		from guide
-		order by id desc
+	<select id ="selectBoardCount" resultType="Integer">
+		select count(*) from guide
+	</select>
+	
+	<select id = "selectBoardList" resultType="guideDTO" parameterType="java.util.Map">
+		select rn,
+		       id,
+		       subject,
+		       reg_date as regDate
+		from (select rownum rn, a.*
+		      from guide a
+		      order by id desc)
+		where rn between #{startRow} and #{endRow}     
+		order by rn desc
 	</select>
 	
 	<select id = "getSelectedBoard" resultType="guideDTO" parameterType="String">

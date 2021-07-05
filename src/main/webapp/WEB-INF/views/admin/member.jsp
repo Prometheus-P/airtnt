@@ -16,7 +16,6 @@
 	</style>
 </head>
 <body>
-	
 	<script type="text/javascript">
 		$(document).ready(function(){
 			
@@ -34,7 +33,7 @@
 		    var member_mode = getUrlParameter('member_mode');
 		    
 		    //초기 조회시 파라미터값 없으므로 all(0) 으로 세팅
-		    if(member_mode == undefined){
+		    if(member_mode == undefined || member_mode == ''){
 		    	member_mode = 0;
 		    }
 		    //멤버구분 라디오버튼 값 설정
@@ -97,6 +96,20 @@
 		        </table>
 		     </div>
 		</div>
+		
+		<c:if test="${rowCount>0}">
+			<c:if test="${startPage>pageBlock}">
+				<a href="member?pageNum=${startPage-pageBlock}&member_mode="+${member_mode}}>[이전]</a>
+			</c:if>
+			<c:forEach var = "i" begin = "${startPage}" end = "${endPage}">
+				<a href = "member?pageNum=${i}&member_mode="+${member_mode}">[${i}]</a>
+			</c:forEach>
+			<c:if test="${endPage<pageCount}">
+				<a href = "member?pageNum=${startPage + pageBlock}&member_mode="+${member_mode}">[다음]</a>
+			</c:if>	
+		</c:if>
+		
+		
 		<!-- 페이징처리 -->
 		<nav aria-label="Page navigation example">
 		  <ul class="pagination pagination-sm justify-content-center">

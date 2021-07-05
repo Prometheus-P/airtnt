@@ -25,7 +25,6 @@ import com.airtnt.airtnt.model.RoomTypeDTO;
 import com.airtnt.airtnt.model.SubPropertyTypeDTO;
 import com.airtnt.airtnt.model.GuideDTO;
 import com.airtnt.airtnt.service.AdminMapper;
-import com.airtnt.airtnt.service.MemberMapper;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -35,13 +34,11 @@ public class AdminController extends UserController {
 
 	@Autowired
 	AdminMapper adminMapper;
-
-	UserController userController = new UserController();
 	
 	/*
 	 * [main] : admin 계정 로그인 화면
 	 */
-	@RequestMapping(value = "", method = RequestMethod.GET)
+	@RequestMapping(value = "", method = {RequestMethod.GET, RequestMethod.POST})
 	public String goMainView() {
 		return "admin/main";
 	}
@@ -122,12 +119,38 @@ public class AdminController extends UserController {
 	 * [member] : 회원정보 조회
 	 * param : "mode" > 회원구분  ( default "all" 로 세팅 > 처음 전체조회시 )
 	 */
-	@RequestMapping(value = "member", method = RequestMethod.GET)
+	@RequestMapping(value = "member", method = RequestMethod.GET) //@RequestParam(defaultValue="1") String member_mode
 	public String selectMemberList(HttpServletRequest req, @RequestParam(defaultValue="0") String member_mode) throws Exception {
-		System.out.println("mode::" + member_mode);
-		List<MemberDTO> list = adminMapper.selectMemberList(member_mode);
+		//페이징 처리
+		int pageSize = 5;
+		String pageNum = req.getParameter("pageNum");
+		if (pageNum == null || pageNum.trim().equals("")){
+			pageNum = "1";
+		}
+		int currentPage = Integer.parseInt(pageNum);
+		int startRow = (currentPage-1) * pageSize + 1;
+		int endRow = startRow + pageSize - 1;
+		int rowCount = adminMapper.selectMemberCount();
+		int number = rowCount - startRow + 1;
+		if (endRow > rowCount) endRow = rowCount;
+		System.out.println("--------------" + req.getParameter("member_mode"));
+		List<MemberDTO> list = adminMapper.selectMemberList(member_mode, startRow, endRow);
+		
+		int pageCount = rowCount / pageSize + (rowCount%pageSize == 0 ? 0 : 1);
+		int pageBlock = 3;
+		int startPage = ((currentPage-1)/pageBlock) * pageBlock + 1;
+		int endPage = startPage + pageBlock - 1;
+		if (endPage > pageCount) endPage = pageCount;
+		
 		req.setAttribute("memberList", list);
 		req.setAttribute("member_mode", member_mode);
+		req.setAttribute("number", number);
+		req.setAttribute("rowCount", rowCount);
+		req.setAttribute("pageBlock", pageBlock);
+		req.setAttribute("startPage", startPage);
+		req.setAttribute("endPage", endPage);
+		req.setAttribute("pageCount", pageCount);
+		System.out.println("membermode::::" + req.getAttribute("member_mode"));
 		return "admin/member";
 	}
 	
@@ -221,8 +244,35 @@ public class AdminController extends UserController {
 	
 	@RequestMapping(value = "guidelist", method = RequestMethod.GET)
 	public String selectBoardList(HttpServletRequest req) throws Exception {
-		List<GuideDTO> list = adminMapper.selectBoardList();
+		//페이징 처리
+		int pageSize = 5;
+		String pageNum = req.getParameter("pageNum");
+		if (pageNum == null || pageNum.trim().equals("")){
+			pageNum = "1";
+		}
+		int currentPage = Integer.parseInt(pageNum);
+		int startRow = (currentPage-1) * pageSize + 1;
+		int endRow = startRow + pageSize - 1;
+		int rowCount = adminMapper.selectBoardCount();
+		System.out.println("rowCOUNT ::: " + rowCount);
+		int number = rowCount - startRow + 1;
+		if (endRow > rowCount) endRow = rowCount;
+		List<GuideDTO> list = adminMapper.selectBoardList(startRow, endRow);
+		
+		int pageCount = rowCount / pageSize + (rowCount%pageSize == 0 ? 0 : 1);
+		int pageBlock = 3;
+		int startPage = ((currentPage-1)/pageBlock) * pageBlock + 1;
+		int endPage = startPage + pageBlock - 1;
+		if (endPage > pageCount) endPage = pageCount;
+		
 		req.setAttribute("boardList", list);
+		req.setAttribute("number", number);
+		req.setAttribute("rowCount", rowCount);
+		req.setAttribute("pageBlock", pageBlock);
+		req.setAttribute("startPage", startPage);
+		req.setAttribute("endPage", endPage);
+		req.setAttribute("pageCount", pageCount);
+		
 		return "admin/guide_list";
 	}
 	

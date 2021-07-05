@@ -30,10 +30,19 @@ public class AdminMapper {
 	}
 	
 	//[member] : 멤버 조회
-	public List<MemberDTO> selectMemberList(String member_mode){
-		Map<String, String> selectKeyMap = new Hashtable<>();
+	public List<MemberDTO> selectMemberList(String member_mode, int startRow, int endRow){
+		Map<String, Object> selectKeyMap = new Hashtable<>();
 		selectKeyMap.put("member_mode", member_mode);
+		selectKeyMap.put("startRow", startRow);
+		selectKeyMap.put("endRow", endRow);
+		
 		return sqlSession.selectList("selectMemberList", selectKeyMap);
+	}
+	
+	//[member] : 멤버 데이터 전체 카운트
+	public int selectMemberCount() {
+		int cnt = sqlSession.selectOne("selectMemberCount");
+		return cnt;
 	}
 	
 	//[filter] : roomTypeList 
@@ -96,25 +105,36 @@ public class AdminMapper {
 		return res;
 	}
 	
-	//[guide] : 게시글 등록
-	public List<GuideDTO> selectBoardList(){
-		List<GuideDTO> list = sqlSession.selectList("selectBoardList");
-		return list;
+	//[guide] : 게시글 목록 전체 조회
+	public List<GuideDTO> selectBoardList(int startRow, int endRow){
+		Map<String, Object> selectKeyMap = new Hashtable<>();
+		selectKeyMap.put("startRow", startRow);
+		selectKeyMap.put("endRow", endRow);
+		return sqlSession.selectList("selectBoardList", selectKeyMap);
 	}
 	
+	//[guide] : 게시글 삭제
 	public int deleteBoard(String id) {
 		int res = sqlSession.delete("deleteBoard", id);
 		return res;
 	}
 	
+	//[guide] : 게시글 상세내용보기
 	public List<GuideDTO> getSelectedBoard(String id){
 		List<GuideDTO> list = sqlSession.selectList("getSelectedBoard", id);
 		return list;
 	}
 	
+	//[guide] : 게시글 수정
 	public int updateSelectedBoard(GuideDTO dto) {
 		int res = sqlSession.update("updateSelectedBoard", dto);
 		return res;
+	}
+	
+	//[guide] : 멤버 전체 카운트
+	public int selectBoardCount() {
+		int cnt = sqlSession.selectOne("selectBoardCount");
+		return cnt;
 	}
 	
 }

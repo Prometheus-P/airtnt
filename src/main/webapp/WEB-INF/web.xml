@@ -67,7 +67,7 @@
        </filter-class>
        <init-param>
         <param-name>excludedUrls</param-name>
-        <param-value>/index,/login,/property/search,/property/detail,/admin</param-value>
+        <param-value>/index,/login,/property/search,/property/detail,/admin,/admin/loginCheck</param-value>
     	</init-param>
     </filter>
     <filter-mapping>
