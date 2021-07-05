@@ -169,7 +169,7 @@ crossorigin="anonymous"></script> -->
                   <c:forEach var='tagAttribute' items='${amenityType.tagAttributes}'>
                     ${tagAttribute}="${amenityType.getTagAttributeMapValue(tagAttribute)}"
                   </c:forEach>
-                onchange="modChecked(this)">
+                >
                 <label class="form-check-label">${amenityType.name}</label>
               </div>
             </c:forEach>

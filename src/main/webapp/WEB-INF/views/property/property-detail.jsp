@@ -253,7 +253,8 @@ function setTotalPrice(){
 	       host id, guest id, day count, guest count, total price,
 	       checkin date, checkout date
 	      -->
-	     <form action="<c:url value='/property/booking?propertyId=${property.id}'/>" method="post">
+	     <form action="<c:url value='/property/booking'/>" method="post">
+	       <input type="hidden" name="propertyId" value="${property.id}">
 	       <input type="hidden" name="hostId" value="${property.hostId}">
 	       <input type="hidden" name="guestId" value="${sessionScope.member_id}">
 	       <input id="day_count" type="hidden" name="dayCount">
