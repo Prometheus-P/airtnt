@@ -5,30 +5,30 @@ import java.util.List;
 
 public class PropertyDTO {
 
-	private int id; // pk
+	private Integer id; // pk
 	private String name;
 	private String hostId;
 	private String propertyDesc;
 	private String address;
 	private String latitude;
 	private String longitude;
-	private int price;
-	private int bedCount;
-	private int maxGuest;
+	private Integer price;
+	private Integer bedCount;
+	private Integer maxGuest;
 	private Date regDate;
 	private Date modDate;
 	
 	// 예전 방식
 	// property_type 테이블 참조값
-	private int propertyTypeId; // fk
+	private Integer propertyTypeId; // fk
 	private String propertyTypeName;
 
 	// sub_property_type 테이블 참조값
-	private int subPropertyTypeId; // fk
+	private Integer subPropertyTypeId; // fk
 	private String subPropertyTypeName;
 
 	// room_type 테이블 참조값
-	private int roomTypeId; // fk
+	private Integer roomTypeId; // fk
 	private String roomTypeName;
 	
 	// 요즘 방식
@@ -43,10 +43,10 @@ public class PropertyDTO {
 	private boolean wished;
 	private Integer wishListId;
 	
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 	public String getName() {
@@ -85,22 +85,22 @@ public class PropertyDTO {
 	public void setLongitude(String longitude) {
 		this.longitude = longitude;
 	}
-	public int getPrice() {
+	public Integer getPrice() {
 		return price;
 	}
-	public void setPrice(int price) {
+	public void setPrice(Integer price) {
 		this.price = price;
 	}
-	public int getBedCount() {
+	public Integer getBedCount() {
 		return bedCount;
 	}
-	public void setBedCount(int bedCount) {
+	public void setBedCount(Integer bedCount) {
 		this.bedCount = bedCount;
 	}
-	public int getMaxGuest() {
+	public Integer getMaxGuest() {
 		return maxGuest;
 	}
-	public void setMaxGuest(int maxGuest) {
+	public void setMaxGuest(Integer maxGuest) {
 		this.maxGuest = maxGuest;
 	}
 	public Date getRegDate() {
@@ -117,10 +117,10 @@ public class PropertyDTO {
 	}
 	
 	// 예전 방식
-	public int getPropertyTypeId() {
+	public Integer getPropertyTypeId() {
 		return propertyTypeId;
 	}
-	public void setPropertyTypeId(int propertyTypeId) {
+	public void setPropertyTypeId(Integer propertyTypeId) {
 		this.propertyTypeId = propertyTypeId;
 	}
 	public String getPropertyTypeName() {
@@ -129,10 +129,10 @@ public class PropertyDTO {
 	public void setPropertyTypeName(String propertyTypeName) {
 		this.propertyTypeName = propertyTypeName;
 	}
-	public int getSubPropertyTypeId() {
+	public Integer getSubPropertyTypeId() {
 		return subPropertyTypeId;
 	}
-	public void setSubPropertyTypeId(int subPropertyTypeId) {
+	public void setSubPropertyTypeId(Integer subPropertyTypeId) {
 		this.subPropertyTypeId = subPropertyTypeId;
 	}
 	public String getSubPropertyTypeName() {
@@ -141,10 +141,10 @@ public class PropertyDTO {
 	public void setSubPropertyTypeName(String subPropertyTypeName) {
 		this.subPropertyTypeName = subPropertyTypeName;
 	}
-	public int getRoomTypeId() {
+	public Integer getRoomTypeId() {
 		return roomTypeId;
 	}
-	public void setRoomTypeId(int roomTypeId) {
+	public void setRoomTypeId(Integer roomTypeId) {
 		this.roomTypeId = roomTypeId;
 	}
 	public String getRoomTypeName() {

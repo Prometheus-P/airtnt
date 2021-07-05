@@ -4,13 +4,13 @@ import java.sql.Date;
 
 public class BookingDTO {
 	
-	private int id;
-	private int propertyId;
+	private Integer id;
+	private Integer propertyId;
 	private String guestId;
 	private String hostId;
-	private int guestCount;
-	private int dayCount;
-	private int totalPrice;
+	private Integer guestCount;
+	private Integer dayCount;
+	private Integer totalPrice;
 	private String bookingNumber;
 	private Date checkInDate;
 	private Date checkOutDate;
@@ -23,9 +23,9 @@ public class BookingDTO {
 	private String booking_number;
 	private Date check_in_date;
 	private Date check_out_date;
-	private int total_price;
+	private Integer total_price;
 	private Date confirm_date;
-	private int property_id;
+	private Integer property_id;
 	private String property_name;
 	private String property_address;
 	private String type_name;
@@ -38,16 +38,16 @@ public class BookingDTO {
 	private String memberId;
 	private String guestName;
 	
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
-	public int getPropertyId() {
+	public Integer getPropertyId() {
 		return propertyId;
 	}
-	public void setPropertyId(int propertyId) {
+	public void setPropertyId(Integer propertyId) {
 		this.propertyId = propertyId;
 	}
 	public String getGuestId() {
@@ -62,22 +62,22 @@ public class BookingDTO {
 	public void setHostId(String hostId) {
 		this.hostId = hostId;
 	}
-	public int getGuestCount() {
+	public Integer getGuestCount() {
 		return guestCount;
 	}
-	public void setGuestCount(int guestCount) {
+	public void setGuestCount(Integer guestCount) {
 		this.guestCount = guestCount;
 	}
-	public int getDayCount() {
+	public Integer getDayCount() {
 		return dayCount;
 	}
-	public void setDayCount(int dayCount) {
+	public void setDayCount(Integer dayCount) {
 		this.dayCount = dayCount;
 	}
-	public int getTotalPrice() {
+	public Integer getTotalPrice() {
 		return totalPrice;
 	}
-	public void setTotalPrice(int totalPrice) {
+	public void setTotalPrice(Integer totalPrice) {
 		this.totalPrice = totalPrice;
 	}
 	public String getBookingNumber() {
@@ -149,10 +149,10 @@ public class BookingDTO {
 	public void setCheck_out_date(Date check_out_date) {
 		this.check_out_date = check_out_date;
 	}
-	public int getTotal_price() {
+	public Integer getTotal_price() {
 		return total_price;
 	}
-	public void setTotal_price(int total_price) {
+	public void setTotal_price(Integer total_price) {
 		this.total_price = total_price;
 	}
 	public Date getConfirm_date() {
@@ -161,10 +161,10 @@ public class BookingDTO {
 	public void setConfirm_date(Date confirm_date) {
 		this.confirm_date = confirm_date;
 	}
-	public int getProperty_id() {
+	public Integer getProperty_id() {
 		return property_id;
 	}
-	public void setProperty_id(int property_id) {
+	public void setProperty_id(Integer property_id) {
 		this.property_id = property_id;
 	}
 	public String getProperty_name() {

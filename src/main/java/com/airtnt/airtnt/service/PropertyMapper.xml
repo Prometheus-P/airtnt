@@ -154,32 +154,32 @@
 			open="(" separator="," close=")">
 				#{propertyTypeIdKey}
 			</foreach>
+			and pt.is_use='Y'
 		</if>
-		and pt.is_use='Y'
 		<if test="subPropertyTypeIdKeyArray != null">
 			and spt.id in
 			<foreach item="subPropertyTypeIdKey" collection="subPropertyTypeIdKeyArray"
 			open="(" separator="," close=")">
 				#{subPropertyTypeIdKey}
 			</foreach>
+			and spt.is_use='Y'
 		</if>
-		and spt.is_use='Y'
 		<if test="roomTypeIdKeyArray != null">
 			 and rt.id in
 			<foreach item="roomTypeIdKey" collection="roomTypeIdKeyArray"
 			open="(" separator="," close=")">
 				#{roomTypeIdKey}
 			</foreach>
+			and rt.is_use='Y'
 		</if>
-		and rt.is_use='Y'
 		<if test="amenityTypeIdKeyArray != null">
 			and at.id in
 			<foreach item="amenityTypeIdKey" collection="amenityTypeIdKeyArray"
 			open="(" separator="," close=")">
 				#{amenityTypeIdKey}
 			</foreach>
+			and at.is_use='Y'
 		</if>
-		and at.is_use='Y'
 		<if test="guestCountKey != null">
 			and p.max_guest <![CDATA[ >= ]]> #{guestCountKey}
 		</if>
