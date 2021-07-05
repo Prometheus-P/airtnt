@@ -128,4 +128,16 @@ public class HostMapper implements HostMapperInterface {
 		return date;
 	}
 
+	@Override
+	public int getPropertyId(String hostId) {
+		int propertyId = sqlSession.selectOne("getPropertyId", hostId);
+		return propertyId;
+	}
+
+	@Override
+	public int insertPropertyAmenity(AmenityDTO dto) {
+		int res = sqlSession.insert("insertPropertyAmenity", dto);
+		return res;
+	}
+
 }

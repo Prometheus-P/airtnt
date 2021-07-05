@@ -79,7 +79,7 @@ public class HostController implements HostControllerInterface {
 
 	@Override
 	@RequestMapping("/host/sub_property_type_1")
-	public ModelAndView sub_property_type_1(HttpServletRequest req, int propertyTypeId) {
+	public ModelAndView sub_property_type_1(HttpServletRequest req, @RequestParam int propertyTypeId) {
 		HttpSession session = req.getSession();
 		session.setAttribute("propertyTypeId", propertyTypeId);
 		List<SubPropertyTypeDTO> subPropertyTypeList = hostMapper.getSubPropertyType(propertyTypeId);
@@ -90,7 +90,7 @@ public class HostController implements HostControllerInterface {
 
 	@Override
 	@RequestMapping("/host/room_type_2")
-	public ModelAndView room_type_2(HttpServletRequest req, int subPropertyType) {
+	public ModelAndView room_type_2(HttpServletRequest req, @RequestParam int subPropertyType) {
 		HttpSession session = req.getSession();
 		session.setAttribute("subPropertyTypeId", subPropertyType);
 		List<RoomTypeDTO> roomTypeList = hostMapper.getRoomType();
@@ -101,7 +101,7 @@ public class HostController implements HostControllerInterface {
 
 	@Override
 	@RequestMapping("/host/address_3")
-	public String address_3(HttpServletRequest req, int roomTypeId) {
+	public String address_3(HttpServletRequest req, @RequestParam int roomTypeId) {
 		HttpSession session = req.getSession();
 		session.setAttribute("roomTypeId", roomTypeId);
 		return "host/property_insert/address_3";
@@ -109,7 +109,7 @@ public class HostController implements HostControllerInterface {
 
 	@Override
 	@RequestMapping("/host/floor_plan_4")
-	public String floor_plan_4(HttpServletRequest req, String address) {
+	public String floor_plan_4(HttpServletRequest req, @RequestParam String address) {
 		HttpSession session = req.getSession();
 		session.setAttribute("address", address);
 		return "host/property_insert/floor_plan_4";
@@ -117,18 +117,19 @@ public class HostController implements HostControllerInterface {
 
 	@Override
 	@RequestMapping("/host/amenities_5")
-	public ModelAndView amenities_5(HttpServletRequest req, Map<String, Integer> floor) {
+	public ModelAndView amenities_5(HttpServletRequest req, @RequestParam Map<String, Integer> floor) {
 		HttpSession session = req.getSession();
-		session.setAttribute("floorMap", floor);
+		session.setAttribute("mapFloor", floor);
 		List<AmenityTypeDTO> list = hostMapper.getAmenityTypeList();
 		return new ModelAndView("/host/property_insert/amenities_5", "listAmenityType", list);
 	}
 
 	@Override
-	@RequestMapping("/host/photos_6")
-	public String photos_6(HttpServletRequest req, Map<String, Integer> amenities) {
+	@RequestMapping("/host/photos_6")//name = amenities로 페이지에서 보내야 함
+	public String photos_6(HttpServletRequest req, 
+			@RequestParam(value="amenities", required=true) List<Integer> amenities) {
 		HttpSession session = req.getSession();
-		session.setAttribute("amenitiesMap", amenities);
+		session.setAttribute("listAmenities", amenities);
 		return "/host/property_insert/photos_6";
 	}
 
@@ -141,45 +142,76 @@ public class HostController implements HostControllerInterface {
 	}
 
 	@Override
-	@RequestMapping("/host/title_description_7")
+	@RequestMapping("/host/name_description_7")
 	public String title_description_7() {
-		return "/host/become_a_host/title_description_7";
+		return "/host/become_a_host/name_description_7";
 	}
 
 	@Override
 	@RequestMapping("/host/price_8")
-	public String price_8(HttpServletRequest req, Map<String, String> titleDesc) {
+	public String price_8(HttpServletRequest req, @RequestParam Map<String, String> nameDesc) {
 		HttpSession session = req.getSession();
-		session.setAttribute("titleDescMap", titleDesc);
+		session.setAttribute("mapNameDesc", nameDesc);
 		return "/host/become_a_host/price_8";
 	}
 
 	@Override
 	@RequestMapping("/host/preview_9")
-	public String preview_9(HttpServletRequest req, int price) {
+	public String preview_9(HttpServletRequest req, @RequestParam int price) {
 		HttpSession session = req.getSession();
 		session.setAttribute("price", price);
 		return "/host/become_a_host/price_8";
 	}
 
 	@Override
+	@RequestMapping("/host/publish_celebration_10")
 	public String publish_celebration_10(HttpServletRequest req) {
 		HttpSession session = req.getSession();
+		String hostId = (String)session.getAttribute("member_id");
 		int propertyTypeId = (int)session.getAttribute("propertyTypeId");
 		int subPropertyTypeId = (int)session.getAttribute("subPropertyTypeId");
 		int roomTypeId = (int)session.getAttribute("roomTypeId");
 		String address = (String)session.getAttribute("address");
-		Map<String, Integer> floor = (Map<String, Integer>)session.getAttribute("floorMap");
+		Map<String, Integer> floor = (Map<String, Integer>)session.getAttribute("mapFloor");
 		//maxGuest & bedCount
-		Map<String, Integer> amenities = (Map<String, Integer>)session.getAttribute("amenitiesMap");
+		List<Integer> amenities = (List<Integer>)session.getAttribute("listAmenities");
 		//여러가지 편의시설
 		session.getAttribute("사진도 받기");
-		Map<String, String> titleDesc = (Map<String, String>)session.getAttribute("titleDescMap");
+		Map<String, String> nameDesc = (Map<String, String>)session.getAttribute("mapNameDesc");
 		int price = (int)session.getAttribute("price");
 	
 		PropertyDTO dtoPro = new PropertyDTO();
+		dtoPro.setHostId(hostId);
+		dtoPro.setAddress(address);
+		dtoPro.setBedCount(floor.get("bedCount"));
+		dtoPro.setMaxGuest(floor.get("maxGuest"));
+		dtoPro.setName(nameDesc.get("name"));
+		dtoPro.setPropertyDesc(nameDesc.get("description"));
+		dtoPro.setPrice(price);
+		dtoPro.setPropertyTypeId(propertyTypeId);
+		dtoPro.setSubPropertyTypeId(subPropertyTypeId);
+		dtoPro.setRoomTypeId(roomTypeId);
 		int ok = hostMapper.insertProperty(dtoPro);
-		List<AmenityDTO> listAme = new ArrayList<>();
+		
+		int propertyId = hostMapper.getPropertyId(hostId);
+		AmenityDTO dto[];
+		int count=0;
+		int result=0;
+		for(int i : amenities) {
+			 dto = new AmenityDTO[count];
+			 dto[count].setAmenityTypeId(i);
+			 dto[count].setPropertyId(propertyId);
+			 result += hostMapper.insertPropertyAmenity(dto[count]);
+			 count++;
+		}
+		session.removeAttribute("propertyTypeId");
+		session.removeAttribute("subPropertyTypeId");
+		session.removeAttribute("roomTypeId");
+		session.removeAttribute("address");
+		session.removeAttribute("mapFloor");
+		session.removeAttribute("listAmenities");
+		session.removeAttribute("mapTitleDesc");
+		session.removeAttribute("price");
 		return "/host/property_insert/publish_celebration_10";
 	}
 	
