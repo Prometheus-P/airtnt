@@ -1,6 +1,6 @@
 package com.airtnt.airtnt.service;
 
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.airtnt.airtnt.model.AmenityDTO;
+import com.airtnt.airtnt.model.AmenityTypeDTO;
 import com.airtnt.airtnt.model.BookingDTO;
 import com.airtnt.airtnt.model.GuideDTO;
 import com.airtnt.airtnt.model.MemberDTO;
@@ -104,9 +105,9 @@ public class HostMapper implements HostMapperInterface {
 	}
 
 	@Override
-	public List<AmenityDTO> getAmenityTypeList() {
-		// TODO Auto-generated method stub
-		return null;
+	public List<AmenityTypeDTO> getAmenityTypeList() {
+		List<AmenityTypeDTO> list = sqlSession.selectList("listAmenityType");
+		return list;
 	}
 
 	@Override
@@ -117,7 +118,14 @@ public class HostMapper implements HostMapperInterface {
 
 	@Override
 	public List<TransactionDTO> getTotalEarning(String memberId) {
-		List<TransactionDTO> list = sqlSession.selectList("totalEarningMap", memberId);
+		List<TransactionDTO> list = sqlSession.selectList("totalEarningList", memberId);
 		return list;
 	}
+
+	@Override
+	public java.sql.Date getSysdate() {
+		java.sql.Date date = sqlSession.selectOne("getSysdate");
+		return date;
+	}
+
 }

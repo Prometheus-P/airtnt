@@ -29,41 +29,37 @@
 		<br><br><br><br>
 		<!-- Main jumbotron for a primary marketing message or call to action -->
 		<div class="jumbotron">
-			<h1>총 수입!</h1>
+			<h1><i class="bi bi-bar-chart"></i>총 수입!</h1>
 			<p>
 				수입을 알아봅시다!
 			</p>
 		</div>
-		
-		
-<!--
-<script>
-var id = "<c:out value ='${id}'/>";
-console.log(id);
-</script> 
--->
-
 	<div class="col-md-6" style="width: 80%">
 			<div class="page-header">
 				<br> <br> <br>
-				<h1>총 수입</h1>
+				<h1<i class="bi bi-cash-stack"></i>>총 수입(₩)<i class="bi bi-cash-stack"></i></h1>
 			</div>
 			<!-- 차트 -->
 			<div class="container"> <canvas id="myChart"> </canvas> </div> 
 			<script>
 				var ctx = document.getElementById('myChart').getContext('2d');
 				var today = new Date();
+				var day = today.getDate();
 				var month = today.getMonth() + 1;
 				var year = today.getYear()-100;
 				var label = [];
-				for (var i = 0; i < 12; ++i) {
-					label[11-i] = month - i;
-					if (label[11-i] <= 0) {
-						label[11-i] += 12
-						label[11-i] = year-1 + '년' + label[11-i] + '월';
+				for (var i = 0; i <= 12; ++i) {
+					label[12-i] = month - i;
+					if (label[12-i] <= 0) {
+						label[12-i] += 12
+						label[12-i] = year-1 + '년' + label[12-i] + '월' + day +'일';
 					}else{
-						label[11-i] = year+ '년' + label[11-i] + '월';
+						label[12-i] = year+ '년' + label[12-i] + '월' + day +'일';
 					}
+				}
+				var check = [];
+				for(var i=0; i<12 ; ++i){
+					check[i] = label[i] + ' ~ ' + label[i+1];
 				}
 				var list1 = "<c:out value='${listTotal.get(0)}'/>";
 				var list2 = "<c:out value='${listTotal.get(1)}'/>";
@@ -92,11 +88,11 @@ console.log(id);
 					type : 'line',
 					// 챠트를 그릴 데이타 
 					data : {
-						labels : label,
+						labels : check,
 						datasets : [ {
-							label : '총 수입',
-							backgroundColor : 'transparent',
-							borderColor : 'red',
+							label : '숙소에서 얻은 수입',
+							backgroundColor : '#00ffff',
+							borderColor : '#0000ff',
 							data : [list1, list2, list3, list4, list5, list6, list7, list8, 
 								list9, list10, list11, list12]
 						} ]

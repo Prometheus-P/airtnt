@@ -1,6 +1,7 @@
 package com.airtnt.airtnt.controller;
 
 import java.io.File;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -20,6 +21,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.airtnt.airtnt.model.AmenityDTO;
+import com.airtnt.airtnt.model.AmenityTypeDTO;
 import com.airtnt.airtnt.model.BookingDTO;
 import com.airtnt.airtnt.model.GuideDTO;
 import com.airtnt.airtnt.model.PropertyDTO;
@@ -63,141 +66,134 @@ public class HostController implements HostControllerInterface {
 		return mav;
 	}
 
+	//////////////////////////////////////////////////////////////////////////////////////
 	// 2. property_type_0으로 이동해서 분류 시작
+	//////////////////////////////////////////////////////////////////////////////////////
+	
 	@Override
-	@RequestMapping("host/property_type_0")
-	public ModelAndView property_type_0() {
+	@RequestMapping("/host/property_type_0")
+	public ModelAndView property_type_0(HttpServletRequest req) {
 		List<PropertyTypeDTO> propertyTypeList = hostMapper.getPropertyType();
-		return new ModelAndView("host/become_a_host/property_type_0", "propertyTypeList", propertyTypeList);
+		return new ModelAndView("host/property_insert/property_type_0", "propertyTypeList", propertyTypeList);
 	}
 
 	@Override
-	@RequestMapping("host/property_detail_1")
-	public ModelAndView property_detail_1(HttpServletRequest req, @RequestParam int propertyTypeId) {
+	@RequestMapping("/host/sub_property_type_1")
+	public ModelAndView sub_property_type_1(HttpServletRequest req, int propertyTypeId) {
 		HttpSession session = req.getSession();
 		session.setAttribute("propertyTypeId", propertyTypeId);
 		List<SubPropertyTypeDTO> subPropertyTypeList = hostMapper.getSubPropertyType(propertyTypeId);
-		List<RoomTypeDTO> roomTypeList = hostMapper.getRoomType();
-		ModelAndView mav = new ModelAndView("host/become_a_host/property_detail_1");
+		ModelAndView mav = new ModelAndView("host/property_insert/sub_property_type_1");
 		mav.addObject("subPropertyTypeList", subPropertyTypeList);
+		return mav;
+	}
+
+	@Override
+	@RequestMapping("/host/room_type_2")
+	public ModelAndView room_type_2(HttpServletRequest req, int subPropertyType) {
+		HttpSession session = req.getSession();
+		session.setAttribute("subPropertyTypeId", subPropertyType);
+		List<RoomTypeDTO> roomTypeList = hostMapper.getRoomType();
+		ModelAndView mav = new ModelAndView("host/property_insert/room_type_2");
 		mav.addObject("roomTypeList", roomTypeList);
 		return mav;
 	}
 
 	@Override
-	@RequestMapping("host/property_address_2") // 개인실, 다인실, 전체
-	// sub_property_type(int) &
-	// room_type(int) & maxGuest(int)(proptertyDTO) &
-	// bedCount(int)(proptertyDTO) >> (property_detail_1)
-	public String property_address_2(HttpServletRequest req, @RequestParam Map<String, Integer> map1) {
+	@RequestMapping("/host/address_3")
+	public String address_3(HttpServletRequest req, int roomTypeId) {
 		HttpSession session = req.getSession();
-		session.setAttribute("map1", map1);
-		return "host/become_a_host/property_address_2";
+		session.setAttribute("roomTypeId", roomTypeId);
+		return "host/property_insert/address_3";
 	}
 
 	@Override
-	@RequestMapping("host/property_detail_3")
-	public String property_detail_3(HttpServletRequest req, @RequestParam String address) {
+	@RequestMapping("/host/floor_plan_4")
+	public String floor_plan_4(HttpServletRequest req, String address) {
 		HttpSession session = req.getSession();
 		session.setAttribute("address", address);
-		System.out.print(address);
-		return "host/become_a_host/property_detail_3";
+		return "host/property_insert/floor_plan_4";
 	}
 
-	// amenities(int) & room_name(String) & description(String) & price(int)
-	// (property_detail_3)
 	@Override
-	@RequestMapping("/host/property_image_4")
-	public String property_image_4(HttpServletRequest req, @RequestParam Map<String, String> map2) {
+	@RequestMapping("/host/amenities_5")
+	public ModelAndView amenities_5(HttpServletRequest req, Map<String, Integer> floor) {
 		HttpSession session = req.getSession();
-		session.setAttribute("map2", map2);
-		return "host/become_a_host/property_image_4";
+		session.setAttribute("floorMap", floor);
+		List<AmenityTypeDTO> list = hostMapper.getAmenityTypeList();
+		return new ModelAndView("/host/property_insert/amenities_5", "listAmenityType", list);
 	}
 
-	private static final int RESULT_EXCEED_SIZE = -2;
-	private static final int RESULT_UNACCEPTED_EXTENSION = -1;
-	private static final int RESULT_SUCCESS = 1;
-	private static final long LIMIT_SIZE = 10 * 1024 * 1024;
+	@Override
+	@RequestMapping("/host/photos_6")
+	public String photos_6(HttpServletRequest req, Map<String, Integer> amenities) {
+		HttpSession session = req.getSession();
+		session.setAttribute("amenitiesMap", amenities);
+		return "/host/property_insert/photos_6";
+	}
 
 	@Override
 	@ResponseBody
-	@RequestMapping(value = "/host/image_upload")
-	public int image_upload(HttpServletRequest req, @RequestParam("files") List<MultipartFile> images) {
-		long sizeSum = 0;
-		for (MultipartFile image : images) {
-			String originalName = image.getOriginalFilename();
-			// 확장자 검사
-			if (!isValidExtension(originalName)) {
-				return RESULT_UNACCEPTED_EXTENSION;
-			}
-
-			// 용량 검사
-			sizeSum += image.getSize();
-			if (sizeSum >= LIMIT_SIZE) {
-				return RESULT_EXCEED_SIZE;
-			}
-		}
-		for (MultipartFile image : images) {
-			String originalName = image.getOriginalFilename();
-			if (originalName != null && !originalName.trim().equals("")) {
-				originalName += "_" + System.currentTimeMillis();
-			}
-			try {
-				image.transferTo(new File("/resources/property_img/" + originalName));
-				System.out.print(originalName);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		return RESULT_SUCCESS;
-	}
-
-	private boolean isValidExtension(String originalName) {
-		String originalNameExtension = originalName.substring(originalName.lastIndexOf(".") + 1);
-		switch (originalNameExtension) {
-		case "jpg":
-		case "png":
-		case "gif":
-			return true;
-		}
-		return false;
-	}
-
-	@Override
-	@RequestMapping("/host/property_preview_5")
-	public String property_preview_5(HttpServletRequest req) {
+	@RequestMapping(value = "/host/photos_upload")
+	public int photos_upload(HttpServletRequest req, List<MultipartFile> images) {
 		// TODO Auto-generated method stub
-		return null;
+		return 0;
 	}
 
 	@Override
-	@RequestMapping("/host/publish_celebration_6")
-	public String publish_celebration_6(HttpServletRequest req) {
-		HttpSession session = req.getSession();
-		Map<String, Integer> map1 = (Map<String, Integer>) session.getAttribute("map1");
-
-		/*
-		 * property_type(int) & sub_property_type(int) & room_type(int) &
-		 * maxGuest(int)(proptertyDTO) & bedCount(int)(proptertyDTO)
-		 */
-		String address = (String) session.getAttribute("address");
-		Map<String, String> map2 = (Map<String, String>) session.getAttribute("map2");
-		/*
-		 * amenities(int) & room_name(String) & description(String) & price(int)
-		 * (property_detail_3)
-		 */
-		session.getAttribute("map3");
-		// 사진
-		return "host/become_a_host/publish_celebration_6";
+	@RequestMapping("/host/title_description_7")
+	public String title_description_7() {
+		return "/host/become_a_host/title_description_7";
 	}
 
+	@Override
+	@RequestMapping("/host/price_8")
+	public String price_8(HttpServletRequest req, Map<String, String> titleDesc) {
+		HttpSession session = req.getSession();
+		session.setAttribute("titleDescMap", titleDesc);
+		return "/host/become_a_host/price_8";
+	}
+
+	@Override
+	@RequestMapping("/host/preview_9")
+	public String preview_9(HttpServletRequest req, int price) {
+		HttpSession session = req.getSession();
+		session.setAttribute("price", price);
+		return "/host/become_a_host/price_8";
+	}
+
+	@Override
+	public String publish_celebration_10(HttpServletRequest req) {
+		HttpSession session = req.getSession();
+		int propertyTypeId = (int)session.getAttribute("propertyTypeId");
+		int subPropertyTypeId = (int)session.getAttribute("subPropertyTypeId");
+		int roomTypeId = (int)session.getAttribute("roomTypeId");
+		String address = (String)session.getAttribute("address");
+		Map<String, Integer> floor = (Map<String, Integer>)session.getAttribute("floorMap");
+		//maxGuest & bedCount
+		Map<String, Integer> amenities = (Map<String, Integer>)session.getAttribute("amenitiesMap");
+		//여러가지 편의시설
+		session.getAttribute("사진도 받기");
+		Map<String, String> titleDesc = (Map<String, String>)session.getAttribute("titleDescMap");
+		int price = (int)session.getAttribute("price");
+	
+		PropertyDTO dtoPro = new PropertyDTO();
+		int ok = hostMapper.insertProperty(dtoPro);
+		List<AmenityDTO> listAme = new ArrayList<>();
+		return "/host/property_insert/publish_celebration_10";
+	}
+	
+	//////////////////////////////////////////////////////////////////////////////////////
+	//3. host_mode 페이지
+	//////////////////////////////////////////////////////////////////////////////////////
+	
 	@Override
 	@RequestMapping("host/host_mode")
 	public ModelAndView host_mode(HttpServletRequest req) {
 		HttpSession session = req.getSession();
 		String hostId = (String) session.getAttribute("member_id");
 		List<BookingDTO> listBooking = hostMapper.getBookingList(hostId);
-		Date today = new Date();
+		java.sql.Date today = hostMapper.getSysdate();
 		ModelAndView mav = new ModelAndView("/host/host_mode/host_mode");
 		mav.addObject("listBooking", listBooking);
 		mav.addObject("today", today);
@@ -223,8 +219,8 @@ public class HostController implements HostControllerInterface {
 	@Override
 	@RequestMapping(value = "host/properties_update", method = RequestMethod.POST)
 	public ModelAndView host_property_update(HttpServletRequest req, @RequestParam Map<String, String> map,
-		@RequestParam("files") List<MultipartFile> images) {
-		//msg, url
+			@RequestParam("files") List<MultipartFile> images) {
+		// msg, url
 		return new ModelAndView("/message");
 	}
 
@@ -235,20 +231,18 @@ public class HostController implements HostControllerInterface {
 		String hostId = (String) session.getAttribute("member_id");
 		List<TransactionDTO> listTransaction = hostMapper.getTransactionList(hostId);
 		// 6월 29, 2021 10:31:02 오전
-		int count = 0;
 		ModelAndView mav = new ModelAndView("/host/host_mode/transaction_list");
-		for (TransactionDTO dto : listTransaction) { // 대금예정이 없습니다
-			if (dto.getPayExptDate() == null) {
-				count++;
+		java.util.Date today = new Date();
+		for (TransactionDTO dto : listTransaction) {
+			if (dto.getConfirmDate() != null && dto.getPayExptDate() != null) {
+				if (dto.getConfirmDate().before(today) && today.before(dto.getPayExptDate())) {
+					mav.addObject("isReserv", 1);
+					break;
+				}
 			}
 		}
-		if (count == listTransaction.size()) {
-			mav.addObject("isTran", true);
-		}
-		Date nowTime = new Date();
 		mav.addObject("listTransaction", listTransaction);
-		mav.addObject("today", nowTime);
-		mav.addObject("isTran", false);
+		mav.addObject("today", today);
 		return mav;
 	}
 
@@ -259,7 +253,7 @@ public class HostController implements HostControllerInterface {
 		return new ModelAndView("/host/host_mode/host_review_list");
 	}
 
-	public Date addMonth(Date date, int months) {
+	public java.util.Date addMonth(Date date, int months) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
 		cal.add(Calendar.MONTH, months);
@@ -272,8 +266,8 @@ public class HostController implements HostControllerInterface {
 		HttpSession session = req.getSession();
 		String hostId = (String) session.getAttribute("member_id");
 		List<TransactionDTO> list = hostMapper.getTotalEarning(hostId);
-		Date date = new Date();
-		Date beM[] = new Date[13];
+		java.util.Date date = new Date();
+		java.util.Date beM[] = new Date[13];
 		ModelAndView mav = new ModelAndView("/host/host_mode/total_earning");
 		List<Integer> listTotal = new ArrayList<>();
 		int total[] = new int[12];
@@ -283,7 +277,9 @@ public class HostController implements HostControllerInterface {
 		for (TransactionDTO dto : list) { // 6개월 전
 			for (int i = 0; i < 12; ++i) {
 				if (beM[i + 1].before(dto.getPayExptDate()) && dto.getPayExptDate().before(beM[i])) {
-					total[i] += dto.getTotalPrice();
+					if (Character.compare(dto.getIsRefund(), 'N') == 0) {
+						total[i] += dto.getTotalPrice() - dto.getTotalPrice() * dto.getSiteFee();
+					}
 				}
 			}
 		} // total[0]: 가장 최근 달 >> total1

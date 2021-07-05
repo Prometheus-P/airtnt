@@ -12,7 +12,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.airtnt.airtnt.model.*;
+import com.airtnt.airtnt.service.BookingMapper;
+import com.airtnt.airtnt.service.MemberMapper;
 import com.airtnt.airtnt.service.PropertyMapper;
+import com.airtnt.airtnt.service.WishListMapper;
 import com.airtnt.airtnt.util.TagAttribute;
 
 @Controller
@@ -21,6 +24,11 @@ public class PropertyController {
 	
 	@Autowired
 	private PropertyMapper propertyMapper;
+	@Autowired
+	private WishListMapper wishListMapper;
+	@Autowired
+	private BookingMapper bookingMapper;
+	
 	
 	@RequestMapping("search")
 	public String search(HttpServletRequest req,
@@ -76,6 +84,16 @@ public class PropertyController {
 		List<RoomTypeDTO> roomTypes = propertyMapper.selectRoomTypes();
 		List<AmenityTypeDTO> amenityTypes = propertyMapper.selectAmenityTypes();
 		
+		// 위시리스트
+		Map<String, Object> wishMap = new Hashtable<>();
+		String memberId = (String)req.getSession().getAttribute("member_id");
+		if(memberId != null && !memberId.trim().equals("")) {
+			wishMap.put("member_id", memberId);
+		}
+		List<WishListDTO> wishLists = wishListMapper.selectWishLists(wishMap);
+		
+		
+		// 검색필터 checked, disabled 값 설정
 		outer: for(PropertyTypeDTO propertyType : propertyTypes) {
 			// 숙소유형값이 없어도 숙소세부유형값이 있을 수 있기 때문에
 			// null 체크 조건문을 for 안에 써준다.
@@ -125,6 +143,33 @@ public class PropertyController {
 			}
 		}
 		
+		// 숙소 wished, unwished 여부 설정
+		outer: for(PropertyDTO property : properties) {
+			for(WishListDTO wishList : wishLists) {
+				for(PropertyDTO wishProperty : wishList.getProperties()) {
+					if(property.getId() == wishProperty.getId()) {
+						property.setWished(true);
+						continue outer;
+					}
+				}
+			}
+		}
+		System.out.println("----- 위시리스트별 숙소 목록 -----");
+		for(WishListDTO wishList : wishLists) {
+			System.out.print("위시리스트[" + wishList.getName() + "] : ");
+			for(PropertyDTO wishProperty : wishList.getProperties()) {
+				System.out.print(wishProperty.getName() + " ");
+			}
+			System.out.println();
+		}
+		System.out.println("---------------------------");
+		
+		System.out.println("----- 숙소별 위시리스트 등록 여부 -----");
+		for(PropertyDTO property : properties) {
+			System.out.println("숙소" + property.getName() + " : " + property.isWished());
+		}
+		System.out.println("---------------------------------------");
+		
 		// 숙소 목록
 		req.setAttribute("properties", properties);
 		
@@ -132,6 +177,9 @@ public class PropertyController {
 		req.setAttribute("propertyTypes", propertyTypes);
 		req.setAttribute("roomTypes", roomTypes);
 		req.setAttribute("amenityTypes", amenityTypes);
+		
+		// 위시리스트 목록
+		req.setAttribute("wishLists", wishLists);
 		
 		return "property/property_list";
 	}
@@ -172,22 +220,22 @@ public class PropertyController {
 		bookingNumber += String.valueOf((int)(Math.random() * 10));
 		booking.setPropertyId(propertyId);
 		booking.setBookingNumber(bookingNumber);
-		if(propertyMapper.insertBooking(booking) < 1) {
+		if(bookingMapper.insertBooking(booking) < 1) {
 			req.setAttribute("msg", "예약 실패(DB 오류)");
 			req.setAttribute("url", "/property/detail?propertyId=" + propertyId);
 			return "message";
 		}
-		booking = propertyMapper.selectSameBooking(booking);
+		booking = bookingMapper.selectSameBooking(booking);
 		System.out.println(booking);
 		
 		TransactionDTO transaction = new TransactionDTO();
 		transaction.setBookingId(booking.getId());
-		if(propertyMapper.insertTransaction(transaction) < 1) {
+		if(bookingMapper.insertTransaction(transaction) < 1) {
 			req.setAttribute("msg", "결제 실패(DB 오류)");
 			req.setAttribute("url", "/property/detail?propertyId=" + propertyId);
 			return "message";
 		}
-		transaction = propertyMapper.selectSameTransaction(transaction);
+		transaction = bookingMapper.selectSameTransaction(transaction);
 		
 		req.setAttribute("booking", booking);
 		req.setAttribute("transaction", transaction);

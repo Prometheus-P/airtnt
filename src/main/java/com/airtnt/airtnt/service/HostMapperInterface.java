@@ -1,8 +1,11 @@
 package com.airtnt.airtnt.service;
 
 import java.util.*;
+import java.sql.Date;
+
 
 import com.airtnt.airtnt.model.AmenityDTO;
+import com.airtnt.airtnt.model.AmenityTypeDTO;
 import com.airtnt.airtnt.model.BookingDTO;
 import com.airtnt.airtnt.model.GuideDTO;
 import com.airtnt.airtnt.model.MemberDTO;
@@ -23,11 +26,12 @@ public interface HostMapperInterface {
 	public List<BookingDTO> getBookingList(String hostId);
 	public List<PropertyTypeDTO> getPropertyType();
 	public List<SubPropertyTypeDTO> getSubPropertyType(int propertyTypeId);
-	public List<AmenityDTO> getAmenityTypeList();
+	public List<AmenityTypeDTO> getAmenityTypeList();
 	public List<RoomTypeDTO> getRoomType();
 	public List<TransactionDTO> getTransactionList(String hostId);
 	public MemberDTO getMemberDTO(String memberId);
 	public List<TransactionDTO> getTotalEarning(String memberId);
+	public java.sql.Date getSysdate();
 	//public List<QuestionDTO> getQuestionList(int hostId);
 	//pubilc List<ReviewDTO> getReiewList(int bookingId);
 	//public SuperHostDTO checkSuperHost(int hostId);

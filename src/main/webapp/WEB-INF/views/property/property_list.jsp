@@ -30,58 +30,61 @@ crossorigin="anonymous"></script> -->
 <!-- 검색필터 이벤트 처리와 초기화를 제어하는 커스텀 파일 -->
 <script src="/resources/script/search-control.js"></script>
 
-<script type="text/javascript">
-var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
-var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
-  return new bootstrap.Popover(popoverTriggerEl)
-})
-var popover = new bootstrap.Popover(document.querySelector('.popover-dismiss'), {
-	trigger: 'focus'
-});
-</script>
-
 </head>
-<body id="top">
+<body>
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
 <!-- Top Background Image Wrapper -->
+<c:forEach var="property" items="${properties}">
+
+</c:forEach>
 
 <!-- 상단 로그인 바 -->
-<jsp:include page="/WEB-INF/views/top.jsp"/>
+<c:import url="/WEB-INF/views/top.jsp"/>
 
-<form class="d-flex" action="<c:url value='/property/search'/>" method="get"
-onsubmit="setParametersOnSubmit()">
+<!-- 위시리스트 모달은 jQuery 라이브러리 적용을 위해서 top.jsp 아래 둬야함 -->
+<c:import url="/WEB-INF/views/property/wish-modal.jsp"/>
+
+<form action="<c:url value='/property/search'/>" method="get" onsubmit="setParametersOnSubmit()">
 <!-- 검색 네비게이션 바 -->
-<div id="pageintro" class="hoc clear justify-content-center" style="padding-top: 1vh; padding-bottom: 1vh;"> 
+<!-- <div id="pageintro" class="hoc clear justify-content-center" style="height: 10px"> -->
     <!-- ################################################################################################ -->
-	<div class="position-absolute top-0 start-50 translate-middle-x">
-	  <nav id="mainnav" class="navbar navbar-light">
-	    <div class="container-fluid" >
-	      <input name="addressKey" class="form-control me-2" type="search" 
-	      placeholder="위치" value="${param.addressKey}"
-	      aria-label="Search" style="height: 50px; width: 300px; font-size: 20px">
-	      <button class="btn btn-primary" type="submit"
-	      style="border: 0px; height: 50px; width: 100px; font-size: 20px">검색</button>
-	    </div>
-	  </nav>
-	</div>
+<div class="position-absolute top-0 start-50 translate-middle-x">
+  <nav id="mainnav" class="navbar navbar-light">
+    <div class="container-fluid" >
+      <input name="addressKey" class="form-control me-2" type="search" 
+      placeholder="위치" value="${param.addressKey}"
+      aria-label="Search" style="height: 50px; width: 300px; font-size: 20px">
+      <button class="btn btn-primary" type="submit"
+      style="border: 0px; height: 50px; width: 100px; font-size: 20px">검색</button>
+    </div>
+  </nav>
 </div>
+<!-- </div> -->
 
 <!-- 검색 필터 -->
-<div class="wrapper row1" style="height: 100px">
-  <section class="hoc container clear" style="padding-top: 20px">
+<div class="wrapper row1" style="height: 50px">
+  <div class="hoc container clear position-relative" >
+    <div class="position-absolute top-0 start-0">
+      <input type="button" class="btn btn-secondary"
+      value="전체 초기화" onclick="resetTags('all')">
+    </div>
+  </div>
+</div>
+
+<div class="wrapper row2" style="height: 100px">
+  <div class="hoc container clear" style="padding-top: 20px">
   
       <!-- 숙소 유형 검색 필터 -->
       <div class="one_quarter first" >
-        
         <div class="btn-group">
         
           <button class="btn btn-secondary btn-lg dropdown-toggle" type="button"
-          id="dropdownMenuClickableInside" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false"
+          id="dropdownMenuClickableInside-1" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false"
           style="width: 200px; height: 50px; font-size: 20px">숙소 유형</button>
           
-          <ul class="dropdown-menu list-group" aria-labelledby="dropdownMenuClickableInside">
+          <ul class="dropdown-menu list-group" aria-labelledby="dropdownMenuClickableInside-1">
             <c:forEach var="propertyType" items="${propertyTypes}">
               <li class="list-group-item">
                 <!-- Split dropend button -->
@@ -129,10 +132,10 @@ onsubmit="setParametersOnSubmit()">
         <div class="btn-group">
         
           <button class="btn btn-secondary btn-lg dropdown-toggle" type="button"
-          id="dropdownMenuClickableInside" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false"
+          id="dropdownMenuClickableInside-2" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false"
           style="width: 200px; height: 50px; font-size: 20px">방 유형</button>
           
-          <ul class="dropdown-menu list-group" aria-labelledby="dropdownMenuClickableInside">
+          <ul class="dropdown-menu list-group" aria-labelledby="dropdownMenuClickableInside-2">
             <c:forEach var="roomType" items="${roomTypes}">
               <li class="list-group-item" style="font-size: 20px">
                 <div class="form-check form-check-inline">
@@ -159,10 +162,10 @@ onsubmit="setParametersOnSubmit()">
         <div class="btn-group">
         
           <button class="btn btn-secondary btn-lg dropdown-toggle" type="button"
-          id="dropdownMenuClickableInside" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false"
+          id="dropdownMenuClickableInside-3" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false"
           style="width: 200px; height: 50px; font-size: 20px">편의시설</button>
           
-          <div class="dropdown-menu" aria-labelledby="dropdownMenuClickableInside" style="font-size: 15px">
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuClickableInside-3" style="font-size: 15px">
             <c:forEach var="amenityType" items="${amenityTypes}">
               <div class="form-check form-check-inline">
                 <input type="checkbox" class="form-check-input" name="amenityTypeId" value="${amenityType.id}"
@@ -185,13 +188,12 @@ onsubmit="setParametersOnSubmit()">
         <div class="btn-group">
         
           <button class="btn btn-secondary btn-lg dropdown-toggle" type="button"
-          id="dropdownMenuClickableInside" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false"
+          id="dropdownMenuClickableInside-4" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false"
           style="width: 200px; height: 50px; font-size: 20px">
             기타사항
           </button>
           
-          
-          <div class="dropdown-menu list-group" aria-labelledby="dropdownMenuClickableInside" style="width: 500px;">
+          <div class="dropdown-menu list-group" aria-labelledby="dropdownMenuClickableInside-4" style="width: 500px;">
             <div class="btn-group list-group-item" style="padding-bottom: 50px; padding-left: 20px">
               <h3>인원</h3>
               <input id="decrease-guest" type="button" class="btn"
@@ -230,22 +232,16 @@ onsubmit="setParametersOnSubmit()">
           </div>
         </div>
       </div>
-      <div>
-        <div class="position-absolute bottom-0 start-0" style="padding-left: 100px">
-          <input type="button" class="btn btn-secondary"
-          value="전체 초기화" onclick="resetTags('all')">
-        </div>
-      </div>
-  </section>
+
+  </div>
 </div>
 
 </form>
 
-
-
 <!-- 메인 화면 -->
 <div class="wrapper row3">
-  <div class="hoc container clear"> 
+  <div class="hoc container clear">
+
     <!-- main body -->
     <!-- ################################################################################################ -->
     <div class="content"> 
@@ -253,47 +249,64 @@ onsubmit="setParametersOnSubmit()">
       <h2>${param.addressKey} 주변의 숙소 목록</h2>
       <!-- ################################################################################################ -->
       <div class="group btmspace-50 demo">
-      
         <!-- 숙소 리스트 -->
         <div class="one_half first">
-	        <div class="content"> 
+	      <div class="content"> 
 	      <!-- ################################################################################################ -->
-	      <div id="gallery">
-	        <figure>
 	          <header class="heading"></header>
 	          <hr>
 	          <!-- 숙소리스트 영역 -->
 	          <ul class="nospace clear" >
 	            <c:forEach var="property" items="${properties}">
+	            
 	            <li style="height: 150px;">
-	              
-	              <div class="one_third first" >
-	                <a href="<c:url value='/property/detail?propertyId=${property.id}'/>">
-	                  <img src="${property.images.get(0).path}" alt="" >
-	                </a>
-	              </div>
-	              <div class="position-relative two_third">
-	                <div class="position-absolute top-0 end-0">
-	                  <%-- <c:set var="isWished" value="${false}"/>
-	                  <c:forEach var="wishList_property" items="${sessionScope.wishList_Properties}">
-	                    <c:if test="${wish.id == property}"></c:if>
-	                  </c:forEach> --%>
-	                  
+	                <div class="one_third first" >
+	                  <a href="<c:url value='/property/detail?propertyId=${property.id}'/>">
+	                    <img src="${property.images.get(0).path}" alt="" >
+	                  </a>
 	                </div>
-	                <h2><a href="<c:url value='/property/detail?propertyId=${property.id}'/>">${property.name}</a></h2>
-	                <h4>${property.propertyType.name}/${property.subPropertyType.name}</h4>
-	                <h4>${property.roomType.name}</h4>
-	                <h4>${property.address}</h4>
-	              </div>
+	                <div class="two_third">
+	                  <h2><a href="<c:url value='/property/detail?propertyId=${property.id}'/>">${property.name}</a></h2>
+	                  <h4>${property.propertyType.name}/${property.subPropertyType.name}</h4>
+	                  <h4>${property.roomType.name}</h4>
+	                  <h4>${property.address}</h4>
+	                </div>
 	            </li>
+	            <div class="position-relative">
+	              <div class="position-absolute end-0 bottom-50">
+	                <!-- Button trigger modal -->
+	                <a href="" class="trigger-btn wish-button" id="wishProperty-${property.id}"
+	                data-toggle="modal" onclick="wishPropertyId=${property.id}">
+	                  <!-- 빈 하트 -->
+	                  <img src="https://img.icons8.com/fluent-systems-regular/48/000000/like--v1.png"
+	                  style="width: 3rem; height: 3rem">
+	                </a>
+	                <script type="text/javascript">
+	                // 화면 로드 시 초기화하는 과정
+	                var wishButton = document.querySelector("a#wishProperty-${property.id}");
+	                if("${sessionScope.member_id}" == ""){
+	                	wishButton.href = "#LoginModal";
+	                } else {
+	                	if("${property.wished}" == "true"){
+	                		wishButton.href = "#";
+	                		wishButton.setAttribute("class", "trigger-btn wish-button unwish");
+	                		var imgTag = document.createElement("img");
+	                		// 찬 하트
+	                		imgTag.src = "https://img.icons8.com/fluent/48/000000/like.png";
+	                		imgTag.style = "width: 3rem; height: 3rem";
+	                		wishButton.innerHTML = "";
+	                		wishButton.appendChild(imgTag);
+	                	} else {
+	                		wishButton.href = "#wish-modal";
+	                	}
+	                }
+	                </script>
+	              </div>
+	            </div>
 	            <hr>
 	            </c:forEach>
 	          </ul>
-	          <figcaption>Gallery Description Goes Here</figcaption>
-	        </figure>
-	      </div>
 	    </div>
-        
         </div>
 
         <!-- 카카오맵 -->
@@ -306,6 +319,7 @@ onsubmit="setParametersOnSubmit()">
     </div>
   </div>
 </div>
+
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
@@ -386,6 +400,6 @@ onsubmit="setParametersOnSubmit()">
 <!-- <script src="../layout/scripts/jquery.min.js"></script>
 <script src="../layout/scripts/jquery.backtotop.js"></script>
 <script src="../layout/scripts/jquery.mobilemenu.js"></script> -->
-
 </body>
+
 </html>

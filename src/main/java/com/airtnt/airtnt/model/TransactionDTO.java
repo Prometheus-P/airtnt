@@ -19,6 +19,7 @@ public class TransactionDTO {
 	private Date checkOutDate;
 	private int propertyId;
 	private String bookingNumber;
+	private String propertyName;
 	
 	public int getId() {
 		return id;
@@ -128,6 +129,14 @@ public class TransactionDTO {
 
 	public void setCheckOutDate(Date checkOutDate) {
 		this.checkOutDate = checkOutDate;
+	}
+
+	public String getPropertyName() {
+		return propertyName;
+	}
+
+	public void setPropertyName(String propertyName) {
+		this.propertyName = propertyName;
 	}
 
 }
