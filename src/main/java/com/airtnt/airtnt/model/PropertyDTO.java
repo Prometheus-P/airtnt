@@ -41,6 +41,7 @@ public class PropertyDTO {
 	
 	// 위시리스트에 있는지 판별하는 값
 	private boolean wished;
+	private Integer wishListId;
 	
 	public int getId() {
 		return id;
@@ -191,5 +192,11 @@ public class PropertyDTO {
 	}
 	public void setWished(boolean wished) {
 		this.wished = wished;
+	}
+	public Integer getWishListId() {
+		return wishListId;
+	}
+	public void setWishListId(Integer wishListId) {
+		this.wishListId = wishListId;
 	}
 }

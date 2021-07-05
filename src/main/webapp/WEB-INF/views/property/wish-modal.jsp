@@ -49,22 +49,21 @@
 </div>
 </body>
 <script type="text/javascript">
+var wishButton;
 var wishPropertyId;
 
 $(function(){
 	$(".wishList-button").click(function(){
 		// 위시리스트 등록
 		var wishListId = $(this).attr("id").split("-")[1];
-		console.log("member id : ${sessionScope.member_id}");
 		console.log("wish list id : " + wishListId);
 		console.log("property id : " + wishPropertyId);
 		
 		$.ajax("/wish/async", {
 			type : "get",
 			data : {
-				memberId : "${sessionScope.member_id}",
-				wishListId : wishListId,
-				wishPropertyId : wishPropertyId
+				wish_id : wishListId,
+				property_id : wishPropertyId
 			}
 		})
 		.done(function(result){
@@ -78,6 +77,7 @@ $(function(){
 				imgTag.setAttribute("style", "width: 3rem; height: 3rem");
 				$("a#wishProperty-" + wishPropertyId)
 					.addClass("unwish")
+					.addClass("wishList-" + wishListId)
 					.empty()
 					.append(imgTag)
 					.attr("href", "#");
@@ -92,17 +92,22 @@ $(function(){
 	});
 	
 	$(".wish-button").click(function(){
+		wishButton = $(this);
+		wishPropertyId = $(this).attr("id").split('-')[1];
+		
 		if($(this).hasClass("unwish")){
+			var wishListClass = $(this).attr("class").split(' ')[3];
+			console.log(wishListClass);
+			var wishListId = wishListClass.split('-')[1];
 			// 위시리스트 삭제
-			var unwishPropertyId = $(this).attr("id").split('-')[1];
-			console.log("member id : ${sessionScope.member_id}");
-			console.log("property id : " + unwishPropertyId);
+			console.log("wish list id : " + wishListId);
+			console.log("property id : " + wishPropertyId);
 			
 			$.ajax("/unwish/async", {
 				type : "get",
 				data : {
-					memberId : "${sessionScope.member_id}",
-					unwishPropertyId : unwishPropertyId
+					wish_id : wishListId,
+					property_id : wishPropertyId
 				}
 			})
 			.done(function(result){
@@ -114,8 +119,9 @@ $(function(){
 					// 빈 하트
 					imgTag.setAttribute("src", "https://img.icons8.com/fluent-systems-regular/48/000000/like--v1.png");
 					imgTag.setAttribute("style", "width: 3rem; height: 3rem");
-					$("a#wishProperty-" + unwishPropertyId)
+					$("a#wishProperty-" + wishPropertyId)
 						.removeClass("unwish")
+						.removeClass(wishListClass)
 						.empty()
 						.append(imgTag)
 						.attr("href", "#wish-modal");

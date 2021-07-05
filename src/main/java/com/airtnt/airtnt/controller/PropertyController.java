@@ -21,6 +21,7 @@ import com.airtnt.airtnt.util.TagAttribute;
 @Controller
 @RequestMapping("property")
 public class PropertyController {
+	public final boolean DEBUG = false;
 	
 	@Autowired
 	private PropertyMapper propertyMapper;
@@ -44,17 +45,6 @@ public class PropertyController {
 		if(addressKey == null) {
 			addressKey = "노원";
 		}
-		
-		System.out.println("----- 검색 ------");
-		System.out.println("property type : " + Arrays.toString(propertyTypeIdKeyArray));
-		System.out.println("sub-property type : " + Arrays.toString(subPropertyTypeIdKeyArray));
-		System.out.println("room type : " + Arrays.toString(roomTypeIdKeyArray));
-		System.out.println("amenity type : " + Arrays.toString(amenityTypeIdKeyArray));
-		System.out.println("guest count : " + guestCountKey);
-		System.out.println("bed count : " + bedCountKey);
-		System.out.println("min price : " + minPriceKey);
-		System.out.println("max price : " + maxPriceKey);
-		System.out.println("-----------------");
 		
 		// sql 조건문 맵
 		Map<String, Object> searchKeyMap = new Hashtable<>();
@@ -148,26 +138,41 @@ public class PropertyController {
 				for(PropertyDTO wishProperty : wishList.getProperties()) {
 					if(property.getId() == wishProperty.getId()) {
 						property.setWished(true);
+						property.setWishListId(wishList.getId());
 						continue outer;
 					}
 				}
 			}
 		}
-		System.out.println("----- 위시리스트별 숙소 목록 -----");
-		for(WishListDTO wishList : wishLists) {
-			System.out.print("위시리스트[" + wishList.getName() + "] : ");
-			for(PropertyDTO wishProperty : wishList.getProperties()) {
-				System.out.print(wishProperty.getName() + " ");
-			}
-			System.out.println();
-		}
-		System.out.println("---------------------------");
 		
-		System.out.println("----- 숙소별 위시리스트 등록 여부 -----");
-		for(PropertyDTO property : properties) {
-			System.out.println("숙소" + property.getName() + " : " + property.isWished());
+		if(DEBUG) {
+			System.out.println("----- 검색 ------");
+			System.out.println("property type : " + Arrays.toString(propertyTypeIdKeyArray));
+			System.out.println("sub-property type : " + Arrays.toString(subPropertyTypeIdKeyArray));
+			System.out.println("room type : " + Arrays.toString(roomTypeIdKeyArray));
+			System.out.println("amenity type : " + Arrays.toString(amenityTypeIdKeyArray));
+			System.out.println("guest count : " + guestCountKey);
+			System.out.println("bed count : " + bedCountKey);
+			System.out.println("min price : " + minPriceKey);
+			System.out.println("max price : " + maxPriceKey);
+			System.out.println("-----------------");
+			
+			System.out.println("----- 위시리스트별 숙소 목록 -----");
+			for(WishListDTO wishList : wishLists) {
+				System.out.print("위시리스트[" + wishList.getName() + "] : ");
+				for(PropertyDTO wishProperty : wishList.getProperties()) {
+					System.out.print(wishProperty.getName() + " ");
+				}
+				System.out.println();
+			}
+			System.out.println("---------------------------");
+			
+			System.out.println("----- 숙소별 위시리스트 등록 여부 -----");
+			for(PropertyDTO property : properties) {
+				System.out.println("숙소" + property.getName() + " : " + property.isWished());
+			}
+			System.out.println("---------------------------------------");
 		}
-		System.out.println("---------------------------------------");
 		
 		// 숙소 목록
 		req.setAttribute("properties", properties);
