@@ -4,10 +4,10 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>preview</title>
+<title>Insert title here</title>
 </head>
 <body>
-<!-- /host/publish_celebration_6 -->
-<H2>미리보기!</H2>
+6. 이제 요금을 설정 하실 차례입니다!(price)
+7. 마지막으로 법률 상황을 확인 해주세요(legal)
 </body>
 </html>

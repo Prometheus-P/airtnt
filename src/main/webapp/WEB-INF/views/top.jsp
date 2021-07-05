@@ -70,8 +70,8 @@
             <li><a href="/help">도움말</a></li>
             <li><a href="/logout">로그아웃</a></li>
           </ul>
-          </c:if>
-        </li>
+         </li>
+         </c:if>
       </ul>
       <!-- ################################################################################################ -->
     </nav>
@@ -118,7 +118,7 @@
 			</div>
 		</div>
 	</div>
-</div> 
+</div>
 <!-- SignUpModal-->
 <div id="SignUpModal" class="modal fade">
 	<div class="modal-dialog modal-lg modal-login ">
