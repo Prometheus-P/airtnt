@@ -23,9 +23,10 @@
 	</select>
 	
 	<insert id="insertProperty" parameterType="propertyDTO">
-		insert into property values(property_seq.nextval, #{name}, #{hostId}, 
-		#{propertyDesc}, #{address}, #{latitude}, #{longitude}, #{price}, #{bedCount}, 
-		#{maxGuest})<!-- modeDate==null -->
+		insert into property(name, host_id, property_desc, property_type_id, sub_property_type_id, 
+		room_type_id, address, price, bed_count, max_guest) 
+		values(#{name}, #{hostId}, #{propertyDesc}, #{propertyTypeId}, #{subPropertyTypeId}, #{roomTypeId}, 
+		#{address}, #{price}, #{bedCount}, #{maxGuest})<!-- modeDate==null -->
 	</insert>
 	
 	<delete id="deleteProperty" parameterType="int">
@@ -165,6 +166,12 @@
 	</select>
 	<select id="getSysdate" resultType="java.sql.Date">
 		select sysdate from dual
+	</select>
+	<select id="listAmenityType" resultType="AmenityTypeDTO">
+		select 
+			id, name,
+			is_use as isUse
+		from amenity_type
 	</select>
 	<!-- <insert id="saveImage" parameterType="java.util.Map">
     I	insert into img_table VALUES #{img}    

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.airtnt.airtnt.model.AmenityDTO;
+import com.airtnt.airtnt.model.AmenityTypeDTO;
 import com.airtnt.airtnt.model.BookingDTO;
 import com.airtnt.airtnt.model.GuideDTO;
 import com.airtnt.airtnt.model.MemberDTO;
@@ -104,9 +105,9 @@ public class HostMapper implements HostMapperInterface {
 	}
 
 	@Override
-	public List<AmenityDTO> getAmenityTypeList() {
-		// TODO Auto-generated method stub
-		return null;
+	public List<AmenityTypeDTO> getAmenityTypeList() {
+		List<AmenityTypeDTO> list = sqlSession.selectList("listAmenityType");
+		return list;
 	}
 
 	@Override
@@ -126,4 +127,5 @@ public class HostMapper implements HostMapperInterface {
 		java.sql.Date date = sqlSession.selectOne("getSysdate");
 		return date;
 	}
+
 }

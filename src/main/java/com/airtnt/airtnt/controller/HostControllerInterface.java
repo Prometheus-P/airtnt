@@ -13,14 +13,20 @@ import org.springframework.web.servlet.ModelAndView;
 public interface HostControllerInterface {
 	public ModelAndView guide_home();
 	public ModelAndView guide_context(@RequestParam int id);
-	public ModelAndView property_type_0() ;
-	public ModelAndView property_detail_1(HttpServletRequest req, @RequestParam int propertyTypeId);
-	public String property_address_2(HttpServletRequest req, @RequestParam Map<String, Integer> map1);
-	public String property_detail_3(HttpServletRequest req, @RequestParam String address);
-	public String property_image_4(HttpServletRequest req, @RequestParam Map<String, String> map2);
-	public int image_upload(HttpServletRequest req, @RequestParam("files")List<MultipartFile> images);
-	public String property_preview_5(HttpServletRequest req);
-	public String publish_celebration_6(HttpServletRequest req);
+	
+	public ModelAndView property_type_0(HttpServletRequest req);
+	public ModelAndView sub_property_type_1(HttpServletRequest req, @RequestParam int propertyTypeId);
+	public ModelAndView room_type_2(HttpServletRequest req, @RequestParam int subPropertyType);
+	public String address_3(HttpServletRequest req, @RequestParam int roomTypeId);
+	public String floor_plan_4(HttpServletRequest req, @RequestParam String address);
+	public ModelAndView amenities_5(HttpServletRequest req, @RequestParam Map<String, Integer> floor);
+	public String photos_6(HttpServletRequest req, @RequestParam Map<String, Integer> amenities);
+	public int photos_upload(HttpServletRequest req, @RequestParam("files")List<MultipartFile> images);
+	public String title_description_7();
+	public String price_8(HttpServletRequest req, @RequestParam Map<String, String> titleDesc);
+	public String preview_9(HttpServletRequest req, @RequestParam int price);
+	public String publish_celebration_10(HttpServletRequest req);
+	
 	public ModelAndView host_mode(HttpServletRequest req);
 	public ModelAndView host_properties_list(HttpServletRequest req);
 	public ModelAndView host_getProperty(HttpServletRequest req, @RequestParam int propertyId);
@@ -29,4 +35,5 @@ public interface HostControllerInterface {
 	public ModelAndView total_earning(HttpServletRequest req);
 	public ModelAndView host_review_list(HttpServletRequest req);
 	public ModelAndView host_support(HttpServletRequest req);
+	
 }
