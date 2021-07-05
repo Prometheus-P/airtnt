@@ -38,33 +38,44 @@ public class UserController {
 	
 	// 회원가입
 	@RequestMapping("signUp")
-	public String signUp(HttpServletRequest req, @ModelAttribute MemberDTO dto) {
+	public String signUp(HttpServletRequest req, @ModelAttribute MemberDTO dto,
+			@RequestParam(value = "preURI", required = false) String preURI) {
+		String nextURI = preURI;
+		if(preURI == null || preURI.trim().equals("")) {
+			nextURI = "index";
+		}
+		
 		int res = memberMapper.inputMember(dto);
 		if(res>0) {
 			req.setAttribute("msg", "회원가입성공 로그인을 해주세요");
-			req.setAttribute("url", "index");
+			req.setAttribute("url", nextURI);
 		}else {
 			req.setAttribute("msg", "회원가입실패");
-			req.setAttribute("url", "index");
+			req.setAttribute("url", nextURI);
 		}
 		return "message";
 	}
 	
 	// 로그인
 	@RequestMapping("login")
-	public String login(HttpServletRequest req, @RequestParam Map<String, String> params, 
-			HttpServletResponse resp, final HttpSession session ) {
+	public String login(HttpServletRequest req, @RequestParam Map<String, String> params,
+			@RequestParam(value = "preURI", required = false) String preURI,
+			HttpServletResponse resp, final HttpSession session) {
+		String nextURI = preURI;
+		if(preURI == null || preURI.trim().equals("")) {
+			nextURI = "index";
+		}
 		
 		MemberDTO dto = memberMapper.getMember(params.get("id"));
 		
 		if(dto == null) {
 			req.setAttribute("msg", "아이디가 존재하지않습니다");
-			req.setAttribute("url", "index");
+			req.setAttribute("url", nextURI);
 			return "message";
 		}else if(!dto.getPasswd().equals(params.get("passwd"))) {
 			System.out.println(dto.getPasswd());
 			req.setAttribute("msg", "비밀번호가 틀렸습니다");
-			req.setAttribute("url", "index");
+			req.setAttribute("url", nextURI);
 			return "message";
 		}else {
 			//로그인 빈에 로그인한 멤버의 정보 담고 세션에 저장
@@ -83,16 +94,22 @@ public class UserController {
 			}
 			resp.addCookie(ck);
 			
-			return "redirect:/index";
+			return "redirect:" + nextURI;
 		}
 	}
 	
 	@RequestMapping("logout")
-	public String logout(HttpServletRequest req) {
+	public String logout(HttpServletRequest req,
+			@RequestParam(value = "preURI", required = false) String preURI) {
+		String nextURI = preURI;
+		if(preURI == null || preURI.trim().equals("")) {
+			nextURI = "index";
+		}
+		
 		HttpSession session = req.getSession();
 		session.invalidate();
 		
-		return "redirect:/index";
+		return "redirect:" + nextURI;
 	}
 	
 	//마이페이지

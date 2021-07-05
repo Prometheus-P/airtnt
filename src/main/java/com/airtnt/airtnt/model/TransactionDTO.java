@@ -4,8 +4,8 @@ import java.sql.Date;
 
 public class TransactionDTO {
 
-	private int id;
-	private int bookingId;
+	private Integer id;
+	private Integer bookingId;
 	private char isRefund;
 	private double siteFee;
 	private Date payExptDate;
@@ -14,26 +14,26 @@ public class TransactionDTO {
 
 	// host가 사용하지롱
 	private String hostId;
-	private int totalPrice;
+	private Integer totalPrice;
 	private Date confirmDate;
 	private Date checkOutDate;
-	private int propertyId;
+	private Integer propertyId;
 	private String bookingNumber;
 	private String propertyName;
 	
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
-	public int getBookingId() {
+	public Integer getBookingId() {
 		return bookingId;
 	}
 
-	public void setBookingId(int bookingId) {
+	public void setBookingId(Integer bookingId) {
 		this.bookingId = bookingId;
 	}
 
@@ -91,11 +91,11 @@ public class TransactionDTO {
 		this.hostId = hostId;
 	}
 
-	public int getTotalPrice() {
+	public Integer getTotalPrice() {
 		return totalPrice;
 	}
 
-	public void setTotalPrice(int totalPrice) {
+	public void setTotalPrice(Integer totalPrice) {
 		this.totalPrice = totalPrice;
 	}
 
@@ -107,11 +107,11 @@ public class TransactionDTO {
 		this.confirmDate = confirmDate;
 	}
 
-	public int getPropertyId() {
+	public Integer getPropertyId() {
 		return propertyId;
 	}
 
-	public void setPropertyId(int propertyId) {
+	public void setPropertyId(Integer propertyId) {
 		this.propertyId = propertyId;
 	}
 

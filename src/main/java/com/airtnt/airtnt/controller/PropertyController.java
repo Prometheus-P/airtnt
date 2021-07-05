@@ -4,16 +4,20 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.airtnt.airtnt.model.*;
 import com.airtnt.airtnt.service.BookingMapper;
-import com.airtnt.airtnt.service.MemberMapper;
 import com.airtnt.airtnt.service.PropertyMapper;
 import com.airtnt.airtnt.service.WishListMapper;
 import com.airtnt.airtnt.util.TagAttribute;
@@ -21,6 +25,7 @@ import com.airtnt.airtnt.util.TagAttribute;
 @Controller
 @RequestMapping("property")
 public class PropertyController {
+	private final boolean DEBUG = false;
 	
 	@Autowired
 	private PropertyMapper propertyMapper;
@@ -29,8 +34,7 @@ public class PropertyController {
 	@Autowired
 	private BookingMapper bookingMapper;
 	
-	
-	@RequestMapping("search")
+	@GetMapping("search")
 	public String search(HttpServletRequest req,
 			@RequestParam(value = "addressKey", required = false) String addressKey,
 			@RequestParam(value = "propertyTypeId", required = false) Integer[] propertyTypeIdKeyArray,
@@ -41,20 +45,14 @@ public class PropertyController {
 			@RequestParam(value = "bedCount", required = false) Integer bedCountKey,
 			@RequestParam(value = "minPrice", required = false) Integer minPriceKey,
 			@RequestParam(value = "maxPrice", required = false) Integer maxPriceKey) {
+		// 로그인 후 돌아갈 url
+		String currentURI = req.getRequestURI() + 
+				(req.getQueryString() == null ? "" : "?" + req.getQueryString());
+		req.setAttribute("currentURI", currentURI);
+		
 		if(addressKey == null) {
 			addressKey = "노원";
 		}
-		
-		System.out.println("----- 검색 ------");
-		System.out.println("property type : " + Arrays.toString(propertyTypeIdKeyArray));
-		System.out.println("sub-property type : " + Arrays.toString(subPropertyTypeIdKeyArray));
-		System.out.println("room type : " + Arrays.toString(roomTypeIdKeyArray));
-		System.out.println("amenity type : " + Arrays.toString(amenityTypeIdKeyArray));
-		System.out.println("guest count : " + guestCountKey);
-		System.out.println("bed count : " + bedCountKey);
-		System.out.println("min price : " + minPriceKey);
-		System.out.println("max price : " + maxPriceKey);
-		System.out.println("-----------------");
 		
 		// sql 조건문 맵
 		Map<String, Object> searchKeyMap = new Hashtable<>();
@@ -148,33 +146,43 @@ public class PropertyController {
 				for(PropertyDTO wishProperty : wishList.getProperties()) {
 					if(property.getId() == wishProperty.getId()) {
 						property.setWished(true);
+						property.setWishListId(wishList.getId());
 						continue outer;
 					}
 				}
 			}
 		}
 		
-		System.out.println("----- 숙소 목록 -----");
-		for(PropertyDTO property : properties) {
-			System.out.println(property.getName());
-		}
-		System.out.println("---------------------------");
-		
-		System.out.println("----- 위시리스트별 숙소 목록 -----");
-		for(WishListDTO wishList : wishLists) {
-			System.out.print("위시리스트[" + wishList.getName() + "] : ");
-			for(PropertyDTO wishProperty : wishList.getProperties()) {
-				System.out.print(wishProperty.getName() + " ");
+		if(DEBUG) {
+			System.out.println("현재 URI : " + currentURI);
+			
+			System.out.println("----- 검색 ------");
+			System.out.println("property type : " + Arrays.toString(propertyTypeIdKeyArray));
+			System.out.println("sub-property type : " + Arrays.toString(subPropertyTypeIdKeyArray));
+			System.out.println("room type : " + Arrays.toString(roomTypeIdKeyArray));
+			System.out.println("amenity type : " + Arrays.toString(amenityTypeIdKeyArray));
+			System.out.println("guest count : " + guestCountKey);
+			System.out.println("bed count : " + bedCountKey);
+			System.out.println("min price : " + minPriceKey);
+			System.out.println("max price : " + maxPriceKey);
+			System.out.println("-----------------");
+			
+			System.out.println("----- 위시리스트별 숙소 목록 -----");
+			for(WishListDTO wishList : wishLists) {
+				System.out.print("위시리스트[" + wishList.getName() + "] : ");
+				for(PropertyDTO wishProperty : wishList.getProperties()) {
+					System.out.print(wishProperty.getName() + " ");
+				}
+				System.out.println();
 			}
-			System.out.println();
+			System.out.println("---------------------------");
+			
+			System.out.println("----- 숙소별 위시리스트 등록 여부 -----");
+			for(PropertyDTO property : properties) {
+				System.out.println("숙소" + property.getName() + " : " + property.isWished());
+			}
+			System.out.println("---------------------------------------");
 		}
-		System.out.println("---------------------------");
-		
-		System.out.println("----- 숙소별 위시리스트 등록 여부 -----");
-		for(PropertyDTO property : properties) {
-			System.out.println("숙소" + property.getName() + " : " + property.isWished());
-		}
-		System.out.println("---------------------------------------");
 		
 		// 숙소 목록
 		req.setAttribute("properties", properties);
@@ -187,35 +195,64 @@ public class PropertyController {
 		// 위시리스트 목록
 		req.setAttribute("wishLists", wishLists);
 		
-		return "property/property_list";
+		return "property/property-list";
 	}
 
-	@RequestMapping("detail")
+	@GetMapping("detail")
 	public String detail(HttpServletRequest req,
 			@RequestParam("propertyId") Integer propertyId) {
+		// 로그인 후 돌아갈 url
+		String currentURI = req.getRequestURI() + 
+				(req.getQueryString() == null ? "" : "?" + req.getQueryString());
+		req.setAttribute("currentURI", currentURI);
+		if(DEBUG) {
+			System.out.println(currentURI);
+		}
+		
 		PropertyDTO property = propertyMapper.selectProperty(propertyId);
 		
 		req.setAttribute("tomorrow", getTomorrowString());
 		req.setAttribute("dayAfterTomorrow", getDayAfterTomorrowString());
 		req.setAttribute("property", property);
 		
-		return "property/property_detail";
+		return "property/property-detail";
 	}
-
-	@RequestMapping("booking")
-	public String booking(HttpServletRequest req, @ModelAttribute BookingDTO booking) {
+	
+	// 1. 화면에 뿌려질 값들을 설정하는 단계
+	@PostMapping("booking")
+	public String booking(RedirectAttributes ra, HttpServletResponse resp, @ModelAttribute BookingDTO booking) {
+		
 		PropertyDTO property = propertyMapper.selectProperty(booking.getPropertyId());
-		req.setAttribute("booking", booking);
-		req.setAttribute("property", property);
-		return "property/booking";
+		
+		ra.addFlashAttribute("booking", booking);
+		ra.addFlashAttribute("property", property);
+		
+		return "redirect:/property/booking-check";
 	}
-
-	@RequestMapping("booking-confirm")
-	public String bookingConfirm(HttpServletRequest req, @ModelAttribute BookingDTO booking) {
-		System.out.println(booking);
-		int propertyId;
+	
+	// 2. 페이지로 이동하는 단계
+	// 새로고침은 여기로 바로 오기때문에 값이 없는 상태로 페이지로 가게 됨
+	@GetMapping("booking-check")
+	public String bookingCheck(HttpServletResponse resp){
+		resp.setHeader("Expires", "-1"); 
+		resp.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
+		resp.addHeader("Cache-Control", "post-check=0, pre-check=0"); 
+		resp.setHeader("Pragma", "no-cache");
+		
+		return "property/booking-check";
+	}
+	
+	// 1. 결제요청 처리
+	@PostMapping("booking-pay")
+	public String bookingPay(HttpServletRequest req, RedirectAttributes ra, HttpServletResponse resp,
+			@ModelAttribute BookingDTO booking) {
+		if(DEBUG) {
+			System.out.println(booking);
+		}
+		
+		Integer propertyId;
 		try {
-			propertyId = Integer.parseInt(req.getParameter("propertyId"));
+			propertyId = Integer.valueOf(req.getParameter("propertyId"));
 		} catch(NullPointerException | NumberFormatException e) {
 			req.setAttribute("msg", "숙소정보 없음");
 			req.setAttribute("url", "/");
@@ -232,7 +269,9 @@ public class PropertyController {
 			return "message";
 		}
 		booking = bookingMapper.selectSameBooking(booking);
-		System.out.println(booking);
+		if(DEBUG) {
+			System.out.println(booking);
+		}
 		
 		TransactionDTO transaction = new TransactionDTO();
 		transaction.setBookingId(booking.getId());
@@ -243,10 +282,21 @@ public class PropertyController {
 		}
 		transaction = bookingMapper.selectSameTransaction(transaction);
 		
-		req.setAttribute("booking", booking);
-		req.setAttribute("transaction", transaction);
+		ra.addFlashAttribute("booking", booking);
+		ra.addFlashAttribute("transaction", transaction);
 		
-		return "property/booking_confirm";
+		return "redirect:/property/booking-complete";
+	}
+	
+	// 2. 화면에 결제정보 표시
+	@GetMapping("booking-complete")
+	public String bookingComplete(HttpServletResponse resp) {
+		resp.setHeader("Expires", "-1"); 
+		resp.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
+		resp.addHeader("Cache-Control", "post-check=0, pre-check=0"); 
+		resp.setHeader("Pragma", "no-cache");
+		
+		return "property/booking-complete";
 	}
 	
 	public String getTomorrowString() {

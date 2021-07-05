@@ -4,24 +4,24 @@ import java.sql.Date;
 
 public class ImageDTO {
 	
-	private int id;
-	private int propertyId;
+	private Integer id;
+	private Integer propertyId;
 	private char isMain;
 	private String path;
 	private long fileSize;
 	private Date regDate;
 	private Date modDate;
 	
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
-	public int getPropertyId() {
+	public Integer getPropertyId() {
 		return propertyId;
 	}
-	public void setPropertyId(int propertyId) {
+	public void setPropertyId(Integer propertyId) {
 		this.propertyId = propertyId;
 	}
 	public char getIsMain() {

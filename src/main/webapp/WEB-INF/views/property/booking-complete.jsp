@@ -14,12 +14,21 @@ Licence URI: https://www.os-templates.com/template-terms
 <html lang="">
 <!-- To declare your language - read more here: https://www.w3.org/International/questions/qa-html-language-declarations -->
 <head>
+
 <title>숙소/상세보기(숙소명:${property.name})</title>
 <meta charset="utf-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <link href="/resources/layout/styles/layout.css" rel="stylesheet" type="text/css" media="all">
+
 </head>
 <body id="top">
+<c:if test="${empty booking}">
+	<script type="text/javascript">
+		alert("요청이 만료되었습니다.");
+		location.href = "/property/search";
+	</script>
+</c:if>
 
 <jsp:include page="/WEB-INF/views/top.jsp"/>
 
@@ -136,7 +145,7 @@ Licence URI: https://www.os-templates.com/template-terms
            </table>
          </div>
          <div>
-           <a href="<c:url value='/property/detail?propertyId=${booking.propertyId}'/>">
+           <a href="<c:url value='/property/search'/>">
              <button class="btn" type="button" style="width: 200px; height: 80px; font-size: 30px">확인</button>
            </a>
 	       <a href="<c:url value=''/>">

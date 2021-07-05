@@ -5,7 +5,7 @@ import java.util.*;
 
 public class RoomTypeDTO {
 	
-	private int id;	// fk
+	private Integer id;	// fk
 	private String name;
 	private char isUse;
 	private Date regDate;
@@ -25,15 +25,15 @@ public class RoomTypeDTO {
 		this.isUse = isUse.charAt(0);
 	}
 	public RoomTypeDTO(String id, String name, String isUse) {
-		this.id = Integer.parseInt(id);
+		this.id = Integer.valueOf(id);
 		this.name = name;
 		this.isUse = isUse.charAt(0);
 	}
 	
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 	public String getName() {

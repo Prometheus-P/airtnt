@@ -3,6 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
+
 <!--
 Template Name: Nekmit
 Author: <a href="https://www.os-templates.com/">OS Templates</a>
@@ -14,8 +15,10 @@ Licence URI: https://www.os-templates.com/template-terms
 <html lang="">
 <!-- To declare your language - read more here: https://www.w3.org/International/questions/qa-html-language-declarations -->
 <head>
+
 <title>숙소/상세보기(숙소명:${property.name})</title>
 <meta charset="utf-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <link href="/resources/layout/styles/layout.css" rel="stylesheet" type="text/css" media="all">
 <script type="text/javascript">
@@ -45,10 +48,15 @@ function setTotalPrice(){
 	
 	return totalPrice;
 }
-
 </script>
 </head>
 <body id="top">
+<c:if test="${empty property}">
+	<script type="text/javascript">
+		alert("요청이 만료되었습니다.");
+		location.href = "/property/search";
+	</script>
+</c:if>
 
 <jsp:include page="/WEB-INF/views/top.jsp"/>
 
@@ -154,7 +162,7 @@ function setTotalPrice(){
 	       host id, guest id, day count, guest count, total price,
 	       checkin date, checkout date
 	      -->
-         <form action="/property/booking-confirm" method="post">
+         <form action="/property/booking-pay" method="post">
            <input type="hidden" name="propertyId" value="${property.id}">
            <input type="hidden" name="hostId" value="${booking.hostId}">
            <input type="hidden" name="guestId" value="${booking.guestId}">
