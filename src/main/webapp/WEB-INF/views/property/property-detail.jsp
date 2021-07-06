@@ -50,6 +50,9 @@ function setTotalPrice(){
 
 <jsp:include page="/WEB-INF/views/top.jsp"/>
 
+<!-- 위시리스트 모달은 jQuery 라이브러리 적용을 위해서 top.jsp 아래 둬야함 -->
+<c:import url="/WEB-INF/views/property/wish-modal.jsp"/>
+
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
@@ -117,39 +120,47 @@ function setTotalPrice(){
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
-<!-- <div class="wrapper row1">
-  <section id="ctdetails" class="hoc clear"> 
-    ################################################################################################
-    <ul class="nospace clear">
-      <li class="one_quarter first">
-        <div class="block clear"><a href="#"><i class="fas fa-phone"></i></a> <span><strong>Give us a call:</strong> +00 (123) 456 7890</span></div>
-      </li>
-      <li class="one_quarter">
-        <div class="block clear"><a href="#"><i class="fas fa-envelope"></i></a> <span><strong>Send us a mail:</strong> support@domain.com</span></div>
-      </li>
-      <li class="one_quarter">
-        <div class="block clear"><a href="#"><i class="fas fa-clock"></i></a> <span><strong> Mon. - Sat.:</strong> 08.00am - 18.00pm</span></div>
-      </li>
-      <li class="one_quarter">
-        <div class="block clear"><a href="#"><i class="fas fa-map-marker-alt"></i></a> <span><strong>Come visit us:</strong> Directions to <a href="#">our location</a></span></div>
-      </li>
-    </ul>
-    ################################################################################################
-  </section>
-</div> -->
+<div class="wrapper row3" style="height: 8rem">
+  <div class="container position-relative">
+    <div class="position-absolute end-0 bottom-0" >
+      <!-- Button trigger modal -->
+      <a href="" class="trigger-btn wish-button" id="wishProperty-${property.id}"
+      data-toggle="modal" style="font-size: 20px">
+        <span class="wish-text">찜하기</span>
+        <!-- 빈 하트 -->
+        <img class="heart" src="" style="width: 3rem; height: 3rem">
+      </a>
+      <script type="text/javascript">
+      	// 화면 로드 시 초기화하는 과정
+      	initWish("${property.id}", "${property.wishListId}", "${property.wished}");
+      </script>
+    </div>
+  </div>
+</div>
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
-<div class="wrapper row3">
+<div class="wrapper row3" >
+  
   <main class="hoc clear"> 
     <!-- main body -->
     <!-- ################################################################################################ -->
-    <div class="container">
+    <div class="container" style="padding-top: 0">
+      
+      
       <!-- 숙소 이미지 -->
       <div class="one_half first">
-        <img class="imgl borderedbox inspace-5" src="${property.images.get(0).path}" alt="" >
+        <img class="imgl borderedbox inspace-5"
+        src="
+          <c:if test='${not empty property.images}'>
+            ${property.images.get(0).path}
+          </c:if>
+        " alt="">
       </div>
       <div class="one_half">
+      
+        
+      
         <c:forEach var="image" items="${property.images}" begin="1" end="4" varStatus="status">
           <c:choose>
             <c:when test="${status.count % 2 == 1}">

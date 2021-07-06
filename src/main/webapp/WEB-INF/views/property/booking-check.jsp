@@ -13,9 +13,14 @@ Licence: Free to use under our free template licence terms
 Licence URI: https://www.os-templates.com/template-terms
 -->
 <html lang="">
+<c:if test="${empty property}">
+	<script type="text/javascript">
+		alert("요청이 만료되었습니다.");
+		location.href = "/property/search";
+	</script>
+</c:if>
 <!-- To declare your language - read more here: https://www.w3.org/International/questions/qa-html-language-declarations -->
 <head>
-
 <title>숙소/상세보기(숙소명:${property.name})</title>
 <meta charset="utf-8">
 
@@ -51,12 +56,6 @@ function setTotalPrice(){
 </script>
 </head>
 <body id="top">
-<c:if test="${empty property}">
-	<script type="text/javascript">
-		alert("요청이 만료되었습니다.");
-		location.href = "/property/search";
-	</script>
-</c:if>
 
 <jsp:include page="/WEB-INF/views/top.jsp"/>
 
@@ -174,7 +173,12 @@ function setTotalPrice(){
              </tr>
              <tr>
                <td>
-                 <img class="imgl borderedbox inspace-5" src="${property.images.get(0).path}" alt="" style="width: 200px;height: 150px">
+                 <img class="imgl borderedbox inspace-5"
+                 src="
+                   <c:if test='${not empty property.images}'>
+                     ${property.images.get(0).path}
+                   </c:if>
+                 " alt="" style="width: 200px;height: 150px">
                </td>
                <td>
                  <ul>

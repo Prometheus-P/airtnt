@@ -12,6 +12,12 @@ Licence: Free to use under our free template licence terms
 Licence URI: https://www.os-templates.com/template-terms
 -->
 <html lang="">
+<c:if test="${empty booking}">
+	<script type="text/javascript">
+		alert("요청이 만료되었습니다.");
+		location.href = "/property/search";
+	</script>
+</c:if>
 <!-- To declare your language - read more here: https://www.w3.org/International/questions/qa-html-language-declarations -->
 <head>
 
@@ -23,12 +29,6 @@ Licence URI: https://www.os-templates.com/template-terms
 
 </head>
 <body id="top">
-<c:if test="${empty booking}">
-	<script type="text/javascript">
-		alert("요청이 만료되었습니다.");
-		location.href = "/property/search";
-	</script>
-</c:if>
 
 <jsp:include page="/WEB-INF/views/top.jsp"/>
 
