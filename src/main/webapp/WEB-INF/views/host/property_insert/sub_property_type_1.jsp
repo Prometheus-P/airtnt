@@ -17,20 +17,34 @@
 				다음 중 가장 비슷하다고 생각하는 유형을 골라주세요</h1>
 			</div>
 			<div class="col-sm-4">
-				<c:forEach var="dto" items="${subPropertyTypeList}">
+			<form name="f" method="post" action="<c:url value='/host/room_type_2'/>" onsubmit="return check()"> 
+				<c:forEach var="dto" items="${listSubPropertyType}">
 					<div class="list-group" style="font-family: fantasy;">
 						<a href="javascript:void(0)" id="${dto.id}"
-							class="list-group-item" onclick="send(${dto.id})">
+							class="list-group-item" onclick="<c:set var='subProperty' value='${dto.id}'/>">
 							<h1 class="list-group-item-heading">${dto.name}</h1>
 						</a>
 					</div>
 				</c:forEach>
-				<br><br><br><br><br><br><br><br><br><br><br>
+				<input type="hidden" name="subPropertyTypeId" value="${subProperty}">
+				<button type="submit" class="btn btn-lg btn-success">확인</button>
+				</form>
 			</div>
+			<br><br><br><br><br><br><br><br><br><br><br>
 	<%@include file='bottom.jsp'%>
 	<script>
-		function send(id){
-			location.href="/host/room_type?subPropertyTypeId="+id;
+		$('.list-group-item').click(function() {
+			$('.list-group-item').not(this).removeClass('active');
+			$(this).toggleClass('active');
+		});
+		function check(){
+			var subPropertyTypeId = "<c:out value='${subProperty}'/>"
+			if(subPropertyTypeId == null){
+				alert("숙소 상세 유형을 정해 주세요!")
+				return false;
+			}
+			document.f.submit();
+			return true;
 		}
 	</script>
 </body>

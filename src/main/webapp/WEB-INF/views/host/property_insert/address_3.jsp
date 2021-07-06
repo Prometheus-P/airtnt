@@ -11,11 +11,10 @@
 	<%@include file="../../top.jsp"%>
 	<div class="container theme-showcase" role="main">
 		<div class="page-header">
-			<h1
-				style="font-style: italic; font-weight: bold; font-family: fantasy;">
+			<h1 style="font-style: italic; font-weight: bold; font-family: fantasy;">
 				주소를 입력해주세요</h1>
 		</div>
-		<form name="f" method="post" action="<c:url value='/host/detail'/>" onsubmit="return send()">
+		<form name="f" method="post" action="<c:url value='/host/floor_plan_4'/>" onsubmit="return send()">
 		<div class="row">
 			<div class="col-sm-4">
 				<input type="text" id="address" name="address" placeholder="주소"
@@ -23,7 +22,7 @@
 					style="text-align: center; width: 500px; height: 50px;">
 				<div id="detail" style="display: none" >
 				<br><br>
-					<input type="text" class="form-control"
+					<input type="text" class="form-control" id=addressDetail name="addressDetail" 
 					style="text-align: center; width: 400px; height: 50px;" placeholder="상세 주소 입력">
 				</div>
 				<button type="button" class="btn btn-primary" id="addressDetail" name="addressDetail" 

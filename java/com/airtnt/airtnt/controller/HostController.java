@@ -73,8 +73,8 @@ public class HostController implements HostControllerInterface {
 	@Override
 	@RequestMapping("/host/property_type_0")
 	public ModelAndView property_type_0(HttpServletRequest req) {
-		List<PropertyTypeDTO> propertyTypeList = hostMapper.getPropertyType();
-		return new ModelAndView("host/property_insert/property_type_0", "propertyTypeList", propertyTypeList);
+		List<PropertyTypeDTO> listPropertyType = hostMapper.getPropertyType();
+		return new ModelAndView("host/property_insert/property_type_0", "listPropertyType", listPropertyType);
 	}
 
 	@Override
@@ -82,9 +82,9 @@ public class HostController implements HostControllerInterface {
 	public ModelAndView sub_property_type_1(HttpServletRequest req, @RequestParam int propertyTypeId) {
 		HttpSession session = req.getSession();
 		session.setAttribute("propertyTypeId", propertyTypeId);
-		List<SubPropertyTypeDTO> subPropertyTypeList = hostMapper.getSubPropertyType(propertyTypeId);
+		List<SubPropertyTypeDTO> listSubPropertyType = hostMapper.getSubPropertyType(propertyTypeId);
 		ModelAndView mav = new ModelAndView("host/property_insert/sub_property_type_1");
-		mav.addObject("subPropertyTypeList", subPropertyTypeList);
+		mav.addObject("listSubPropertyType", listSubPropertyType);
 		return mav;
 	}
 
@@ -93,9 +93,9 @@ public class HostController implements HostControllerInterface {
 	public ModelAndView room_type_2(HttpServletRequest req, @RequestParam int subPropertyType) {
 		HttpSession session = req.getSession();
 		session.setAttribute("subPropertyTypeId", subPropertyType);
-		List<RoomTypeDTO> roomTypeList = hostMapper.getRoomType();
+		List<RoomTypeDTO> listRoomType = hostMapper.getRoomType();
 		ModelAndView mav = new ModelAndView("host/property_insert/room_type_2");
-		mav.addObject("roomTypeList", roomTypeList);
+		mav.addObject("listRoomType", listRoomType);
 		return mav;
 	}
 
@@ -160,6 +160,33 @@ public class HostController implements HostControllerInterface {
 	public String preview_9(HttpServletRequest req, @RequestParam int price) {
 		HttpSession session = req.getSession();
 		session.setAttribute("price", price);
+		Map<String, String> nameDesc = (Map<String, String>)session.getAttribute("mapNameDesc");
+		Map<String, Integer> floor = (Map<String, Integer>)session.getAttribute("mapFloor");
+		List<Integer> amenities = (List<Integer>)session.getAttribute("listAmenities");
+		
+		session.getAttribute("사진도 받기");
+		List<AmenityTypeDTO> listAmenityType = hostMapper.getAmenityTypeList();
+		List<SubPropertyTypeDTO> listSubPropertyType = hostMapper.getSubPropertyType(session.getAttribute("propertyId"));
+		List<RoomTypeDTO> listRoomType = hostMapper.getRoomType();
+		int count=0;
+		String amenityName[];
+		for(int i : amenities) {
+			for(AmenityTypeDTO dto : listAmenityType) {
+				if(i == dto.getId()) {
+					amenityName[count] = dto.getName();
+					count++;
+				}
+			}
+		}
+		List<PropertyTypeDTO> listPropertyType = hostMapper.getPropertyType();
+		session.setAttribute("bedCount", floor.get("bedCount"));
+		session.setAttribute("maxGuest", floor.get("maxGuest"));
+		session.setAttribute("name", nameDesc.get("name"));
+		session.setAttribute("description", nameDesc.get("description"));
+		session.setAttribute("listAmenityName", amenityName);
+		
+		session.removeAttribute("mapFloor");
+		session.removeAttribute("mapNameDesc");
 		return "/host/become_a_host/price_8";
 	}
 
@@ -172,21 +199,22 @@ public class HostController implements HostControllerInterface {
 		int subPropertyTypeId = (int)session.getAttribute("subPropertyTypeId");
 		int roomTypeId = (int)session.getAttribute("roomTypeId");
 		String address = (String)session.getAttribute("address");
-		Map<String, Integer> floor = (Map<String, Integer>)session.getAttribute("mapFloor");
-		//maxGuest & bedCount
+		int bedCount = (int)session.getAttribute("bedCount");
+		int maxGuest = (int)session.getAttribute("maxGuest");
+		String name = (String)session.getAttribute("name");
+		String description = (String)session.getAttribute("description");
 		List<Integer> amenities = (List<Integer>)session.getAttribute("listAmenities");
 		//여러가지 편의시설
 		session.getAttribute("사진도 받기");
-		Map<String, String> nameDesc = (Map<String, String>)session.getAttribute("mapNameDesc");
 		int price = (int)session.getAttribute("price");
 	
 		PropertyDTO dtoPro = new PropertyDTO();
 		dtoPro.setHostId(hostId);
 		dtoPro.setAddress(address);
-		dtoPro.setBedCount(floor.get("bedCount"));
-		dtoPro.setMaxGuest(floor.get("maxGuest"));
-		dtoPro.setName(nameDesc.get("name"));
-		dtoPro.setPropertyDesc(nameDesc.get("description"));
+		dtoPro.setBedCount(bedCount);
+		dtoPro.setMaxGuest(maxGuest);
+		dtoPro.setName(name);
+		dtoPro.setPropertyDesc(description);
 		dtoPro.setPrice(price);
 		dtoPro.setPropertyTypeId(propertyTypeId);
 		dtoPro.setSubPropertyTypeId(subPropertyTypeId);
@@ -204,13 +232,15 @@ public class HostController implements HostControllerInterface {
 			 result += hostMapper.insertPropertyAmenity(dto[count]);
 			 count++;
 		}
+		session.removeAttribute("bedCount");
+		session.removeAttribute("maxGuest");
+		session.removeAttribute("description");
+		session.removeAttribute("name");
 		session.removeAttribute("propertyTypeId");
 		session.removeAttribute("subPropertyTypeId");
 		session.removeAttribute("roomTypeId");
 		session.removeAttribute("address");
-		session.removeAttribute("mapFloor");
 		session.removeAttribute("listAmenities");
-		session.removeAttribute("mapTitleDesc");
 		session.removeAttribute("price");
 		return "/host/property_insert/publish_celebration_10";
 	}

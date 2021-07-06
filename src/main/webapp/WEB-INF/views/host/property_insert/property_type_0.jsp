@@ -1,3 +1,5 @@
+
+
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -17,39 +19,35 @@
 				호스팅 할 숙소 유형을 알려주세요</h1>
 			</div>
 			<div class="col-sm-4">
-				<c:forEach var="dto" items="${propertyTypeList}">
+			<form name="f" method="post" action="<c:url value='/host/sub_property_type_1'/>" onsubmit="return check()"> 
+				<c:forEach var="dto" items="${listPropertyType}">
 					<div class="list-group" style="font-family: fantasy;">
 						<a href="javascript:void(0)" id="${dto.id}"
-							class="list-group-item" onclick="send(${dto.id})">
+							class="list-group-item" onclick="<c:set var='property' value='${dto.id}'/>">
 							<h1 class="list-group-item-heading">${dto.name}</h1>
 						</a>
 					</div>
 				</c:forEach>
-				<br><br><br><br><br><br><br><br><br><br><br>
+				<input type="hidden" name="propertyTypeId" value="${property}">
+				<button type="submit" class="btn btn-lg btn-success">확인</button>
+				</form>
 			</div>
+			<br><br><br><br><br><br><br><br><br><br><br>
 	<%@include file='bottom.jsp'%>
 	<script>
-		function send(id){
-			location.href="/host/sub_property_type?propertyTypeId="+id;
-		}
-		/* $('.list-group-item').click(function() {
+		$('.list-group-item').click(function() {
 			$('.list-group-item').not(this).removeClass('active');
 			$(this).toggleClass('active');
-		}); */
-
-		 /* function send() {
-			var propertyId = document
-					.getElementsByClassName("list-group-item active")[0].value
-			if (propertyId == null) {
-				alert("숙소 유형을 선택해 주세요!");
-				return;
+		});
+		function check(){
+			var propertyTypeId = "<c:out value='${property}'/>"
+			if(propertyTypeId == null){
+				alert("숙소 유형을 정해 주세요!")
+				return false;
 			}
-			var input = $("<input>").attr("type", "hidden").attr("name",
-					"propertyTypeId").val(propertyId);
-			$("#f").append($(input));
-			document.f.method = "post"
 			document.f.submit();
-		} */ 
+			return true;
+		}
 	</script>
 </body>
 </html>

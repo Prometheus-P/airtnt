@@ -139,5 +139,19 @@ public class HostMapper implements HostMapperInterface {
 		int res = sqlSession.insert("insertPropertyAmenity", dto);
 		return res;
 	}
+	
+	/*
+	 * public PropertyTypeDTO getPropertyTypeName(int propertyTypeId) {
+	 * PropertyTypeDTO dto = sqlSession.selectOne("getPropertyTypeName",
+	 * propertyTypeId); return dto; }
+	 * 
+	 * public SubPropertyTypeDTO getSubPropertyTypeName(int subPropertyTypeId) {
+	 * SubPropertyTypeDTO dto = sqlSession.selectOne("getSubPropertyTypeName",
+	 * subPropertyTypeId); return dto; }
+	 * 
+	 * 
+	 * public RoomTypeDTO getRoomTypeName(int roomTypeId) { RoomTypeDTO dto =
+	 * sqlSession.selectOne("getRoomTypeName", roomTypeId); return dto; }
+	 */
 
 }

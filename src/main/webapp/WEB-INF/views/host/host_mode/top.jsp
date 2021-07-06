@@ -29,9 +29,10 @@
 				</button>
 				<a class="navbar-brand" style="font-size: 20px ;font:italic; font-family:fantasy;">
 				${sessionScope.member_name}님 환영합니다</a>
-			</div>
+			</div><!-- <ol class="breadcrumb"> -->
 			<div id="navbar" class="navbar-collapse collapse" >
-				<ul class="nav navbar-nav" style="font-size: 30px ;font:bold; font-family:fantasy;">
+				<ul class="nav navbar-nav breadcrumb" style="font-size: 30px ;font:bold; font-family:fantasy;">
+				
 					<li>
 					<a href="<c:url value='/host/host_mode'/>">투데이</a></li>
 					<li>
