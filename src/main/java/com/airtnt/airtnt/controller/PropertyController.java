@@ -3,6 +3,7 @@ package com.airtnt.airtnt.controller;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.airtnt.airtnt.model.*;
@@ -25,7 +27,8 @@ import com.airtnt.airtnt.util.TagAttribute;
 @Controller
 @RequestMapping("property")
 public class PropertyController {
-	private final boolean DEBUG = false;
+	private final int DEBUG_INDEX = 1;
+	private final boolean DEBUG;
 	
 	@Autowired
 	private PropertyMapper propertyMapper;
@@ -33,6 +36,10 @@ public class PropertyController {
 	private WishListMapper wishListMapper;
 	@Autowired
 	private BookingMapper bookingMapper;
+	
+	public PropertyController() {
+		this.DEBUG = (this.DEBUG_INDEX != 0);
+	}
 	
 	@GetMapping("search")
 	public String search(HttpServletRequest req,
@@ -199,7 +206,7 @@ public class PropertyController {
 	}
 
 	@GetMapping("detail")
-	public String detail(HttpServletRequest req,
+	public String detail(HttpServletRequest req, HttpServletResponse resp,
 			@RequestParam("propertyId") Integer propertyId) {
 		// 로그인 후 돌아갈 url
 		String currentURI = req.getRequestURI() + 
@@ -219,6 +226,7 @@ public class PropertyController {
 		}
 		List<WishListDTO> wishLists = wishListMapper.selectWishLists(wishMap);
 		
+		
 		outer: for(WishListDTO wishList : wishLists) {
 			for(PropertyDTO wishProperty : wishList.getProperties()) {
 				if(property.getId() == wishProperty.getId()) {
@@ -228,6 +236,43 @@ public class PropertyController {
 				}
 			}
 		}
+		
+		// 최근목록에 저장
+		Cookie[] cookieArray = req.getCookies();
+		ArrayList<PropertyDTO> recentProperties = new ArrayList<>();
+		if(DEBUG) {
+			System.out.println("쿠키 사이즈(전) : " + cookieArray.length);
+		}
+		String cookieUser = "non-member";
+		if(memberId != null && !memberId.trim().equals("")) {
+			cookieUser = memberId;
+		}
+		Cookie newCookie = null;
+		for(int i = 0; i < cookieArray.length; i++) {
+			if(cookieArray[i].getName().equals(cookieUser + "Property")) {
+				Integer recentPropertyId = Integer.valueOf(cookieArray[i].getValue());
+				if(recentPropertyId == propertyId) {
+					newCookie = cookieArray[i];
+					cookieArray[i].setMaxAge(0);
+					break;
+				}
+			}
+		}
+		if(DEBUG) {
+			System.out.println("쿠키 사이즈(후) : " + cookieArray.length);
+		}
+		if(newCookie == null) {
+			newCookie = new Cookie(cookieUser + "Property", String.valueOf(propertyId));
+			newCookie.setMaxAge(2*60);
+		}
+		
+		
+		for(int i = cookieArray.length - 1; i >= 0; i--) {
+			Integer recentPropertyId = Integer.valueOf(cookieArray[i].getValue());
+			PropertyDTO recentProperty = propertyMapper.selectProperty(recentPropertyId);
+			recentProperties.add(recentProperty);
+		}
+		req.setAttribute("recentProperties", recentProperties);
 		
 		req.setAttribute("tomorrow", getTomorrowString());
 		req.setAttribute("dayAfterTomorrow", getDayAfterTomorrowString());
@@ -254,7 +299,7 @@ public class PropertyController {
 	// 새로고침은 여기로 바로 오기때문에 값이 없는 상태로 페이지로 가게 됨
 	@GetMapping("booking-check")
 	public String bookingCheck(HttpServletResponse resp){
-		resp.setHeader("Expires", "-1"); 
+		resp.setHeader("Expires", "-1");
 		resp.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
 		resp.addHeader("Cache-Control", "post-check=0, pre-check=0"); 
 		resp.setHeader("Pragma", "no-cache");
@@ -304,6 +349,9 @@ public class PropertyController {
 		
 		ra.addFlashAttribute("booking", booking);
 		ra.addFlashAttribute("transaction", transaction);
+		
+		
+		
 		
 		return "redirect:/property/booking-complete";
 	}
