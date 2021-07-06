@@ -1,12 +1,14 @@
 package com.airtnt.airtnt.controller;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,20 +17,24 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.airtnt.airtnt.model.*;
 import com.airtnt.airtnt.service.BookingMapper;
 import com.airtnt.airtnt.service.PropertyMapper;
 import com.airtnt.airtnt.service.WishListMapper;
-import com.airtnt.airtnt.util.TagAttribute;
+import com.airtnt.airtnt.util.*;
 
 @Controller
 @RequestMapping("property")
 public class PropertyController {
-	private final int DEBUG_INDEX = 1;
+	// debug index가 0이면 콘솔에 아무것도 안찍고 나머지는 다 콘솔에 찍음
+	// 생성자 참고
+	private final int DEBUG_INDEX = 0;
 	private final boolean DEBUG;
+	
+	private final int COOKIE_MAX_AGE = 60;
+	private final String ENCODING = Encoding.UTF_8;
 	
 	@Autowired
 	private PropertyMapper propertyMapper;
@@ -42,7 +48,7 @@ public class PropertyController {
 	}
 	
 	@GetMapping("search")
-	public String search(HttpServletRequest req,
+	public String search(HttpServletRequest req, HttpServletResponse resp,
 			@RequestParam(value = "addressKey", required = false) String addressKey,
 			@RequestParam(value = "propertyTypeId", required = false) Integer[] propertyTypeIdKeyArray,
 			@RequestParam(value = "subPropertyTypeId", required = false) Integer[] subPropertyTypeIdKeyArray,
@@ -160,6 +166,71 @@ public class PropertyController {
 			}
 		}
 		
+		// 최근목록 조회
+		List<PropertyDTO> recentProperties = null;
+		
+		// 로그인하지 않았다면 비회원 최근목록을 가져옴
+		// 로그인중이라면 회원 최근목록을 가져옴
+		String cookieUser = memberId;
+		if(memberId == null || memberId.trim().equals("")) {
+			cookieUser = "nonmember";
+		}
+		
+		// 기존의 최근목록 쿠키가 있는지 찾아봄
+		Cookie cookie = null;
+		Cookie[] cookieArray = req.getCookies();
+		if(cookieArray != null) {
+			for(Cookie existCookie : cookieArray) {
+				if(existCookie.getName().equals("AirTnT-" + cookieUser)) {
+					cookie = existCookie;
+					break;
+				}
+			}
+		}
+		
+		if(cookie != null) {
+			String encodedCookieString = cookie.getValue();
+			String decodedCookieString = null;
+			if(DEBUG) {
+				System.out.println("디코딩 전 : " + encodedCookieString);
+			}
+			
+			try {
+				decodedCookieString =
+						URLDecoder.decode(encodedCookieString, ENCODING);
+				if(DEBUG) {
+					System.out.println("디코딩 후 : " + decodedCookieString);
+				}
+			
+				int[] recentPropertyIdArray =
+						NumericList.toIntArray(decodedCookieString.split("%"));
+				recentProperties = propertyMapper.selectProperties(recentPropertyIdArray);
+				
+				// 쿠키에 등록되어있던 순서대로 정렬함
+				// 쿠키에 등록되어있던 값을 앞에서부터 읽으면서
+				// id가 같은 숙소를 맨 뒤로 이동시키기를 반복하면
+				// 쿠키에 등록되어있던 순서와 똑같이 정렬됨
+				for(int i = 0; i < recentPropertyIdArray.length; i++) {
+					inner: for(int j = 0; j < recentProperties.size(); j++) {
+						PropertyDTO recentProperty = recentProperties.get(j);
+						if(recentProperty.getId() == recentPropertyIdArray[i]) {
+							recentProperties.remove(j);
+							recentProperties.add(recentProperty);
+							break inner;
+						}
+					}
+				}
+				
+			} catch(UnsupportedEncodingException e) {
+				e.printStackTrace();
+				System.out.println("디코딩 문제 발생");
+				
+				cookie.setValue(null);
+				cookie.setMaxAge(0);
+				resp.addCookie(cookie);
+			}
+		}
+		
 		if(DEBUG) {
 			System.out.println("현재 URI : " + currentURI);
 			
@@ -202,6 +273,9 @@ public class PropertyController {
 		// 위시리스트 목록
 		req.setAttribute("wishLists", wishLists);
 		
+		// 최근 목록
+		req.setAttribute("recentProperties", recentProperties);
+		
 		return "property/property-list";
 	}
 
@@ -226,7 +300,6 @@ public class PropertyController {
 		}
 		List<WishListDTO> wishLists = wishListMapper.selectWishLists(wishMap);
 		
-		
 		outer: for(WishListDTO wishList : wishLists) {
 			for(PropertyDTO wishProperty : wishList.getProperties()) {
 				if(property.getId() == wishProperty.getId()) {
@@ -237,48 +310,144 @@ public class PropertyController {
 			}
 		}
 		
-		// 최근목록에 저장
+		// 최근목록 조회 및 쿠키에 저장
+		List<PropertyDTO> recentProperties = null;
+		
+		// 로그인하지 않았다면 비회원 최근목록에 저장
+		// 로그인중이라면 회원 최근목록에 저장
+		String cookieUser = memberId;
+		if(memberId == null || memberId.trim().equals("")) {
+			cookieUser = "nonmember";
+		}
+		
+		// 기존의 최근목록 쿠키가 있는지 찾아봄
+		Cookie cookie = null;
 		Cookie[] cookieArray = req.getCookies();
-		ArrayList<PropertyDTO> recentProperties = new ArrayList<>();
-		if(DEBUG) {
-			System.out.println("쿠키 사이즈(전) : " + cookieArray.length);
-		}
-		String cookieUser = "non-member";
-		if(memberId != null && !memberId.trim().equals("")) {
-			cookieUser = memberId;
-		}
-		Cookie newCookie = null;
-		for(int i = 0; i < cookieArray.length; i++) {
-			if(cookieArray[i].getName().equals(cookieUser + "Property")) {
-				Integer recentPropertyId = Integer.valueOf(cookieArray[i].getValue());
-				if(recentPropertyId == propertyId) {
-					newCookie = cookieArray[i];
-					cookieArray[i].setMaxAge(0);
+		if(cookieArray != null) {
+			for(Cookie existCookie : cookieArray) {
+				if(existCookie.getName().equals("AirTnT-" + cookieUser)) {
+					cookie = existCookie;
 					break;
 				}
 			}
 		}
-		if(DEBUG) {
-			System.out.println("쿠키 사이즈(후) : " + cookieArray.length);
-		}
-		if(newCookie == null) {
-			newCookie = new Cookie(cookieUser + "Property", String.valueOf(propertyId));
-			newCookie.setMaxAge(2*60);
+		
+		String decodedCookieString = null;
+		String encodedCookieString = null;
+		if(cookie == null) {
+			// 기존의 최근목록 쿠키가 없으면 쿠키를 생성
+			// 최근목록에는 저장하지 않음
+			decodedCookieString = propertyId.toString();
+			
+			try {
+				encodedCookieString =
+						URLEncoder.encode(decodedCookieString, ENCODING);
+				cookie = new Cookie("AirTnT-" + cookieUser, encodedCookieString);
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+				System.out.println("인코딩 문제 발생");
+			}
+			
+		} else {
+			// 최근목록이 있으면 원래의 쿠키값 내에서 비교하여
+			// 같은 값이 있으면 삭제하고 현재 값을 최근으로 올림
+			encodedCookieString = cookie.getValue();
+			if(DEBUG) {
+				System.out.println("디코딩 전 : " + encodedCookieString);
+			}
+			
+			try {
+				// 여기서 예외가 발생하면 decodedCookieString은 null 이다
+				decodedCookieString =
+						URLDecoder.decode(encodedCookieString, ENCODING);
+				if(DEBUG) {
+					System.out.println("디코딩 후 : " + decodedCookieString);
+				}
+				
+				List<String> recentPropertyIdStrings =
+						new ArrayList<>(Arrays.asList(decodedCookieString.split("%")));
+				int[] recentPropertyIdArray =
+						NumericList.toIntArray(recentPropertyIdStrings);
+				if(DEBUG) {
+					System.out.print("최근목록 숙소 id :");
+					for(String recentPropertyIdString : recentPropertyIdStrings) {
+						System.out.print(" " + recentPropertyIdString);
+					}
+					System.out.println();
+				}
+				
+				// 상세페이지 화면에 띄울 목록에는 변화를 적용하지 않음
+				recentProperties = propertyMapper.selectProperties(recentPropertyIdArray);
+				
+				// 쿠키에 등록되어있던 순서대로 정렬함
+				// 쿠키에 등록되어있던 값을 앞에서부터 읽으면서
+				// id가 같은 숙소를 맨 뒤로 이동시키기를 반복하면
+				// 쿠키에 등록되어있던 순서와 똑같이 정렬됨
+				for(int i = 0; i < recentPropertyIdArray.length; i++) {
+					inner: for(int j = 0; j < recentProperties.size(); j++) {
+						PropertyDTO recentProperty = recentProperties.get(j);
+						if(recentProperty.getId() == recentPropertyIdArray[i]) {
+							recentProperties.remove(j);
+							recentProperties.add(recentProperty);
+							break inner;
+						}
+					}
+				}
+				
+				// 최근목록 변화 로직
+				// 이전의 최근목록에 같은 숙소가 존재하고 있었다면 삭제함
+				for(int i = 0; i < recentPropertyIdArray.length; i++) {
+					if(recentPropertyIdArray[i] == propertyId) {
+						recentPropertyIdStrings.remove(i);
+						break;
+					}
+				}
+				// 방금 본 목록을 쿠키 맨 앞에 추가함
+				decodedCookieString = propertyId.toString();
+				for(int i = 0; i < recentPropertyIdStrings.size(); i++) {
+					decodedCookieString += "%" + recentPropertyIdStrings.get(i);
+				}
+				
+				// 브라우저에 저장될 문자열로 인코딩
+				// 여기서 예외가 발생하면 decodedCookieString은 null이 아님
+				encodedCookieString =
+						URLEncoder.encode(decodedCookieString, ENCODING);
+				if(DEBUG) {
+					System.out.println("인코딩 후 : " + cookie.getValue());
+				}
+				
+				cookie.setValue(encodedCookieString);
+				
+			} catch(UnsupportedEncodingException e) {
+				e.printStackTrace();
+				if(decodedCookieString == null) {
+					System.out.println("디코딩 문제 발생");
+				} else {
+					System.out.println("인코딩 문제 발생");
+				}
+				
+				cookie.setValue(null);
+			}
 		}
 		
-		
-		for(int i = cookieArray.length - 1; i >= 0; i--) {
-			Integer recentPropertyId = Integer.valueOf(cookieArray[i].getValue());
-			PropertyDTO recentProperty = propertyMapper.selectProperty(recentPropertyId);
-			recentProperties.add(recentProperty);
+		// 새로운 쿠키 생성에서 오류가 났으면 쿠키가 아예 없음
+		if(cookie != null) {
+			if(cookie.getValue() == null) {
+				// 인코딩 오류가 있었으면 사용자 브라우저에서 쿠키 삭제
+				cookie.setMaxAge(0);
+			} else {
+				// 인코딩 오류가 없었으면 쿠키 수명 갱신
+				cookie.setMaxAge(COOKIE_MAX_AGE);
+			}
+			resp.addCookie(cookie);
 		}
-		req.setAttribute("recentProperties", recentProperties);
 		
 		req.setAttribute("tomorrow", getTomorrowString());
 		req.setAttribute("dayAfterTomorrow", getDayAfterTomorrowString());
 		req.setAttribute("property", property);
 		
 		req.setAttribute("wishLists", wishLists);
+		req.setAttribute("recentProperties", recentProperties);
 		
 		return "property/property-detail";
 	}
@@ -349,9 +518,6 @@ public class PropertyController {
 		
 		ra.addFlashAttribute("booking", booking);
 		ra.addFlashAttribute("transaction", transaction);
-		
-		
-		
 		
 		return "redirect:/property/booking-complete";
 	}

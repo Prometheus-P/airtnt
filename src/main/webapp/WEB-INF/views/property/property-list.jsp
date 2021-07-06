@@ -311,6 +311,11 @@ crossorigin="anonymous"></script> -->
 	            </c:forEach>
 	          </ul>
 	      </div>
+	      <div>
+	        <c:forEach var="recentProperty" items="${recentProperties}">
+	          <span>${recentProperty.name} </span>
+	        </c:forEach>
+	      </div>
         </div>
 
         <!-- 카카오맵 -->
