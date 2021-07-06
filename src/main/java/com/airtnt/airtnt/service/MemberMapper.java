@@ -32,4 +32,9 @@ public class MemberMapper {
 		int res = sqlSession.update("updateMemberImage", params);
 		return res;
 	}
+
+	public int deleteMemberImage(String member_id) {
+		int res = sqlSession.update("deleteMemberImage", member_id);
+		return res;
+	}
 }

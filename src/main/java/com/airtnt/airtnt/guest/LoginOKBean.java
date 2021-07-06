@@ -20,7 +20,7 @@ public class LoginOKBean {
 		return instance;
 	}
 	
-	public void login_setting(MemberDTO dto) {
+	public void init_setting(MemberDTO dto) {
 		this.id = dto.getId();
 		this.name = dto.getName();
 		this.passwd = dto.getPasswd();

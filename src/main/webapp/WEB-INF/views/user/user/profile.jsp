@@ -18,7 +18,7 @@
 						</c:if>
 						<c:if test="${not empty memberData.member_image}">
 							<div class="text-center">
-							  <img src="${memberData.member_image}" class="rounded" style="max-width:80%; margin-bottom:5px" alt="...">
+							  <img src="${memberData.member_image}" class="rounded" style="object-fit:cover; width:15vh; max-width:80%; margin-bottom:5px" alt="...">
 							</div>
 						</c:if>
 					</div>

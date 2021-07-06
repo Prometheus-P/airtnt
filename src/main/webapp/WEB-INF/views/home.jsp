@@ -403,27 +403,37 @@
 			</div>
 			<div class="modal-body">
 				<form action="signUp" method="post">
-					<div class="form-group">
-						<input type="text" class="form-control" name="id" placeholder="ID" required="required">		
+					<div class="form-group mb-3 col-sm-lg">
+						    <label for="InputId" class="form-label">ID</label>
+						    <input type="text" name="id" class="form-control" id="InputId">
 					</div>
-					<div class="form-group">
-						<input type="password" class="form-control" name="passwd" placeholder="Password" required="required">	
-					</div>        
-					<div class="form-group">
-						<input type="text" class="form-control" name="name" placeholder="이름">	
+					<div class="form-group mb-3 col-sm-lg">
+						    <label for="InputPass" class="form-label">비밀번호</label>
+						    <input type="password" name="passwd" class="form-control" id="InputPass">
 					</div>
+					<div class="form-group mb-3 col-sm-lg">
+						    <label for="InputName" class="form-label">이름</label>
+						    <input type="text" name="name" class="form-control" id="InputName">
+					  </div>
+					  <div class="form-group mb-3 col-lg">
+						    <label for="InputBirth" class="form-label">생년월일</label>
+						    <input type="text" name="birth" class="form-control" id="InputBirth" aria-describedby="birthHelp" >
+						    <div id="birthHelp" class="form-text">2000/00/00</div>
+					  </div>
+					  <div class="form-group mb-3 col-lg">
+						    <label for="InputTel" class="form-label">핸드폰번호</label>
+						    <input type="text" name="Tel" class="form-control" id="InputTel" aria-describedby="TelHelp">
+						    <div id="TelHelp" class="form-text">010-xxxx-xxxx</div>
+					  </div>
+					  <div class="form-group mb-3 col-lg">
+							<label for="inputState" class="form-label">성별</label>
+							    <select id="inputState" class="form-select form-select-lg" name="gender">
+							       	<option selected value="1">남성</option>
+							      	<option value="2">여성</option>
+							    </select>
+						</div>
 					<div class="form-group">
-						<input type="text" class="form-control" name="birth" placeholder="생년월일 (2000/01/01)">	
-					</div>
-					<div class="form-group">
-						<input type="text" class="form-control" name="tel" placeholder="연락처(010/0000/0000)">	
-					</div>
-					<div class="form-group">
-						<label><input type="radio" class="center" name="gender" value="1" checked="checked"> 남</label>
-      					<label><input type="radio" class="center" name="gender" value="2"> 여</label>
-					</div>
-					<div class="form-group">
-						<button type="submit" class="btn btn-primary btn-lg btn-block login-btn" style="font-size: 15px">동의 및 계속하기</button>
+						<button type="submit" class="btn btn-primary btn-lg btn-block login-btn" style="font-size: 15px">동의 및 가입하기</button>
 					</div>
 				</form>
 			</div>
