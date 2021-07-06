@@ -203,7 +203,7 @@ public class PropertyController {
 				}
 			
 				int[] recentPropertyIdArray =
-						NumericList.toIntArray(decodedCookieString.split("%"));
+						Numeric.toIntArray(decodedCookieString.split("%"));
 				recentProperties = propertyMapper.selectProperties(recentPropertyIdArray);
 				
 				// 쿠키에 등록되어있던 순서대로 정렬함
@@ -367,7 +367,7 @@ public class PropertyController {
 				List<String> recentPropertyIdStrings =
 						new ArrayList<>(Arrays.asList(decodedCookieString.split("%")));
 				int[] recentPropertyIdArray =
-						NumericList.toIntArray(recentPropertyIdStrings);
+						Numeric.toIntArray(recentPropertyIdStrings);
 				if(DEBUG) {
 					System.out.print("최근목록 숙소 id :");
 					for(String recentPropertyIdString : recentPropertyIdStrings) {
