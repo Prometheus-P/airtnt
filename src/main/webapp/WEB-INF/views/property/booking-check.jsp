@@ -3,6 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
+
 <!--
 Template Name: Nekmit
 Author: <a href="https://www.os-templates.com/">OS Templates</a>
@@ -12,10 +13,17 @@ Licence: Free to use under our free template licence terms
 Licence URI: https://www.os-templates.com/template-terms
 -->
 <html lang="">
+<c:if test="${empty property}">
+	<script type="text/javascript">
+		alert("요청이 만료되었습니다.");
+		location.href = "/property/search";
+	</script>
+</c:if>
 <!-- To declare your language - read more here: https://www.w3.org/International/questions/qa-html-language-declarations -->
 <head>
 <title>숙소/상세보기(숙소명:${property.name})</title>
 <meta charset="utf-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <link href="/resources/layout/styles/layout.css" rel="stylesheet" type="text/css" media="all">
 <script type="text/javascript">
@@ -26,7 +34,7 @@ function setTotalPrice(){
 	//console.log(checkInDateStr);
 	//console.log(checkOutDateStr);
 	if(checkInDateStr == "" || checkOutDateStr == ""){
-		return;
+		return 0;
 	}
 	var checkInDate = new Date(checkInDateStr);
 	var checkOutDate = new Date(checkOutDateStr);
@@ -38,11 +46,12 @@ function setTotalPrice(){
 	var dayCount = diff / (24*60*60*1000);
 	//console.log(dayCount);
 	var totalPrice = guestCount * dayCount * ${property.price};
-	var totalPriceStr = new Intl.NumberFormat('ko-KR', {style: 'currency',currency: 'KRW', minimumFractionDigits: 0}).format(totalPrice);
+	const totalPriceStr = new Intl.NumberFormat('ko-KR', {style: 'currency',currency: 'KRW', minimumFractionDigits: 2}).format(totalPrice);
 	
-	document.getElementById("day_count").value = dayCount;
 	document.getElementById("total_price").value = totalPrice;
 	document.getElementById("price_disp").innerHTML = totalPriceStr;
+	
+	return totalPrice;
 }
 </script>
 </head>
@@ -141,161 +150,73 @@ function setTotalPrice(){
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
 <div class="wrapper row3">
-  <main class="hoc clear"> 
+  <main class="hoc container clear"> 
     <!-- main body -->
     <!-- ################################################################################################ -->
-    <div class="container">
-      <!-- 숙소 이미지 -->
-      <div class="one_half first">
-        <img class="imgl borderedbox inspace-5" src="${property.images.get(0).path}" alt="" >
-      </div>
-      <div class="one_half">
-        <c:forEach var="image" items="${property.images}" begin="1" end="4" varStatus="status">
-          <c:choose>
-            <c:when test="${status.count % 2 == 1}">
-              <div class="one_half first">
-                <img class="imgl borderedbox inspace-5" src="${image.path}" alt="" >
-              </div>
-            </c:when>
-            <c:otherwise>
-              <div class="one_half">
-                <img class="imgl borderedbox inspace-5" src="${image.path}" alt="" >
-              </div>
-            </c:otherwise>
-          </c:choose>
-        </c:forEach>
-      </div>
-      
-      
-      <!-- 숙소 상세정보 나열 구역 -->
-	  <div class="two_third first">
-	        <div>
-	          <h1>숙소 유형</h1>
-	          <p>
-	            ${property.propertyType.name}/${property.subPropertyType.name}<br>
-	            ${property.roomType.name}
-	          </p>
-	        </div>
-	        
-	        <hr>
-	        
-	        <div>
-	          <h1>상세 설명</h1>
-	          <textarea rows="10" cols="80" readonly>${property.propertyDesc}</textarea>
-	        </div>
-	        
-	        <hr>
-	        
-	        <div>
-	          <h1>편의 시설</h1><br>
-	          <c:forEach var="amenity" items="${property.amenities}">
-	            <ul>
-	              <li>
-	                ${amenity.amenityType.name}
-	              </li>
-	            </ul>
-	          </c:forEach>
-	        </div>
-	        
-	        <hr>
-	        
-		    <div id="comments">
-	        <h1>대앳그을</h1>
-	        <ul>
-	          <li>
-	            <article>
-	              <header>
-	                <figure class="avatar"><img src="/resources/images/demo/avatar.png" alt=""></figure>
-	                <address>
-	                By <a href="#">A Name</a>
-	                </address>
-	                <time datetime="2045-04-06T08:15+00:00">Friday, 6<sup>th</sup> April 2045 @08:15:00</time>
-	              </header>
-	              <div class="comcont">
-	                <p>This is an example of a comment made on a post. You can either edit the comment, delete the comment or reply to the comment. Use this as a place to respond to the post or to share what you are thinking.</p>
-	              </div>
-	            </article>
-	          </li>
-	          <li>
-	            <article>
-	              <header>
-	                <figure class="avatar"><img src="/resources/images/demo/avatar.png" alt=""></figure>
-	                <address>
-	                By <a href="#">A Name</a>
-	                </address>
-	                <time datetime="2045-04-06T08:15+00:00">Friday, 6<sup>th</sup> April 2045 @08:15:00</time>
-	              </header>
-	              <div class="comcont">
-	                <p>This is an example of a comment made on a post. You can either edit the comment, delete the comment or reply to the comment. Use this as a place to respond to the post or to share what you are thinking.</p>
-	              </div>
-	            </article>
-	          </li>
-	          <li>
-	            <article>
-	              <header>
-	                <figure class="avatar"><img src="/resources/images/demo/avatar.png" alt=""></figure>
-	                <address>
-	                By <a href="#">A Name</a>
-	                </address>
-	                <time datetime="2045-04-06T08:15+00:00">Friday, 6<sup>th</sup> April 2045 @08:15:00</time>
-	              </header>
-	              <div class="comcont">
-	                <p>This is an example of a comment made on a post. You can either edit the comment, delete the comment or reply to the comment. Use this as a place to respond to the post or to share what you are thinking.</p>
-	              </div>
-	            </article>
-	          </li>
-	        </ul>
-	      </div>
-	   </div>
-	   <div class="one_third">
-	     <!-- 
-	       상세정보에서 넘어가는 예약정보
+       <!-- 숙소 상세정보 나열 구역 -->
+       <div class="content" style="font-size: 20px">
+         <div>
+         <!-- 
+	       상세정보에서 넘어오는 예약정보
 	       host id, guest id, day count, guest count, total price,
 	       checkin date, checkout date
 	      -->
-	     <form action="<c:url value='/property/booking?propertyId=${property.id}'/>" method="post">
-	       <input type="hidden" name="hostId" value="${property.hostId}">
-	       <input type="hidden" name="guestId" value="${sessionScope.member_id}">
-	       <input id="day_count" type="hidden" name="dayCount">
-	       <input id="total_price" type="hidden" name="totalPrice">
-	       <table>
-	         <tr>
-	           <th>체크인</th>
-	           <td><input id="check_in_date" type="date" name="checkInDate" class="btmspace-15"
-	            	min="${tomorrow}" value="${tomorrow}"
-	            	onchange="javascript:setTotalPrice()"></td>
-	         </tr>
-	         <tr>
-	           <th>체크아웃</th>
-	           <td><input id="check_out_date" type="date" name="checkOutDate" class="btmspace-15"
-	            	min="${dayAfterTomorrow}" value="${dayAfterTomorrow}"
-	            	onchange="javascript:setTotalPrice()"></td>
-	         </tr>
-	         <tr>
-	           <th>인원수</th>
-	           <td><input id="guest_count" type="number" name="guestCount" class="btmspace-15"
-	            	min="1" max="${property.maxGuest}" value="1" 
-	            	onchange="javascript:setTotalPrice()"></td>
-	         </tr>
-	         <tr>
-	           <td colspan="2" style="font-size: 30px">
-	             총액 <span id="price_disp"></span>
- 	             <script type="text/javascript">
-	               setTotalPrice();
-	             </script>
-	           </td>
-	         </tr>
-	         <tr>
-	           <td colspan="2">
-	             <button class="btn" type="submit">예약하기</button>
-	             <a href="문의url?propertyId=${property.id}"><button class="btn" type="button">1:1 문의하기</button></a>
-	           </td>
-	         </tr>
-	     </table>
-	     </form>
-	   </div>
-	   
-      
+         <form action="/property/booking-pay" method="post">
+           <input type="hidden" name="propertyId" value="${property.id}">
+           <input type="hidden" name="hostId" value="${booking.hostId}">
+           <input type="hidden" name="guestId" value="${booking.guestId}">
+           <input type="hidden" name="dayCount" value="${booking.dayCount}">
+           <input type="hidden" name="totalPrice" value="${booking.totalPrice}">
+           <table border="1">
+             <tr>
+               <td colspan="3">결제정보</td>
+             </tr>
+             <tr>
+               <td>
+                 <img class="imgl borderedbox inspace-5"
+                 src="
+                   <c:if test='${not empty property.images}'>
+                     ${property.images.get(0).path}
+                   </c:if>
+                 " alt="" style="width: 200px;height: 150px">
+               </td>
+               <td>
+                 <ul>
+                   <li>숙소명 : ${property.name}</li>
+                   <li>주소 : ${property.address}</li>
+                   <li>숙소 유형 : ${property.propertyType.name}/${property.subPropertyType.name}</li>
+                   <li>방 유형 : ${property.roomType.name}</li>
+                 </ul>
+               </td>
+               <td>
+                 <ul>
+                   <li>체크인 : <input type="date" name="checkInDate" value="${booking.checkInDate}" readonly></li>
+                   <li>체크아웃 : <input type="date" name="checkOutDate" value="${booking.checkOutDate}" readonly></li>
+                   <li>숙박기간 : ${booking.dayCount}박</li>
+                   <li>인원 : <input type="number" name="guestCount" value="${booking.guestCount}" readonly style="width: 100px"></li>
+                 </ul>
+                 
+               </td>
+             </tr>
+             <tr>
+               <td colspan="3" style="font-size: 40px">
+                 <label>결제금액</label>
+                 <p>
+                   ₩${property.price} × ${booking.dayCount}박 × ${booking.guestCount}명<br>
+                   = <font color="blue">₩${booking.totalPrice}</font>
+                 </p>
+               </td>
+             </tr>
+           </table>
+           <div>
+             <button class="btn" type="submit" style="width: 200px; height: 80px; font-size: 30px">예약하기</button>
+	         <a href="javascript:history.back()">
+	           <button class="btn" type="button"style="width: 200px; height: 80px; font-size: 30px">취소</button>
+	         </a>
+           </div>
+           </form>
+         </div>
+         
       <!-- <div class="scrollable">
         <table>
           <thead>

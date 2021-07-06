@@ -68,7 +68,7 @@
             <li><a href="/pages/sidebar-right.html">호스트 되기</a></li>
             <li><a href="/myPage">계정</a></li>
             <li><a href="/help">도움말</a></li>
-            <li><a href="/logout">로그아웃</a></li>
+            <li><a href="/logout?preURI=${currentURI}">로그아웃</a></li>
           </ul>
          </li>
          </c:if>
@@ -88,6 +88,7 @@
 			</div>
 			<div class="modal-body">
 				<form action="/login" method="post">
+					<input type="hidden" name="preURI" value="${currentURI}">
 					<div class="form-group">
 						<c:if test="${empty value}">		
 							<input type="text" class="form-control" name="id" placeholder="ID" required="required">
@@ -129,6 +130,7 @@
 			</div>
 			<div class="modal-body">
 				<form action="/signUp" method="post">
+					<input type="hidden" name="preURI" value="${currentURI}">
 					<div class="form-group">
 						<input type="text" class="form-control" name="id" placeholder="ID" required="required">		
 					</div>
