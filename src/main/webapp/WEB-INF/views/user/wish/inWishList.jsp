@@ -39,7 +39,7 @@
 					<h2>저장된 항목 없음</h2><br>
 					<h5>맘에 드는 게 있으면 하트 아이콘을 눌러 저장하세요. 다른 사람과의 여행을 계획하고 있다면 초대하세요. 함께 원하는 항목을 저장하고 투표할 수 있습니다.</h5>
 					</div>
-					<a href="숙소리스트">
+					<a href="/property/search?addressKey=">
 						<button id="test_btn3" style="font-size:40px; padding-left:15px; padding-right:15px;" type="button" class="btn btn-outline-primary">둘러보기</button>
 					</a>
 				</c:if>

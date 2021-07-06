@@ -37,7 +37,13 @@
 		delete from wishlist_property where wish_id =#{wish_id}
 	</delete>
 	
-	
+	<!--wishlist_property  -->
+	<insert id="insertWishProperty" parameterType="WishList_PropertyDTO">
+		insert into wishlist_property values(seq_wish_p_id.nextval, #{wish_id}, #{property_id}, sysdate, #{mod_date, jdbcType=VARCHAR})	
+	</insert>
+	<delete id="deletePropertyAsync" parameterType="java.util.Map">
+		delete from wishlist_property where wish_id =#{wish_id} and property_id =#{property_id}
+	</delete>
 	
 	<!-- 뷰가 내머릿속에 없어서 헷갈려서 만듬 -->
 	<!-- 화면에 띄울 숙소 id들 중 위시리스트에 등록된 숙소id가 있는지만 판별하는 용도임 -->

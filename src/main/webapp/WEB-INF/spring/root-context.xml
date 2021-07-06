@@ -16,9 +16,11 @@
 		<property name="username" value="teambit"/>
 		<property name="password" value="teambit"/>
 	</bean>
-		<!-- image -->
-		<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver" />
-		
+	
+	<!-- image -->
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"></bean>
+
+	
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="dataSource"/>
 		<property name="typeAliasesPackage" value="com.airtnt.airtnt.model" />
