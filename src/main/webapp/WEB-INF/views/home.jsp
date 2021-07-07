@@ -10,7 +10,7 @@
 	<!--basic-->
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
-	<link href="/resources/layout/styles/layout.css" rel="stylesheet" type="text/css" media="all">
+	<link href='<c:url value='/resources/layout/styles/layout.css'/>' rel="stylesheet" type="text/css" media="all">
 	<!--loginModal-->
 	<link href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round" rel="stylesheet">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -26,6 +26,7 @@
 <body>
 	<c:set var="isLogin" value="false"/>
 	<c:if test="${not empty member_id && not empty member_name}"><c:set var="isLogin" value="true"/></c:if>
+	
 <div class="bgded overlay padtop" style="background-image:url('<c:url value='/resources/img/main3.jpg'/>');">
   <!-- ################################################################################################ -->
   <!-- ################################################################################################ -->
@@ -66,7 +67,7 @@
           <ul>
             <li><a href="tour">여행</a></li>
             <li><a href="wishList">위시리스트</a></li>
-            <li><a href="mypage">계정</a></li>
+            <li><a href="myPage">계정</a></li>
             <li><a href="help">도움말</a></li>
             <li><a href="logout">로그아웃</a></li>
           </ul>
@@ -83,7 +84,7 @@
     <!-- ################################################################################################ -->
         <nav class="navbar navbar-light">
 		  <div class="container-fluid">
-		    <form class="d-flex" action="/property/search" method="post">
+		    <form class="d-flex" action="/property/search" method="get">
 		      <input name="addressKey" class="form-control me-2" type="search" placeholder="위치" aria-label="Search">
 		      <button  class="btn btn-outline-primary" type="submit" style="background-color:#01546b; border: 0px;">Search</button>
 		    </form>
@@ -402,27 +403,37 @@
 			</div>
 			<div class="modal-body">
 				<form action="signUp" method="post">
-					<div class="form-group">
-						<input type="text" class="form-control" name="id" placeholder="ID" required="required">		
+					<div class="form-group mb-3 col-sm-lg">
+						    <label for="InputId" class="form-label">ID</label>
+						    <input type="text" name="id" class="form-control" id="InputId">
 					</div>
-					<div class="form-group">
-						<input type="password" class="form-control" name="passwd" placeholder="Password" required="required">	
-					</div>        
-					<div class="form-group">
-						<input type="text" class="form-control" name="name" placeholder="이름">	
+					<div class="form-group mb-3 col-sm-lg">
+						    <label for="InputPass" class="form-label">비밀번호</label>
+						    <input type="password" name="passwd" class="form-control" id="InputPass">
 					</div>
+					<div class="form-group mb-3 col-sm-lg">
+						    <label for="InputName" class="form-label">이름</label>
+						    <input type="text" name="name" class="form-control" id="InputName">
+					  </div>
+					  <div class="form-group mb-3 col-lg">
+						    <label for="InputBirth" class="form-label">생년월일</label>
+						    <input type="text" name="birth" class="form-control" id="InputBirth" aria-describedby="birthHelp" >
+						    <div id="birthHelp" class="form-text">2000/00/00</div>
+					  </div>
+					  <div class="form-group mb-3 col-lg">
+						    <label for="InputTel" class="form-label">핸드폰번호</label>
+						    <input type="text" name="Tel" class="form-control" id="InputTel" aria-describedby="TelHelp">
+						    <div id="TelHelp" class="form-text">010-xxxx-xxxx</div>
+					  </div>
+					  <div class="form-group mb-3 col-lg">
+							<label for="inputState" class="form-label">성별</label>
+							    <select id="inputState" class="form-select form-select-lg" name="gender">
+							       	<option selected value="1">남성</option>
+							      	<option value="2">여성</option>
+							    </select>
+						</div>
 					<div class="form-group">
-						<input type="text" class="form-control" name="birth" placeholder="생년월일 (2000/01/01)">	
-					</div>
-					<div class="form-group">
-						<input type="text" class="form-control" name="tel" placeholder="연락처(010/0000/0000)">	
-					</div>
-					<div class="form-group">
-						<label><input type="radio" class="center" name="gender" value="1" checked="checked"> 남</label>
-      					<label><input type="radio" class="center" name="gender" value="2"> 여</label>
-					</div>
-					<div class="form-group">
-						<button type="submit" class="btn btn-primary btn-lg btn-block login-btn" style="font-size: 15px">동의 및 계속하기</button>
+						<button type="submit" class="btn btn-primary btn-lg btn-block login-btn" style="font-size: 15px">동의 및 가입하기</button>
 					</div>
 				</form>
 			</div>
