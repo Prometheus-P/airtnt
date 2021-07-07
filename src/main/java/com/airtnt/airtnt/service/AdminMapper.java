@@ -40,8 +40,11 @@ public class AdminMapper {
 	}
 	
 	//[member] : 멤버 데이터 전체 카운트
-	public int selectMemberCount() {
-		int cnt = sqlSession.selectOne("selectMemberCount");
+	public int selectMemberCount(String member_mode) {
+		Map<String, String> selectKeyMap = new Hashtable<>();
+		selectKeyMap.put("member_mode", member_mode);
+		
+		int cnt = sqlSession.selectOne("selectMemberCount", selectKeyMap);
 		return cnt;
 	}
 	

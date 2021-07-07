@@ -118,7 +118,7 @@ public class AdminController extends UserController {
 	 * [member] : 회원정보 조회
 	 * param : "mode" > 회원구분  ( default "all" 로 세팅 > 처음 전체조회시 )
 	 */
-	@RequestMapping(value = "member", method = RequestMethod.GET) //@RequestParam(defaultValue="1") String member_mode
+	@RequestMapping(value = "member", method = RequestMethod.GET)
 	public String selectMemberList(HttpServletRequest req, @RequestParam(defaultValue="0") String member_mode) throws Exception {
 		//페이징 처리
 		int pageSize = 5;
@@ -129,10 +129,9 @@ public class AdminController extends UserController {
 		int currentPage = Integer.parseInt(pageNum);
 		int startRow = (currentPage-1) * pageSize + 1;
 		int endRow = startRow + pageSize - 1;
-		int rowCount = adminMapper.selectMemberCount();
+		int rowCount = adminMapper.selectMemberCount(member_mode);
 		int number = rowCount - startRow + 1;
 		if (endRow > rowCount) endRow = rowCount;
-		System.out.println("--------------" + req.getParameter("member_mode"));
 		List<MemberDTO> list = adminMapper.selectMemberList(member_mode, startRow, endRow);
 		
 		int pageCount = rowCount / pageSize + (rowCount%pageSize == 0 ? 0 : 1);
@@ -149,7 +148,6 @@ public class AdminController extends UserController {
 		req.setAttribute("startPage", startPage);
 		req.setAttribute("endPage", endPage);
 		req.setAttribute("pageCount", pageCount);
-		System.out.println("membermode::::" + req.getAttribute("member_mode"));
 		return "admin/member";
 	}
 	
