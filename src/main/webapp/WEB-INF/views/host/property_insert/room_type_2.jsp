@@ -21,12 +21,14 @@
 				<c:forEach var="dto" items="${listRoomType}">
 					<div class="list-group" style="font-family: fantasy;">
 						<a href="javascript:void(0)" id="${dto.id}"
-							class="list-group-item" onclick="<c:set var='room' value='${dto.id}'/>">
+							class="list-group-item" onclick="<c:set var='roomTypeId' value='${dto.id}'/>; 
+							<c:set var='roomTypeName' value='${dto.name}'/>">
 							<h1 class="list-group-item-heading">${dto.name}</h1>
 						</a>
 					</div>
 				</c:forEach>
-				<input type="hidden" name="roomTypeId" value="${room}">
+				<input type="hidden" name="roomTypeId" value="${roomTypeId}">
+				<input type="hidden" name="roomTypeName" value="${roomTypeName}">
 				<button type="submit" class="btn btn-lg btn-success">확인</button>
 				</form>
 			</div>
@@ -38,7 +40,7 @@
 			$(this).toggleClass('active');
 		});
 		function check(){
-			var roomTypeId = "<c:out value='${room}'/>"
+			var roomTypeId = "<c:out value='${roomTypeId}'/>"
 			if(roomTypeId == null){
 				alert("숙소의 종류를 정해 주세요!")
 				return false;

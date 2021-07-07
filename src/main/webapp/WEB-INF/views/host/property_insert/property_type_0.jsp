@@ -1,5 +1,3 @@
-
-
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -23,12 +21,14 @@
 				<c:forEach var="dto" items="${listPropertyType}">
 					<div class="list-group" style="font-family: fantasy;">
 						<a href="javascript:void(0)" id="${dto.id}"
-							class="list-group-item" onclick="<c:set var='property' value='${dto.id}'/>">
+							class="list-group-item" onclick="<c:set var='propertyTypeId' value='${dto.id}'/>;
+							<c:set var='propertyTypeName' value='${dto.name}'/>">
 							<h1 class="list-group-item-heading">${dto.name}</h1>
 						</a>
 					</div>
 				</c:forEach>
-				<input type="hidden" name="propertyTypeId" value="${property}">
+				<input type="hidden" name="propertyTypeId" value="${propertyTypeId}">
+				<input type="hidden" name="propertyTypeName" value="${propertyTypeName}">
 				<button type="submit" class="btn btn-lg btn-success">확인</button>
 				</form>
 			</div>
@@ -40,7 +40,7 @@
 			$(this).toggleClass('active');
 		});
 		function check(){
-			var propertyTypeId = "<c:out value='${property}'/>"
+			var propertyTypeId = "<c:out value='${propertyTypeId}'/>"
 			if(propertyTypeId == null){
 				alert("숙소 유형을 정해 주세요!")
 				return false;
