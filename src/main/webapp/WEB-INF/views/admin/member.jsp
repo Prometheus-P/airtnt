@@ -17,60 +17,52 @@
 </head>
 <body>
 	<script type="text/javascript">
-	var memberMode = "all"; //회원구분 파라미터
-	
-	$(document).ready(function(){
-		//ajax 공통 필요 변수
-    	var token = $("input[name='_csrf']").val();
-		var header = "X-CSRF-TOKEN";
+		$(document).ready(function(){
+			
+			//url 내 파라미터값 가져오기
+			var getUrlParameter = function getUrlParameter(sParam) {
+		    	var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+		    	sURLVariables = sPageURL.split('&'),sParameterName,i;
+		    	for (i = 0; i < sURLVariables.length; i++) {
+		    		sParameterName = sURLVariables[i].split('=');
+		    		if (sParameterName[0] === sParam) {
+		    			return sParameterName[1] === undefined ? true : sParameterName[1];
+		    		}
+		    	}
+		    };
+		    var member_mode = getUrlParameter('member_mode');
+		    
+		    //초기 조회시 파라미터값 없으므로 all(0) 으로 세팅
+		    if(member_mode == undefined || member_mode == ''){
+		    	member_mode = 0;
+		    }
+		    //멤버구분 라디오버튼 값 설정
+		    $('input:radio[name=memberModeRadio]:input[value=' + member_mode + ']').attr("checked", true);
 		
-		/* 라디오 버튼 이벤트 */
-		$('#memberModeRadio').change(function() {
-			var checkedRadio = $('#memberModeRadio input:radio:checked').val();
-			alert(checkedRadio);
-		});
-		
-		// 조회
-		$("#searchBtn").click(function(){
-			$.ajax({
-  		        url: "member",
-  		        type: "GET",
-  		        beforeSend : function(xhr)
-  		        {
-  		        	xhr.setRequestHeader(header, token);
-  		        },
-  		        data: {
-  		        	member_mode : memberMode
-  		        },
-  		        success: function(res){
-  		        	document.location.href = document.location.href; //페이지 새로고침
-  		        },
-  		        error: function(){
-  		            alert("err발생");
-  		        }
-  		});
-	    });
-		
-		
-	});	
+			//조회 버튼 클릭시 선택한 멤버구분값 조건으로 조회
+		    $("#searchBtn").click(function(){
+		        var memberMode = $('input[name="memberModeRadio"]:checked').val();
+		        location.href='member?member_mode=' + memberMode; 
+		    });
+		    
+		});	
 	</script>
 	
-	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 	<main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
 		<h1 class="h2">Member</h1>
 		<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom"></div>
 		<div id ="memberModeRadio" style="overflow:auto;">
 			<div class="custom-control custom-radio custom-control-inline">
-			  <input type="radio" id="customRadioInline1" name="memberModeRadio" class="custom-control-input">
-			  <label class="custom-control-label" for="customRadioInline1" value="all">All</label>
+			  <input type="radio" id="customRadioInline1" name="memberModeRadio" value="0" class="custom-control-input">
+			  <label class="custom-control-label" for="customRadioInline1">All</label>
 			</div>
 			<div class="custom-control custom-radio custom-control-inline">
-			  <input type="radio" id="customRadioInline2" name="memberModeRadio" class="custom-control-input">
-			  <label class="custom-control-label" for="customRadioInline2" value="1">Guest</label>
+			  <input type="radio" id="customRadioInline2" name="memberModeRadio" value="1" class="custom-control-input">
+			  <label class="custom-control-label" for="customRadioInline2">Guest</label>
 			</div>
 			<div class="custom-control custom-radio custom-control-inline">
-			  <input type="radio" id="customRadioInline3" name="memberModeRadio" class="custom-control-input">
-			  <label class="custom-control-label" for="customRadioInline3" value="2">Host</label>
+			  <input type="radio" id="customRadioInline3" name="memberModeRadio" value="2" class="custom-control-input">
+			  <label class="custom-control-label" for="customRadioInline3">Host</label>
 			</div>
 			<button type="button" id="searchBtn" style="float:right;" class="btn btn-primary btn-sm" >조회</button>
 		</div>
@@ -104,6 +96,20 @@
 		        </table>
 		     </div>
 		</div>
+		
+		<c:if test="${rowCount>0}">
+			<c:if test="${startPage>pageBlock}">
+				<a href="member?pageNum=${startPage-pageBlock}&member_mode=${member_mode}"}>[이전]</a>
+			</c:if>
+			<c:forEach var = "i" begin = "${startPage}" end = "${endPage}">
+				<a href = "member?pageNum=${i}&member_mode=${member_mode}">[${i}]</a>
+			</c:forEach>
+			<c:if test="${endPage<pageCount}">
+				<a href = "member?pageNum=${startPage + pageBlock}&member_mode=${member_mode}">[다음]</a>
+			</c:if>	
+		</c:if>
+		
+		
 		<!-- 페이징처리 -->
 		<nav aria-label="Page navigation example">
 		  <ul class="pagination pagination-sm justify-content-center">
