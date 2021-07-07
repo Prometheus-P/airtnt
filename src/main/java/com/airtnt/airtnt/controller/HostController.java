@@ -2,16 +2,20 @@ package com.airtnt.airtnt.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -89,7 +93,7 @@ public class HostController implements HostControllerInterface {
 		List<SubPropertyTypeDTO> listSubPropertyType = hostMapper.getSubPropertyType(propertyTypeId);
 		ModelAndView mav = new ModelAndView("host/property_insert/sub_property_type_1");
 		mav.addObject("listSubPropertyType", listSubPropertyType);
-		
+
 		System.out.println(propertyTypeId);
 		System.out.println(propertyTypeName);
 		return mav;
@@ -97,7 +101,7 @@ public class HostController implements HostControllerInterface {
 
 	@Override
 	@RequestMapping("/host/room_type_2")
-	public ModelAndView room_type_2(HttpServletRequest req, @RequestParam Map<String, String> map) {		
+	public ModelAndView room_type_2(HttpServletRequest req, @RequestParam Map<String, String> map) {
 		HttpSession session = req.getSession();
 		int subPropertyTypeId = Integer.parseInt(map.get("subPropertyTypeId"));
 		String subPropertyTypeName = map.get("subPropertyTypeName");
@@ -106,7 +110,7 @@ public class HostController implements HostControllerInterface {
 		List<RoomTypeDTO> listRoomType = hostMapper.getRoomType();
 		ModelAndView mav = new ModelAndView("host/property_insert/room_type_2");
 		mav.addObject("listRoomType", listRoomType);
-		
+
 		System.out.println(subPropertyTypeId);
 		System.out.println(subPropertyTypeName);
 		return mav;
@@ -120,7 +124,7 @@ public class HostController implements HostControllerInterface {
 		String roomTypeName = map.get("roomTypeName");
 		session.setAttribute("roomTypeId", roomTypeId);
 		session.setAttribute("roomTypeName", roomTypeName);
-		
+
 		System.out.println(roomTypeId);
 		System.out.println(roomTypeName);
 		return "host/property_insert/address_3";
@@ -132,7 +136,7 @@ public class HostController implements HostControllerInterface {
 		HttpSession session = req.getSession();
 		String addresss = map.get("address") + " " + map.get("addressDetail");
 		session.setAttribute("address", addresss);
-		
+
 		System.out.println(map.get("address"));
 		System.out.println("상세: " + map.get("addressDetail"));
 		return "host/property_insert/floor_plan_4";
@@ -143,11 +147,11 @@ public class HostController implements HostControllerInterface {
 	public ModelAndView amenities_5(HttpServletRequest req, @RequestParam Map<String, String> map) {
 		HttpSession session = req.getSession();
 		int maxGuest = Integer.parseInt(map.get("maxGuest"));
-		int bedCount = Integer.parseInt(map.get("bedCount"));		
+		int bedCount = Integer.parseInt(map.get("bedCount"));
 		session.setAttribute("maxGuest", maxGuest);
 		session.setAttribute("bedCount", bedCount);
 		List<AmenityTypeDTO> list = hostMapper.getAmenityTypeList();
-		
+
 		System.out.println(maxGuest);
 		System.out.println(bedCount);
 		return new ModelAndView("/host/property_insert/amenities_5", "listAmenityType", list);
@@ -160,7 +164,7 @@ public class HostController implements HostControllerInterface {
 		HttpSession session = req.getSession();
 		session.setAttribute("listAmenities", amenities);
 		System.out.println("편의시설 ID: ");
-		for(int i : amenities) {
+		for (int i : amenities) {
 			System.out.println(i);
 		}
 		return "/host/property_insert/photos_6";
@@ -173,41 +177,70 @@ public class HostController implements HostControllerInterface {
 		// TODO Auto-generated method stub
 		return 0;
 	}
-	
-	@RequestMapping(value = "/host/requestupload2")
-	public String requestupload2(HttpServletRequest req) {
-		MultipartHttpServletRequest mr = (MultipartHttpServletRequest)req;
-		List<MultipartFile> fileList = mr.getFiles("file");
-		String src = mr.getParameter("src");
-		System.out.println("src value : " + src);
-		
-		HttpSession session = req.getSession();
-		String upPath = session.getServletContext().getRealPath("/resources/property_img");
 
-		for (MultipartFile mf : fileList) {
-			String originFileName = mf.getOriginalFilename(); // 원본 파일 명
-			long fileSize = mf.getSize(); // 파일 사이즈
+	@ResponseBody
+	@RequestMapping(value = "/host/file-upload", method = RequestMethod.POST)
+	public String fileUpload(@RequestParam("article_files") List<MultipartFile> multipartFile,
+			HttpServletRequest req) {
 
-			System.out.println("originFileName : " + originFileName);
-			System.out.println("fileSize : " + fileSize);
+		String strResult = "{ \"result\":\"FAIL\" }";
+		String contextRoot = new HttpServletRequestWrapper(req).getRealPath("/");
+		String fileRoot;
+		long sizeSum=0;
+		try {
+			// 파일이 있을때 탄다.
+			if (multipartFile.size() > 0 && !multipartFile.get(0).getOriginalFilename().equals("")) {
+				
+				for (MultipartFile file : multipartFile) {
+					fileRoot = contextRoot + "resources/property_img/";
+					System.out.println(fileRoot);
 
-			String safeFile = System.currentTimeMillis() + originFileName;
-			try {
-				mf.transferTo(new File(upPath, safeFile));
-			} catch (IllegalStateException e) {
-				// TODO Auto-generated catch block
-				System.out.print("IllegalStateException이란다! ");
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				System.out.print("IOException이란다! ");
-				e.printStackTrace();
+					String originalFileName = file.getOriginalFilename(); // 오리지날 파일명
+					String extension = originalFileName.substring(originalFileName.lastIndexOf(".")); // 파일 확장자
+					String savedFileName = System.currentTimeMillis() + extension; // 저장될 파일 명
+					
+					if(!isValidExtension(originalFileName)) { //확장자 검사
+						return strResult = "{ \"result\":\"UNACCEPTED_EXTENSION\" }";
+					}
+					
+					sizeSum += file.getSize(); // 사진의 총 사이즈 검사
+					if(sizeSum >= 5 * 1024 * 1024) { // 500MB
+						return strResult = "{ \"result\":\"EXCEED_SIZE\" }";
+					}
+					
+					File targetFile = new File(fileRoot + savedFileName);
+					try {
+						InputStream fileStream = file.getInputStream();
+						FileUtils.copyInputStreamToFile(fileStream, targetFile); // 파일 저장
+					} catch (Exception e) {
+						// 파일삭제
+						FileUtils.deleteQuietly(targetFile); // 저장된 현재 파일 삭제
+						e.printStackTrace();
+						break;
+					}
+				}
+				strResult = "{ \"result\":\"OK\" }";
+			}else {
+				strResult = "{ \"result\":\"NO_IMAGE\" }";
 			}
+		} catch (Exception e) {
+			System.out.println("예외발생!!");
+			e.printStackTrace();
 		}
-
-		return "/host/property_insert/name_description_7";
+		return strResult;
 	}
-	
+
+	private boolean isValidExtension(String originalName) {
+		String originalNameExtension = originalName.substring(originalName.lastIndexOf(".") + 1);
+		switch (originalNameExtension) {
+		case "jpg":
+		case "png":
+		case "gif":
+		case "bmp":
+			return true;
+		}
+		return false;
+	}
 	
 	@Override
 	@RequestMapping("/host/name_description_7")
@@ -223,7 +256,7 @@ public class HostController implements HostControllerInterface {
 		String description = map.get("description");
 		session.setAttribute("name", name);
 		session.setAttribute("description", description);
-		
+
 		System.out.println(name);
 		System.out.println(description);
 		return "/host/property_insert/price_8";
@@ -250,7 +283,7 @@ public class HostController implements HostControllerInterface {
 
 		List<String> listAmenityName = new ArrayList<>();
 		List<AmenityTypeDTO> listAmenityType = hostMapper.getAmenityTypeList();
-		List<Integer> amenities = (List<Integer>)session.getAttribute("listAmenities");
+		List<Integer> amenities = (List<Integer>) session.getAttribute("listAmenities");
 		for (int i : amenities) {
 			for (AmenityTypeDTO dto : listAmenityType) {
 				if (i == dto.getId()) {
@@ -306,7 +339,7 @@ public class HostController implements HostControllerInterface {
 		session.removeAttribute("listAmenities");
 		session.removeAttribute("price");
 
-		//사진도 지우기
+		// 사진도 지우기
 		return "/host/property_insert/publish_celebration_10";
 	}
 
