@@ -57,8 +57,8 @@
         <c:if test="${!isLogin}">
         <li><a class="drop" href="#">로그인 하기</a>
           <ul>
-            <li><a href="#LoginModal" class="trigger-btn" data-toggle="modal">로그인</a></li>
-            <li><a href="#SignUpModal" class="trigger-btn" data-toggle="modal">회원가입</a></li>
+            <li><a id="login-button" href="#LoginModal" class="trigger-btn" data-toggle="modal">로그인</a></li>
+            <li><a id="signUp-button" href="#SignUpModal" class="trigger-btn" data-toggle="modal">회원가입</a></li>
             <li><a href="help">도움말</a></li>
           </ul>
           </c:if>

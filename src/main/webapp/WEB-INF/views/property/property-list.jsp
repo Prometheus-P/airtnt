@@ -237,7 +237,7 @@ crossorigin="anonymous"></script> -->
 
 <!-- 메인 화면 -->
 <div class="wrapper row3">
-  <div class="hoc container clear">
+  <div class="hoc clear" style="margin-left: 50px; margin-right: 50px">
 
     <!-- main body -->
     <!-- ################################################################################################ -->
@@ -253,6 +253,7 @@ crossorigin="anonymous"></script> -->
               <header class="heading"></header>
               
               <!-- 숙소리스트 영역 -->
+              <hr>
               <ul class="nospace clear" >
                 <c:forEach var="property" items="${properties}">
                 
@@ -262,62 +263,93 @@ crossorigin="anonymous"></script> -->
                       <!-- 사진 넘기기 -->
                       <div id="carouselControls-${property.id}" class="carousel slide" data-bs-interval="false">
                         <div class="carousel-inner">
-                          <c:if test="${not empty property.images}">
-                            <div class="carousel-item active">
-                              <img src="${property.images.get(0).path}" class="d-block w-100" alt="">
-                            </div>
-                          </c:if>
-                          <c:forEach var="image" items="${property.images}" begin="1">
-                            <div class="carousel-item">
+                          <c:forEach var="image" items="${property.images}" varStatus="status">
+                            <div class="carousel-item <c:if test='${status.count == 1}'>active</c:if>">
                               <img src="${image.path}" class="d-block w-100" alt="">
                             </div>
                           </c:forEach>
                         </div>
                         <c:if test="${not empty property.images && property.images.size() > 1}">
-                          <button class="carousel-control-prev" type="button" data-bs-target="#carouselControls-${property.id}" data-bs-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Previous</span>
+                          <button class="carousel-control-prev" type="button"
+                          data-bs-target="#carouselControls-${property.id}" data-bs-slide="prev">
+                            <img src="https://img.icons8.com/color/48/000000/back--v1.png"/>
+                            <!-- <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span> -->
                           </button>
-                          <button class="carousel-control-next" type="button" data-bs-target="#carouselControls-${property.id}" data-bs-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Next</span>
+                          <button class="carousel-control-next" type="button"
+                          data-bs-target="#carouselControls-${property.id}" data-bs-slide="next">
+                            <img src="https://img.icons8.com/color/48/000000/forward.png"/>
+                            <!-- <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span> -->
                           </button>
                         </c:if>
                       </div>
-	                </div>
-	                
-	                <div class="two_third">
-	                  <h2><a href="<c:url value='/property/detail?propertyId=${property.id}'/>">${property.name}</a></h2>
-	                  <h4>${property.propertyType.name}/${property.subPropertyType.name}</h4>
-	                  <h4>${property.roomType.name}</h4>
-	                  <h4>${property.address}</h4>
-	                </div>
-	            </li>
-	            <div class="position-relative">
-	              <div class="position-absolute end-0 bottom-50">
-	                <!-- Button trigger modal -->
-	                <a href="" class="trigger-btn wish-button" id="wishProperty-${property.id}"
-	                data-toggle="modal">
-	                  <!-- 빈 하트 -->
-	                  <img class="heart" src="" style="width: 3rem; height: 3rem">
-	                </a>
-	                <script type="text/javascript">
-	                  // 화면 로드 시 초기화하는 과정
-	                  initWish("${property.id}", "${property.wishListId}", "${property.wished}");
-	                </script>
-	              </div>
-	            </div>
-	            
-	            </c:forEach>
-	          </ul>
-	      </div>
-	      <div>
-	        <c:forEach var="recentProperty" items="${recentProperties}">
-	          <span>${recentProperty.name} </span>
-	        </c:forEach>
-	      </div>
+                    </div>
+                    
+                    <div class="two_third">
+                      <h2><a href="<c:url value='/property/detail?propertyId=${property.id}'/>">${property.name}</a></h2>
+                      <h4>${property.propertyType.name}/${property.subPropertyType.name}</h4>
+                      <h4>${property.roomType.name}</h4>
+                      <h4>${property.address}</h4>
+                    </div>
+                </li>
+                <div class="position-relative">
+                  <div class="position-absolute end-0 bottom-50">
+                    <!-- Button trigger modal -->
+                    <a href="" class="trigger-btn wish-button" id="wishProperty-${property.id}"
+                    data-toggle="modal">
+                      <!-- 빈 하트 -->
+                      <img class="heart" src="" style="width: 3rem; height: 3rem">
+                    </a>
+                    <script type="text/javascript">
+                  // 화면 로드 시 초기화하는 과정
+                      initWish("${property.id}", "${property.wishListId}", "${property.wished}");
+                </script>
+                  </div>
+                </div>
+                <hr>
+                </c:forEach>
+                
+              </ul>
+          </div>
+          
+          <!-- 최근 목록 -->
+          <h2>최근 본 숙소</h2>
+          <div id="carouselControls-recent" class="carousel slide" data-bs-interval="false">
+            <div class="carousel-inner" style="margin-left: 10%; width: 80%">
+              <c:forEach var="recentProperty" items="${recentProperties}" varStatus="status">
+                <c:if test="${status.count % 3 == 1}">
+                <div class="carousel-item <c:if test='${status.count == 1}'>active</c:if>">
+                </c:if>
+                  <div class="one_third <c:if test='${status.count % 3 == 1}'>first</c:if>">
+                    <img
+                      <c:if test='${recentProperty.images != null && recentProperty.images.size() > 0}'>
+                        src="${recentProperty.images.get(0).path}"
+                      </c:if>
+                    class="d-block w-100" alt="">
+                    <span>${recentProperty.name}</span>
+                  </div>
+                <c:if test="${status.count % 3 == 0 || status.last}">
+                </div>
+                </c:if>
+              </c:forEach>
+            </div>
+            <c:if test="${not empty recentProperties && recentProperties.size() > 3}">
+              <button class="carousel-control-prev" type="button" data-bs-target="#carouselControls-recent"
+              data-bs-slide="prev">
+                <img src="https://img.icons8.com/fluent/48/000000/back.png"/>
+                <!-- <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span> -->
+              </button>
+              <button class="carousel-control-next" type="button" data-bs-target="#carouselControls-recent"
+              data-bs-slide="next">
+                <img src="https://img.icons8.com/fluent/48/000000/forward.png"/>
+                <!-- <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span> -->
+              </button>
+            </c:if>
+          </div>
         </div>
-
         <!-- 카카오맵 -->
         <div class="one_half">
           <div id="map" style="width:600px;height:600px;"></div>

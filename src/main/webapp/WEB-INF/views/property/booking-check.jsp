@@ -19,6 +19,12 @@ Licence URI: https://www.os-templates.com/template-terms
 		location.href = "/property/search";
 	</script>
 </c:if>
+<c:if test="${empty sessionScope.member_id}">
+	<script type="text/javascript">
+		alert("로그인 후 이용해주세요.");
+		location.href = "/property/search";
+	</script>
+</c:if>
 <!-- To declare your language - read more here: https://www.w3.org/International/questions/qa-html-language-declarations -->
 <head>
 <title>숙소/상세보기(숙소명:${property.name})</title>
@@ -168,27 +174,27 @@ function setTotalPrice(){
            <input type="hidden" name="dayCount" value="${booking.dayCount}">
            <input type="hidden" name="totalPrice" value="${booking.totalPrice}">
            <table border="1">
-             <tr>
-               <td colspan="3">결제정보</td>
+             <tr style="font-size: 30px">
+               <td>결제정보<td>
              </tr>
-             <tr>
+             <tr style="font-size: 20px">
                <td>
-                 <img class="imgl borderedbox inspace-5"
-                 src="
+               <div class="one_third first">
+                 <img
                    <c:if test='${not empty property.images}'>
-                     ${property.images.get(0).path}
+                     src="${property.images.get(0).path}"
                    </c:if>
-                 " alt="" style="width: 200px;height: 150px">
-               </td>
-               <td>
+                 alt="" style="width: 100% /9">
+               </div>
+               <div class="one_third">
                  <ul>
                    <li>숙소명 : ${property.name}</li>
                    <li>주소 : ${property.address}</li>
                    <li>숙소 유형 : ${property.propertyType.name}/${property.subPropertyType.name}</li>
                    <li>방 유형 : ${property.roomType.name}</li>
                  </ul>
-               </td>
-               <td>
+               </div>
+               <div class="one_third">
                  <ul>
                    <li>체크인 : <input type="date" name="checkInDate" value="${booking.checkInDate}" readonly></li>
                    <li>체크아웃 : <input type="date" name="checkOutDate" value="${booking.checkOutDate}" readonly></li>
@@ -196,23 +202,24 @@ function setTotalPrice(){
                    <li>인원 : <input type="number" name="guestCount" value="${booking.guestCount}" readonly style="width: 100px"></li>
                  </ul>
                  
+               </div>
                </td>
              </tr>
-             <tr>
-               <td colspan="3" style="font-size: 40px">
+             <tr style="font-size: 40px">
+               <td style="padding-left: 30px">
                  <label>결제금액</label>
                  <p>
                    ₩${property.price} × ${booking.dayCount}박 × ${booking.guestCount}명<br>
-                   = <font color="blue">₩${booking.totalPrice}</font>
+                   총액 <font color="blue">₩${booking.totalPrice}</font>
                  </p>
                </td>
              </tr>
            </table>
+           
            <div>
-             <button class="btn" type="submit" style="width: 200px; height: 80px; font-size: 30px">예약하기</button>
-	         <a href="javascript:history.back()">
-	           <button class="btn" type="button"style="width: 200px; height: 80px; font-size: 30px">취소</button>
-	         </a>
+             <input class="btn btn-primary" type="submit" value="예약하기" style="width: 200px; height: 60px; font-size: 30px">
+	         <a href="javascript:history.back()" class="btn btn-danger" role="button"
+	         style="width: 200px; height: 60px; font-size: 30px">취소</a>
            </div>
            </form>
          </div>

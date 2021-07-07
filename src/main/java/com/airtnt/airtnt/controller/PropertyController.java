@@ -30,11 +30,21 @@ import com.airtnt.airtnt.util.*;
 public class PropertyController {
 	// debug index가 0이면 콘솔에 아무것도 안찍고 나머지는 다 콘솔에 찍음
 	// 생성자 참고
-	private final int DEBUG_INDEX = 0;
-	private final boolean DEBUG;
+	private final int debugIndex = 0;
+	private final boolean debug = (this.debugIndex != 0);
 	
-	private final int COOKIE_MAX_AGE = 60;
-	private final String ENCODING = Encoding.UTF_8;
+	// 월(1~12)*일(1~30)*시간(1~24)*분(1~60)*초(1~60)
+	private final int minute = 60;
+	private final int hour = 60*minute;
+	private final int day = 24*hour;
+	private final int week = 7*day;
+	private final int month = 30*day;
+	private final int year = 12*month;
+	private final int decade = 10*year;
+	private final int century = 100*year;
+	
+	private final int cookieMaxAge = 5*minute;
+	private final String encoding = Encoding.UTF_8;
 	
 	@Autowired
 	private PropertyMapper propertyMapper;
@@ -42,10 +52,6 @@ public class PropertyController {
 	private WishListMapper wishListMapper;
 	@Autowired
 	private BookingMapper bookingMapper;
-	
-	public PropertyController() {
-		this.DEBUG = (this.DEBUG_INDEX != 0);
-	}
 	
 	@GetMapping("search")
 	public String search(HttpServletRequest req, HttpServletResponse resp,
@@ -191,14 +197,14 @@ public class PropertyController {
 		if(cookie != null) {
 			String encodedCookieString = cookie.getValue();
 			String decodedCookieString = null;
-			if(DEBUG) {
+			if(debug) {
 				System.out.println("디코딩 전 : " + encodedCookieString);
 			}
 			
 			try {
 				decodedCookieString =
-						URLDecoder.decode(encodedCookieString, ENCODING);
-				if(DEBUG) {
+						URLDecoder.decode(encodedCookieString, encoding);
+				if(debug) {
 					System.out.println("디코딩 후 : " + decodedCookieString);
 				}
 			
@@ -231,7 +237,7 @@ public class PropertyController {
 			}
 		}
 		
-		if(DEBUG) {
+		if(debug) {
 			System.out.println("현재 URI : " + currentURI);
 			
 			System.out.println("----- 검색 ------");
@@ -286,7 +292,7 @@ public class PropertyController {
 		String currentURI = req.getRequestURI() + 
 				(req.getQueryString() == null ? "" : "?" + req.getQueryString());
 		req.setAttribute("currentURI", currentURI);
-		if(DEBUG) {
+		if(debug) {
 			System.out.println(currentURI);
 		}
 		
@@ -341,7 +347,7 @@ public class PropertyController {
 			
 			try {
 				encodedCookieString =
-						URLEncoder.encode(decodedCookieString, ENCODING);
+						URLEncoder.encode(decodedCookieString, encoding);
 				cookie = new Cookie("AirTnT-" + cookieUser, encodedCookieString);
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
@@ -352,15 +358,15 @@ public class PropertyController {
 			// 최근목록이 있으면 원래의 쿠키값 내에서 비교하여
 			// 같은 값이 있으면 삭제하고 현재 값을 최근으로 올림
 			encodedCookieString = cookie.getValue();
-			if(DEBUG) {
+			if(debug) {
 				System.out.println("디코딩 전 : " + encodedCookieString);
 			}
 			
 			try {
 				// 여기서 예외가 발생하면 decodedCookieString은 null 이다
 				decodedCookieString =
-						URLDecoder.decode(encodedCookieString, ENCODING);
-				if(DEBUG) {
+						URLDecoder.decode(encodedCookieString, encoding);
+				if(debug) {
 					System.out.println("디코딩 후 : " + decodedCookieString);
 				}
 				
@@ -368,7 +374,7 @@ public class PropertyController {
 						new ArrayList<>(Arrays.asList(decodedCookieString.split("%")));
 				int[] recentPropertyIdArray =
 						Numeric.toIntArray(recentPropertyIdStrings);
-				if(DEBUG) {
+				if(debug) {
 					System.out.print("최근목록 숙소 id :");
 					for(String recentPropertyIdString : recentPropertyIdStrings) {
 						System.out.print(" " + recentPropertyIdString);
@@ -411,8 +417,8 @@ public class PropertyController {
 				// 브라우저에 저장될 문자열로 인코딩
 				// 여기서 예외가 발생하면 decodedCookieString은 null이 아님
 				encodedCookieString =
-						URLEncoder.encode(decodedCookieString, ENCODING);
-				if(DEBUG) {
+						URLEncoder.encode(decodedCookieString, encoding);
+				if(debug) {
 					System.out.println("인코딩 후 : " + cookie.getValue());
 				}
 				
@@ -437,7 +443,7 @@ public class PropertyController {
 				cookie.setMaxAge(0);
 			} else {
 				// 인코딩 오류가 없었으면 쿠키 수명 갱신
-				cookie.setMaxAge(COOKIE_MAX_AGE);
+				cookie.setMaxAge(cookieMaxAge);
 			}
 			resp.addCookie(cookie);
 		}
@@ -468,6 +474,7 @@ public class PropertyController {
 	// 새로고침은 여기로 바로 오기때문에 값이 없는 상태로 페이지로 가게 됨
 	@GetMapping("booking-check")
 	public String bookingCheck(HttpServletResponse resp){
+		// 헤더에 no cache 설정
 		resp.setHeader("Expires", "-1");
 		resp.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
 		resp.addHeader("Cache-Control", "post-check=0, pre-check=0"); 
@@ -480,7 +487,7 @@ public class PropertyController {
 	@PostMapping("booking-pay")
 	public String bookingPay(HttpServletRequest req, RedirectAttributes ra,
 			@ModelAttribute BookingDTO booking) {
-		if(DEBUG) {
+		if(debug) {
 			System.out.println(booking);
 		}
 		
@@ -503,7 +510,7 @@ public class PropertyController {
 			return "message";
 		}
 		booking = bookingMapper.selectSameBooking(booking);
-		if(DEBUG) {
+		if(debug) {
 			System.out.println(booking);
 		}
 		
@@ -525,6 +532,7 @@ public class PropertyController {
 	// 2. 화면에 결제정보 표시
 	@GetMapping("booking-complete")
 	public String bookingComplete(HttpServletResponse resp) {
+		// 헤더에 no cache 설정
 		resp.setHeader("Expires", "-1"); 
 		resp.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
 		resp.addHeader("Cache-Control", "post-check=0, pre-check=0"); 
@@ -533,7 +541,7 @@ public class PropertyController {
 		return "property/booking-complete";
 	}
 	
-	public String getTomorrowString() {
+	private String getTomorrowString() {
 		SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd");
 		java.util.Date now = new java.util.Date();
 		java.util.Date tomorrow = new java.util.Date(now.getTime() + 24*60*60*1000);
@@ -541,7 +549,7 @@ public class PropertyController {
 		return strDate;
 	}
 	
-	public String getDayAfterTomorrowString() {
+	private String getDayAfterTomorrowString() {
 		SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd");
 		java.util.Date now = new java.util.Date();
 		java.util.Date tomorrow = new java.util.Date(now.getTime() + 2*24*60*60*1000);
@@ -549,7 +557,7 @@ public class PropertyController {
 		return strDate;
 	}
 	
-	public String getCurrentTimeStamp() {
+	private String getCurrentTimeStamp() {
 		SimpleDateFormat sdfDate = new SimpleDateFormat("yyyyMMddHHmmssSSS");
 		java.util.Date now = new java.util.Date();
 		String strDate = sdfDate.format(now);

@@ -19,6 +19,14 @@ Licence URI: https://www.os-templates.com/template-terms
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <link href="/resources/layout/styles/layout.css" rel="stylesheet" type="text/css" media="all">
 <script type="text/javascript">
+function loginCheck(){
+	if("${member_id}" == ""){
+		document.querySelector("a#login-button").click();
+		return false;
+	}
+	return true;
+}
+
 function setTotalPrice(){
 	var checkInDateStr = document.getElementById("check_in_date").value;
 	var checkOutDateStr = document.getElementById("check_out_date").value;
@@ -126,7 +134,7 @@ function setTotalPrice(){
       <!-- Button trigger modal -->
       <a href="" class="trigger-btn wish-button" id="wishProperty-${property.id}"
       data-toggle="modal" style="font-size: 20px">
-        <span class="wish-text">찜하기</span>
+        <span class="wish-text"></span>
         <!-- 빈 하트 -->
         <img class="heart" src="" style="width: 3rem; height: 3rem">
       </a>
@@ -151,26 +159,24 @@ function setTotalPrice(){
       <!-- 숙소 이미지 -->
       <div class="one_half first">
         <img class="imgl borderedbox inspace-5"
-        src="
           <c:if test='${not empty property.images}'>
-            ${property.images.get(0).path}
+            src="${property.images.get(0).path}"
           </c:if>
-        " alt="">
+         alt="" style="height: 41rem;">
       </div>
       <div class="one_half">
-      
-        
-      
         <c:forEach var="image" items="${property.images}" begin="1" end="4" varStatus="status">
           <c:choose>
             <c:when test="${status.count % 2 == 1}">
               <div class="one_half first">
-                <img class="imgl borderedbox inspace-5" src="${image.path}" alt="" >
+                <img class="imgl borderedbox inspace-5 " src="${image.path}" alt=""
+                style="height: 20rem;">
               </div>
             </c:when>
             <c:otherwise>
               <div class="one_half">
-                <img class="imgl borderedbox inspace-5" src="${image.path}" alt="" >
+                <img class="imgl borderedbox inspace-5" src="${image.path}" alt=""
+                style="height: 20rem;">
               </div>
             </c:otherwise>
           </c:choose>
@@ -182,7 +188,7 @@ function setTotalPrice(){
 	  <div class="two_third first">
 	        <div>
 	          <h1>숙소 유형</h1>
-	          <p>
+	          <p style="font-size: 20px">
 	            ${property.propertyType.name}/${property.subPropertyType.name}<br>
 	            ${property.roomType.name}
 	          </p>
@@ -192,7 +198,9 @@ function setTotalPrice(){
 	        
 	        <div>
 	          <h1>상세 설명</h1>
-	          <textarea rows="10" cols="80" readonly>${property.propertyDesc}</textarea>
+	          <p style="font-size: 20px">
+	            ${property.propertyDesc}
+	          </p>
 	        </div>
 	        
 	        <hr>
@@ -200,7 +208,7 @@ function setTotalPrice(){
 	        <div>
 	          <h1>편의 시설</h1><br>
 	          <c:forEach var="amenity" items="${property.amenities}">
-	            <ul>
+	            <ul style="font-size: 20px">
 	              <li>
 	                ${amenity.amenityType.name}
 	              </li>
@@ -210,7 +218,7 @@ function setTotalPrice(){
 	        
 	        <hr>
 	        
-		    <div id="comments">
+	       <div>
 	        <h1>대앳그을</h1>
 	        <ul>
 	          <li>
@@ -256,54 +264,102 @@ function setTotalPrice(){
 	            </article>
 	          </li>
 	        </ul>
+	        
 	      </div>
-	   </div>
+	      
+          <!-- 최근 목록 -->
+          <h2>최근 본 숙소</h2>
+          <div id="carouselControls-recent" class="carousel slide" data-bs-interval="false">
+            <div class="carousel-inner" style="margin-left: 10%; width: 80%">
+              <c:forEach var="recentProperty" items="${recentProperties}" varStatus="status">
+                <c:if test="${status.count % 3 == 1}">
+                <div class="carousel-item <c:if test='${status.count == 1}'>active</c:if>">
+                </c:if>
+                  <div class="one_third <c:if test='${status.count % 3 == 1}'>first</c:if>">
+                    <img
+                      <c:if test='${recentProperty.images != null && recentProperty.images.size() > 0}'>
+                        src="${recentProperty.images.get(0).path}"
+                      </c:if>
+                    class="d-block w-100" alt="">
+                    <span>${recentProperty.name}</span>
+                  </div>
+                <c:if test="${status.count % 3 == 0 || status.last}">
+                </div>
+                </c:if>
+              </c:forEach>
+            </div>
+            <c:if test="${not empty recentProperties && recentProperties.size() > 3}">
+              <button class="carousel-control-prev" type="button" data-bs-target="#carouselControls-recent"
+              data-bs-slide="prev">
+                <img src="https://img.icons8.com/fluent/48/000000/back.png"/>
+                <!-- <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span> -->
+              </button>
+              <button class="carousel-control-next" type="button" data-bs-target="#carouselControls-recent"
+              data-bs-slide="next">
+                <img src="https://img.icons8.com/fluent/48/000000/forward.png"/>
+                <!-- <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span> -->
+              </button>
+            </c:if>
+          </div><!-- end of 최근 목록 -->
+	   </div><!-- end of two_third first -->
 	   <div class="one_third">
 	     <!-- 
 	       상세정보에서 넘어가는 예약정보
 	       host id, guest id, day count, guest count, total price,
 	       checkin date, checkout date
 	      -->
-	     <form action="<c:url value='/property/booking'/>" method="post">
+	     <form action="<c:url value='/property/booking'/>" method="post" onsubmit="return loginCheck()">
 	       <input type="hidden" name="propertyId" value="${property.id}">
 	       <input type="hidden" name="hostId" value="${property.hostId}">
 	       <input type="hidden" name="guestId" value="${sessionScope.member_id}">
 	       <input id="day_count" type="hidden" name="dayCount">
 	       <input id="total_price" type="hidden" name="totalPrice">
-	       <table>
-	         <tr>
-	           <th>체크인</th>
-	           <td><input id="check_in_date" type="date" name="checkInDate" class="btmspace-15"
-	            	min="${tomorrow}" value="${tomorrow}"
-	            	onchange="javascript:setTotalPrice()"></td>
-	         </tr>
-	         <tr>
-	           <th>체크아웃</th>
-	           <td><input id="check_out_date" type="date" name="checkOutDate" class="btmspace-15"
-	            	min="${dayAfterTomorrow}" value="${dayAfterTomorrow}"
-	            	onchange="javascript:setTotalPrice()"></td>
-	         </tr>
-	         <tr>
-	           <th>인원수</th>
-	           <td><input id="guest_count" type="number" name="guestCount" class="btmspace-15"
-	            	min="1" max="${property.maxGuest}" value="1" 
-	            	onchange="javascript:setTotalPrice()"></td>
-	         </tr>
-	         <tr>
-	           <td colspan="2" style="font-size: 30px">
-	             총액 <span id="price_disp"></span>
- 	             <script type="text/javascript">
-	               setTotalPrice();
-	             </script>
-	           </td>
-	         </tr>
-	         <tr>
-	           <td colspan="2">
-	             <button class="btn" type="submit">예약하기</button>
-	             <a href="문의url?propertyId=${property.id}"><button class="btn" type="button">1:1 문의하기</button></a>
-	           </td>
-	         </tr>
-	     </table>
+	       <ul class="list-group" style="font-size: 20px">
+	         <li class="list-group-item">
+	           <div class="one_third first">
+	             체크인
+	           </div>
+	           <div class="two_third">
+	             <input id="check_in_date" type="date" name="checkInDate" class="btmspace-15"
+	             min="${tomorrow}" value="${tomorrow}"
+	             onchange="javascript:setTotalPrice()">
+	           </div>
+	         </li>
+	         <li class="list-group-item">
+	           <div class="one_third first">
+	             체크아웃
+	           </div>
+	           <div class="two_third">
+	             <input id="check_out_date" type="date" name="checkOutDate" class="btmspace-15"
+	             min="${dayAfterTomorrow}" value="${dayAfterTomorrow}"
+	             onchange="javascript:setTotalPrice()">
+	           </div>
+	         </li>
+	         <li class="list-group-item">
+	           <div class="one_third first">
+	             인원수
+	           </div>
+	           <div class="two_third">
+	             <input id="guest_count" type="number" name="guestCount" class="btmspace-15"
+	             min="1" max="${property.maxGuest}" value="1" 
+	             onchange="javascript:setTotalPrice()">
+	           </div>
+	         </li>
+	         <li class="list-group-item" style="font-size: 30px;color: blue">
+	           총액 <span id="price_disp"></span>
+ 	           <script type="text/javascript">
+	             setTotalPrice();
+	           </script>
+	         </li>
+	         <li class="list-group-item">
+	           <input class="btn btn-primary" type="submit"
+	           style="font-size: 20px; width: 15rem" value="예약하기">
+	           <a href="문의url?propertyId=${property.id}" class="btn btn-info"
+	           style="font-size: 20px; width: 15rem">1:1 문의하기</a>
+	         </li>
+	       </ul>
 	     </form>
 	   </div>
 	   
@@ -501,8 +557,8 @@ function setTotalPrice(){
 <!-- ################################################################################################ -->
 <a id="backtotop" href="#top"><i class="fas fa-chevron-up"></i></a>
 <!-- JAVASCRIPTS -->
-<script src="/resources/layout/scripts/jquery.min.js"></script>
+<!-- <script src="/resources/layout/scripts/jquery.min.js"></script>
 <script src="/resources/layout/scripts/jquery.backtotop.js"></script>
-<script src="/resources/layout/scripts/jquery.mobilemenu.js"></script>
+<script src="/resources/layout/scripts/jquery.mobilemenu.js"></script> -->
 </body>
 </html>
