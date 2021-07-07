@@ -178,8 +178,8 @@
 			open="(" separator="," close=")">
 				#{amenityTypeIdKey}
 			</foreach>
+			and at.is_use='Y'
 		</if>
-		and at.is_use='Y'
 		<if test="guestCountKey != null">
 			and p.max_guest <![CDATA[ >= ]]> #{guestCountKey}
 		</if>
