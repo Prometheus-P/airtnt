@@ -5,13 +5,13 @@ import java.util.*;
 
 public class SubPropertyTypeDTO {
 	
-	private int id;
+	private Integer id;
 	private String name;
 	private char isUse;
 	private Date regDate;
 	private Date modDate;
 	
-	private int propertyTypeId;
+	private Integer propertyTypeId;
 	private String propertyTypeName;
 	
 	// 검색 필터 input 태그 내에 속성을 설정하기 위한 필드. db랑 상관없음
@@ -22,16 +22,16 @@ public class SubPropertyTypeDTO {
 	// 태그 속성값 여러개 넣을 때 사용
 	private Hashtable<String, String> tagAttributeMap;
 	
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
-	public int getPropertyTypeId() {
+	public Integer getPropertyTypeId() {
 		return propertyTypeId;
 	}
-	public void setPropertyTypeId(int propertyTypeId) {
+	public void setPropertyTypeId(Integer propertyTypeId) {
 		this.propertyTypeId = propertyTypeId;
 	}
 	public String getName() {

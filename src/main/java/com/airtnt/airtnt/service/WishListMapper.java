@@ -58,4 +58,15 @@ public class WishListMapper {
 	public List<WishListDTO> selectWishLists(Map<String, Object> wishMap){
 		return sqlSession.selectList("selectWishLists", wishMap);
 	}
+
+	public Integer insertWishProperty(WishList_PropertyDTO dto) {
+		int res = sqlSession.insert("insertWishProperty", dto);
+		
+		return res;
+	}
+
+	public Integer deletePropertyAsync(Map<String, String> params) {
+		int res = sqlSession.delete("deletePropertyAsync", params);
+		return null;
+	}
 }
