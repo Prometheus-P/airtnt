@@ -99,13 +99,13 @@
 		
 		<c:if test="${rowCount>0}">
 			<c:if test="${startPage>pageBlock}">
-				<a href="member?pageNum=${startPage-pageBlock}&member_mode="+${member_mode}}>[이전]</a>
+				<a href="member?pageNum=${startPage-pageBlock}&member_mode=${member_mode}"}>[이전]</a>
 			</c:if>
 			<c:forEach var = "i" begin = "${startPage}" end = "${endPage}">
-				<a href = "member?pageNum=${i}&member_mode="+${member_mode}">[${i}]</a>
+				<a href = "member?pageNum=${i}&member_mode=${member_mode}">[${i}]</a>
 			</c:forEach>
 			<c:if test="${endPage<pageCount}">
-				<a href = "member?pageNum=${startPage + pageBlock}&member_mode="+${member_mode}">[다음]</a>
+				<a href = "member?pageNum=${startPage + pageBlock}&member_mode=${member_mode}">[다음]</a>
 			</c:if>	
 		</c:if>
 		
