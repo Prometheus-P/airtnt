@@ -49,7 +49,6 @@ public class AdminController extends UserController {
 	@RequestMapping(value = "loginCheck", method = RequestMethod.POST)
 	public String loginCheck(HttpServletRequest req, @RequestParam Map<String, String> params, 
 			HttpServletResponse resp, final HttpSession session) {
-		
 		MemberDTO dto = memberMapper.getMember(params.get("id"));
 		
 		if(dto == null) {
@@ -67,7 +66,7 @@ public class AdminController extends UserController {
 		}else {
 			//로그인 빈에 로그인한 멤버의 정보 담고 세션에 저장
 			LoginOKBean login = LoginOKBean.getInstance();
-			login.login_setting(dto);
+			login.init_setting(dto);
 			session.setAttribute("member_id", dto.getId());
 			session.setAttribute("member_name", dto.getName());
 			session.setAttribute("member_ip", req.getRemoteAddr());
@@ -87,12 +86,12 @@ public class AdminController extends UserController {
 	/*
 	 * [공통] : logout
 	 */
-	@RequestMapping("logout")
-	public String logout(HttpServletRequest req) {
-		HttpSession session = req.getSession();
-		session.invalidate();
-		return "redirect:/admin";
-	}
+	//@RequestMapping("logout")
+	//public String logout(HttpServletRequest req) {
+	//	HttpSession session = req.getSession();
+	//	session.invalidate();
+	//	return "redirect:/admin";
+	//}
 
 	/*
 	 * [dashboard] : 대시보드 필요 데이터 조회 및 넘긴다

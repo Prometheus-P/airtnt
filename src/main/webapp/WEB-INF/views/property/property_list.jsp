@@ -13,7 +13,7 @@ Licence URI: https://www.os-templates.com/template-terms
 <html lang="">
 <!-- To declare your language - read more here: https://www.w3.org/International/questions/qa-html-language-declarations -->
 <head>
-<title>AirTnT/숙소검색(키워드:${param.addressKey})</title>
+<title>1111AirTnT/숙소검색(키워드:${param.addressKey})</title>
 <meta charset="utf-8">
 <!-- map 커스텀 정보창 css -->
 <style>
@@ -43,6 +43,7 @@ crossorigin="anonymous"></script> -->
 
 </head>
 <body>
+<script>console.log('test');</script>
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
@@ -257,7 +258,7 @@ crossorigin="anonymous"></script> -->
     <!-- ################################################################################################ -->
     <div class="content"> 
       <!-- ################################################################################################ -->
-      <h2>${param.addressKey} 주변의 숙소 목록</h2>
+      <h2>${param.addressKey} 주변의 숙소 목록!!!!!!!!!!!!!!!!!</h2>
       <!-- ################################################################################################ -->
       <div class="group btmspace-50 demo">
         <!-- 숙소 리스트 -->
@@ -267,7 +268,7 @@ crossorigin="anonymous"></script> -->
 	          <header class="heading"></header>
 	          <hr>
 	          <!-- 숙소리스트 : 맵 내 마커 정보 : 나중에 히든처리할거임 -->
-	          <table id="markerPositionTb" style="display:none;">
+	          <table id="markerPositionTb">
 	          	<c:forEach var="property" items="${properties}">
                   	<tr>
                   	<td>${property.id}</td>
@@ -286,9 +287,9 @@ crossorigin="anonymous"></script> -->
 	            
 	            <li style="height: 150px;">
 	                <div class="one_third first" >
-	                  <a href="<c:url value='/property/detail?propertyId=${property.id}'/>">
+	                  <%-- <a href="<c:url value='/property/detail?propertyId=${property.id}'/>">
 	                    <img src="${property.images.get(0).path}" alt="" >
-	                  </a>
+	                  </a> --%>
 	                </div>
 	                <div class="two_third">
 	                  <h2><a href="<c:url value='/property/detail?propertyId=${property.id}'/>">${property.name}</a></h2>
