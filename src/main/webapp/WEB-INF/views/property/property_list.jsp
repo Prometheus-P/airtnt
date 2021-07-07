@@ -13,7 +13,7 @@ Licence URI: https://www.os-templates.com/template-terms
 <html lang="">
 <!-- To declare your language - read more here: https://www.w3.org/International/questions/qa-html-language-declarations -->
 <head>
-<title>1111AirTnT/숙소검색(키워드:${param.addressKey})</title>
+<title>11AirTnT/숙소검색(키워드:${param.addressKey})</title>
 <meta charset="utf-8">
 <!-- map 커스텀 정보창 css -->
 <style>
@@ -43,7 +43,6 @@ crossorigin="anonymous"></script> -->
 
 </head>
 <body>
-<script>console.log('test');</script>
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
