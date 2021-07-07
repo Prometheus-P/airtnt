@@ -25,9 +25,11 @@ zoom: 2.0;
 			</div>
 			<form name="f" method="post" action="<c:url value='/host/photos_6'/>" onsubmit="return check()">
 			<div class="col-sm-4" style="font-family: fantasy;">
-				<c:forEach var="dto" items="${listAmenities}">
+				<c:forEach var="dto" items="${listAmenityType}">
 					<input type="checkbox" name="amenities" id="${dto.id}" value="${dto.id}">
-					<h3>${dto.name}</h3>
+					<font style="font-weight: bold; font-family: fantasy; font-size: large;">
+					${dto.name}
+					</font><br>
 				</c:forEach>
 				<button type="submit" class="btn btn-lg btn-success">확인</button>
 			</div>
@@ -36,14 +38,14 @@ zoom: 2.0;
 		<br><br><br><br><br><br><br><br><br><br><br>
 	<%@include file='bottom.jsp'%>
 	<script>
-	$(function check(){
+	function check(){
 		if($("input:checkbox[name=amenities]:checked").length < 1){
 			alert("한 개 이상의 편의시설이 필요합니다!");
 			return false;
 		}
 		document.f.submit;
 		return true;
-	});
+	}
 	</script>
 </body>
 </html>

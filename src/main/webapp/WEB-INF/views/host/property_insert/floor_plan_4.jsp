@@ -12,37 +12,36 @@
 	<!-- <form name="f" method="post"
 		action="<c:url value='/host/property_detail_1'/>" onsubmit="send()"> -->
 	<div class="container theme-showcase" role="main">
-		<div class="page-header">
-			<h1 style="font-style: italic; font-weight: bold; font-family: fantasy;">
+		<div class="page-header" style="font-style: italic; font-family: fantasy;">
+			<h1 style="font-weight: bold;">
 				숙소에서 맞이 할 최대 인원 수를 알려주세요</h1><br>최소 1로 저장 됩니다
 		</div>
-		<div class="col-sm-4">
 		<form name="f" method="post" action="<c:url value='/host/amenities_5'/>">
 			<div class="btn-group list-group-item"
-				style="padding-bottom: 50px; padding-left: 20px; font-family: fantasy;">
+				style="padding-bottom: 70px; padding-left: 20px; font-family: fantasy;">
 				<h3>최대 수용 인원</h3>
 				<input id="decrease-guest" type="button" class="btn" value="-"
 					onclick="changeCount(this)" style="font-size: 40px;"> 
 					<input id="guest-count" class="form-control btn" type="number"
-					name="guestCount" value="${param.maxGuest}" min="1" readonly
-					style="width: 80px; height: 44px; font-size: 50px;">
+					name="maxGuest" value="${param.maxGuest}" min="1" readonly
+					style="width: 80px; height: 70px; font-size: 50px;">
 					<input id="increase-guest" type="button" class="btn" value="+"
 					onclick="changeCount(this)" style="font-size: 40px;">
 			</div>
 			<div class="btn-group list-group-item"
-				style="padding-bottom: 50px; padding-left: 20px; font-family: fantasy;">
+				style="padding-bottom: 70px; padding-left: 20px; font-family: fantasy;">
 				<h3>침대 수</h3>
 				<input id="decrease-bed" type="button" class="btn" value="-"
 					onclick="changeCount(this)" style="font-size: 40px;">
 					<input id="bed-count" class="form-control btn" type="number"
 					name="bedCount" value="${param.bedCount}" min="1" readonly
-					style="width: 80px; height: 44px; font-size: 50px;">
+					style="width: 80px; height: 70px; font-size: 50px;">
 					<input id="increase-bed" type="button" class="btn" value="+"
 					onclick="changeCount(this)" style="font-size: 40px;">
 			</div>
+			<br><br><br>
 			<button type="submit" class="btn btn-lg btn-success">확인</button>
 		</form>
-		</div>
 		<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 		<%@include file='bottom.jsp'%>
 		<script>

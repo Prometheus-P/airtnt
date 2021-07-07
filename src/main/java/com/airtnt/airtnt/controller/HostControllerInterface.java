@@ -19,7 +19,7 @@ public interface HostControllerInterface {
 	public ModelAndView room_type_2(HttpServletRequest req,@RequestParam Map<String, String> map);
 	public String address_3(HttpServletRequest req, @RequestParam Map<String, String> map);
 	public String floor_plan_4(HttpServletRequest req, @RequestParam Map<String, String> map);
-	public ModelAndView amenities_5(HttpServletRequest req, @RequestParam Map<String, Integer> map);
+	public ModelAndView amenities_5(HttpServletRequest req, @RequestParam Map<String, String> map);
 	public String photos_6(HttpServletRequest req, @RequestParam(value="amenities", required=true) List<Integer> amenities);
 	public int photos_upload(HttpServletRequest req, @RequestParam("files")List<MultipartFile> images);
 	public String name_description_7();

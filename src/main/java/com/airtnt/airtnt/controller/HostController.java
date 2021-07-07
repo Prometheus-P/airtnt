@@ -1,7 +1,7 @@
 package com.airtnt.airtnt.controller;
 
 import java.io.File;
-
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.airtnt.airtnt.model.AmenityDTO;
@@ -139,10 +140,10 @@ public class HostController implements HostControllerInterface {
 
 	@Override
 	@RequestMapping("/host/amenities_5")
-	public ModelAndView amenities_5(HttpServletRequest req, @RequestParam Map<String, Integer> map) {
+	public ModelAndView amenities_5(HttpServletRequest req, @RequestParam Map<String, String> map) {
 		HttpSession session = req.getSession();
-		int maxGuest = map.get("maxGuest");
-		int bedCount = map.get("bedCount");		
+		int maxGuest = Integer.parseInt(map.get("maxGuest"));
+		int bedCount = Integer.parseInt(map.get("bedCount"));		
 		session.setAttribute("maxGuest", maxGuest);
 		session.setAttribute("bedCount", bedCount);
 		List<AmenityTypeDTO> list = hostMapper.getAmenityTypeList();
@@ -172,11 +173,46 @@ public class HostController implements HostControllerInterface {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+	
+	@RequestMapping(value = "/host/requestupload2")
+	public String requestupload2(HttpServletRequest req) {
+		MultipartHttpServletRequest mr = (MultipartHttpServletRequest)req;
+		List<MultipartFile> fileList = mr.getFiles("file");
+		String src = mr.getParameter("src");
+		System.out.println("src value : " + src);
+		
+		HttpSession session = req.getSession();
+		String upPath = session.getServletContext().getRealPath("/resources/property_img");
 
+		for (MultipartFile mf : fileList) {
+			String originFileName = mf.getOriginalFilename(); // 원본 파일 명
+			long fileSize = mf.getSize(); // 파일 사이즈
+
+			System.out.println("originFileName : " + originFileName);
+			System.out.println("fileSize : " + fileSize);
+
+			String safeFile = System.currentTimeMillis() + originFileName;
+			try {
+				mf.transferTo(new File(upPath, safeFile));
+			} catch (IllegalStateException e) {
+				// TODO Auto-generated catch block
+				System.out.print("IllegalStateException이란다! ");
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				System.out.print("IOException이란다! ");
+				e.printStackTrace();
+			}
+		}
+
+		return "/host/property_insert/name_description_7";
+	}
+	
+	
 	@Override
 	@RequestMapping("/host/name_description_7")
 	public String name_description_7() {
-		return "/host/become_a_host/name_description_7";
+		return "/host/property_insert/name_description_7";
 	}
 
 	@Override
@@ -190,7 +226,7 @@ public class HostController implements HostControllerInterface {
 		
 		System.out.println(name);
 		System.out.println(description);
-		return "/host/become_a_host/price_8";
+		return "/host/property_insert/price_8";
 	}
 
 	@Override
@@ -224,7 +260,7 @@ public class HostController implements HostControllerInterface {
 		}
 
 		session.setAttribute("listAmenityName", listAmenityName);
-		return "/host/become_a_host/price_8";
+		return "/host/property_insert/price_8";
 	}
 
 	@Override
