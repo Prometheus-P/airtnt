@@ -1,4 +1,6 @@
-<!doctype html>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
   <head>
     <meta charset="utf-8">
@@ -20,11 +22,14 @@
   </head>
 
   <body>
+  	<c:set var="isLogin" value="false"/>
+	<c:if test="${not empty member_id && not empty member_name}"><c:set var="isLogin" value="true"/></c:if>
+	
     <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
-      <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">airTnT ADMIN</a>
+      <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="/admin/dashboard">airTnT ADMIN</a>
       <ul class="navbar-nav px-3">
         <li class="nav-item text-nowrap">
-          <a class="nav-link" href="#">Sign out</a>
+        	<a class="nav-link" href="">logout</a>
         </li>
       </ul>
     </nav>
@@ -38,7 +43,7 @@
               <li class="nav-item">
                 <a class="nav-link active" href="/admin/dashboard">
                   <span data-feather="home"></span>
-                  Dashboard <span class="sr-only">(current)</span>
+                  Dashboard
                 </a>
               </li>
               <li class="nav-item">
@@ -60,7 +65,7 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link" href="/wishList">
                   <span data-feather="star"></span>
                   Wish-List
                 </a>
@@ -71,6 +76,10 @@
                   Guide Board
                 </a>
               </li>
+              <div style="position: fixed; bottom: 15; left: 15;">
+                  	접속계정 : ${member_name}<br>
+                  	접속 IP : ${member_ip}
+              </div>
             </ul>
           </div>
         </nav>

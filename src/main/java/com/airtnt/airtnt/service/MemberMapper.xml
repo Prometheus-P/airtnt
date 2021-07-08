@@ -9,4 +9,19 @@
 	<select id="getMember" parameterType="String" resultType="memberDTO">
 		select * from member where id = #{member_id}
 	</select>
+	<update id="updateMember" parameterType="memberDTO">
+		update member 
+		set name=#{name}, birth=#{birth}, tel=#{tel}, gender=#{gender}
+		where id=#{id}
+	</update>
+	<update id="updateMemberImage" parameterType="java.util.Map">
+		update member 
+		set member_image=#{member_image, jdbcType=VARCHAR}
+		where id=#{member_id}
+	</update>
+	<update id="deleteMemberImage" parameterType="String">
+		update member 
+		set member_image = null
+		where id=#{member_id}
+	</update>
  </mapper>

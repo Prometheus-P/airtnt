@@ -18,6 +18,12 @@ Licence URI: https://www.os-templates.com/template-terms
 		location.href = "/property/search";
 	</script>
 </c:if>
+<c:if test="${empty sessionScope.member_id}">
+	<script type="text/javascript">
+		alert("로그인 후 이용해주세요.");
+		location.href = "/property/search";
+	</script>
+</c:if>
 <!-- To declare your language - read more here: https://www.w3.org/International/questions/qa-html-language-declarations -->
 <head>
 
@@ -129,20 +135,18 @@ Licence URI: https://www.os-templates.com/template-terms
        <!-- 숙소 상세정보 나열 구역 -->
        <div class="content" style="font-size: 20px">
          <div>
-           <table>
-             <tr>
-               <td>결제정보</td>
-             </tr>
-             <tr>
-               <td>
-                 <ul>
-                   <li>결제일시 : ${transaction.regDate}</li>
-                   <li>결제금액 : ${booking.totalPrice}</li>
-                   <li>예약번호 : ${booking.bookingNumber}</li>
-                 </ul>
-               </td>
-             </tr>
-           </table>
+           <ul class="list-group">
+             <li class="list-group-item">
+               결제정보
+             </li>
+             <li class="list-group-item">
+               <ul>
+                 <li>결제일시 : ${transaction.regDate}</li>
+                 <li>결제금액 : ${booking.totalPrice}</li>
+                 <li>예약번호 : ${booking.bookingNumber}</li>
+               </ul>
+             </li>
+           </ul>
          </div>
          <div>
            <a href="<c:url value='/property/search'/>">

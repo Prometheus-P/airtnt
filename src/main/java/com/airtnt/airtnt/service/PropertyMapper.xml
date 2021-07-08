@@ -140,14 +140,27 @@
 		where
 		<choose>
 			<!-- choose절 안의 파라미터가 없으면 bad grammar 예외 발생 -->
+			
+			<!-- 숙소 리스트 페이지 검색 -->
 			<when test="addressKey != null">
 				<bind name="addressKey" value="'%' + addressKey + '%'"/>
 				p.address like #{addressKey}
 			</when>
+			<!-- 최근목록 리스트 -->
+			<when test="propertyIdList != null">
+				p.id in
+				<foreach item="propertyId" collection="propertyIdList"
+				open="(" separator="," close=")">
+					#{propertyId}
+				</foreach>
+			</when>
+			<!-- 상세보기 페이지 -->
 			<when test="propertyId != null">
 				p.id=#{propertyId}
 			</when>
 		</choose>
+		
+		<!-- 검색 필터라서 거의 안들어감 -->
 		<if test="propertyTypeIdKeyArray != null">
 			and pt.id in
 			<foreach item="propertyTypeIdKey" collection="propertyTypeIdKeyArray"

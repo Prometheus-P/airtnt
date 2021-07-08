@@ -11,7 +11,7 @@
 		<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom"></div>
 		<c:forEach var="dto" items="${boardList}">
 		<form name="f" action="guideUpdate" method="post">
-			 <input type="hidden" name="contentId" value="${dto.contentId}">
+			 <input type="hidden" name="id" value="${dto.id}">
 			 <div class="form-group">
 			   <label for="exampleFormControlInput1">Title</label>
 			   <input type="text" class="form-control" id="subject" name="subject" value="${dto.subject}">
