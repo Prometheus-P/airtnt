@@ -4,15 +4,23 @@
  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
  <mapper namespace="com.airtnt.airtnt.service.MemberMapper">
  	<insert id="inputMember" parameterType="memberDTO">
-		insert into member values(#{id}, #{name, jdbcType=VARCHAR}, #{passwd}, #{birth, jdbcType=VARCHAR}, #{tel, jdbcType=VARCHAR}, 1, #{gender, jdbcType=VARCHAR}, #{member_image, jdbcType=VARCHAR}, sysdate, sysdate)
+		insert into member values(#{id}, #{name, jdbcType=VARCHAR}, #{passwd}, #{birth, jdbcType=VARCHAR}, #{tel, jdbcType=VARCHAR}, 1, #{gender, jdbcType=VARCHAR}, #{member_image, jdbcType=VARCHAR}, sysdate, sysdate, #{email})
 	</insert>
 	<select id="getMember" parameterType="String" resultType="memberDTO">
 		select * from member where id = #{member_id}
 	</select>
+	<select id="findId" parameterType="java.util.Map" resultType="memberDTO">
+		select id from member where name = #{name} and email=#{email}
+	</select>
 	<update id="updateMember" parameterType="memberDTO">
 		update member 
-		set name=#{name}, birth=#{birth}, tel=#{tel}, gender=#{gender}
+		set name=#{name}, birth=#{birth}, tel=#{tel}, gender=#{gender}, email=#{email}
 		where id=#{id}
+	</update>
+	<update id="updatePasswd" parameterType="java.util.Map">
+		update member 
+		set passwd=#{Npasswd}
+		where id=#{member_id}
 	</update>
 	<update id="updateMemberImage" parameterType="java.util.Map">
 		update member 
@@ -24,4 +32,8 @@
 		set member_image = null
 		where id=#{member_id}
 	</update>
+	<delete id="deleteMember" parameterType="String">
+		delete from member 
+		where id=#{member_id}
+	</delete>
  </mapper>

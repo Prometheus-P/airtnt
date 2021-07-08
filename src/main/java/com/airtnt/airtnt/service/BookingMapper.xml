@@ -30,7 +30,7 @@
 		<result property="modDate" column="mod_date"/>
 	</resultMap>
 	
-	<!-- 여기 주인 이름 써주셈 -->
+	<!-- 승훈 -->
 	
 	<select id="getPlanedBooking" resultType="BookingDTO" parameterType="String"> 
 		select *
@@ -42,7 +42,11 @@
 		from booking_view
 		where guest_id=#{member_id} and sysdate > check_out_date
 	</select>
-	
+	<select id="getToWriteBooking" resultType="BookingDTO" parameterType="String"> 
+		select *
+		from booking_view
+		where guest_id=#{member_id} and sysdate > check_out_date
+	</select>
 	
 	<!-- 정석 -->
 	

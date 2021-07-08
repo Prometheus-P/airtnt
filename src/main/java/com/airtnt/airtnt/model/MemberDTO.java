@@ -6,6 +6,7 @@ public class MemberDTO {
 	private String passwd;
 	private String birth;
 	private String tel;
+	private String Email;
 	private String member_mode;
 	private String gender;
 	private String member_image;
@@ -43,6 +44,12 @@ public class MemberDTO {
 	}
 	public void setTel(String tel) {
 		this.tel = tel;
+	}
+	public String getEmail() {
+		return Email;
+	}
+	public void setEmail(String email) {
+		Email = email;
 	}
 	public String getMember_mode() {
 		return member_mode;

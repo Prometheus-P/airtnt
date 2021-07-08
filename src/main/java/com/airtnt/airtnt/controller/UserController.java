@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.mail.HtmlEmail;
 import org.apache.ibatis.session.SqlSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,10 +33,12 @@ import com.airtnt.airtnt.guest.LoginOKBean;
 import com.airtnt.airtnt.model.BookingDTO;
 import com.airtnt.airtnt.model.MemberDTO;
 import com.airtnt.airtnt.model.PropertyDTO;
+import com.airtnt.airtnt.model.ReviewDTO;
 import com.airtnt.airtnt.model.WishListDTO;
 import com.airtnt.airtnt.model.WishList_PropertyDTO;
 import com.airtnt.airtnt.service.BookingMapper;
 import com.airtnt.airtnt.service.MemberMapper;
+import com.airtnt.airtnt.service.ReviewMapper;
 import com.airtnt.airtnt.service.WishListMapper;
 
 @Controller
@@ -47,6 +50,8 @@ public class UserController {
 	WishListMapper wishListMapper;
 	@Autowired
 	BookingMapper bookingMapper;
+	@Autowired
+	ReviewMapper reviewMapper;
 
 	// 회원가입
 	@RequestMapping("signUp")
@@ -121,7 +126,69 @@ public class UserController {
 
 		return "redirect:" + nextURI;
 	}
-
+	
+	//[비밀번호 찾기]
+	@RequestMapping("findPass")
+	public String findPass(HttpServletRequest req, @RequestParam Map<String, String> params) throws Exception {
+		String member_id = params.get("id");
+		MemberDTO getMember = memberMapper.getMember(member_id);
+		if(!getMember.getId().isEmpty()) {
+			if(params.get("email").equals(getMember.getEmail())) {
+				if(params.get("name").equals(getMember.getName())) {
+					// 임시 비밀번호 생성
+					String Npasswd = "";
+					for (int i = 0; i < 12; i++) {
+						Npasswd += (char) ((Math.random() * 26) + 97);
+					}
+					
+					// 비밀번호 변경
+					params.put("member_id", getMember.getId());
+					params.put("Npasswd", Npasswd);
+					memberMapper.updateMember(params);
+					
+					// 비밀번호 변경 메일 발송
+					int res = sendEmail(getMember, "findpw");
+					
+					//메일 전송 여부
+					if(res>0) {
+						//로그인창에 input id value값주기
+						req.getSession().setAttribute("findId",getMember.getId());
+						req.setAttribute("msg", "임시비밀번호를 이메일로 전송하였습니다");
+						req.setAttribute("url", "/index");
+						return "message";
+					}
+					req.setAttribute("msg", "메일 전송 실패");
+					req.setAttribute("url", "/index");
+					return "message";
+				}
+				req.setAttribute("msg", "이름이 일치하지않습니다");
+				req.setAttribute("url", "/index");
+				return "message";
+			}
+			req.setAttribute("msg", "이메일이 일치하지않습니다");
+			req.setAttribute("url", "/index");
+			return "message";
+		}
+		req.setAttribute("msg", "아이디가 존재하지않습니다");
+		req.setAttribute("url", "/index");
+		return "message";
+	}
+	
+	//[아이디 찾기]
+	@RequestMapping("findId")
+	public String findId(HttpServletRequest req, @RequestParam Map<String, String> params) {
+		MemberDTO getMember = memberMapper.findId(params);
+		if(getMember!=null) {
+			req.getSession().setAttribute("findId",getMember.getId());
+			req.setAttribute("msg", "찾은 아이디 : "+getMember.getId());
+			req.setAttribute("url", "/index");
+			return "message";
+		}
+		req.setAttribute("msg", "아이디가 존재하지않습니다");
+		req.setAttribute("url", "/index");
+		return "message";
+	}
+	
 	// [마이페이지]
 	@RequestMapping("myPage")
 	public String mypage(HttpServletRequest req) {
@@ -138,12 +205,12 @@ public class UserController {
 		return "user/user/profile";
 	}
 	
+	//[마이페이지 - 개인정보 수정]
 	@RequestMapping("myPage/updateMember")
 	public String updateMember(HttpServletRequest req, @ModelAttribute MemberDTO dto) {
 		String member_id = (String) req.getSession().getAttribute("member_id");
 		dto.setId(member_id);
 		int res = memberMapper.updateMember(dto);
-
 		MemberDTO getMember = memberMapper.getMember(member_id);
 		LoginOKBean login = LoginOKBean.getInstance();
 		login.init_setting(getMember);
@@ -221,12 +288,84 @@ public class UserController {
 		}
 		return "redirect:/myPage/editPhoto";
 	}
+	
+	//[마이페이지 - 비밀번호 변경]
+	@RequestMapping(value = ("myPage/editPassword"), method = RequestMethod.GET)
+	public String editPassword(HttpServletRequest req) {
 
+		return "user/user/editPassword";
+	}
+	
+	@RequestMapping(value = ("myPage/editPassword"), method = RequestMethod.POST)
+	public String editPassword(HttpServletRequest req, @RequestParam Map<String, String> params) {
+		LoginOKBean memberData = LoginOKBean.getInstance();
+		System.out.println(memberData.getPasswd());
+		if(!params.get("passwd").equals(memberData.getPasswd())) {
+			req.setAttribute("msg", "현재 비밀번호가 틀렸습니다, 확인해주세요");
+			req.setAttribute("url", "/myPage/editPassword");
+			return "message";
+		}
+		params.put("member_id", memberData.getId());
+		int res = memberMapper.updateMember(params);
+		if (res > 0) {
+			req.setAttribute("msg", "비밀번호 변경완료, 로그인을 다시해주세요");
+			req.setAttribute("url", "/logout");
+		}else {
+			req.setAttribute("msg", "DB문제발생 관리자 문의");
+			req.setAttribute("url", "/error");
+		}
+		return "message";
+	}
+	
+	//[마이페이지 - 회원탈퇴]
+		@RequestMapping(value = ("myPage/deleteMember"), method = RequestMethod.GET)
+		public String deleteMember(HttpServletRequest req) {
+			String member_id = (String) req.getSession().getAttribute("member_id");
+				int res = memberMapper.deleteMember(member_id);
+				if (res > 0) {
+					req.setAttribute("msg", "정상적으로 탈퇴되었습니다 그동안 감사했습니다 언제든지 찾아주세요!");
+					req.setAttribute("url", "/logout");
+				}else {
+					req.setAttribute("msg", "DB문제발생 관리자 문의");
+					req.setAttribute("url", "/error");
+				}
+				return "message";
+		}
+		
+	//[마이페이지 - 리뷰]
 	@RequestMapping("myPage/review")
 	public String review(HttpServletRequest req) {
-
+		String member_id = (String) req.getSession().getAttribute("member_id");
+		
+		List<BookingDTO> toWriteReviews = bookingMapper.getToWriteBooking(member_id);
+		req.setAttribute("toWriteReviews", toWriteReviews);
+		
 		return "user/user/review";
 	}
+	@RequestMapping("myPage/writeReview")
+	public String writeReview(HttpServletRequest req, @ModelAttribute ReviewDTO dto) {
+		String member_id = (String) req.getSession().getAttribute("member_id");
+		System.out.println("zz");
+		System.out.println(dto.getProperty_id());
+		int res = reviewMapper.writeReview(dto);
+		
+		if(res>0) {
+			req.setAttribute("msg", "리뷰가 등록되었습니다");
+			req.setAttribute("url", "/myPage/review");
+		}
+		req.setAttribute("msg", "DB문제발생 관리자 문의");
+		req.setAttribute("url", "/myPage/review");
+	
+		return "message";
+	}
+	
+	@RequestMapping("myPage/deleteReview")
+	public String deleteReview(HttpServletRequest req) {
+		String member_id = (String) req.getSession().getAttribute("member_id");
+		
+		return "user/user/review";
+	}
+	
 
 	@RequestMapping("myPage/payment")
 	public String payment(HttpServletRequest req) {
@@ -310,5 +449,53 @@ public class UserController {
 		req.setAttribute("preBookinglist", pre);
 		return "user/tour/tour";
 	}
+	
+	
+	//[메일보내는 메소드]
+	public int sendEmail(MemberDTO dto, String div) {
+		// Mail Server 설정
+		String charSet = "utf-8";
+		String hostSMTP = "smtp.gmail.com"; //네이버 이용시 smtp.naver.com, smtp.gmail.com
+		String hostSMTPid = "myclove1981@gmail.com";
+		String hostSMTPpwd = "ahrdidryghl1!";
 
+		// 보내는 사람 EMail, 제목, 내용
+		String fromEmail = "myclove1981@gmail.com";
+		String fromName = "AirTnT";
+		String subject = "";
+		String msg = "";
+
+		if(div.equals("findpw")) {
+			subject = "AirTnT 임시 비밀번호 입니다.";
+			msg += "<div align='center' style='border:1px solid black; font-family:verdana'>";
+			msg += "<h3 style='color: blue;'>";
+			msg += dto.getId() + "님의 임시 비밀번호 입니다. 비밀번호를 변경하여 사용하세요.</h3>";
+			msg += "<p>임시 비밀번호 : ";
+			msg += dto.getPasswd() + "</p></div>";
+		}
+
+		// 받는 사람 E-Mail 주소
+		String mail = dto.getEmail();
+		try {
+			HtmlEmail email = new HtmlEmail();
+			email.setDebug(true);
+			email.setCharset(charSet);
+			email.setSSL(true);
+			email.setHostName(hostSMTP);
+			email.setSmtpPort(465); //네이버 이용시 587 , gmail 이용시 465
+
+			email.setAuthentication(hostSMTPid, hostSMTPpwd);
+			email.setTLS(true);
+			email.addTo(mail, charSet);
+			email.setFrom(fromEmail, fromName, charSet);
+			email.setSubject(subject);
+			email.setHtmlMsg(msg);
+			email.send();
+		} catch (Exception e) {
+			System.out.println("메일발송 실패 : " + e);
+			return 0;
+		}
+		
+		return 1;
+	}
 }

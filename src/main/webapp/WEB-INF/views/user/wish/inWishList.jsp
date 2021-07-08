@@ -49,7 +49,7 @@
 			            <c:forEach var="dto" items="${properties}">
 			            <li style="height: 150px;">
 			              <div class="one_third first" >
-			                <a href="/guest/property-detail?propertyId=${dto.property_id}"><img src="${dto.path}" alt="" ></a>
+			                <a href="/guest/property-detail?propertyId=${dto.property_id}"><img src="${dto.path}" alt="" style="object-fit:contain; width:200px; height:150px;"></a>
 			              </div>
 			              <div class="two_third">
 			                <h2><a href="/guest/property-detail?propertyId=${dto.property_id}">${dto.property_name}</a></h2>
