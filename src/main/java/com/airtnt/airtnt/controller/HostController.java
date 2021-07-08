@@ -27,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.airtnt.airtnt.interceptor.LoginInterceptor;
 import com.airtnt.airtnt.model.AmenityDTO;
 import com.airtnt.airtnt.model.AmenityTypeDTO;
 import com.airtnt.airtnt.model.BookingDTO;
@@ -44,11 +45,16 @@ import com.airtnt.airtnt.service.HostMapper;
 public class HostController implements HostControllerInterface {
 	@Autowired
 	private HostMapper hostMapper;
+	
+	@RequestMapping("message")
+	public String message() {
+		return "message";
+	}
 
 	// 1. 호스트 시작하기 >>으로 이동
 	// 나머지는 게시판
 	@Override
-	@RequestMapping("host/guide_home")
+	@RequestMapping("guide_home")
 	public ModelAndView guide_home() {
 		List<GuideDTO> listGuide = hostMapper.getGuideList();
 		// System.out.print(guideList.get(0).getId());
@@ -56,7 +62,7 @@ public class HostController implements HostControllerInterface {
 	}
 
 	@Override
-	@RequestMapping("host/guide_context")
+	@RequestMapping("guide_context")
 	public ModelAndView guide_context(@RequestParam int id) {
 		GuideDTO guideDTO = hostMapper.getGuide(id);
 		List<GuideDTO> guideList = hostMapper.getGuideList();
@@ -143,11 +149,11 @@ public class HostController implements HostControllerInterface {
 	@RequestMapping("/host/amenities_5")
 	public ModelAndView amenities_5(HttpServletRequest req, Integer maxGuest, Integer bedCount) {
 		HttpSession session = req.getSession();
-		if(maxGuest == null) {
-			maxGuest =1;
+		if (maxGuest == null) {
+			maxGuest = 1;
 		}
-		if(bedCount == null) {
-			bedCount =1;
+		if (bedCount == null) {
+			bedCount = 1;
 		}
 		session.setAttribute("maxGuest", maxGuest);
 		session.setAttribute("bedCount", bedCount);
@@ -170,35 +176,36 @@ public class HostController implements HostControllerInterface {
 		}
 		return "/host/property_insert/photos_6";
 	}
+
 	@ResponseBody
-	@RequestMapping(value = "/file-upload", method = RequestMethod.POST)
-	public String fileUpload(
-			@RequestParam("article_file") List<MultipartFile> multipartFile
-			, HttpServletRequest request) {
-		
+	@RequestMapping(value = "/host/file-upload", method = RequestMethod.POST)
+	public String fileUpload(@RequestParam("article_file") List<MultipartFile> multipartFile,
+			HttpServletRequest request) {
+
 		String strResult = "{ \"result\":\"FAIL\" }";
+		@SuppressWarnings("deprecation")
 		String contextRoot = new HttpServletRequestWrapper(request).getRealPath("/");
 		String fileRoot;
 		try {
 			// 파일이 있을때 탄다.
-			if(multipartFile.size() > 0 && !multipartFile.get(0).getOriginalFilename().equals("")) {
-				
-				for(MultipartFile file:multipartFile) {
-					fileRoot = contextRoot + "resources/upload/";
+			if (multipartFile.size() > 0 && !multipartFile.get(0).getOriginalFilename().equals("")) {
+
+				for (MultipartFile file : multipartFile) {
+					fileRoot = contextRoot + "resources/property_img/";
 					System.out.println(fileRoot);
-					
-					String originalFileName = file.getOriginalFilename();	//오리지날 파일명
-					String extension = originalFileName.substring(originalFileName.lastIndexOf("."));	//파일 확장자
-					String savedFileName = UUID.randomUUID() + extension;	//저장될 파일 명
-					
-					File targetFile = new File(fileRoot + savedFileName);	
+
+					String originalFileName = file.getOriginalFilename(); // 오리지날 파일명
+					String extension = originalFileName.substring(originalFileName.lastIndexOf(".")); // 파일 확장자
+					String savedFileName = UUID.randomUUID() + extension; // 저장될 파일 명
+
+					File targetFile = new File(fileRoot + savedFileName);
 					try {
 						InputStream fileStream = file.getInputStream();
-						FileUtils.copyInputStreamToFile(fileStream, targetFile); //파일 저장
-						
+						FileUtils.copyInputStreamToFile(fileStream, targetFile); // 파일 저장
+
 					} catch (Exception e) {
-						//파일삭제
-						FileUtils.deleteQuietly(targetFile);	//저장된 현재 파일 삭제
+						// 파일삭제
+						FileUtils.deleteQuietly(targetFile); // 저장된 현재 파일 삭제
 						e.printStackTrace();
 						break;
 					}
@@ -208,7 +215,7 @@ public class HostController implements HostControllerInterface {
 			// 파일 아무것도 첨부 안했을때 탄다.(게시판일때, 업로드 없이 글을 등록하는경우)
 			else
 				strResult = "{ \"result\":\"OK\" }";
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return strResult;
@@ -254,7 +261,7 @@ public class HostController implements HostControllerInterface {
 						InputStream fileStream = file.getInputStream();
 						FileUtils.copyInputStreamToFile(fileStream, targetFile); // 파일 저장
 						listImgUrl.add(fileRoot + time + originalFileName);
-						System.out.println("사진 주소: "+ fileRoot + time + originalFileName);
+						System.out.println("사진 주소: " + fileRoot + time + originalFileName);
 						session.setAttribute("listImgUrl", listImgUrl);
 						/* <img src="<spring:url value='/resources/img/testimg.png'/>"> */
 					} catch (Exception e) {
@@ -272,7 +279,7 @@ public class HostController implements HostControllerInterface {
 			System.out.println("예외발생!!");
 			e.printStackTrace();
 		}
-		
+
 		return strResult;
 	}
 
@@ -391,6 +398,12 @@ public class HostController implements HostControllerInterface {
 	// 3. host_mode 페이지
 	//////////////////////////////////////////////////////////////////////////////////////
 
+	
+
+	/*
+	 * session.setAttribute("member_id", dto.getId());
+	 * session.setAttribute("member_name", dto.getName());
+	 */
 	@Override
 	@RequestMapping("/host/host_mode")
 	public ModelAndView host_mode(HttpServletRequest req) {
@@ -410,14 +423,17 @@ public class HostController implements HostControllerInterface {
 		HttpSession session = req.getSession();
 		String hostId = (String) session.getAttribute("member_id");
 		List<PropertyDTO> listProperty = hostMapper.getPropertyList(hostId);
-		return new ModelAndView("/host/host_mode/host_properties_list", "listProperty", listProperty);
+		ModelAndView mav = new ModelAndView("/host/host_mode/host_properties_list", "listProperty", listProperty);
+		return mav;
 	}
 
 	@Override
 	@RequestMapping(value = "host/properties_update", method = RequestMethod.GET)
 	public ModelAndView host_getProperty(HttpServletRequest req, int propertyId) {
+		HttpSession session = req.getSession();
 		PropertyDTO dto = hostMapper.getProperty(propertyId);
-		return new ModelAndView("/host/host_mode/properties_update", "propertyDTO", dto);
+		ModelAndView mav = new ModelAndView("/host/host_mode/properties_update", "propertyDTO", dto);
+		return mav;
 	}
 
 	@Override

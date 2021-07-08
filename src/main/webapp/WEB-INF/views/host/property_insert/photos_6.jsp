@@ -78,7 +78,7 @@ function fileCheck(e) {
         $('#articlefileChange').append(
        		'<div id="file' + fileNum + '" onclick="fileDelete(\'file' + fileNum + '\')">'
        		+ '<font style="font-size:12px">' + f.name + '</font>'  
-       		+ '<img src="/img/icon_minus.png" style="width:20px; height:auto; vertical-align: middle; cursor: pointer;"/>' 
+       		+ '<img src="dash-circle.svg" style="width:20px; height:auto; vertical-align: middle; cursor: pointer;"/>' 
        		+ '<div/>'
 		);
         fileNum ++;
@@ -117,8 +117,8 @@ function fileDelete(fileNum){
    */    
 	$.ajax({
    	      type: "POST",
-   	   	  enctype: "/form-data",
-   	      url: "/file-upload",
+   	   	  enctype: "multipart/form-data",
+   	      url: "<c:url value='/host/file-upload'/>",
        	  data : formData,
        	  processData: false,
    	      contentType: false,

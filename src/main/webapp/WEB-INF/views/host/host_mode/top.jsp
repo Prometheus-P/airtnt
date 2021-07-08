@@ -60,7 +60,9 @@
 							<li class="divider"></li>
 							<li>
 							<a href="<c:url value='/logout'/>">로그아웃</a>
-							<a href="<c:url value='/index'/>">게스트 모드로 전환</a></li>
+							<a href="<c:url value='/index'/>" onclick="<c:set var='isHost' value='false' scope='session'/>">
+							게스트 모드로 전환
+							</a></li>
 							<li><a href="<c:url value='/mypage'/>">계정</a></li>
 							<li class="dropdown-header">메롱</li>
 						</ul></li>
