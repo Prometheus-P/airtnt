@@ -25,17 +25,6 @@ public abstract class AbstractTypeDTO {
 	// 태그 속성값 여러개 넣을 때 사용
 	private Hashtable<String, String> tagAttributeMap;
 	
-	public AbstractTypeDTO() {}
-	public AbstractTypeDTO(String name, String isUse) {
-		this.name = name;
-		this.isUse = isUse.charAt(0);
-	}
-	public AbstractTypeDTO(String id, String name, String isUse) {
-		this.id = Integer.valueOf(id);
-		this.name = name;
-		this.isUse = isUse.charAt(0);
-	}
-	
 	// basic
 	public Integer getId() {
 		return id;
