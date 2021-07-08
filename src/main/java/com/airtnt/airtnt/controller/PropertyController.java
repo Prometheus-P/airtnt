@@ -55,8 +55,7 @@ public class PropertyController {
 			@RequestParam(value = "minPrice", required = false) Integer minPriceKey,
 			@RequestParam(value = "maxPrice", required = false) Integer maxPriceKey) {
 		// 로그인 후 돌아갈 url
-		String currentURI = req.getRequestURI() + 
-				(req.getQueryString() == null ? "" : "?" + req.getQueryString());
+		String currentURI = Util.getCurrentURI(req);
 		req.setAttribute("currentURI", currentURI);
 		
 		if(addressKey == null) {
@@ -161,8 +160,7 @@ public class PropertyController {
 	public String detail(HttpServletRequest req, HttpServletResponse resp,
 			@RequestParam("propertyId") Integer propertyId) {
 		// 로그인 후 돌아갈 url
-		String currentURI = req.getRequestURI() + 
-				(req.getQueryString() == null ? "" : "?" + req.getQueryString());
+		String currentURI = Util.getCurrentURI(req);
 		req.setAttribute("currentURI", currentURI);
 		if(debug) {
 			System.out.println(currentURI);

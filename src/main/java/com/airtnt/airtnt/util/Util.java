@@ -33,6 +33,10 @@ public class Util {
 		return null;
 	}
 	
+	public static String getCurrentURI(HttpServletRequest req) {
+		return req.getRequestURI() + (req.getQueryString() == null ? "" : "?" + req.getQueryString());
+	}
+	
 	public static String getMemberId(HttpServletRequest req) {
 		return getMemberId(req.getSession());
 	}

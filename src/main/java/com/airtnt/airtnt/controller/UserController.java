@@ -286,7 +286,6 @@ public class UserController {
 	@RequestMapping("wish/async")
 	@ResponseBody
 	public int wishPropertyAsync(HttpServletRequest req, @ModelAttribute WishList_PropertyDTO dto) {
-
 		int result = wishListMapper.insertWishProperty(dto);
 		return result;
 	}
@@ -294,7 +293,6 @@ public class UserController {
 	@RequestMapping("unwish/async")
 	@ResponseBody
 	public int unwishPropertyAsync(HttpServletRequest req, @RequestParam Map<String, String> params) {
-
 		int result = wishListMapper.deletePropertyAsync(params);
 		return result;
 	}
