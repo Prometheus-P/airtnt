@@ -13,6 +13,10 @@
 		tr, td{
 			font-size:13px;
 		}
+		.col{
+			font-size:13px;
+		}
+		
 	</style>
 </head>
 <body>
@@ -51,6 +55,7 @@
 	<main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
 		<h1 class="h2">Member</h1>
 		<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom"></div>
+		<!-- 멤버 모드 구분 라디오 버튼 -->
 		<div id ="memberModeRadio" style="overflow:auto;">
 			<div class="custom-control custom-radio custom-control-inline">
 			  <input type="radio" id="customRadioInline1" name="memberModeRadio" value="0" class="custom-control-input">
@@ -66,7 +71,10 @@
 			</div>
 			<button type="button" id="searchBtn" style="float:right;" class="btn btn-primary btn-sm" >조회</button>
 		</div>
+
 		<br>
+
+		<!-- 조회 결과 grid -->
         <div style="overflow:auto; text-align:center;">
 			<div class="table-responsive">
 		    	<table class="table table-striped table-sm">
@@ -97,32 +105,26 @@
 		     </div>
 		</div>
 		
-		<c:if test="${rowCount>0}">
-			<c:if test="${startPage>pageBlock}">
-				<a href="member?pageNum=${startPage-pageBlock}&member_mode=${member_mode}"}>[이전]</a>
-			</c:if>
-			<c:forEach var = "i" begin = "${startPage}" end = "${endPage}">
-				<a href = "member?pageNum=${i}&member_mode=${member_mode}">[${i}]</a>
-			</c:forEach>
-			<c:if test="${endPage<pageCount}">
-				<a href = "member?pageNum=${startPage + pageBlock}&member_mode=${member_mode}">[다음]</a>
-			</c:if>	
-		</c:if>
-		
-		
 		<!-- 페이징처리 -->
-		<nav aria-label="Page navigation example">
-		  <ul class="pagination pagination-sm justify-content-center">
-		    <li class="page-item disabled">
-		      <a class="page-link" href="#" tabindex="-1">Previous</a>
-		    </li>
-		    <li class="page-item"><a class="page-link" href="#">1</a></li>
-		    <li class="page-item"><a class="page-link" href="#">2</a></li>
-		    <li class="page-item"><a class="page-link" href="#">3</a></li>
-		    <li class="page-item">
-		      <a class="page-link" href="#">Next</a>
-		    </li>
-		  </ul>
-		</nav>
+		<c:if test="${rowCount>0}">
+			<nav aria-label="Page navigation example">
+			  <ul class="pagination pagination-sm justify-content-center">
+			    <li class="page-item">
+			    	<c:if test="${startPage>pageBlock}">
+			      		<a class="page-link" href="member?pageNum=${startPage-pageBlock}&member_mode=${member_mode}" tabindex="-1">Previous</a>
+			      	</c:if>
+			    </li>
+			    <c:forEach var = "i" begin = "${startPage}" end = "${endPage}">
+			    	<li class="page-item"><a class="page-link" href="member?pageNum=${i}&member_mode=${member_mode}">${i}</a></li>
+				</c:forEach>
+			    <li class="page-item">
+			    	<c:if test="${endPage<pageCount}">
+			      		<a class="page-link" href="member?pageNum=${startPage + pageBlock}&member_mode=${member_mode}">Next</a>
+			      	</c:if>
+			    </li>
+			  </ul>
+			</nav>
+		</c:if>	
+		
 	</main>
 </body>
