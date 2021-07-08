@@ -84,10 +84,8 @@ public class HostController implements HostControllerInterface {
 
 	@Override
 	@RequestMapping("/host/sub_property_type_1")
-	public ModelAndView sub_property_type_1(HttpServletRequest req, @RequestParam Map<String, String> map) {
+	public ModelAndView sub_property_type_1(HttpServletRequest req, Integer propertyTypeId, String propertyTypeName) {
 		HttpSession session = req.getSession();
-		int propertyTypeId = Integer.parseInt(map.get("propertyTypeId"));
-		String propertyTypeName = map.get("propertyTypeName");
 		session.setAttribute("propertyTypeId", propertyTypeId);
 		session.setAttribute("propertyTypeName", propertyTypeName);
 		List<SubPropertyTypeDTO> listSubPropertyType = hostMapper.getSubPropertyType(propertyTypeId);
@@ -101,10 +99,8 @@ public class HostController implements HostControllerInterface {
 
 	@Override
 	@RequestMapping("/host/room_type_2")
-	public ModelAndView room_type_2(HttpServletRequest req, @RequestParam Map<String, String> map) {
+	public ModelAndView room_type_2(HttpServletRequest req, Integer subPropertyTypeId, String subPropertyTypeName) {
 		HttpSession session = req.getSession();
-		int subPropertyTypeId = Integer.parseInt(map.get("subPropertyTypeId"));
-		String subPropertyTypeName = map.get("subPropertyTypeName");
 		session.setAttribute("subPropertyTypeId", subPropertyTypeId);
 		session.setAttribute("subPropertyTypeName", subPropertyTypeName);
 		List<RoomTypeDTO> listRoomType = hostMapper.getRoomType();
@@ -118,10 +114,8 @@ public class HostController implements HostControllerInterface {
 
 	@Override
 	@RequestMapping("/host/address_3")
-	public String address_3(HttpServletRequest req, @RequestParam Map<String, String> map) {
+	public String address_3(HttpServletRequest req, Integer roomTypeId, String roomTypeName) {
 		HttpSession session = req.getSession();
-		int roomTypeId = Integer.parseInt(map.get("roomTypeId"));
-		String roomTypeName = map.get("roomTypeName");
 		session.setAttribute("roomTypeId", roomTypeId);
 		session.setAttribute("roomTypeName", roomTypeName);
 
@@ -132,22 +126,19 @@ public class HostController implements HostControllerInterface {
 
 	@Override
 	@RequestMapping("/host/floor_plan_4")
-	public String floor_plan_4(HttpServletRequest req, @RequestParam Map<String, String> map) {
+	public String floor_plan_4(HttpServletRequest req, String address, String addressDetail) {
 		HttpSession session = req.getSession();
-		String addresss = map.get("address") + " " + map.get("addressDetail");
-		session.setAttribute("address", addresss);
+		session.setAttribute("address", address + " " + addressDetail);
 
-		System.out.println(map.get("address"));
-		System.out.println("상세: " + map.get("addressDetail"));
+		System.out.println(address);
+		System.out.println("상세: " + addressDetail);
 		return "host/property_insert/floor_plan_4";
 	}
 
 	@Override
 	@RequestMapping("/host/amenities_5")
-	public ModelAndView amenities_5(HttpServletRequest req, @RequestParam Map<String, String> map) {
+	public ModelAndView amenities_5(HttpServletRequest req, Integer maxGuest, Integer bedCount) {
 		HttpSession session = req.getSession();
-		int maxGuest = Integer.parseInt(map.get("maxGuest"));
-		int bedCount = Integer.parseInt(map.get("bedCount"));
 		session.setAttribute("maxGuest", maxGuest);
 		session.setAttribute("bedCount", bedCount);
 		List<AmenityTypeDTO> list = hostMapper.getAmenityTypeList();
@@ -172,25 +163,18 @@ public class HostController implements HostControllerInterface {
 
 	@Override
 	@ResponseBody
-	@RequestMapping(value = "/host/photos_upload")
-	public int photos_upload(HttpServletRequest req, List<MultipartFile> images) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@ResponseBody
 	@RequestMapping(value = "/host/file-upload", method = RequestMethod.POST)
-	public String fileUpload(@RequestParam("article_files") List<MultipartFile> multipartFile,
+	public String photos_upload(@RequestParam("article_files") List<MultipartFile> multipartFile,
 			HttpServletRequest req) {
 
 		String strResult = "{ \"result\":\"FAIL\" }";
 		String contextRoot = new HttpServletRequestWrapper(req).getRealPath("/");
 		String fileRoot;
-		long sizeSum=0;
+		long sizeSum = 0;
 		try {
 			// 파일이 있을때 탄다.
 			if (multipartFile.size() > 0 && !multipartFile.get(0).getOriginalFilename().equals("")) {
-				
+
 				for (MultipartFile file : multipartFile) {
 					fileRoot = contextRoot + "resources/property_img/";
 					System.out.println(fileRoot);
@@ -198,16 +182,16 @@ public class HostController implements HostControllerInterface {
 					String originalFileName = file.getOriginalFilename(); // 오리지날 파일명
 					String extension = originalFileName.substring(originalFileName.lastIndexOf(".")); // 파일 확장자
 					String savedFileName = System.currentTimeMillis() + extension; // 저장될 파일 명
-					
-					if(!isValidExtension(originalFileName)) { //확장자 검사
+
+					if (!isValidExtension(originalFileName)) { // 확장자 검사
 						return strResult = "{ \"result\":\"UNACCEPTED_EXTENSION\" }";
 					}
-					
+
 					sizeSum += file.getSize(); // 사진의 총 사이즈 검사
-					if(sizeSum >= 5 * 1024 * 1024) { // 500MB
+					if (sizeSum >= 5 * 1024 * 1024) { // 500MB
 						return strResult = "{ \"result\":\"EXCEED_SIZE\" }";
 					}
-					
+
 					File targetFile = new File(fileRoot + savedFileName);
 					try {
 						InputStream fileStream = file.getInputStream();
@@ -220,7 +204,7 @@ public class HostController implements HostControllerInterface {
 					}
 				}
 				strResult = "{ \"result\":\"OK\" }";
-			}else {
+			} else {
 				strResult = "{ \"result\":\"NO_IMAGE\" }";
 			}
 		} catch (Exception e) {
@@ -241,7 +225,7 @@ public class HostController implements HostControllerInterface {
 		}
 		return false;
 	}
-	
+
 	@Override
 	@RequestMapping("/host/name_description_7")
 	public String name_description_7() {
@@ -250,10 +234,8 @@ public class HostController implements HostControllerInterface {
 
 	@Override
 	@RequestMapping("/host/price_8")
-	public String price_8(HttpServletRequest req, @RequestParam Map<String, String> map) {
+	public String price_8(HttpServletRequest req, String name, String description) {
 		HttpSession session = req.getSession();
-		String name = map.get("name");
-		String description = map.get("description");
 		session.setAttribute("name", name);
 		session.setAttribute("description", description);
 

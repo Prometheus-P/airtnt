@@ -15,15 +15,15 @@ public interface HostControllerInterface {
 	public ModelAndView guide_context(@RequestParam int id);
 	
 	public ModelAndView property_type_0(HttpServletRequest req);
-	public ModelAndView sub_property_type_1(HttpServletRequest req, @RequestParam Map<String, String> map);
-	public ModelAndView room_type_2(HttpServletRequest req,@RequestParam Map<String, String> map);
-	public String address_3(HttpServletRequest req, @RequestParam Map<String, String> map);
-	public String floor_plan_4(HttpServletRequest req, @RequestParam Map<String, String> map);
-	public ModelAndView amenities_5(HttpServletRequest req, @RequestParam Map<String, String> map);
+	public ModelAndView sub_property_type_1(HttpServletRequest req, @RequestParam Integer propertyTypeId, @RequestParam String propertyTypeName);
+	public ModelAndView room_type_2(HttpServletRequest req, @RequestParam Integer subPropertyTypeId, @RequestParam String subPropertyTypeName);
+	public String address_3(HttpServletRequest req, @RequestParam Integer roomTypeId, @RequestParam String roomTypeName);
+	public String floor_plan_4(HttpServletRequest req, @RequestParam String address, @RequestParam String addressDetail);
+	public ModelAndView amenities_5(HttpServletRequest req, @RequestParam Integer maxGuest, @RequestParam Integer bedCount);
 	public String photos_6(HttpServletRequest req, @RequestParam(value="amenities", required=true) List<Integer> amenities);
-	public int photos_upload(HttpServletRequest req, @RequestParam("files")List<MultipartFile> images);
+	public String photos_upload(@RequestParam("article_files") List<MultipartFile> multipartFile, HttpServletRequest req);
 	public String name_description_7();
-	public String price_8(HttpServletRequest req, @RequestParam Map<String, String> map);
+	public String price_8(HttpServletRequest req, @RequestParam String name, @RequestParam String description);
 	public String preview_9(HttpServletRequest req, @RequestParam int price);
 	public String publish_celebration_10(HttpServletRequest req);
 	

@@ -187,7 +187,8 @@
 		                  var img = document.createElement("img");
 		                  img.setAttribute("src", event.target.result);
 		                 
-		                  document.querySelector("div#image_container").appendChild(img);
+		                  document.querySelector("div#image_container").appendChild(
+		                		  <div class="thumbnail">img</div>);
 		                 
 		                		 
 							//새로 선택한 이미지 div에 출력
