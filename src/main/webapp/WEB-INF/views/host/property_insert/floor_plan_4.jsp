@@ -16,7 +16,7 @@
 			<h1 style="font-weight: bold;">
 				숙소에서 맞이 할 최대 인원 수를 알려주세요</h1><br>최소 1로 저장 됩니다
 		</div>
-		<form name="f" method="post" action="<c:url value='/host/amenities_5'/>">
+		<form name="f" method="post" action="<c:url value='/host/amenities_5'/>" onsubmit="return check();">
 			<div class="btn-group list-group-item"
 				style="padding-bottom: 70px; padding-left: 20px; font-family: fantasy;">
 				<h3>최대 수용 인원</h3>
@@ -45,6 +45,17 @@
 		<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 		<%@include file='bottom.jsp'%>
 		<script>
+			function check(){
+				if(document.f.bedCount == ""){
+					window.alert("침대 수를 정해주세요!");
+					return false;
+				}
+				if(document.f.maxGuest == ""){
+					window.alert("최대 인원 수를 정해주세요!");
+					return false;
+				}
+				return true;
+			}
 			function changeCount(button) {
 				var idValueArray = button.id.split('-');
 				var operation = idValueArray[0];

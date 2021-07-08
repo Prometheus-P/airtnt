@@ -11,6 +11,7 @@
 	<%@include file="../../top.jsp"%>
 	<!-- <form name="f" method="post"
 		action="<c:url value='/host/property_detail_1'/>" onsubmit="send()"> -->
+
 		<div class="container theme-showcase" role="main">
 			<div class="page-header">
 				<h1 style="font-style: italic; font-weight: bold; font-family: fantasy;">
@@ -21,14 +22,23 @@
 				<c:forEach var="dto" items="${listRoomType}">
 					<div class="list-group" style="font-family: fantasy;">
 						<a href="javascript:void(0)" id="${dto.id}"
-							class="list-group-item" onclick="<c:set var='roomTypeId' value='${dto.id}'/>; 
-							<c:set var='roomTypeName' value='${dto.name}'/>">
+							class="
+							<c:choose>
+							<c:when test='${sessionScope.roomTypeId == dto.id && sessionScope.roomTypeName == dto.name}'>
+							list-group-item active
+							<c:remove var="roomTypeId" scope="session"/>
+							<c:remove var="roomTypeName" scope="session"/>
+							</c:when>
+							<c:otherwise>list-group-item</c:otherwise>
+							</c:choose>" 
+							onclick="<c:set var='id' value='${dto.id}' scope="page"/>; 
+							<c:set var='name' value='${dto.name}' scope="page"/>">
 							<h1 class="list-group-item-heading">${dto.name}</h1>
 						</a>
 					</div>
 				</c:forEach>
-				<input type="hidden" name="roomTypeId" value="${roomTypeId}">
-				<input type="hidden" name="roomTypeName" value="${roomTypeName}">
+				<input type="hidden" name="roomTypeId" value="${pageScope.id}">
+				<input type="hidden" name="roomTypeName" value="${pageScope.name}">
 				<button type="submit" class="btn btn-lg btn-success">확인</button>
 				</form>
 			</div>
@@ -45,9 +55,9 @@
 				alert("숙소의 종류를 정해 주세요!")
 				return false;
 			}
-			document.f.submit();
 			return true;
 		}
+	
 	</script>
 </body>
 </html>

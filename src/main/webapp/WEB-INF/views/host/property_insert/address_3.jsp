@@ -54,17 +54,15 @@
 			function send(){
 				if (document.f.address.value==""){
 					alert("주소를 검색해 주세요!!")
-					f.addressString.focus();
+					f.address.focus();
 					return false;
 				}
 				if(document.f.addressDetail.value==""){
-					var check = window.confirm("상세 주소가 없나요?");
-					if(!check){
-						f.detailString.focus();
+					if(!window.confirm("상세 주소가 없나요?")){
+						f.addressDetail.focus();
 						return false;
 					}
 				}
-				document.f.submit();
 				return true;
 			}
 			var mapContainer = document.getElementById('map'), // 지도를 표시할 div

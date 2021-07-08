@@ -30,6 +30,7 @@ import com.airtnt.airtnt.model.AmenityDTO;
 import com.airtnt.airtnt.model.AmenityTypeDTO;
 import com.airtnt.airtnt.model.BookingDTO;
 import com.airtnt.airtnt.model.GuideDTO;
+import com.airtnt.airtnt.model.ImageDTO;
 import com.airtnt.airtnt.model.PropertyDTO;
 import com.airtnt.airtnt.model.PropertyTypeDTO;
 import com.airtnt.airtnt.model.RoomTypeDTO;
@@ -116,6 +117,8 @@ public class HostController implements HostControllerInterface {
 	@RequestMapping("/host/address_3")
 	public String address_3(HttpServletRequest req, Integer roomTypeId, String roomTypeName) {
 		HttpSession session = req.getSession();
+		session.removeAttribute("roomTypeId");
+		session.removeAttribute("roomTypeName");
 		session.setAttribute("roomTypeId", roomTypeId);
 		session.setAttribute("roomTypeName", roomTypeName);
 
@@ -139,6 +142,12 @@ public class HostController implements HostControllerInterface {
 	@RequestMapping("/host/amenities_5")
 	public ModelAndView amenities_5(HttpServletRequest req, Integer maxGuest, Integer bedCount) {
 		HttpSession session = req.getSession();
+		if(maxGuest == null) {
+			maxGuest =1;
+		}
+		if(bedCount == null) {
+			bedCount =1;
+		}
 		session.setAttribute("maxGuest", maxGuest);
 		session.setAttribute("bedCount", bedCount);
 		List<AmenityTypeDTO> list = hostMapper.getAmenityTypeList();
@@ -163,14 +172,16 @@ public class HostController implements HostControllerInterface {
 
 	@Override
 	@ResponseBody
-	@RequestMapping(value = "/host/file-upload", method = RequestMethod.POST)
+	@RequestMapping(value = "host/file-upload", method = RequestMethod.POST)
 	public String photos_upload(@RequestParam("article_files") List<MultipartFile> multipartFile,
 			HttpServletRequest req) {
-
+		HttpSession session = req.getSession();
+		System.out.println("여기까지");
 		String strResult = "{ \"result\":\"FAIL\" }";
 		String contextRoot = new HttpServletRequestWrapper(req).getRealPath("/");
 		String fileRoot;
 		long sizeSum = 0;
+		List<String> listImgUrl = new ArrayList<>();
 		try {
 			// 파일이 있을때 탄다.
 			if (multipartFile.size() > 0 && !multipartFile.get(0).getOriginalFilename().equals("")) {
@@ -181,7 +192,8 @@ public class HostController implements HostControllerInterface {
 
 					String originalFileName = file.getOriginalFilename(); // 오리지날 파일명
 					String extension = originalFileName.substring(originalFileName.lastIndexOf(".")); // 파일 확장자
-					String savedFileName = System.currentTimeMillis() + extension; // 저장될 파일 명
+					long time = System.currentTimeMillis();
+					String savedFileName = time + extension; // 저장될 파일 명
 
 					if (!isValidExtension(originalFileName)) { // 확장자 검사
 						return strResult = "{ \"result\":\"UNACCEPTED_EXTENSION\" }";
@@ -196,6 +208,10 @@ public class HostController implements HostControllerInterface {
 					try {
 						InputStream fileStream = file.getInputStream();
 						FileUtils.copyInputStreamToFile(fileStream, targetFile); // 파일 저장
+						listImgUrl.add(fileRoot + time + originalFileName);
+						System.out.println("사진 주소: "+ fileRoot + time + originalFileName);
+						session.setAttribute("listImgUrl", listImgUrl);
+						/* <img src="<spring:url value='/resources/img/testimg.png'/>"> */
 					} catch (Exception e) {
 						// 파일삭제
 						FileUtils.deleteQuietly(targetFile); // 저장된 현재 파일 삭제
@@ -211,6 +227,7 @@ public class HostController implements HostControllerInterface {
 			System.out.println("예외발생!!");
 			e.printStackTrace();
 		}
+		
 		return strResult;
 	}
 
@@ -330,7 +347,7 @@ public class HostController implements HostControllerInterface {
 	//////////////////////////////////////////////////////////////////////////////////////
 
 	@Override
-	@RequestMapping("host/host_mode")
+	@RequestMapping("/host/host_mode")
 	public ModelAndView host_mode(HttpServletRequest req) {
 		HttpSession session = req.getSession();
 		String hostId = (String) session.getAttribute("member_id");
