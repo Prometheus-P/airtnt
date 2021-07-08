@@ -44,10 +44,10 @@
         <li class="active">
         <c:if test="${isLogin}">
         	<c:if test="${member_mode == 1}">
-       			<a href="/host/guide_home">호스트 되기</a>
+       			<a href="<c:url value='/host/guide_home'/>">호스트 되기</a>
         	</c:if>
         	<c:if test="${member_mode == 2}">
-        		<a href="/host/host_mode">호스트 모드로 전환</a>
+        		<a href="<c:url value='/host/host_mode'/>">호스트 모드로 전환</a>
         	</c:if>
         </c:if>
         <c:if test="${!isLogin}">

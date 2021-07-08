@@ -19,7 +19,7 @@ import com.airtnt.airtnt.model.RoomTypeDTO;
 import com.airtnt.airtnt.model.SubPropertyTypeDTO;
 import com.airtnt.airtnt.model.TransactionDTO;
 
-@Service 
+@Service
 public class HostMapper implements HostMapperInterface {
 	@Autowired
 	private SqlSession sqlSession;
@@ -100,7 +100,7 @@ public class HostMapper implements HostMapperInterface {
 	@Override
 	public List<TransactionDTO> getTransactionList(String hostId) {
 		List<TransactionDTO> listTransaction = sqlSession.selectList("listTransaction", hostId);
-		//6월 29, 2021 10:31:02 오전
+		// 6월 29, 2021 10:31:02 오전
 		return listTransaction;
 	}
 
@@ -126,6 +126,18 @@ public class HostMapper implements HostMapperInterface {
 	public java.sql.Date getSysdate() {
 		java.sql.Date date = sqlSession.selectOne("getSysdate");
 		return date;
+	}
+
+	@Override
+	public int getPropertyId(String hostId) {
+		int propertyId = sqlSession.selectOne("getPropertyId", hostId);
+		return propertyId;
+	}
+
+	@Override
+	public int insertPropertyAmenity(AmenityDTO dto) {
+		int res = sqlSession.insert("insertPropertyAmenity", dto);
+		return res;
 	}
 
 }

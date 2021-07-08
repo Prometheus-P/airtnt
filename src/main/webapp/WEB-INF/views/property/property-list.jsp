@@ -60,7 +60,7 @@ crossorigin="anonymous"></script> -->
 <div class="position-absolute top-0 start-50 translate-middle-x">
   <nav id="mainnav" class="navbar navbar-light">
     <div class="container-fluid" >
-      <input name="addressKey" class="form-control me-2" type="search"
+      <input name="addressKey" class="form-control me-2" type="search" 
       placeholder="위치" value="${param.addressKey}"
       aria-label="Search" style="height: 50px; width: 300px; font-size: 20px">
       <button class="btn btn-primary" type="submit"
