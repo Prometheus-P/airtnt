@@ -292,16 +292,16 @@ function setTotalPrice(){
 	       <ul class="list-group" style="font-size: 20px">
 	         <li class="list-group-item">
 	           <!-- 달력넣자 -->
-	           <%-- <div class="one_third first">
+	           <div class="one_third first">
 	             체크인
 	           </div>
 	           <div class="two_third">
 	             <div id='source-calendar'></div>
 	             <input id="check_in_date" type="date" name="checkInDate"
 	             min="${tomorrow}" value="${tomorrow}" onchange="javascript:setTotalPrice()">
-	           </div> --%>
+	           </div>
 	         </li>
-	         <%-- <li class="list-group-item">
+	         <li class="list-group-item">
 	           <div class="one_third first">
 	             체크아웃
 	           </div>
@@ -310,7 +310,7 @@ function setTotalPrice(){
 	             <input id="check_out_date" type="date" name="checkOutDate"
 	             min="${dayAfterTomorrow}" value="${dayAfterTomorrow}" onchange="javascript:setTotalPrice()">
 	           </div>
-	         </li> --%>
+	         </li>
 	         <li class="list-group-item">
 	           <div class="one_third first">
 	             인원수
