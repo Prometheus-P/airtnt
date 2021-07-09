@@ -17,15 +17,10 @@ public class LoginInterceptor implements HandlerInterceptor {
 		HttpSession session = request.getSession();
 		if (session.getAttribute("member_id") == null && session.getAttribute("member_name") == null) {
 			System.out.println("로그인 중이 아님!");
-			
-			 request.setAttribute("msg", "로그인 해주세요!"); 
-			 request.setAttribute("url","index"); 
-			 response.sendRedirect("message");
-			 
+			response.sendRedirect(request.getContextPath() + "/message"); 
 			return false;
 		}
 		System.out.println("로그인 확인!");
-		
 		return true;
 		/* return HandlerInterceptor.super.preHandle(request, response, handler); */
 	}

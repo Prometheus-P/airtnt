@@ -54,7 +54,7 @@
         </c:if>
 
         <c:if test="${!isLogin}">
-         <a href="<c:url value='/guide_home'/>">호스트 되기</a>
+        <a href="<c:url value='/guide_home'/>">호스트 되기</a>
         </c:if>
         </li>
         <c:if test="${!isLogin}">

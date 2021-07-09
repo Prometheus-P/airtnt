@@ -47,7 +47,10 @@ public class HostController implements HostControllerInterface {
 	private HostMapper hostMapper;
 	
 	@RequestMapping("message")
-	public String message() {
+	public String message(HttpServletRequest req) {
+		System.out.println("도착");
+		req.setAttribute("msg", "로그인 해주세요!"); 
+		req.setAttribute("url", "stay"); 
 		return "message";
 	}
 
