@@ -41,29 +41,18 @@ public class PropertyMapper {
 	}
 	
 	// 상세보기
-	public PropertyDTO selectProperty(Integer propertyId) {
+	public PropertyDTO selectProperty(int propertyId) {
 		Map<String, Integer> selectKeyMap = new Hashtable<>();
 		selectKeyMap.put("propertyId", propertyId);
 		return sqlSession.selectOne("selectProperty", selectKeyMap);
 	}
 	
-	public List<ImageDTO> selectRoomImages(Integer propertyId){
-		return sqlSession.selectList("selectRoomImages", propertyId);
-	}
-	
-	public List<AmenityDTO> selectAmenities(Integer propertyId){
-		return sqlSession.selectList("selectAmenities", propertyId);
-	}
-	
-	public List<PropertyTypeDTO> selectPropertyTypes() {
-		return sqlSession.selectList("selectPropertyTypes");
-	}
-	
-	public List<RoomTypeDTO> selectRoomTypes(){
-		return sqlSession.selectList("selectRoomTypes");
-	}
-	
-	public List<AmenityTypeDTO> selectAmenityTypes(){
-		return sqlSession.selectList("selectAmenityTypes");
+	public<T extends AbstractTypeDTO> List<T> selectTypes(Class<T> typeClass) {
+		switch(typeClass.getSimpleName()) {
+		case "PropertyTypeDTO":	return sqlSession.selectList("selectPropertyTypes");
+		case "RoomTypeDTO":		return sqlSession.selectList("selectRoomTypes");
+		case "AmenityTypeDTO":	return sqlSession.selectList("selectAmenityTypes");
+		default :				return null;
+		}
 	}
 }

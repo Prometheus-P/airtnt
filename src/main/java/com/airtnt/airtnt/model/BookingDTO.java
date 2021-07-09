@@ -123,11 +123,11 @@ public class BookingDTO {
 				+ ", bookingNumber=" + bookingNumber + ", checkInDate=" + checkInDate + ", checkOutDate=" + checkOutDate
 				+ ", confirmDate=" + confirmDate + ", regDate=" + regDate + ", modDate=" + modDate + "]";
 	}
+	
+	//tour.jsp 담을거
 	public String getGuest_id() {
 		return guest_id;
 	}
-	
-	//tour.jsp 담을거
 	public void setGuest_id(String guest_id) {
 		this.guest_id = guest_id;
 	}

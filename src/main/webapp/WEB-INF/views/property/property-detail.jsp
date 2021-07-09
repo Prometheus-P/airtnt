@@ -53,6 +53,10 @@ function setTotalPrice(){
 	document.getElementById("price_disp").innerHTML = totalPriceStr;
 }
 </script>
+<link href="/resources/calendar/main.css" rel="stylesheet"/>
+<script src="/resources/calendar/main.js"></script>
+<script src="/resources/calendar/double-calendar.js"></script>
+<link href="/resources/calendar/double-calendar.css" rel="stylesheet"/>
 </head>
 <body id="top">
 
@@ -60,6 +64,8 @@ function setTotalPrice(){
 
 <!-- 위시리스트 모달은 jQuery 라이브러리 적용을 위해서 top.jsp 아래 둬야함 -->
 <c:import url="/WEB-INF/views/property/wish-modal.jsp"/>
+
+
 
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
@@ -182,7 +188,7 @@ function setTotalPrice(){
           </c:choose>
         </c:forEach>
       </div>
-      
+    
       
       <!-- 숙소 상세정보 나열 구역 -->
 	  <div class="two_third first">
@@ -285,28 +291,31 @@ function setTotalPrice(){
 	       <input id="total_price" type="hidden" name="totalPrice">
 	       <ul class="list-group" style="font-size: 20px">
 	         <li class="list-group-item">
-	           <div class="one_third first">
+	           <!-- 달력넣자 -->
+	           <%-- <div class="one_third first">
 	             체크인
 	           </div>
 	           <div class="two_third">
+	             <div id='source-calendar'></div>
 	             <input id="check_in_date" type="date" name="checkInDate"
 	             min="${tomorrow}" value="${tomorrow}" onchange="javascript:setTotalPrice()">
-	           </div>
+	           </div> --%>
 	         </li>
-	         <li class="list-group-item">
+	         <%-- <li class="list-group-item">
 	           <div class="one_third first">
 	             체크아웃
 	           </div>
 	           <div class="two_third">
+	             <div id='destination-calendar'></div>
 	             <input id="check_out_date" type="date" name="checkOutDate"
 	             min="${dayAfterTomorrow}" value="${dayAfterTomorrow}" onchange="javascript:setTotalPrice()">
 	           </div>
-	         </li>
+	         </li> --%>
 	         <li class="list-group-item">
 	           <div class="one_third first">
 	             인원수
 	           </div>
-	           <div class="two_third">
+	           <div class="two_third" style="height: 100px; width: 100px">
 	             <input id="guest_count" type="number" name="guestCount"
 	             min="1" max="${property.maxGuest}" value="1" onchange="javascript:setTotalPrice()">
 	           </div>

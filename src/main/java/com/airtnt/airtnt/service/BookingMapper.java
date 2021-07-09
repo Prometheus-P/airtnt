@@ -1,6 +1,8 @@
 package com.airtnt.airtnt.service;
 
+import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,13 @@ public class BookingMapper {
 	}
 	
 	// 정석
+	
+	// 상세보기 페이지 달력 비활성화 목록
+	public List<BookingDTO> selectFutureBookings(int propertyId){
+		return sqlSession.selectList("selectFutureBookings", propertyId);
+	}
+	
+	// 예약, 결제
 	public int insertBooking(BookingDTO booking) {
 		return sqlSession.insert("insertBooking", booking);
 	}
