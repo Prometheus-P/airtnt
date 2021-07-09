@@ -296,9 +296,9 @@ function setTotalPrice(){
 	             체크인
 	           </div>
 	           <div class="two_third">
-	             <div id='source-calendar'></div>
-	             <input id="check_in_date" type="date" name="checkInDate"
-	             min="${tomorrow}" value="${tomorrow}" onchange="javascript:setTotalPrice()">
+	             <div id='source-calendar' style="height: 10px"></div>
+	             <%-- <input id="check_in_date" type="date" name="checkInDate"
+	             min="${tomorrow}" value="${tomorrow}" onchange="javascript:setTotalPrice()"> --%>
 	           </div>
 	         </li>
 	         <li class="list-group-item">
@@ -307,8 +307,8 @@ function setTotalPrice(){
 	           </div>
 	           <div class="two_third">
 	             <div id='destination-calendar'></div>
-	             <input id="check_out_date" type="date" name="checkOutDate"
-	             min="${dayAfterTomorrow}" value="${dayAfterTomorrow}" onchange="javascript:setTotalPrice()">
+	             <%-- <input id="check_out_date" type="date" name="checkOutDate"
+	             min="${dayAfterTomorrow}" value="${dayAfterTomorrow}" onchange="javascript:setTotalPrice()"> --%>
 	           </div>
 	         </li>
 	         <li class="list-group-item">
