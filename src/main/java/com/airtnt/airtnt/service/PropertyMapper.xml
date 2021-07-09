@@ -237,25 +237,4 @@
 		order by id asc
 	</select>
 	
-	<select id="selectImages" resultMap="imageMap">
-		select * from image
-	</select>
-	
-	<select id="selectAmenities" parameterType="int" resultMap="amenityMap">
-		select
-			a.*,
-			
-			at.id type_id,
-			at.name type_name,
-			at.is_use type_is_use,
-			at.reg_date type_reg_date,
-			at.mod_date type_mod_date
-		from
-			amenity a
-			join amenity_type at on a.amenity_type_id=at.id
-		where
-			a.property_id=#{propertyId} and
-			at.is_use='Y'
-	</select>
-	
 </mapper>

@@ -55,8 +55,7 @@ public class PropertyController {
 			@RequestParam(value = "minPrice", required = false) Integer minPriceKey,
 			@RequestParam(value = "maxPrice", required = false) Integer maxPriceKey) {
 		// 로그인 후 돌아갈 url
-		String currentURI = req.getRequestURI() + 
-				(req.getQueryString() == null ? "" : "?" + req.getQueryString());
+		String currentURI = Util.getCurrentURI(req);
 		req.setAttribute("currentURI", currentURI);
 		
 		if(addressKey == null) {
@@ -84,11 +83,11 @@ public class PropertyController {
 		
 		// 숙소 목록
 		List<PropertyDTO> properties = propertyMapper.searchProperties(searchKeyMap);
-		// 검색 필터 목록
 		
-		List<PropertyTypeDTO> propertyTypes = propertyMapper.selectPropertyTypes();
-		List<RoomTypeDTO> roomTypes = propertyMapper.selectRoomTypes();
-		List<AmenityTypeDTO> amenityTypes = propertyMapper.selectAmenityTypes();
+		// 검색 필터 목록
+		List<PropertyTypeDTO> propertyTypes = propertyMapper.selectTypes(PropertyTypeDTO.class);
+		List<RoomTypeDTO> roomTypes = propertyMapper.selectTypes(RoomTypeDTO.class);
+		List<AmenityTypeDTO> amenityTypes = propertyMapper.selectTypes(AmenityTypeDTO.class);
 		
 		// 위시리스트
 		Map<String, Object> wishMap = new Hashtable<>();
@@ -161,14 +160,21 @@ public class PropertyController {
 	public String detail(HttpServletRequest req, HttpServletResponse resp,
 			@RequestParam("propertyId") Integer propertyId) {
 		// 로그인 후 돌아갈 url
-		String currentURI = req.getRequestURI() + 
-				(req.getQueryString() == null ? "" : "?" + req.getQueryString());
+		String currentURI = Util.getCurrentURI(req);
 		req.setAttribute("currentURI", currentURI);
 		if(debug) {
 			System.out.println(currentURI);
 		}
 		
 		PropertyDTO property = propertyMapper.selectProperty(propertyId);
+		
+		// 달력에 비활성화를 하는 기준값
+		List<BookingDTO> bookings = bookingMapper.selectFutureBookings(propertyId);
+		if(debug) {
+			for(BookingDTO booking : bookings) {
+				System.out.println(booking);
+			}
+		}
 		
 		// 위시리스트
 		Map<String, Object> wishMap = new Hashtable<>();
@@ -193,11 +199,14 @@ public class PropertyController {
 		
 		// 최근목록 조회 및 쿠키에 저장
 		List<PropertyDTO> recentProperties = loadRecentProperties(cookie, resp);
+		// 현재 보고있는 숙소는 현재 화면의 최근목록에 띄우지 않음
 		saveRecentProperties(cookie, cookieUser, resp, propertyId);
 		
 		req.setAttribute("tomorrow", Util.getTomorrowString());
 		req.setAttribute("dayAfterTomorrow", Util.getDayAfterTomorrowString());
 		req.setAttribute("property", property);
+		
+		req.setAttribute("bookings", bookings);
 		
 		req.setAttribute("wishLists", wishLists);
 		req.setAttribute("recentProperties", recentProperties);
@@ -208,7 +217,9 @@ public class PropertyController {
 	// 1. 화면에 뿌려질 값들을 설정하는 단계
 	@PostMapping("booking")
 	public String booking(RedirectAttributes ra, @ModelAttribute BookingDTO booking) {
-		
+		// params :
+		// propertyId, hostId, guestId, dayCount, guestCount, totalPrice,
+		// checkInDate, checkOutDate
 		PropertyDTO property = propertyMapper.selectProperty(booking.getPropertyId());
 		
 		ra.addFlashAttribute("booking", booking);
@@ -238,22 +249,13 @@ public class PropertyController {
 			System.out.println(booking);
 		}
 		
-		Integer propertyId;
-		try {
-			propertyId = Integer.valueOf(req.getParameter("propertyId"));
-		} catch(NullPointerException | NumberFormatException e) {
-			req.setAttribute("msg", "숙소정보 없음");
-			req.setAttribute("url", "/");
-			return "message";
-		}
 		String bookingNumber = Util.getCurrentTimeStamp();
 		// 타임스탬프 뒤에 0~9의 난수를 붙이고 그 뒤에 db에서 0~9의 시퀀스 사이클을 붙일 것임
 		bookingNumber += String.valueOf((int)(Math.random() * 10));
-		booking.setPropertyId(propertyId);
 		booking.setBookingNumber(bookingNumber);
 		if(bookingMapper.insertBooking(booking) < 1) {
 			req.setAttribute("msg", "예약 실패(DB 오류)");
-			req.setAttribute("url", "/property/detail?propertyId=" + propertyId);
+			req.setAttribute("url", "/property/detail?propertyId=" + booking.getPropertyId());
 			return "message";
 		}
 		booking = bookingMapper.selectSameBooking(booking);
@@ -263,9 +265,10 @@ public class PropertyController {
 		
 		TransactionDTO transaction = new TransactionDTO();
 		transaction.setBookingId(booking.getId());
+		transaction.setSiteFee(0.05);
 		if(bookingMapper.insertTransaction(transaction) < 1) {
 			req.setAttribute("msg", "결제 실패(DB 오류)");
-			req.setAttribute("url", "/property/detail?propertyId=" + propertyId);
+			req.setAttribute("url", "/property/detail?propertyId=" + booking.getPropertyId());
 			return "message";
 		}
 		transaction = bookingMapper.selectSameTransaction(transaction);
@@ -423,16 +426,17 @@ public class PropertyController {
 	
 	public boolean saveRecentProperties(
 			Cookie cookie, String memberId, HttpServletResponse resp, Integer propertyId) {
-		String cookieUser = memberId;
-		if(cookieUser == null || cookieUser.trim().equals("")) {
-			cookieUser = "non-member";
-		}
 		
 		String decodedCookieString = null;
 		String encodedCookieString = null;
 		if(cookie == null) {
 			// 기존의 최근목록 쿠키가 없으면 쿠키를 생성
 			// 최근목록에는 저장하지 않음
+			String cookieUser = memberId;
+			if(cookieUser == null || cookieUser.trim().equals("")) {
+				cookieUser = "non-member";
+			}
+			
 			decodedCookieString = propertyId.toString();
 			if(debug) {
 				System.out.println("최근목록 저장 : 인코딩 전");

@@ -6,14 +6,15 @@ public class PropertyTypeDTO extends AbstractTypeDTO {
 	
 	private List<SubPropertyTypeDTO> subPropertyTypes;
 	
-	public PropertyTypeDTO() {
-		super();
-	}
+	public PropertyTypeDTO() {}
 	public PropertyTypeDTO(String name, String isUse) {
-		super(name, isUse);
+		setName(name);
+		setIsUse(isUse.charAt(0));
 	}
 	public PropertyTypeDTO(String id, String name, String isUse) {
-		super(id, name, isUse);
+		setId(Integer.parseInt(id));
+		setName(name);
+		setIsUse(isUse.charAt(0));
 	}
 	
 	public List<SubPropertyTypeDTO> getSubPropertyTypes() {

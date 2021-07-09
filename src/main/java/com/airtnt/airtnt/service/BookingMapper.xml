@@ -64,12 +64,21 @@
 	<select id="selectSameBooking" parameterType="bookingDTO" resultMap="bookingMap">
 		select * from booking
 		where
-			property_id=#{propertyId} and
-			guest_id=#{guestId} and
-			host_id=#{hostId} and
-			substr(booking_number,0,length(booking_number) - 1)=#{bookingNumber} and
-			to_date(check_in_date)=to_date(#{checkInDate}) and
-			to_date(check_out_date)=to_date(#{checkOutDate})
+			property_id=#{propertyId}
+			and guest_id=#{guestId}
+			and host_id=#{hostId}
+			and substr(booking_number,0,length(booking_number) - 1)=#{bookingNumber}
+			and to_date(check_in_date)=to_date(#{checkInDate})
+			and to_date(check_out_date)=to_date(#{checkOutDate})
+	</select>
+	
+	<!-- 내일보다 늦게 체크아웃 하는 예약을 불러옴 -->
+	<select id="selectFutureBookings" parameterType="int" resultMap="bookingMap">
+		select * from booking
+		where
+			property_id=#{propertyId}
+			and to_date(check_out_date) <![CDATA[ > ]]> to_date(sysdate)+1
+		order by check_out_date
 	</select>
 	
 	<insert id="insertTransaction" parameterType="transactionDTO">
