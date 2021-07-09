@@ -1,6 +1,9 @@
 package com.airtnt.airtnt.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -18,11 +21,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.airtnt.airtnt.guest.LoginOKBean;
 import com.airtnt.airtnt.model.AmenityTypeDTO;
+import com.airtnt.airtnt.model.BookingDTO;
 import com.airtnt.airtnt.model.DashBoardDTO;
 import com.airtnt.airtnt.model.MemberDTO;
 import com.airtnt.airtnt.model.PropertyTypeDTO;
 import com.airtnt.airtnt.model.RoomTypeDTO;
 import com.airtnt.airtnt.model.SubPropertyTypeDTO;
+import com.airtnt.airtnt.model.TransactionDTO;
 import com.airtnt.airtnt.model.GuideDTO;
 import com.airtnt.airtnt.service.AdminMapper;
 import com.google.gson.Gson;
@@ -34,6 +39,12 @@ public class AdminController extends UserController {
 
 	@Autowired
 	AdminMapper adminMapper;
+	
+	//reports 화면 내 초기 날짜 파라미터로 사용(오늘 날짜)
+	Date dateToday = new Date(System.currentTimeMillis());
+	SimpleDateFormat transFormat = new SimpleDateFormat("yyyy-MM-dd");
+	String strToday = transFormat.format(dateToday);
+
 	
 	/*
 	 * [main] : admin 계정 로그인 화면
@@ -149,6 +160,36 @@ public class AdminController extends UserController {
 		req.setAttribute("endPage", endPage);
 		req.setAttribute("pageCount", pageCount);
 		return "admin/member";
+	}
+	
+	/*
+	 * [reports] : 최초 페이지 로딩시 오늘날짜로 세팅해서 리포트 데이터 조회해온다
+	 */
+	@RequestMapping(value="reports", method = RequestMethod.GET)
+	public String selectReportsData(HttpServletRequest req) {
+		String startDate = strToday;
+		String endDate = strToday;
+		List<BookingDTO> bookingList = adminMapper.selectBookingList(startDate, endDate);
+		List<TransactionDTO> transactionList = adminMapper.selectTransactionList(startDate, endDate);
+		req.setAttribute("bookingList", bookingList);
+		req.setAttribute("transactionList", transactionList);
+		req.setAttribute("today", strToday);
+		System.out.println(strToday);
+		return "admin/reports";
+	}
+	
+	@RequestMapping(value="reports", method = RequestMethod.POST)
+	public String selectReportsData(HttpServletRequest req, 
+									@RequestParam(value = "startDate", required = false) String startDate, 
+									@RequestParam(value = "endDate", required = false) String endDate
+									) {
+		if(startDate==null || endDate==null) {
+			startDate = strToday;
+			endDate = strToday;
+		}
+		List<BookingDTO> list = adminMapper.selectBookingList(startDate, endDate);
+		req.setAttribute("bookingList", list);
+		return "admin/reports";
 	}
 	
 	/*

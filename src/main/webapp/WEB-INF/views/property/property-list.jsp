@@ -19,13 +19,6 @@ Licence URI: https://www.os-templates.com/template-terms
 <!-- map 커스텀 정보창 css -->
 <style>
 	.wrap {position: absolute;left: 0;bottom: 40px;width: 300px;height: 330px;margin-left: -144px;text-align: left;overflow: hidden;font-size: 12px;font-family: 'Malgun Gothic', dotum, '돋움', sans-serif;line-height: 1.5;}
-    .wrap * {padding: 0;margin: 0;}
-    .wrap .info {width: 295px;height: 320px;border-radius: 5px;border-bottom: 2px solid #ccc;border-right: 1px solid #ccc;overflow: hidden;background: #fff;}
-    .wrap .info:nth-child(1) {border: 0;box-shadow: 0px 1px 2px #888;}
-    .info .title {padding: 5px 0 0 10px;height: 30px;background: #eee;border-bottom: 1px solid #ddd;font-size: 18px;font-weight: bold;}
-    .info .body {position: relative;overflow: hidden;}
-    .info:after {content: '';position: absolute;margin-left: -12px;left: 50%;bottom: 0;width: 22px;height: 12px;background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png')}
-    .info .link {color: #5085BB;}
 </style>
 
 <!-- drop down, popup, ... -->
@@ -260,21 +253,27 @@ crossorigin="anonymous"></script> -->
         <!-- 숙소 리스트 -->
         <div class="one_half first">
           <div class="content"> 
+          
           <!-- ################################################################################################ -->
               <header class="heading"></header>
               <!-- 숙소리스트 : 맵 내 마커 정보 -->
 	          <table id="markerPositionTb" style="display:none;">
 	          	<c:forEach var="property" items="${properties}">
-                  	<tr>
+	          		<tr>
                   	<td>${property.id}</td>
                   	<td>${property.latitude}</td>
                   	<td>${property.longitude}</td>
                   	<td>${property.name}</td>
                   	<td>${property.propertyType.name}</td>
+                  	<td>
+                  		 <c:forEach var="image" items="${property.images}">
+                              ${image.path}:
+                         </c:forEach>
+                    </td>      
                   	</tr>
 	          	</c:forEach>
 	          </table>
-              
+	          
               <!-- 숙소리스트 영역 -->
               <hr>
               <ul class="nospace clear" >
@@ -284,7 +283,7 @@ crossorigin="anonymous"></script> -->
                     <div class="one_third first" >
                       
                       <!-- 사진 넘기기 -->
-                      <div id="carouselControls-${property.id}" class="carousel slide" data-bs-interval="false">
+                      <div id="carouselControls-${property.id}" class="carousel slide">
                         <div class="carousel-inner">
                           <c:forEach var="image" items="${property.images}" varStatus="status">
                             <div class="carousel-item <c:if test='${status.count == 1}'>active</c:if>">
@@ -353,15 +352,16 @@ crossorigin="anonymous"></script> -->
 	      	$(document).ready(function(){
 	      		var mapContainer = document.getElementById('map'), // 지도를 표시할 div
 	      		 mapOption = { 
-			        center: new kakao.maps.LatLng(	37.65634637629008, 127.07345281096936), // 지도의 중심좌표
+			        center: new kakao.maps.LatLng(37.65634637629008, 127.07345281096936), // 지도의 중심좌표
 			        level: 3 // 지도의 확대 레벨
 			    };
-		      	
+	      		
 		      	var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
 		      	var bounds = new kakao.maps.LatLngBounds(); // 지도를 재설정할 범위정보를 가지고 있을 LatLngBounds 객체
 		      	
 		     	// 마커 객체 배열 생성(positions)
 		      	var positions = []; 
+		      	var selectedMaker = null; //클릭한 마커 담을 변수
 		      	var table = $('#markerPositionTb tr'); //숙소 조회 리스트
 		      	for(var i=0; i<table.length; i++){
 		      		
@@ -370,14 +370,16 @@ crossorigin="anonymous"></script> -->
 		      		var longitude = $('tr:eq('+i+')>td:eq(2)').html();
 		      		var name = $('tr:eq('+i+')>td:eq(3)').html(); //숙소명
 		      		var propertyType = $('tr:eq('+i+')>td:eq(4)').html(); //숙소타입
+		      		var image = $('tr:eq('+i+')>td:eq(5)').html(); //이미지
 		      		
-		      		if(name.length>19) name = name.substring(0, 19)+'...';
+		      		if(name.length>16) name = name.substring(0, 16)+'...'; //숙소명 긴 경우
 
 		      		//마커 각각의 객체를 positions 배열에 push
 		      		positions.push({title : name,
 		      						latlng : new kakao.maps.LatLng(latitude, longitude),
 		      						id : id,
-		      						propertyType : propertyType
+		      						propertyType : propertyType,
+		      						image : image
 		      					  });
 		      	}
 		        
@@ -389,13 +391,16 @@ crossorigin="anonymous"></script> -->
 		      	    displayMarker(data);
 		      	}
 
-		      	// 지도에 마커를 표시하는 함수입니다    
+		      	// 지도에 마커를 표시 및 오버레이 세팅 (오버레이 세팅은 나중에 함수로 따로 뺄 예정!)
 		      	function displayMarker(data) { 
 		      		// 마커 이미지 크기
-		      	    var imageSize = new kakao.maps.Size(24, 35); 
+		      	    var imageSize = new kakao.maps.Size(38, 40); 
 		      	    
 		      	    // 마커 이미지 생성    
-		      	    var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize); 
+		      	    //var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize); 
+		      	    var markerImage = new kakao.maps.MarkerImage("/resources/property_img/marker.png", imageSize); 
+		      	    var clickedMakerImage = new kakao.maps.MarkerImage("/resources/property_img/marker3.png", imageSize); 
+		      	    var selectedMarkerImage = new kakao.maps.MarkerImage("/resources/property_img/marker1.png", imageSize); 
 		      	    
 		      	    var marker = new kakao.maps.Marker({
 		      	        map: map,
@@ -410,7 +415,7 @@ crossorigin="anonymous"></script> -->
 		      	    var overlay = new kakao.maps.CustomOverlay({
 		      	        yAnchor: 1,
 		      	      	clickable: true, //지도 클릭 이벤트 막음
-		      	        position: marker.getPosition()
+		      	      	position : map.getCenter()
 		      	    });
 		      	    
 		      		//오버레이 내용 구성
@@ -418,35 +423,82 @@ crossorigin="anonymous"></script> -->
 		      	  	content.className = 'wrap';
 		      	    content.style.cssText = 'background: white; border-radius: 10px;border-bottom: 2px solid #ccc;border-right: 1px solid #ccc; box-shadow: 0px 0px 20px #000;';
 		      	    
-		      	  	var image = document.createElement('div');
-		      	  	image.className = 'img';
-		      	  	image.style.cssText = '{position: relative;width: 300px;height: 220px;overflow: hidden;}';
-		      	  	image.innerHTML = '<img src="/resources/property_img/prop1.PNG">';
-		      	  	content.appendChild(image);
 		      	  	
+		      	  	//오버레이 안의 이미지 구현
+		      	    var imageArea = document.createElement('div');
+		      	  	imageArea.id = 'carouselControls-img'+data.id;
+		      	  	imageArea.className = 'carousel slide';
+		      	  	imageArea.style.cssText = '{position: relative;width: 300px;height: 220px;overflow: hidden;}';
+		      	  	content.appendChild(imageArea);
+		      	  	
+		      		//마커객체에 담아놓았던 이미지 경로 split 하여 경로 배열(arr)에 넣음
+		      	  	const arr = data.image.split(":");
+		      	  	const size  = arr.length;
+		      	  	
+		      	  	//사진 슬라이드 좌우버튼
+		      	  	if(size>2){
+			      	  	var txt = '<button class="carousel-control-prev" type="button" data-bs-target="#carouselControls-img'+data.id+'" data-bs-slide="prev">'
+			      	  	+ '<span class="carousel-control-prev-icon" aria-hidden="true"></span>'
+                        + '<span class="visually-hidden">Previous</span>'
+                      	+ '</button>'
+                      	+ '<button class="carousel-control-next" type="button" data-bs-target="#carouselControls-img'+data.id+'" data-bs-slide="next">'
+                        + '<span class="carousel-control-next-icon" aria-hidden="true"></span>'
+                        + '<span class="visually-hidden">Next</span>'
+                     	+ '</button>';
+	      	    		
+			      	  	imageArea.innerHTML = txt;
+		      	  	};
+		      	  	
+		      	  	var carousel = document.createElement('div');
+		      	  	carousel.className = 'carousel-inner';
+		      	  	imageArea.appendChild(carousel);
+		      		
+		      	  	
+		      	  	//첫번째 img
+		      	  	var image = document.createElement('div');
+		      	  	image.className = 'carousel-item active';
+		      	  	image.innerHTML = '<img src="'+ arr[0] +'" style="object-fit: cover;">';
+		      	  	carousel.appendChild(image);
+		      	  	
+		      	  	//else img
+		      	  	for(let i=1; i<size-1; i++){
+			      	  	var imageElse = document.createElement('div');
+			      	  	imageElse.className = 'carousel-item';
+			      	  	imageElse.innerHTML = '<img src="'+ arr[i] +'" style="object-fit: cover;">';
+			      	  	carousel.appendChild(imageElse);
+		      	  	}
+		      	  	
+		      	  	//숙소 설명 및 링크 설정
 		      	  	var desc = document.createElement('div');
 		      	  	desc.className = "desc";
-		      	  	desc.style.cssText = "position: relative;height: 90px; width:300px; padding:12px;font-size:16px;";
+		      	  	desc.style.cssText = "position: relative;height: 90px; width:300px; padding:15px;font-size:18px;";
 		      	  	desc.innerHTML =  '<img src="/resources/property_img/starIcon.PNG" style="width:18px; height:18px; margin-bottom:5px;">4.84<br>'
 		      	  					  + '<a href="/property/detail?propertyId='+ data.id + '" target="_blank">'
-		      	  					  + data.propertyType + '<br>'+ data.title +'</a>';
+		      	  					  + data.propertyType + '<br>'+ data.title + '<br>' + '</a>';
 		      	  	content.appendChild(desc);
 		      	    
 		      	    overlay.setContent(content);
 					
 		      	    //마커 클릭 이벤트 : 맵에 오버레이 표시
 		      	    kakao.maps.event.addListener(marker, 'click', function() {
-		      	        overlay.setMap(map);
+		      	    	overlay.setMap(map);
+		      	    	marker.setImage(selectedMarkerImage);
+		      	    	selectedMarker = marker;
 		      	    });
 		      	    
 		      	    //맵 클릭 이벤트 : 오버레이 닫음
 		      	  	kakao.maps.event.addListener(map, 'click', function() {
 		      	        overlay.setMap(null);
 		      	    });
+		      	    
+		      		
+		      		
 		      	}
-		     	
-		      	//마커 범위 재설정
+		      	
+		     	//마커 범위 재설정
 		      	map.setBounds(bounds);
+		     	//재설정한 지도 기준으로 오버레이가 맵 중앙에 표시되도록 위치 재설정
+		      	overlay.setPosition(map.getCenter()); 
 		     	
 	        })
 	        
