@@ -22,9 +22,13 @@
 				<h3>최대 수용 인원</h3>
 				<input id="decrease-guest" type="button" class="btn" value="-"
 					onclick="changeCount(this)" style="font-size: 40px;"> 
+					
 					<input id="guest-count" class="form-control btn" type="number"
-					name="maxGuest" value="${param.maxGuest}" min="1" readonly
+					name="maxGuest" 
+					value="${param.maxGuest}" 
+					min="1" readonly
 					style="width: 80px; height: 70px; font-size: 50px;">
+					
 					<input id="increase-guest" type="button" class="btn" value="+"
 					onclick="changeCount(this)" style="font-size: 40px;">
 			</div>

@@ -21,14 +21,20 @@
 				<c:forEach var="dto" items="${listSubPropertyType}">
 					<div class="list-group" style="font-family: fantasy;">
 						<a href="javascript:void(0)" id="${dto.id}"
-							class="list-group-item" onclick="<c:set var='subPropertyTypeId' value='${dto.id}'/>; 
-							<c:set var='subPropertyTypeName' value='${dto.name}'/> ">
+							class="list-group-item
+							<c:if test="${sessionScope.subPropertyTypeId == dto.id}">
+							 active
+							<c:remove var="subPropertyTypeId" scope="session"/>
+							<c:remove var="subPropertyTypeName" scope="session"/>
+							</c:if>"
+							onclick="<c:set var='subPropertyTypeId' value='${dto.id}' scope="page"/>; 
+							<c:set var='subPropertyTypeName' value='${dto.name}' scope="page"/> ">
 							<h1 class="list-group-item-heading">${dto.name}</h1>
 						</a>
 					</div>
 				</c:forEach>
-				<input type="hidden" name="subPropertyTypeId" value="${subPropertyTypeId}">
-				<input type="hidden" name="subPropertyTypeName" value="${subPropertyTypeName}">
+				<input type="hidden" name="subPropertyTypeId" value="${page.subPropertyTypeId}">
+				<input type="hidden" name="subPropertyTypeName" value="${page.subPropertyTypeName}">
 				<button type="submit" class="btn btn-lg btn-success">확인</button>
 				</form>
 			</div>

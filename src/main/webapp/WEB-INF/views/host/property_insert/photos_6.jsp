@@ -1,36 +1,68 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8"%>
 <html lang="en">
 <head>
-  <title>파일업로드예제</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<title>파일업로드예제</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
 <body>
+	<div class="container">
 
-<div class="container">
-  <h2>파일업로드</h2>
-  <form name="dataForm" id="dataForm" onsubmit="return registerAction()">
-  	<button id="btn-upload" type="button" style="border: 1px solid #ddd; outline: none;">파일 추가</button>
-  	<input id="input_file" multiple="multiple" type="file" style="display:none;">
-  	<span style="font-size:10px; color: gray;">※첨부파일은 최대 10개까지 등록이 가능합니다.</span>
-  	<div class="data_file_txt" id="data_file_txt" style="margin:40px;">
-		<span>첨부 파일</span>
-		<br />
-		<div id="articlefileChange">
-		</div>
+		<form name="dataForm" id="dataForm" onsubmit="return registerAction()">
+			<div class="page-header"
+				style="font-style: italic; font-family: fantasy;">
+				<h1 style="font-weight: bold;">이제 숙소 사진을 올릴 차례입니다</h1>
+				<button type="submit" class="btn btn-lg btn-success">전송</button>
+			</div>
+			<div class="data_file_txt" id="data_file_txt" style="margin: 40px;">
+				<div class="row">
+					<h3>첨부 파일</h3>
+					<!-- <div class="col-sm-4">
+						<div id="image_container"></div>
+						<div class="grid-item grid-item--width2">...</div>
+  						<div class="grid-item">...</div>
+ 							 ...
+					</div> -->
+					<div class="col-sm-4">
+						<div id="articlefileChange" style="font-family: fantasy;"></div>
+					</div>
+					<div class="col-sm-4">
+						<button id="btn-upload" type="button"
+							class="btn btn-sm btn-primary" style="font-size: 17px">
+							사진 추가 하기</button>
+						<!-- onchange="setImg(event)" -->
+						<input id="input_file" multiple="multiple" type="file"
+							style="display: none;" onchange="setImg(event)"> <br>
+						<span style="font-size: 10px; color: gray;"> ※숙소 사진은 최대
+							10개까지 등록이 가능합니다.<br> ※파일명 클릭 시 삭제 됩니다.
+						</span>
+					</div>
+				</div>
+			</div>
+		</form>
+		<!-- <div class="col-md-6">
+				<div class="progress">
+					<div class="progress-bar progress-bar-success" role="progressbar"
+						aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"
+						style="width: 40%">
+						<span class="sr-only">40% Complete (success)</span>
+					</div>
+				</div>
+			</div> -->
 	</div>
-  	<button type="submit" style="border: 1px solid #ddd; outline: none;">전송</button>
-  </form>
-</div>
 
 
-<!-- 파일 업로드 스크립트 -->
-<script>
+	<!-- 파일 업로드 스크립트 -->
+	<script>
 $(document).ready(function()
 		// input file 파일 첨부시 fileCheck 함수 실행
 		{
@@ -114,7 +146,7 @@ function fileDelete(fileNum){
 		}
    /*
    * 파일업로드 multiple ajax처리
-   */    
+   */    /* host/file-upload */
 	$.ajax({
    	      type: "POST",
    	   	  enctype: "multipart/form-data",
@@ -122,12 +154,19 @@ function fileDelete(fileNum){
        	  data : formData,
        	  processData: false,
    	      contentType: false,
-   	      success: function (data) {
-   	    	if(JSON.parse(data)['result'] == "OK"){
-   	    		alert("파일업로드 성공");
-			} else
-				alert("서버내 오류로 처리가 지연되고있습니다. 잠시 후 다시 시도해주세요");
-   	      },
+			success : function(data) {
+				if (JSON.parse(data)['result'] == "OK") {
+					alert("사진업로드 성공");
+				} else if (JSON.parse(data)['result'] == "NO_IMAGE") {
+					alert("한장 이상의 사진을 등록해주세요!");
+			} else if (JSON.parse(data)['result'] == "UNACCEPTED_EXTENSION") {
+					alert("사진의 확장자는 JPG, PNG, GIF, BMP만 가능합니다!");
+				} else if (JSON.parse(data)['result'] == "EXCEED_SIZE") {
+					alert("사진의 크기가 너무 큽니다!(최대 500MB)");
+				} else
+					alert("서버내 오류로 처리가 지연되고있습니다. 잠시 후 다시 시도해주세요");
+			},
+
    	      error: function (xhr, status, error) {
    	    	alert("서버오류로 지연되고있습니다. 잠시 후 다시 시도해주시기 바랍니다.");
    	     return false;
@@ -135,6 +174,30 @@ function fileDelete(fileNum){
    	    });
    	    return false;
 	}
+	var count =0;
+	function setImg(event) {
+			for (var file of event.target.files) {
+			var reader = new FileReader();
+	         reader.onload = function(event) {
+	            var filesystemName = file.name.split(".");
+	            if(filesystemName.length > 1) {
+	               var extension = filesystemName[filesystemName.length - 1];
+	              // document.querySelector("div#image_container").innerHTML = "";  // 앞서 선택한 이미지 삭제
+	               if(extension == "jpg" || extension == "png" || extention == "gif" || extension == "bmp") {
+	                  var img = document.createElement("img");
+	                  img.setAttribute("src", event.target.result);
+	                  img.setAttribute("class", "img-thumbnail");
+	                  img.setAttribute("id", count);
+	                  document.querySelector("div#image_container").appendChild(img);  //새로 선택한 이미지 div에 출력
+	                  count++;
+	               }
+	            }
+	         }
+	         console.log(file);
+	         reader.readAsDataURL(file);
+	      }
+	   }
+
 </script>
 </body>
 </html>

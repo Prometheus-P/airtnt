@@ -18,13 +18,12 @@ public class HostInterceptor implements HandlerInterceptor {
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
 		HttpSession session = request.getSession();
-		System.out.println("호스트 검사");
 		if (session.getAttribute("member_mode").equals("1")) {
 			System.out.println("호스트 아님");
 			response.sendRedirect(request.getContextPath() + "/message_host");
 			return false;
 		}
-		System.out.println("호스트 맞음");
+		System.out.println("=================호스트 맞음================");
 		session.setAttribute("isHostMode", true);
 		@SuppressWarnings("rawtypes")
 		Enumeration paramNames = request.getParameterNames();

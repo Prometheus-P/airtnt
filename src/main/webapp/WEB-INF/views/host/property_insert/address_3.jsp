@@ -19,7 +19,12 @@
 			<div class="col-sm-4">
 				<input type="text" id="address" name="address" placeholder="주소"
 					readonly="readonly" class="form-control"
-					style="text-align: center; width: 500px; height: 50px;">
+					style="text-align: center; width: 500px; height: 50px;"
+					<c:if test="${not empty sessionScope.checkAddress}">
+						value = "${sessionScope.checkAddress}"
+						<c:remove var="checkAddress" scope="session"/>
+						<c:remove var="address" scope="session"/>
+					</c:if>>
 				<div id="detail" style="display: none" >
 				<br><br>
 					<input type="text" class="form-control" id=addressDetail name="addressDetail" 
@@ -31,7 +36,7 @@
 				</button>
 			</div>
 			<div id="field" class="col-sm-4" style="display: none;">
-					<button type="submit" class="btn btn-lg btn-success"
+					<button type="submit" class="btn btn-lg btn-success" id="send"
 					style=" margin-left: 80px">이 주소가 맞아요!!</button>
 				<div id="map"
 						style="width: 350px; height: 350px; margin-left: 80px;margin-top: 10px; float:rigth;"></div>
@@ -51,7 +56,20 @@
 			function displayDetail(){
 				document.getElementById('detail').style.display="block";
 			}
-			function send(){
+			 // id 'testBtn'이라는 버튼을 클릭 시 체크박스 검사.
+           function send(){
+                if(vali($("#address").val())){
+                	alert("주소를 검색해 주세요!!");
+                	return false;
+                }
+                if(vali($("#addressDetail").val())){
+                	if(!window.confirm("상세 주소가 없나요?")){
+                		return false;
+                	}
+                }
+                return true;
+            }
+		/* 	function send(){
 				if (document.f.address.value==""){
 					alert("주소를 검색해 주세요!!")
 					f.address.focus();
@@ -64,7 +82,7 @@
 					}
 				}
 				return true;
-			}
+			} */
 			var mapContainer = document.getElementById('map'), // 지도를 표시할 div
 			mapOption = {
 				center : new daum.maps.LatLng(37.537187, 127.005476), // 지도의 중심좌표

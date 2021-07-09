@@ -22,15 +22,12 @@
 				<c:forEach var="dto" items="${listRoomType}">
 					<div class="list-group" style="font-family: fantasy;">
 						<a href="javascript:void(0)" id="${dto.id}"
-							class="
-							<c:choose>
-							<c:when test='${sessionScope.roomTypeId == dto.id && sessionScope.roomTypeName == dto.name}'>
-							list-group-item active
+							class="list-group-item
+							<c:if test='${sessionScope.roomTypeId == dto.id}'>
+							 active
 							<c:remove var="roomTypeId" scope="session"/>
 							<c:remove var="roomTypeName" scope="session"/>
-							</c:when>
-							<c:otherwise>list-group-item</c:otherwise>
-							</c:choose>" 
+							</c:if>"
 							onclick="<c:set var='id' value='${dto.id}' scope="page"/>; 
 							<c:set var='name' value='${dto.name}' scope="page"/>">
 							<h1 class="list-group-item-heading">${dto.name}</h1>

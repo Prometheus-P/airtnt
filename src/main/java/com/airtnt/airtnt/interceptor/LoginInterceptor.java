@@ -13,14 +13,13 @@ public class LoginInterceptor implements HandlerInterceptor {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception { //컨트롤러로 들어가기 전
-		System.out.println("로그인 인터셉터 확인 . . . ");
 		HttpSession session = request.getSession();
 		if (session.getAttribute("member_id") == null && session.getAttribute("member_name") == null) {
-			System.out.println("로그인 중이 아님!");
+			System.out.println("==============로그인 중이 아님!=============");
 			response.sendRedirect(request.getContextPath() + "/message_login"); 
 			return false;
 		}
-		System.out.println("로그인 확인!");
+		System.out.println("=============로그인 확인!=============");
 		return true;
 		/* return HandlerInterceptor.super.preHandle(request, response, handler); */
 	}
