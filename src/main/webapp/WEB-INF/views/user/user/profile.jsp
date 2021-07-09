@@ -31,27 +31,35 @@
 													</svg></div>
         			<div><a href="/myPage/editPassword" style="color:black">비밀번호변경</a></div>
         	</div>
+        	<div class="border rounded vw-3 center" style="padding-top:2vh;padding-bottom:2vh">
+        		<div><a href="#" style="color:black" onclick="sure()">회원탈퇴</a></div>
+        	</div>
 		</div>
 		<div class="col-sm-9 bg-light p-3 border">
 			<div>
-				<form action="/myPage/updateMember" method="post" >
+				<form name="profileEdit" action="/myPage/updateMember" method="post" onsubmit="return profileEditCheck()">
 					  <div class="mb-3 col-sm-lg">
 						    <label for="InputName" class="form-label">이름</label>
-						    <input type="text" name="name" class="form-control" id="name" value="${memberData.name}">
+						    <input type="text" name="name" class="form-control" id="Pname" value="${memberData.name}" onchange="checkChange()">
 					  </div>
 					  <div class="mb-3 col-lg">
 						    <label for="InputBirth" class="form-label">생년월일</label>
-						    <input type="text" name="birth" class="form-control" id="InputBirth" value="${memberData.birth}" aria-describedby="birthHelp" >
+						    <input type="text" name="birth" class="form-control" id="Pbirth" value="${memberData.birth}" onchange="checkChange()" aria-describedby="birthHelp" >
 						    <div id="birthHelp" class="form-text">2000/00/00</div>
 					  </div>
 					  <div class="mb-3 col-lg">
 						    <label for="InputTel" class="form-label">핸드폰번호</label>
-						    <input type="text" name="Tel" class="form-control" id="InputTel" value="${memberData.tel}" aria-describedby="TelHelp">
+						    <input type="text" name="Tel" class="form-control" id="Ptel" value="${memberData.tel}" onchange="checkChange()" aria-describedby="TelHelp">
 						    <div id="TelHelp" class="form-text">010-xxxx-xxxx</div>
 					  </div>
 					  <div class="mb-3 col-lg">
+					  		<label for="InputEmail" class="form-label">이메일</label>
+						    <input type="text" name="email" class="form-control" id="Pemail" value="${memberData.email}" onchange="checkChange()" aria-describedby="EmailHelp" >
+						    <div id="EmailHelp" class="form-text">xxxxx@xxxxx.xxx</div>
+					  </div>
+					  <div class="mb-3 col-lg">
 							<label for="inputState" class="form-label">성별</label>
-							    <select id="inputState" class="form-select form-select-lg" name="gender">
+							    <select id="inputState" class="form-select form-select-lg" name="gender" onchange="checkChange()">
 							      <c:if test="${memberData.gender eq 1}">
 							      	<option selected value="1">남성</option>
 							      	<option value="2">여성</option>
@@ -62,7 +70,7 @@
 							      </c:if>
 							    </select>
 						</div>
-					  <button style="margin-top:10px" type="submit" class="btn btn-primary">Submit</button>
+					  <button id="sButton" style="margin-top:10px" type="button" class="btn btn-primary">Submit</button>
 				</form>
 			</div>
 		</div>

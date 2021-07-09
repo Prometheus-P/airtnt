@@ -6,6 +6,7 @@ public class LoginOKBean {
 	private String id;
 	private String name;
 	private String passwd;
+	private String email;
 	private String birth;
 	private String tel;
 	private String member_mode;
@@ -24,6 +25,7 @@ public class LoginOKBean {
 		this.id = dto.getId();
 		this.name = dto.getName();
 		this.passwd = dto.getPasswd();
+		this.email = dto.getEmail();
 		this.birth = dto.getBirth();
 		this.tel = dto.getTel();
 		this.member_mode = dto.getMember_mode();
@@ -51,6 +53,12 @@ public class LoginOKBean {
 	}
 	public void setPasswd(String passwd) {
 		this.passwd = passwd;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
 	}
 	public String getBirth() {
 		return birth;

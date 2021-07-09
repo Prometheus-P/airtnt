@@ -20,18 +20,12 @@
 			   <label for="exampleFormControlTextarea1">Explanation</label>
 			   <textarea class="form-control" id="explanation" name="explanation" rows="2">${dto.explanation}</textarea>
 			 </div>
-			 <div class="form-group">
-			   <label for="exampleFormControlTextarea1">Content1</label>
-			   <textarea class="form-control" id="content1" rows="3" name="content1">${dto.content1}</textarea>
-			 </div>
-			 <div class="form-group">
-			   <label for="exampleFormControlTextarea1">Content2</label>
-			   <textarea class="form-control" id="content2" rows="3" name="content2">${dto.content2}</textarea>
-			 </div>
-			 <div class="form-group">
-			   <label for="exampleFormControlTextarea1">Content3</label>
-			   <textarea class="form-control" id="content3" rows="3" name="content3">${dto.content3}</textarea>
-			 </div>
+			<%--  <c:forEach var="dto" items="${boardList.content}">
+			 	<div class="form-group">
+			   		<label for="exampleFormControlTextarea1">Content"/></label>
+			   		<textarea class="form-control" id="content1" rows="3" name="content1">${content.id}</textarea>
+			 	</div>
+			 </c:forEach> --%>
 			 <div align="center">
 				<input type="reset" value="초기화">
 				<input type="submit" value="수정">
