@@ -59,4 +59,18 @@ public class HomeController {
 		return "home";
 	}
 	
+	@RequestMapping("message_login")
+	public String message_login(HttpServletRequest req) {
+		req.setAttribute("msg", "로그인 해주세요!");
+		req.setAttribute("url", "stay");
+		return "message";
+	}
+
+	@RequestMapping("message_host")
+	public String message_host(HttpServletRequest req) {
+		req.setAttribute("msg", "먼저 숙소를 등록해서 호스트가 되어 주세요!");
+		req.setAttribute("url", "<c:url value='/host/guide_home'/>");
+		return "message";
+	}
+	
 }

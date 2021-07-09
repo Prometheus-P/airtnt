@@ -10,7 +10,7 @@
 		id, subject,
 		reg_date as regDate,
 		mod_date as modDate,
-		explanation, content1, content2, content3 from guide
+		explanation from guide
 	</select>
 
 	<select id="getGuide" parameterType="int" resultType="guideDTO">
@@ -18,7 +18,7 @@
 		id, subject,
 		reg_date as regDate,
 		mod_date as modDate,
-		explanation, content1, content2, content3
+		explanation
 		from guide where id = #{id}
 	</select>
 
@@ -200,6 +200,20 @@
 		values(#{propertyId},#{amenityTypeId}) 
 	</select>
 	
+	<select id="updateMemberMode" resultType="int" parameterType="String">
+		update member set member_mode= '2' where id=#{hostId}
+	</select>
+	
+	<select id="getGuideContext" resultType="GuideContextDTO" parameterType="int">
+		select 
+			id,
+			guide_id as guideId,
+			context,
+			reg_date as regDate,
+			mod_date as modeDate
+		from guide_context
+		where guide_id=#{guideId}
+	</select>
 	<!-- <insert id="saveImage" parameterType="java.util.Map">     I insert 
 		into img_table VALUES #{img}    </insert> -->
 	<!--<delete> </delete> <update> </update> -->

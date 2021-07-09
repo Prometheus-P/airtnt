@@ -118,7 +118,7 @@ function fileDelete(fileNum){
 	$.ajax({
    	      type: "POST",
    	   	  enctype: "multipart/form-data",
-   	      url: "<c:url value='/host/file-upload'/>",
+   	      url: "/host/file-upload",
        	  data : formData,
        	  processData: false,
    	      contentType: false,

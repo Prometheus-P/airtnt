@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.airtnt.airtnt.model.AmenityDTO;
 import com.airtnt.airtnt.model.AmenityTypeDTO;
 import com.airtnt.airtnt.model.BookingDTO;
+import com.airtnt.airtnt.model.GuideContextDTO;
 import com.airtnt.airtnt.model.GuideDTO;
 import com.airtnt.airtnt.model.MemberDTO;
 import com.airtnt.airtnt.model.PropertyDTO;
@@ -37,6 +38,11 @@ public class HostMapper implements HostMapperInterface {
 	public GuideDTO getGuide(int id) {
 		GuideDTO guideDTO = sqlSession.selectOne("getGuide", id);
 		return guideDTO;
+	}
+	
+	public List<GuideContextDTO> getGuideContext(int guideId) {
+		List<GuideContextDTO> list = sqlSession.selectList("getGuideContext", guideId);
+		return list;
 	}
 
 	@Override
@@ -139,5 +145,10 @@ public class HostMapper implements HostMapperInterface {
 		int res = sqlSession.insert("insertPropertyAmenity", dto);
 		return res;
 	}
+	public int updateMemberMode(String memberId) {
+		int res = sqlSession.update("updateMemberMode", memberId);
+		return res;
+	}
+	
 
 }

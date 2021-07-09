@@ -1,11 +1,11 @@
 package com.airtnt.airtnt.model;
 
-public class GuideDTO {
+public class GuideContextDTO {
 	private int id;
-	private String subject;
+	private int guideId;
+	private String context;
 	private String regDate;
 	private String modDate;
-	private String explanation;
 
 	public int getId() {
 		return id;
@@ -15,12 +15,12 @@ public class GuideDTO {
 		this.id = id;
 	}
 
-	public String getSubject() {
-		return subject;
+	public int getGuideId() {
+		return guideId;
 	}
 
-	public void setSubject(String subject) {
-		this.subject = subject;
+	public void setGuideId(int guideId) {
+		this.guideId = guideId;
 	}
 
 	public String getRegDate() {
@@ -31,7 +31,7 @@ public class GuideDTO {
 		this.regDate = regDate;
 	}
 
-	String getModDate() {
+	public String getModDate() {
 		return modDate;
 	}
 
@@ -39,12 +39,12 @@ public class GuideDTO {
 		this.modDate = modDate;
 	}
 
-	public String getExplanation() {
-		return explanation;
+	public String getContext() {
+		return context;
 	}
 
-	public void setExplanation(String explanation) {
-		this.explanation = explanation;
+	public void setContext(String context) {
+		this.context = context;
 	}
 
 }

@@ -31,6 +31,7 @@ import com.airtnt.airtnt.interceptor.LoginInterceptor;
 import com.airtnt.airtnt.model.AmenityDTO;
 import com.airtnt.airtnt.model.AmenityTypeDTO;
 import com.airtnt.airtnt.model.BookingDTO;
+import com.airtnt.airtnt.model.GuideContextDTO;
 import com.airtnt.airtnt.model.GuideDTO;
 import com.airtnt.airtnt.model.ImageDTO;
 import com.airtnt.airtnt.model.PropertyDTO;
@@ -45,22 +46,6 @@ import com.airtnt.airtnt.service.HostMapper;
 public class HostController implements HostControllerInterface {
 	@Autowired
 	private HostMapper hostMapper;
-
-	@RequestMapping("message_login")
-	public String message_login(HttpServletRequest req) {
-		System.out.println("도착");
-		req.setAttribute("msg", "로그인 해주세요!");
-		req.setAttribute("url", "stay");
-		return "message";
-	}
-
-	@RequestMapping("message_host")
-	public String message_host(HttpServletRequest req) {
-		System.out.println("도착");
-		req.setAttribute("msg", "먼저 숙소를 등록해서 호스트가 되어 주세요!");
-		req.setAttribute("url", "<c:url value='/host/guide_home'/>");
-		return "message";
-	}
 
 	// 1. 호스트 시작하기 >>으로 이동
 	// 나머지는 게시판
@@ -84,8 +69,10 @@ public class HostController implements HostControllerInterface {
 				isRemove = true;
 			return isRemove;
 		});
+		List<GuideContextDTO> listGuideContext = hostMapper.getGuideContext(id);
 		ModelAndView mav = new ModelAndView("host/guide/guide_context");
 		mav.addObject("guideDTO", guideDTO);
+		mav.addObject("listGuideContext", listGuideContext);
 		mav.addObject("guideList", guideList);
 		return mav;
 	}
@@ -95,14 +82,14 @@ public class HostController implements HostControllerInterface {
 	//////////////////////////////////////////////////////////////////////////////////////
 
 	@Override
-	@RequestMapping("/host/property_type_0")
+	@RequestMapping("host/property_type_0")
 	public ModelAndView property_type_0(HttpServletRequest req) {
 		List<PropertyTypeDTO> listPropertyType = hostMapper.getPropertyType();
 		return new ModelAndView("host/property_insert/property_type_0", "listPropertyType", listPropertyType);
 	}
 
 	@Override
-	@RequestMapping("/host/sub_property_type_1")
+	@RequestMapping("host/sub_property_type_1")
 	public ModelAndView sub_property_type_1(HttpServletRequest req, Integer propertyTypeId, String propertyTypeName) {
 		HttpSession session = req.getSession();
 		session.setAttribute("propertyTypeId", propertyTypeId);
@@ -117,7 +104,7 @@ public class HostController implements HostControllerInterface {
 	}
 
 	@Override
-	@RequestMapping("/host/room_type_2")
+	@RequestMapping("host/room_type_2")
 	public ModelAndView room_type_2(HttpServletRequest req, Integer subPropertyTypeId, String subPropertyTypeName) {
 		HttpSession session = req.getSession();
 		session.setAttribute("subPropertyTypeId", subPropertyTypeId);
@@ -132,7 +119,7 @@ public class HostController implements HostControllerInterface {
 	}
 
 	@Override
-	@RequestMapping("/host/address_3")
+	@RequestMapping("host/address_3")
 	public String address_3(HttpServletRequest req, Integer roomTypeId, String roomTypeName) {
 		HttpSession session = req.getSession();
 		session.removeAttribute("roomTypeId");
@@ -146,7 +133,7 @@ public class HostController implements HostControllerInterface {
 	}
 
 	@Override
-	@RequestMapping("/host/floor_plan_4")
+	@RequestMapping("host/floor_plan_4")
 	public String floor_plan_4(HttpServletRequest req, String address, String addressDetail) {
 		HttpSession session = req.getSession();
 		session.setAttribute("address", address + " " + addressDetail);
@@ -157,7 +144,7 @@ public class HostController implements HostControllerInterface {
 	}
 
 	@Override
-	@RequestMapping("/host/amenities_5")
+	@RequestMapping("host/amenities_5")
 	public ModelAndView amenities_5(HttpServletRequest req, Integer maxGuest, Integer bedCount) {
 		HttpSession session = req.getSession();
 		if (maxGuest == null) {
@@ -176,7 +163,7 @@ public class HostController implements HostControllerInterface {
 	}
 
 	@Override
-	@RequestMapping("/host/photos_6") // name = amenities로 페이지에서 보내야 함
+	@RequestMapping("host/photos_6") // name = amenities로 페이지에서 보내야 함
 	public String photos_6(HttpServletRequest req,
 			@RequestParam(value = "amenities", required = true) List<Integer> amenities) {
 		HttpSession session = req.getSession();
@@ -189,7 +176,7 @@ public class HostController implements HostControllerInterface {
 	}
 
 	@ResponseBody
-	@RequestMapping(value = "/host/file-upload", method = RequestMethod.POST)
+	@RequestMapping(value = "host/file-upload", method = RequestMethod.POST)
 	public String fileUpload(@RequestParam("article_file") List<MultipartFile> multipartFile,
 			HttpServletRequest request) {
 
@@ -307,13 +294,13 @@ public class HostController implements HostControllerInterface {
 	}
 
 	@Override
-	@RequestMapping("/host/name_description_7")
+	@RequestMapping("host/name_description_7")
 	public String name_description_7() {
 		return "/host/property_insert/name_description_7";
 	}
 
 	@Override
-	@RequestMapping("/host/price_8")
+	@RequestMapping("host/price_8")
 	public String price_8(HttpServletRequest req, String name, String description) {
 		HttpSession session = req.getSession();
 		session.setAttribute("name", name);
@@ -325,7 +312,7 @@ public class HostController implements HostControllerInterface {
 	}
 
 	@Override
-	@RequestMapping("/host/preview_9")
+	@RequestMapping("host/preview_9")
 	public String preview_9(HttpServletRequest req, @RequestParam int price) {
 		HttpSession session = req.getSession();
 		session.setAttribute("price", price);
@@ -359,9 +346,10 @@ public class HostController implements HostControllerInterface {
 	}
 
 	@Override
-	@RequestMapping("/host/publish_celebration_10")
+	@RequestMapping("host/publish_celebration_10")
 	public String publish_celebration_10(HttpServletRequest req) {
 		HttpSession session = req.getSession();
+		session.setAttribute("isMemberMode", true);
 		List<Integer> amenities = (List<Integer>) session.getAttribute("listAmenities");
 		// 여러가지 편의시설
 		session.getAttribute("사진도 받기");
@@ -379,6 +367,7 @@ public class HostController implements HostControllerInterface {
 		dtoPro.setPropertyDesc((String) session.getAttribute("description"));
 		dtoPro.setPrice((int) session.getAttribute("price"));
 		int ok = hostMapper.insertProperty(dtoPro);
+		int memberChange = hostMapper.updateMemberMode(hostId); // 1 -> 2
 
 		int propertyId = hostMapper.getPropertyId(hostId);
 		for (int i : amenities) {
@@ -414,7 +403,7 @@ public class HostController implements HostControllerInterface {
 	 * session.setAttribute("member_name", dto.getName());
 	 */
 	@Override
-	@RequestMapping("/host/host_mode")
+	@RequestMapping("host/host_mode")
 	public ModelAndView host_mode(HttpServletRequest req) {
 		HttpSession session = req.getSession();
 		String hostId = (String) session.getAttribute("member_id");
@@ -439,7 +428,6 @@ public class HostController implements HostControllerInterface {
 	@Override
 	@RequestMapping(value = "host/properties_update", method = RequestMethod.GET)
 	public ModelAndView host_getProperty(HttpServletRequest req, int propertyId) {
-		HttpSession session = req.getSession();
 		PropertyDTO dto = hostMapper.getProperty(propertyId);
 		ModelAndView mav = new ModelAndView("/host/host_mode/properties_update", "propertyDTO", dto);
 		return mav;
@@ -454,7 +442,7 @@ public class HostController implements HostControllerInterface {
 	}
 
 	@Override
-	@RequestMapping("/host/transaction_list")
+	@RequestMapping("host/transaction_list")
 	public ModelAndView transaction_list(HttpServletRequest req) {
 		HttpSession session = req.getSession();
 		String hostId = (String) session.getAttribute("member_id");
@@ -476,7 +464,7 @@ public class HostController implements HostControllerInterface {
 	}
 
 	@Override
-	@RequestMapping("/host/host_review_list")
+	@RequestMapping("host/host_review_list")
 	public ModelAndView host_review_list(HttpServletRequest req) {
 		// TODO Auto-generated method stub
 		return new ModelAndView("/host/host_mode/host_review_list");
@@ -490,7 +478,7 @@ public class HostController implements HostControllerInterface {
 	}
 
 	@Override
-	@RequestMapping("/host/total_earning")
+	@RequestMapping("host/total_earning")
 	public ModelAndView total_earning(HttpServletRequest req) {
 		HttpSession session = req.getSession();
 		String hostId = (String) session.getAttribute("member_id");
@@ -520,7 +508,7 @@ public class HostController implements HostControllerInterface {
 	}
 
 	@Override
-	@RequestMapping("/host/host_support")
+	@RequestMapping("host/host_support")
 	public ModelAndView host_support(HttpServletRequest req) {
 		// TODO Auto-generated method stub
 		return new ModelAndView("/host/host_mode/host_support");
