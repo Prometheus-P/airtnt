@@ -292,13 +292,28 @@ function setTotalPrice(){
 	       <ul class="list-group" style="font-size: 20px">
 	         <li class="list-group-item">
 	           <!-- 달력넣자 -->
-	           <div class="one_third first">
+	           <!-- Default dropstart button -->
+                 <div class="btn-group dropstart">
+                   <button type="button" class="btn btn-secondary dropdown-toggle" id="dropdownMenuClickableInside"
+                   data-bs-auto-close="outside" data-bs-toggle="dropdown" aria-expanded="false">
+                     체크인
+                   </button>
+                   <button type="button" class="btn btn-secondary" id="dropdownTrigger" aria-expanded="false">
+                     체크아웃
+                   </button>
+                   <ul class="dropdown-menu" aria-labelledby="dropdownMenuClickableInside" style="width: 900px">
+                     <li style="height: 800px">
+                       <div id='source-calendar'></div>
+                       <div id='destination-calendar'></div>
+                     </li>
+                    </ul>
+                   </div>
+	           <%-- <div class="one_third first">
 	             체크인
 	           </div>
 	           <div class="two_third">
-	             <div id='source-calendar' style="height: 10px"></div>
-	             <%-- <input id="check_in_date" type="date" name="checkInDate"
-	             min="${tomorrow}" value="${tomorrow}" onchange="javascript:setTotalPrice()"> --%>
+	             <input id="check_in_date" type="date" name="checkInDate"
+	             min="${tomorrow}" value="${tomorrow}" onchange="javascript:setTotalPrice()">
 	           </div>
 	         </li>
 	         <li class="list-group-item">
@@ -306,10 +321,9 @@ function setTotalPrice(){
 	             체크아웃
 	           </div>
 	           <div class="two_third">
-	             <div id='destination-calendar'></div>
-	             <%-- <input id="check_out_date" type="date" name="checkOutDate"
-	             min="${dayAfterTomorrow}" value="${dayAfterTomorrow}" onchange="javascript:setTotalPrice()"> --%>
-	           </div>
+	             <input id="check_out_date" type="date" name="checkOutDate"
+	             min="${dayAfterTomorrow}" value="${dayAfterTomorrow}" onchange="javascript:setTotalPrice()">
+	           </div> --%>
 	         </li>
 	         <li class="list-group-item">
 	           <div class="one_third first">

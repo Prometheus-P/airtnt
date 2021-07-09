@@ -21,7 +21,7 @@
               <c:if test='${recentProperty.images != null && recentProperty.images.size() > 0}'>
                 src="${recentProperty.images.get(0).path}"
               </c:if>
-            class="d-block w-100" alt="">
+            class="d-block w-100" alt="" style="object-fit: cover; width:200px; height: 150px">
             <span style="font-size: 25px">${recentProperty.name}</span><br>
             <span style="font-size: 20px">${recentProperty.address}</span>
           </a>

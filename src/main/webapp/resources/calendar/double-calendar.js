@@ -6,7 +6,6 @@ document.addEventListener('DOMContentLoaded', function() {
 	var destCalendarEl = document.getElementById('destination-calendar');
 
 	var srcCalendar = new FullCalendar.Calendar(srcCalendarEl, {
-		resizable: true,
 		editable: true,
 		initialDate: '2020-09-12',
 		events: [
@@ -28,7 +27,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	var destCalendar = new FullCalendar.Calendar(destCalendarEl, {
 		initialDate: '2020-09-12',
-		resizable: true,
 		editable: true,
 		droppable: true, // will let it receive events!
 		eventReceive: function(info) {

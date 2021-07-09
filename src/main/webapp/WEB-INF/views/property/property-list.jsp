@@ -287,7 +287,7 @@ crossorigin="anonymous"></script> -->
                         <div class="carousel-inner">
                           <c:forEach var="image" items="${property.images}" varStatus="status">
                             <div class="carousel-item <c:if test='${status.count == 1}'>active</c:if>">
-                              <img src="${image.path}" class="d-block w-100" alt="">
+                              <img src="${image.path}" class="d-block w-100" alt="" style="object-fit: cover; width:200px;height: 150px">
                             </div>
                           </c:forEach>
                         </div>

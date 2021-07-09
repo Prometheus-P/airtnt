@@ -216,7 +216,7 @@ public class PropertyController {
 	
 	// 1. 화면에 뿌려질 값들을 설정하는 단계
 	@PostMapping("booking")
-	public String booking(RedirectAttributes ra, @ModelAttribute BookingDTO booking) {
+	public String booking(HttpServletRequest req, RedirectAttributes ra, @ModelAttribute BookingDTO booking) {
 		// params :
 		// propertyId, hostId, guestId, dayCount, guestCount, totalPrice,
 		// checkInDate, checkOutDate
