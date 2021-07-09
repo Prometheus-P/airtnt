@@ -240,7 +240,7 @@ crossorigin="anonymous"></script> -->
 
 <!-- 메인 화면 -->
 <div class="wrapper row3">
-  <div class="hoc container clear">
+  <div class="hoc clear" style="margin-left: 50px; margin-right: 50px">
 
     <!-- main body -->
     <!-- ################################################################################################ -->
@@ -274,6 +274,7 @@ crossorigin="anonymous"></script> -->
 	          </table>
 	          
               <!-- 숙소리스트 영역 -->
+              <hr>
               <ul class="nospace clear" >
                 <c:forEach var="property" items="${properties}">
                 
@@ -283,66 +284,69 @@ crossorigin="anonymous"></script> -->
                       <!-- 사진 넘기기 -->
                       <div id="carouselControls-${property.id}" class="carousel slide">
                         <div class="carousel-inner">
-                          <c:if test="${not empty property.images}">
-                            <div class="carousel-item active">
-                              <img src="${property.images.get(0).path}" class="d-block w-100" alt="">
-                            </div>
-                          </c:if>
-                          <c:forEach var="image" items="${property.images}" begin="1">
-                            <div class="carousel-item">
+                          <c:forEach var="image" items="${property.images}" varStatus="status">
+                            <div class="carousel-item <c:if test='${status.count == 1}'>active</c:if>">
                               <img src="${image.path}" class="d-block w-100" alt="">
                             </div>
                           </c:forEach>
                         </div>
                         <c:if test="${not empty property.images && property.images.size() > 1}">
-                          <button class="carousel-control-prev" type="button" data-bs-target="#carouselControls-${property.id}" data-bs-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Previous</span>
+                          <button class="carousel-control-prev" type="button"
+                          data-bs-target="#carouselControls-${property.id}" data-bs-slide="prev">
+                            <img src="https://img.icons8.com/color/48/000000/back--v1.png"/>
+                            <!-- <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span> -->
                           </button>
-                          <button class="carousel-control-next" type="button" data-bs-target="#carouselControls-${property.id}" data-bs-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Next</span>
+                          <button class="carousel-control-next" type="button"
+                          data-bs-target="#carouselControls-${property.id}" data-bs-slide="next">
+                            <img src="https://img.icons8.com/color/48/000000/forward.png"/>
+                            <!-- <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span> -->
                           </button>
                         </c:if>
                       </div>
-	                </div>
-	                <div class="two_third">
-	                  <h2><a href="<c:url value='/property/detail?propertyId=${property.id}'/>">${property.name}</a></h2>
-	                  <h4>${property.propertyType.name}/${property.subPropertyType.name}</h4>
-	                  <h4>${property.roomType.name}</h4>
-	                  <h4>${property.address}</h4>
-	                </div>
-	            </li>
-	            <div class="position-relative">
-	              <div class="position-absolute end-0 bottom-50">
-	                <!-- Button trigger modal -->
-	                <a href="" class="trigger-btn wish-button" id="wishProperty-${property.id}"
-	                data-toggle="modal">
-	                  <!-- 빈 하트 -->
-	                  <img class="heart" src="" style="width: 3rem; height: 3rem">
-	                </a>
-	                <script type="text/javascript">
-	                  // 화면 로드 시 초기화하는 과정
-	                  initWish("${property.id}", "${property.wishListId}", "${property.wished}");
-	                </script>
-	              </div>
-	            </div>
-	            <hr>
-	            </c:forEach>
-	          </ul>
-	      </div>
-	      <div>
-	        <c:forEach var="recentProperty" items="${recentProperties}">
-	          <span>${recentProperty.name} </span>
-	        </c:forEach>
-	      </div>
-        </div>
 
+                    </div>
+                    
+                    <div class="two_third">
+                      <h2><a href="<c:url value='/property/detail?propertyId=${property.id}'/>">${property.name}</a></h2>
+                      <h4>${property.propertyType.name}/${property.subPropertyType.name}</h4>
+                      <h4>${property.roomType.name}</h4>
+                      <h4>${property.address}</h4>
+                    </div>
+                </li>
+                
+                <!-- 위시 버튼 -->
+                <div class="position-relative">
+                  <div class="position-absolute end-0 bottom-50">
+                    <!-- Button trigger modal -->
+                    <a href="" class="trigger-btn wish-button" id="wishProperty-${property.id}"
+                    data-toggle="modal">
+                      <!-- 빈 하트 -->
+                      <img class="heart" src="" style="width: 3rem; height: 3rem">
+                    </a>
+                    <script type="text/javascript">
+                      // 화면 로드 시 초기화하는 과정
+                      initWish("${property.id}", "${property.wishListId}", "${property.wished}");
+                    </script>
+                  </div>
+                </div>
+                <hr>
+                </c:forEach>
+                
+              </ul>
+          </div>
+          
+          <!-- 최근 목록 -->
+          <c:import url="/WEB-INF/views/property/recent-list.jsp"/>
+          
+        </div>
+        
         <!-- 카카오맵 -->
         <div class="one_half">
           <div id="map" style="width:600px;height:600px;"></div>
           <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=62b11c585fb341eec39dbc28ac9bad71"></script>
-          <script type="text/javascript" src="/resources/map/kakao_map_test.js"></script>
+          <!-- <script type="text/javascript" src="/resources/map/kakao_map_test.js"></script> -->
           <script>
 	      	$(document).ready(function(){
 	      		var mapContainer = document.getElementById('map'), // 지도를 표시할 div

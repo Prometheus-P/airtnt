@@ -29,7 +29,7 @@
 				</button>
 				<a class="navbar-brand" style="font-size: 20px ;font:italic; font-family:fantasy;">
 				${sessionScope.member_name}님 환영합니다</a>
-			</div>
+			</div><!-- <ol class="breadcrumb"> -->
 			<div id="navbar" class="navbar-collapse collapse" >
 				<ul class="nav navbar-nav" style="font-size: 30px ;font:bold; font-family:fantasy;">
 					<li>
@@ -60,7 +60,9 @@
 							<li class="divider"></li>
 							<li>
 							<a href="<c:url value='/logout'/>">로그아웃</a>
-							<a href="<c:url value='/index'/>">게스트 모드로 전환</a></li>
+							<a href="<c:url value='/index'/>" onclick="<c:set var='isHost' value='false' scope='session'/>">
+							게스트 모드로 전환
+							</a></li>
 							<li><a href="<c:url value='/mypage'/>">계정</a></li>
 							<li class="dropdown-header">메롱</li>
 						</ul></li>

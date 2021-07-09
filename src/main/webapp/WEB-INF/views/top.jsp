@@ -44,21 +44,26 @@
         <li class="active">
         <c:if test="${isLogin}">
         	<c:if test="${member_mode == 1}">
-       			<a href="/host/guide_home">호스트 되기</a>
+       			<a href="/guide_home">호스트 되기</a>
+       			<c:set var='isHostMode' value='false' scope='session'/>
         	</c:if>
-        	<c:if test="${member_mode == 2}">
+        	<c:if test="${member_mode == 2 && !sessionScope.isHostMode}">
         		<a href="/host/host_mode">호스트 모드로 전환</a>
+        		<c:set var='isHostMode' value='true' scope='session'/>
         	</c:if>
         </c:if>
+        <c:if test='${sessionScope.isHostMode}'>
+        	<a href="<c:url value='/host/host_mode'/>">호스트 홈으로</a>
+        </c:if>
         <c:if test="${!isLogin}">
-         <a href="#LoginModal" data-toggle="modal">호스트 되기</a>
+         <a href="/guide_home">호스트 되기</a>
         </c:if>
         </li>
         <c:if test="${!isLogin}">
         <li><a class="drop" href="#">로그인 하기</a>
           <ul>
-            <li><a href="#LoginModal" class="trigger-btn" data-toggle="modal">로그인</a></li>
-            <li><a href="#SignUpModal" class="trigger-btn" data-toggle="modal">회원가입</a></li>
+            <li><a id="login-button" href="#LoginModal" class="trigger-btn" data-toggle="modal">로그인</a></li>
+            <li><a id="signUp-button" href="#SignUpModal" class="trigger-btn" data-toggle="modal">회원가입</a></li>
             <li><a href="help">도움말</a></li>
           </ul>
           </c:if>

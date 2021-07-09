@@ -19,6 +19,14 @@ Licence URI: https://www.os-templates.com/template-terms
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <link href="/resources/layout/styles/layout.css" rel="stylesheet" type="text/css" media="all">
 <script type="text/javascript">
+function loginCheck(){
+	if("${member_id}" == ""){
+		document.querySelector("a#login-button").click();
+		return false;
+	}
+	return true;
+}
+
 function setTotalPrice(){
 	var checkInDateStr = document.getElementById("check_in_date").value;
 	var checkOutDateStr = document.getElementById("check_out_date").value;
@@ -45,6 +53,10 @@ function setTotalPrice(){
 	document.getElementById("price_disp").innerHTML = totalPriceStr;
 }
 </script>
+<link href="/resources/calendar/main.css" rel="stylesheet"/>
+<script src="/resources/calendar/main.js"></script>
+<script src="/resources/calendar/double-calendar.js"></script>
+<link href="/resources/calendar/double-calendar.css" rel="stylesheet"/>
 </head>
 <body id="top">
 
@@ -52,6 +64,8 @@ function setTotalPrice(){
 
 <!-- 위시리스트 모달은 jQuery 라이브러리 적용을 위해서 top.jsp 아래 둬야함 -->
 <c:import url="/WEB-INF/views/property/wish-modal.jsp"/>
+
+
 
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
@@ -126,7 +140,7 @@ function setTotalPrice(){
       <!-- Button trigger modal -->
       <a href="" class="trigger-btn wish-button" id="wishProperty-${property.id}"
       data-toggle="modal" style="font-size: 20px">
-        <span class="wish-text">찜하기</span>
+        <span class="wish-text"></span>
         <!-- 빈 하트 -->
         <img class="heart" src="" style="width: 3rem; height: 3rem">
       </a>
@@ -151,38 +165,36 @@ function setTotalPrice(){
       <!-- 숙소 이미지 -->
       <div class="one_half first">
         <img class="imgl borderedbox inspace-5"
-        src="
           <c:if test='${not empty property.images}'>
-            ${property.images.get(0).path}
+            src="${property.images.get(0).path}"
           </c:if>
-        " alt="">
+         alt="" style="height: 41rem;">
       </div>
       <div class="one_half">
-      
-        
-      
         <c:forEach var="image" items="${property.images}" begin="1" end="4" varStatus="status">
           <c:choose>
             <c:when test="${status.count % 2 == 1}">
               <div class="one_half first">
-                <img class="imgl borderedbox inspace-5" src="${image.path}" alt="" >
+                <img class="imgl borderedbox inspace-5 " src="${image.path}" alt=""
+                style="height: 20rem;">
               </div>
             </c:when>
             <c:otherwise>
               <div class="one_half">
-                <img class="imgl borderedbox inspace-5" src="${image.path}" alt="" >
+                <img class="imgl borderedbox inspace-5" src="${image.path}" alt=""
+                style="height: 20rem;">
               </div>
             </c:otherwise>
           </c:choose>
         </c:forEach>
       </div>
-      
+    
       
       <!-- 숙소 상세정보 나열 구역 -->
 	  <div class="two_third first">
 	        <div>
 	          <h1>숙소 유형</h1>
-	          <p>
+	          <p style="font-size: 20px">
 	            ${property.propertyType.name}/${property.subPropertyType.name}<br>
 	            ${property.roomType.name}
 	          </p>
@@ -192,7 +204,9 @@ function setTotalPrice(){
 	        
 	        <div>
 	          <h1>상세 설명</h1>
-	          <textarea rows="10" cols="80" readonly>${property.propertyDesc}</textarea>
+	          <p style="font-size: 20px">
+	            ${property.propertyDesc}
+	          </p>
 	        </div>
 	        
 	        <hr>
@@ -200,7 +214,7 @@ function setTotalPrice(){
 	        <div>
 	          <h1>편의 시설</h1><br>
 	          <c:forEach var="amenity" items="${property.amenities}">
-	            <ul>
+	            <ul style="font-size: 20px">
 	              <li>
 	                ${amenity.amenityType.name}
 	              </li>
@@ -210,7 +224,7 @@ function setTotalPrice(){
 	        
 	        <hr>
 	        
-		    <div id="comments">
+	       <div>
 	        <h1>대앳그을</h1>
 	        <ul>
 	          <li>
@@ -256,54 +270,69 @@ function setTotalPrice(){
 	            </article>
 	          </li>
 	        </ul>
+	        
 	      </div>
-	   </div>
+	      
+          <!-- 최근 목록 -->
+          <c:import url="/WEB-INF/views/property/recent-list.jsp"/>
+          
+	   </div><!-- end of two_third first -->
 	   <div class="one_third">
 	     <!-- 
 	       상세정보에서 넘어가는 예약정보
 	       host id, guest id, day count, guest count, total price,
 	       checkin date, checkout date
 	      -->
-	     <form action="<c:url value='/property/booking'/>" method="post">
+	     <form action="<c:url value='/property/booking'/>" method="post" onsubmit="return loginCheck()">
 	       <input type="hidden" name="propertyId" value="${property.id}">
 	       <input type="hidden" name="hostId" value="${property.hostId}">
 	       <input type="hidden" name="guestId" value="${sessionScope.member_id}">
 	       <input id="day_count" type="hidden" name="dayCount">
 	       <input id="total_price" type="hidden" name="totalPrice">
-	       <table>
-	         <tr>
-	           <th>체크인</th>
-	           <td><input id="check_in_date" type="date" name="checkInDate" class="btmspace-15"
-	            	min="${tomorrow}" value="${tomorrow}"
-	            	onchange="javascript:setTotalPrice()"></td>
-	         </tr>
-	         <tr>
-	           <th>체크아웃</th>
-	           <td><input id="check_out_date" type="date" name="checkOutDate" class="btmspace-15"
-	            	min="${dayAfterTomorrow}" value="${dayAfterTomorrow}"
-	            	onchange="javascript:setTotalPrice()"></td>
-	         </tr>
-	         <tr>
-	           <th>인원수</th>
-	           <td><input id="guest_count" type="number" name="guestCount" class="btmspace-15"
-	            	min="1" max="${property.maxGuest}" value="1" 
-	            	onchange="javascript:setTotalPrice()"></td>
-	         </tr>
-	         <tr>
-	           <td colspan="2" style="font-size: 30px">
-	             총액 <span id="price_disp"></span>
- 	             <script type="text/javascript">
-	               setTotalPrice();
-	             </script>
-	           </td>
-	         </tr>
-	         <tr>
-	           <td colspan="2">
-	             <button class="btn" type="submit">예약하기</button>
-	             <a href="문의url?propertyId=${property.id}"><button class="btn" type="button">1:1 문의하기</button></a>
-	           </td>
-	         </tr>
-	     </table>
+	       <ul class="list-group" style="font-size: 20px">
+	         <li class="list-group-item">
+	           <!-- 달력넣자 -->
+	           <div class="one_third first">
+	             체크인
+	           </div>
+	           <div class="two_third">
+	             <div id='source-calendar'></div>
+	             <input id="check_in_date" type="date" name="checkInDate"
+	             min="${tomorrow}" value="${tomorrow}" onchange="javascript:setTotalPrice()">
+	           </div>
+	         </li>
+	         <li class="list-group-item">
+	           <div class="one_third first">
+	             체크아웃
+	           </div>
+	           <div class="two_third">
+	             <div id='destination-calendar'></div>
+	             <input id="check_out_date" type="date" name="checkOutDate"
+	             min="${dayAfterTomorrow}" value="${dayAfterTomorrow}" onchange="javascript:setTotalPrice()">
+	           </div>
+	         </li>
+	         <li class="list-group-item">
+	           <div class="one_third first">
+	             인원수
+	           </div>
+	           <div class="two_third" style="height: 100px; width: 100px">
+	             <input id="guest_count" type="number" name="guestCount"
+	             min="1" max="${property.maxGuest}" value="1" onchange="javascript:setTotalPrice()">
+	           </div>
+	         </li>
+	         <li class="list-group-item" style="font-size: 30px;color: blue">
+	           총액 <span id="price_disp"></span>
+ 	           <script type="text/javascript">
+	             setTotalPrice();
+	           </script>
+	         </li>
+	         <li class="list-group-item">
+	           <input class="btn btn-primary" type="submit"
+	           style="font-size: 20px; width: 15rem" value="예약하기">
+	           <a href="문의url?propertyId=${property.id}" class="btn btn-info"
+	           style="font-size: 20px; width: 15rem">1:1 문의하기</a>
+	         </li>
+	       </ul>
 	     </form>
 	   </div>
 	   
@@ -501,8 +530,8 @@ function setTotalPrice(){
 <!-- ################################################################################################ -->
 <a id="backtotop" href="#top"><i class="fas fa-chevron-up"></i></a>
 <!-- JAVASCRIPTS -->
-<script src="/resources/layout/scripts/jquery.min.js"></script>
+<!-- <script src="/resources/layout/scripts/jquery.min.js"></script>
 <script src="/resources/layout/scripts/jquery.backtotop.js"></script>
-<script src="/resources/layout/scripts/jquery.mobilemenu.js"></script>
+<script src="/resources/layout/scripts/jquery.mobilemenu.js"></script> -->
 </body>
 </html>

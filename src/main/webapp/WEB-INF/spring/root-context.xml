@@ -13,8 +13,8 @@
 			<value>jdbc:oracle:thin:@127.0.0.1:1521:XE</value>
 		</property>
 		
-		<property name="username" value="bigdata3"/>
-		<property name="password" value="bigdata3"/>
+		<property name="username" value="teambit"/>
+		<property name="password" value="teambit"/>
 	</bean>
 	
 	<!-- image -->
