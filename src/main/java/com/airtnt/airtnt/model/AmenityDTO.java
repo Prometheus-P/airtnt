@@ -2,30 +2,30 @@ package com.airtnt.airtnt.model;
 
 public class AmenityDTO {
 	
-	private int id;
-	private int propertyId;
+	private Integer id;
+	private Integer propertyId;
 	
-	private int amenityTypeId;
+	private Integer amenityTypeId;
 	private String name;
 	
 	private AmenityTypeDTO amenityType;
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
-	public int getPropertyId() {
+	public Integer getPropertyId() {
 		return propertyId;
 	}
-	public void setPropertyId(int propertyId) {
+	public void setPropertyId(Integer propertyId) {
 		this.propertyId = propertyId;
 	}
-	public int getAmenityTypeId() {
+	public Integer getAmenityTypeId() {
 		return amenityTypeId;
 	}
-	public void setAmenityTypeId(int amenityTypeId) {
+	public void setAmenityTypeId(Integer amenityTypeId) {
 		this.amenityTypeId = amenityTypeId;
 	}
 	public String getName() {

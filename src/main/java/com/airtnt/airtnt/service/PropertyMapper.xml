@@ -5,7 +5,7 @@
 <mapper namespace="com.airtnt.airtnt.service.PropertyMapper">
 
 	<resultMap type="propertyDTO" id="propertyMap">
-		<id property="id" column="id" />
+		<id property="id" column="id"/>
 		<result property="name" column="name"/>
 		<result property="hostId" column="host_id"/>
 		<result property="propertyDesc" column="property_desc"/>
@@ -28,7 +28,7 @@
 			columnPrefix="room_type_" resultMap="roomTypeMap"/>
 		
 		<collection property="amenities" ofType="amenityDTO"
-			columnPrefix="amenity_" resultMap="amenityMap"/>
+			columnPrefix="amenity_" resultMap="amenityMap" />
 		
 		<collection property="images" ofType="imageDTO"
 			columnPrefix="image_" resultMap="imageMap"/>
@@ -140,46 +140,59 @@
 		where
 		<choose>
 			<!-- choose절 안의 파라미터가 없으면 bad grammar 예외 발생 -->
+			
+			<!-- 숙소 리스트 페이지 검색 -->
 			<when test="addressKey != null">
 				<bind name="addressKey" value="'%' + addressKey + '%'"/>
 				p.address like #{addressKey}
 			</when>
+			<!-- 최근목록 리스트 -->
+			<when test="propertyIdList != null">
+				p.id in
+				<foreach item="propertyId" collection="propertyIdList"
+				open="(" separator="," close=")">
+					#{propertyId}
+				</foreach>
+			</when>
+			<!-- 상세보기 페이지 -->
 			<when test="propertyId != null">
 				p.id=#{propertyId}
 			</when>
 		</choose>
+		
+		<!-- 검색 필터라서 거의 안들어감 -->
 		<if test="propertyTypeIdKeyArray != null">
 			and pt.id in
 			<foreach item="propertyTypeIdKey" collection="propertyTypeIdKeyArray"
 			open="(" separator="," close=")">
 				#{propertyTypeIdKey}
 			</foreach>
+			and pt.is_use='Y'
 		</if>
-		and pt.is_use='Y'
 		<if test="subPropertyTypeIdKeyArray != null">
 			and spt.id in
 			<foreach item="subPropertyTypeIdKey" collection="subPropertyTypeIdKeyArray"
 			open="(" separator="," close=")">
 				#{subPropertyTypeIdKey}
 			</foreach>
+			and spt.is_use='Y'
 		</if>
-		and spt.is_use='Y'
 		<if test="roomTypeIdKeyArray != null">
 			 and rt.id in
 			<foreach item="roomTypeIdKey" collection="roomTypeIdKeyArray"
 			open="(" separator="," close=")">
 				#{roomTypeIdKey}
 			</foreach>
+			and rt.is_use='Y'
 		</if>
-		and rt.is_use='Y'
 		<if test="amenityTypeIdKeyArray != null">
 			and at.id in
 			<foreach item="amenityTypeIdKey" collection="amenityTypeIdKeyArray"
 			open="(" separator="," close=")">
 				#{amenityTypeIdKey}
 			</foreach>
+			and at.is_use='Y'
 		</if>
-		and at.is_use='Y'
 		<if test="guestCountKey != null">
 			and p.max_guest <![CDATA[ >= ]]> #{guestCountKey}
 		</if>
@@ -222,27 +235,6 @@
 		select * from amenity_type
 		where is_use='Y'
 		order by id asc
-	</select>
-	
-	<select id="selectImages" resultMap="imageMap">
-		select * from image
-	</select>
-	
-	<select id="selectAmenities" parameterType="int" resultMap="amenityMap">
-		select
-			a.*,
-			
-			at.id type_id,
-			at.name type_name,
-			at.is_use type_is_use,
-			at.reg_date type_reg_date,
-			at.mod_date type_mod_date
-		from
-			amenity a
-			join amenity_type at on a.amenity_type_id=at.id
-		where
-			a.property_id=#{propertyId} and
-			at.is_use='Y'
 	</select>
 	
 </mapper>

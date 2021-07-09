@@ -49,22 +49,55 @@
 </div>
 </body>
 <script type="text/javascript">
+const FULL_HEART = "https://img.icons8.com/fluent/48/000000/like.png";
+const EMPTY_HEART = "https://img.icons8.com/fluent-systems-regular/48/000000/like--v1.png";
+var wishButton;
+var wishTextTag;
+var imgTag;
 var wishPropertyId;
+
+//화면 로드 시 초기화하는 과정
+function initWish(propertyId, wishListId, isWished){
+	wishButton = document.querySelector("a#wishProperty-" + propertyId);
+	wishTextTag = wishButton.querySelector("span.wish-text");
+	imgTag = wishButton.querySelector("img.heart");
+	if("${sessionScope.member_id}" == ""){
+		wishButton.href = "#LoginModal";
+		imgTag.src = EMPTY_HEART;
+		if(wishTextTag != null){
+			wishTextTag.innerHTML = "저장";
+		}
+	} else {
+		if(isWished == "true"){
+			wishButton.href = "#";
+			wishButton.setAttribute("class",
+					"trigger-btn wish-button unwish wishList-" + wishListId);
+			imgTag.src = FULL_HEART;
+			if(wishTextTag != null){
+				wishTextTag.innerHTML = "삭제";
+			}
+		} else {
+			wishButton.href = "#wish-modal";
+			imgTag.src = EMPTY_HEART;
+			if(wishTextTag != null){
+				wishTextTag.innerHTML = "저장";
+			}
+		}
+	}
+}
 
 $(function(){
 	$(".wishList-button").click(function(){
 		// 위시리스트 등록
-		var wishListId = $(this).attr("id").split("-")[1];
-		console.log("member id : ${sessionScope.member_id}");
+		var wishListId = this.getAttribute("id").split("-")[1];
 		console.log("wish list id : " + wishListId);
 		console.log("property id : " + wishPropertyId);
 		
 		$.ajax("/wish/async", {
 			type : "get",
 			data : {
-				memberId : "${sessionScope.member_id}",
-				wishListId : wishListId,
-				wishPropertyId : wishPropertyId
+				wish_id : wishListId,
+				property_id : wishPropertyId
 			}
 		})
 		.done(function(result){
@@ -72,15 +105,15 @@ $(function(){
 			if(result < 1){
 				alert("위시리스트 추가 실패 : DB 오류");
 			} else {
-				var imgTag = document.createElement("img");
 				// 찬 하트
-				imgTag.setAttribute("src", "https://img.icons8.com/fluent/48/000000/like.png");
-				imgTag.setAttribute("style", "width: 3rem; height: 3rem");
+				imgTag.src = FULL_HEART;
 				$("a#wishProperty-" + wishPropertyId)
 					.addClass("unwish")
-					.empty()
-					.append(imgTag)
+					.addClass("wishList-" + wishListId)
 					.attr("href", "#");
+				if(wishTextTag != null){
+					wishTextTag.innerHTML = "삭제";
+				}
 			}
 		})
 		.fail(function(){
@@ -92,17 +125,24 @@ $(function(){
 	});
 	
 	$(".wish-button").click(function(){
+		wishButton = this;
+		wishTextTag = this.querySelector("span.wish-text");
+		imgTag = this.querySelector("img.heart");
+		wishPropertyId = this.getAttribute("id").split('-')[1];
+		
 		if($(this).hasClass("unwish")){
+			var wishListClass = $(this).attr("class").split(' ')[3];
+			console.log(wishListClass);
+			var wishListId = wishListClass.split('-')[1];
 			// 위시리스트 삭제
-			var unwishPropertyId = $(this).attr("id").split('-')[1];
-			console.log("member id : ${sessionScope.member_id}");
-			console.log("property id : " + unwishPropertyId);
+			console.log("wish list id : " + wishListId);
+			console.log("property id : " + wishPropertyId);
 			
 			$.ajax("/unwish/async", {
 				type : "get",
 				data : {
-					memberId : "${sessionScope.member_id}",
-					unwishPropertyId : unwishPropertyId
+					wish_id : wishListId,
+					property_id : wishPropertyId
 				}
 			})
 			.done(function(result){
@@ -110,15 +150,15 @@ $(function(){
 				if(result < 1){
 					alert("위시리스트 삭제 실패 : DB 오류");
 				} else {
-					var imgTag = document.createElement("img");
 					// 빈 하트
-					imgTag.setAttribute("src", "https://img.icons8.com/fluent-systems-regular/48/000000/like--v1.png");
-					imgTag.setAttribute("style", "width: 3rem; height: 3rem");
-					$("a#wishProperty-" + unwishPropertyId)
+					imgTag.src = EMPTY_HEART;
+					$("a#wishProperty-" + wishPropertyId)
 						.removeClass("unwish")
-						.empty()
-						.append(imgTag)
+						.removeClass(wishListClass)
 						.attr("href", "#wish-modal");
+					if(wishTextTag != null){
+						wishTextTag.innerHTML = "저장";
+					}
 				}
 			})
 			.fail(function(){

@@ -37,41 +37,47 @@
       <h1><a href="/index">AirTnT</a></h1>
       <!-- ################################################################################################ -->
     </div>
-    <nav id="mainav" class="fl_right"> 
+    <nav id="mainav" class="fl_right" > 
       <!-- ################################################################################################ -->
       <ul class="clear">
-         <c:if test="${isLogin}">
+      
+        <li class="active">
+        <c:if test="${isLogin}">
         	<c:if test="${member_mode == 1}">
-       			<a href="/host/guide_home">호스트 되기</a>
+       			<a href="/guide_home">호스트 되기</a>
+       			<c:set var='isHostMode' value='false' scope='session'/>
         	</c:if>
-        	<c:if test="${member_mode == 2}">
+        	<c:if test="${member_mode == 2 && !sessionScope.isHostMode}">
         		<a href="/host/host_mode">호스트 모드로 전환</a>
+        		<c:set var='isHostMode' value='true' scope='session'/>
         	</c:if>
         </c:if>
-        <c:if test="${!isLogin}">
-         <a href="#LoginModal" class="trigger-btn" data-toggle="modal">호스트 되기</a>
+        <c:if test='${sessionScope.isHostMode}'>
+        	<a href="<c:url value='/host/host_mode'/>">호스트 홈으로</a>
         </c:if>
         <c:if test="${!isLogin}">
-        <li><a class="drop" href="#" >로그인 하기</a>
-          <ul>
-            <li><a href="#LoginModal" class="trigger-btn" data-toggle="modal">로그인</a></li>
-            <li><a href="#SignUpModal" class="trigger-btn" data-toggle="modal">회원가입</a></li>
-            <li><a href="/help">도움말</a></li>
-          </ul>
+         <a href="/guide_home">호스트 되기</a>
+        </c:if>
         </li>
+        <c:if test="${!isLogin}">
+        <li><a class="drop" href="#">로그인 하기</a>
+          <ul>
+            <li><a id="login-button" href="#LoginModal" class="trigger-btn" data-toggle="modal">로그인</a></li>
+            <li><a id="signUp-button" href="#SignUpModal" class="trigger-btn" data-toggle="modal">회원가입</a></li>
+            <li><a href="help">도움말</a></li>
+          </ul>
           </c:if>
         <c:if test="${isLogin}">
         <li><a class="drop" href="#">MyPages</a>
           <ul>
             <li><a href="/tour">여행</a></li>
             <li><a href="/wishList">위시리스트</a></li>
-            <li><a href="/pages/sidebar-right.html">호스트 되기</a></li>
             <li><a href="/myPage">계정</a></li>
             <li><a href="/help">도움말</a></li>
-            <li><a href="/logout">로그아웃</a></li>
+            <li><a href="/logout?preURI=${currentURI}">로그아웃</a></li>
           </ul>
-         </li>
-         </c:if>
+        </li>
+        </c:if>
       </ul>
       <!-- ################################################################################################ -->
     </nav>
@@ -88,6 +94,7 @@
 			</div>
 			<div class="modal-body">
 				<form action="/login" method="post">
+					<input type="hidden" name="preURI" value="${currentURI}">
 					<div class="form-group">
 						<c:if test="${empty value}">		
 							<input type="text" class="form-control" name="id" placeholder="ID" required="required">
@@ -129,27 +136,38 @@
 			</div>
 			<div class="modal-body">
 				<form action="/signUp" method="post">
-					<div class="form-group">
-						<input type="text" class="form-control" name="id" placeholder="ID" required="required">		
+					<input type="hidden" name="preURI" value="${currentURI}">
+					<div class="form-group mb-3 col-sm-lg">
+						    <label for="InputId" class="form-label">ID</label>
+						    <input type="text" name="id" class="form-control" id="InputId">
 					</div>
-					<div class="form-group">
-						<input type="password" class="form-control" name="passwd" placeholder="Password" required="required">	
-					</div>        
-					<div class="form-group">
-						<input type="text" class="form-control" name="name" placeholder="이름">	
+					<div class="form-group mb-3 col-sm-lg">
+						    <label for="InputPass" class="form-label">비밀번호</label>
+						    <input type="password" name="passwd" class="form-control" id="InputPass">
 					</div>
+					<div class="form-group mb-3 col-sm-lg">
+						    <label for="InputName" class="form-label">이름</label>
+						    <input type="text" name="name" class="form-control" id="InputName">
+					  </div>
+					  <div class="form-group mb-3 col-lg">
+						    <label for="InputBirth" class="form-label">생년월일</label>
+						    <input type="text" name="birth" class="form-control" id="InputBirth" aria-describedby="birthHelp" >
+						    <div id="birthHelp" class="form-text">2000/00/00</div>
+					  </div>
+					  <div class="form-group mb-3 col-lg">
+						    <label for="InputTel" class="form-label">핸드폰번호</label>
+						    <input type="text" name="Tel" class="form-control" id="InputTel" aria-describedby="TelHelp">
+						    <div id="TelHelp" class="form-text">010-xxxx-xxxx</div>
+					  </div>
+					  <div class="form-group mb-3 col-lg">
+							<label for="inputState" class="form-label">성별</label>
+							    <select id="inputState" class="form-select form-select-lg" name="gender">
+							       	<option selected value="1">남성</option>
+							      	<option value="2">여성</option>
+							    </select>
+						</div>
 					<div class="form-group">
-						<input type="text" class="form-control" name="birth" placeholder="생년월일 (2000/01/01)">	
-					</div>
-					<div class="form-group">
-						<input type="text" class="form-control" name="tel" placeholder="연락처(010/0000/0000)">	
-					</div>
-					<div class="form-group">
-						<label><input type="radio" class="center" name="gender" value="1" checked="checked"> 남</label>
-      					<label><input type="radio" class="center" name="gender" value="2"> 여</label>
-					</div>
-					<div class="form-group">
-						<button type="submit" class="btn btn-primary btn-lg btn-block login-btn" style="font-size: 15px">동의 및 계속하기</button>
+						<button type="submit" class="btn btn-primary btn-lg btn-block login-btn" style="font-size: 15px">동의 및 가입하기</button>
 					</div>
 				</form>
 			</div>

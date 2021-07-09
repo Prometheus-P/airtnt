@@ -12,41 +12,27 @@ Licence: Free to use under our free template licence terms
 Licence URI: https://www.os-templates.com/template-terms
 -->
 <html lang="">
+<c:if test="${empty booking}">
+	<script type="text/javascript">
+		alert("요청이 만료되었습니다.");
+		location.href = "/property/search";
+	</script>
+</c:if>
+<c:if test="${empty sessionScope.member_id}">
+	<script type="text/javascript">
+		alert("로그인 후 이용해주세요.");
+		location.href = "/property/search";
+	</script>
+</c:if>
 <!-- To declare your language - read more here: https://www.w3.org/International/questions/qa-html-language-declarations -->
 <head>
+
 <title>숙소/상세보기(숙소명:${property.name})</title>
 <meta charset="utf-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <link href="/resources/layout/styles/layout.css" rel="stylesheet" type="text/css" media="all">
-<script type="text/javascript">
-function setTotalPrice(){
-	var checkInDateStr = document.getElementById("check_in_date").value;
-	var checkOutDateStr = document.getElementById("check_out_date").value;
-	var guestCount = document.getElementById("guest_count").value;
-	//console.log(checkInDateStr);
-	//console.log(checkOutDateStr);
-	if(checkInDateStr == "" || checkOutDateStr == ""){
-		return 0;
-	}
-	var checkInDate = new Date(checkInDateStr);
-	var checkOutDate = new Date(checkOutDateStr);
-	//console.log(checkInDate);
-	//console.log(checkOutDate);
-	
-	var diff = checkOutDate - checkInDate;
-	//console.log(diff);
-	var dayCount = diff / (24*60*60*1000);
-	//console.log(dayCount);
-	var totalPrice = guestCount * dayCount * ${property.price};
-	const totalPriceStr = new Intl.NumberFormat('ko-KR', {style: 'currency',currency: 'KRW', minimumFractionDigits: 2}).format(totalPrice);
-	
-	document.getElementById("total_price").value = totalPrice;
-	document.getElementById("price_disp").innerHTML = totalPriceStr;
-	
-	return totalPrice;
-}
 
-</script>
 </head>
 <body id="top">
 
@@ -149,61 +135,28 @@ function setTotalPrice(){
        <!-- 숙소 상세정보 나열 구역 -->
        <div class="content" style="font-size: 20px">
          <div>
-         <!-- 
-	       상세정보에서 넘어오는 예약정보
-	       host id, guest id, day count, guest count, total price,
-	       checkin date, checkout date
-	      -->
-         <form action="/property/booking-confirm" method="post">
-           <input type="hidden" name="propertyId" value="${property.id}">
-           <input type="hidden" name="hostId" value="${booking.hostId}">
-           <input type="hidden" name="guestId" value="${booking.guestId}">
-           <input type="hidden" name="dayCount" value="${booking.dayCount}">
-           <input type="hidden" name="totalPrice" value="${booking.totalPrice}">
-           <table border="1">
-             <tr>
-               <td colspan="3">결제정보</td>
-             </tr>
-             <tr>
-               <td>
-                 <img class="imgl borderedbox inspace-5" src="${property.images.get(0).path}" alt="" style="width: 200px;height: 150px">
-               </td>
-               <td>
-                 <ul>
-                   <li>숙소명 : ${property.name}</li>
-                   <li>주소 : ${property.address}</li>
-                   <li>숙소 유형 : ${property.propertyType.name}/${property.subPropertyType.name}</li>
-                   <li>방 유형 : ${property.roomType.name}</li>
-                 </ul>
-               </td>
-               <td>
-                 <ul>
-                   <li>체크인 : <input type="date" name="checkInDate" value="${booking.checkInDate}" readonly></li>
-                   <li>체크아웃 : <input type="date" name="checkOutDate" value="${booking.checkOutDate}" readonly></li>
-                   <li>숙박기간 : ${booking.dayCount}박</li>
-                   <li>인원 : <input type="number" name="guestCount" value="${booking.guestCount}" readonly style="width: 100px"></li>
-                 </ul>
-                 
-               </td>
-             </tr>
-             <tr>
-               <td colspan="3" style="font-size: 40px">
-                 <label>결제금액</label>
-                 <p>
-                   ₩${property.price} × ${booking.dayCount}박 × ${booking.guestCount}명<br>
-                   = <font color="blue">₩${booking.totalPrice}</font>
-                 </p>
-               </td>
-             </tr>
-           </table>
-           <div>
-             <button class="btn" type="submit" style="width: 200px; height: 80px; font-size: 30px">예약하기</button>
-	         <a href="javascript:history.back()">
-	           <button class="btn" type="button"style="width: 200px; height: 80px; font-size: 30px">취소</button>
-	         </a>
-           </div>
-           </form>
+           <ul class="list-group">
+             <li class="list-group-item">
+               결제정보
+             </li>
+             <li class="list-group-item">
+               <ul>
+                 <li>결제일시 : ${transaction.regDate}</li>
+                 <li>결제금액 : ${booking.totalPrice}</li>
+                 <li>예약번호 : ${booking.bookingNumber}</li>
+               </ul>
+             </li>
+           </ul>
          </div>
+         <div>
+           <a href="<c:url value='/property/search'/>">
+             <button class="btn" type="button" style="width: 200px; height: 80px; font-size: 30px">확인</button>
+           </a>
+	       <a href="<c:url value=''/>">
+	         <button class="btn" type="button"style="width: 200px; height: 80px; font-size: 30px">마이페이지</button>
+	       </a>
+         </div>
+       </div>
          
       <!-- <div class="scrollable">
         <table>
@@ -315,7 +268,7 @@ function setTotalPrice(){
         </form>
       </div> -->
       <!-- ################################################################################################ -->
-    </div>
+    <!-- </div> -->
     <!-- ################################################################################################ -->
     <!-- / main body -->
     <div class="clear"></div>
