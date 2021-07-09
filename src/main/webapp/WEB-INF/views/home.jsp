@@ -18,6 +18,7 @@
 	<link rel="stylesheet" href="/resources/css/modal.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script src="/resources/script/check.js"></script>
 	<!-- JAVASCRIPTS -->
 	<!-- <script src="layout/scripts/jquery.min.js"></script>
 	<script src="layout/scripts/jquery.backtotop.js"></script>
@@ -37,10 +38,10 @@
       <h1><a href="index">AirTnT</a></h1>
       <!-- ################################################################################################ -->
     </div>
+    <div>
     <nav id="mainav" class="fl_right" > 
       <!-- ################################################################################################ -->
       <ul class="clear">
-      
         <li class="active">
         <c:if test="${isLogin}">
         	<c:if test="${member_mode == 1}">
@@ -79,6 +80,7 @@
       </ul>
       <!-- ################################################################################################ -->
     </nav>
+    </div>
   </header>
   <!-- ################################################################################################ -->
   <!-- ################################################################################################ -->
@@ -367,7 +369,7 @@
 				<form action="login" method="post">
 					<div class="form-group">
 						<c:if test="${empty value}">		
-							<input type="text" class="form-control" name="id" placeholder="ID" required="required">
+							<input type="text" class="form-control" name="id" placeholder="ID" required="required" value="${findId}">
 						</c:if>
 						<c:if test="${not empty value}">
 							<input type="text" class="form-control" name="id" placeholder="ID" required="required" value="${value}">		
@@ -381,21 +383,21 @@
 					</div>
 					<div class="form-group">
 						<c:if test="${empty value}">			
-							<input type="checkbox" name="saveId">
+							<input type="checkbox" name="saveId" aria-describedby="saveIdHelp">
 						</c:if>	
 						<c:if test="${not empty value}">
-							<input type="checkbox" name="saveId" checked>
+							<input type="checkbox" name="saveId" checked aria-describedby="saveIdHelp">
 						</c:if>
-						<p>아이디 기억하기</p>
+						<div id="saveIdHelp" class="form-text">아이디기억하기</div>
 					</div>
 				</form>
 			</div>
 			<div class="modal-footer">
-				<a href="findMember">Forgot Password?</a>
+				<a href="#FindPassModal" data-toggle="modal" data-dismiss="modal" aria-hidden="true">비밀번호를 잊으셨나요?</a>
 			</div>
 		</div>
 	</div>
-</div> 
+</div>
 <!-- SignUpModal-->
 <div id="SignUpModal" class="modal fade">
 	<div class="modal-dialog modal-lg modal-login ">
@@ -405,36 +407,47 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 			</div>
 			<div class="modal-body">
-				<form action="signUp" method="post">
+				<form name="form" action="signUp" method="post" onsubmit="return checkAll()">
 					<div class="form-group mb-3 col-sm-lg">
 						    <label for="InputId" class="form-label">ID</label>
-						    <input type="text" name="id" class="form-control" id="InputId">
+						    <input type="text" name="id" class="form-control" id="userId" aria-describedby="IdHelp">
+						    <div id="IdHelp" class="form-text">아이디는 영문 대소문자와 숫자 4~20자리로 입력해야합니다</div>
 					</div>
 					<div class="form-group mb-3 col-sm-lg">
 						    <label for="InputPass" class="form-label">비밀번호</label>
-						    <input type="password" name="passwd" class="form-control" id="InputPass">
+						    <input type="password" name="passwd" class="form-control" id="password1" aria-describedby="PassHelp">
+						    <div id="PassHelp" class="form-text">비밀번호는 영문 대소문자와 숫자 4~20자리로 입력해야합니다</div>
+					</div>
+					<div class="form-group mb-3 col-sm-lg">
+						    <label for="InputPass" class="form-label">비밀번호확인</label>
+						    <input type="password" class="form-control" id="password2">
 					</div>
 					<div class="form-group mb-3 col-sm-lg">
 						    <label for="InputName" class="form-label">이름</label>
-						    <input type="text" name="name" class="form-control" id="InputName">
-					  </div>
-					  <div class="form-group mb-3 col-lg">
-						    <label for="InputBirth" class="form-label">생년월일</label>
-						    <input type="text" name="birth" class="form-control" id="InputBirth" aria-describedby="birthHelp" >
-						    <div id="birthHelp" class="form-text">2000/00/00</div>
-					  </div>
-					  <div class="form-group mb-3 col-lg">
+						    <input type="text" name="name" class="form-control" id="name">
+					</div>
+					<div class="form-group mb-3 col-sm-lg">
+						    <label for="InputEmail" class="form-label">이메일</label>
+						    <input type="text" name="email" class="form-control" id="email" aria-describedby="EmailHelp">
+						    <div id="EmailHelp" class="form-text">xxxxx@xxxxx.xxx</div>
+					</div>
+					<div class="form-group mb-3 col-lg">
+						   <label for="InputBirth" class="form-label">생년월일</label>
+						   <input type="text" name="birth" class="form-control" id="birth" aria-describedby="birthHelp" >
+						   <div id="birthHelp" class="form-text">2000/00/00</div>
+					</div>
+				  	<div class="form-group mb-3 col-lg">
 						    <label for="InputTel" class="form-label">핸드폰번호</label>
-						    <input type="text" name="Tel" class="form-control" id="InputTel" aria-describedby="TelHelp">
+						    <input type="text" name="tel" class="form-control" id="tel" aria-describedby="TelHelp">
 						    <div id="TelHelp" class="form-text">010-xxxx-xxxx</div>
-					  </div>
-					  <div class="form-group mb-3 col-lg">
-							<label for="inputState" class="form-label">성별</label>
-							    <select id="inputState" class="form-select form-select-lg" name="gender">
-							       	<option selected value="1">남성</option>
-							      	<option value="2">여성</option>
-							    </select>
-						</div>
+				  	</div>
+				  	<div class="form-group mb-3 col-lg">
+						<label for="inputState" class="form-label">성별</label>
+						    <select id="inputState" class="form-select form-select-lg" name="gender">
+						       	<option selected value="1">남성</option>
+						      	<option value="2">여성</option>
+						    </select>
+					</div>
 					<div class="form-group">
 						<button type="submit" class="btn btn-primary btn-lg btn-block login-btn" style="font-size: 15px">동의 및 가입하기</button>
 					</div>
@@ -445,6 +458,70 @@
 			</div>
 		</div>
 	</div>
-</div>    
+</div>
+<!-- FindPassModal-->
+<div id="FindPassModal" class="modal fade">
+	<div class="modal-dialog modal-lg modal-login ">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">비밀번호 찾기</h4>	
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			</div>
+			<div class="modal-body">
+				<form name="findPass" action="findPass" method="post" onsubmit="return FindPassCheck()">
+					<div class="form-group mb-3 col-sm-lg">
+						    <label for="InputId" class="form-label">ID</label>
+						    <input type="text" name="id" class="form-control" id="Fid">
+					</div>
+					<div class="form-group mb-3 col-sm-lg">
+						    <label for="InputPass" class="form-label">이름</label>
+						    <input type="text" name="name" class="form-control" id="Fname">
+					</div>
+					<div class="form-group mb-3 col-sm-lg">
+						    <label for="InputEmail" class="form-label">이메일</label>
+						    <input type="text" name="email" class="form-control" id="Femail" aria-describedby="EmailHelp">
+						    <div id="EmailHelp" class="form-text">가입 시 입력한 이메일주소</div>
+					</div>
+					<div class="form-group">
+						<button type="submit" class="btn btn-primary btn-lg btn-block login-btn" style="font-size: 15px">전송</button>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<a href="#FindIdModal" data-toggle="modal" data-dismiss="modal" aria-hidden="true">설마...아이디도 잊으셨나요?</a>
+			</div>
+		</div>
+	</div>
+</div>  
+<!-- FindIdModal-->
+<div id="FindIdModal" class="modal fade">
+	<div class="modal-dialog modal-lg modal-login ">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">아이디 찾기</h4>	
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			</div>
+			<div class="modal-body">
+				<form name="findId" action="findId" method="post" onsubmit="return FindIdCheck()">
+					<div class="form-group mb-3 col-sm-lg">
+						    <label for="InputPass" class="form-label">이름</label>
+						    <input type="text" name="name" class="form-control" id="FIname">
+					</div>
+					<div class="form-group mb-3 col-sm-lg">
+						    <label for="InputEmail" class="form-label">이메일</label>
+						    <input type="text" name="email" class="form-control" id="FIemail" aria-describedby="EmailHelp">
+						    <div id="EmailHelp" class="form-text">가입 시 입력한 이메일주소</div>
+					</div>
+					<div class="form-group">
+						<button type="submit" class="btn btn-primary btn-lg btn-block login-btn" style="font-size: 15px">전송</button>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<a href="#SignUpModal" data-toggle="modal" data-dismiss="modal" aria-hidden="true">그냥 회원가입하기</a>
+			</div>
+		</div>
+	</div>
+</div>  
 </body>
 </html>

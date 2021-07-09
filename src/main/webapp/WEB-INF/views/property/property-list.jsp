@@ -15,6 +15,7 @@ Licence URI: https://www.os-templates.com/template-terms
 <head>
 <title>AirTnT/숙소검색(키워드:${param.addressKey})</title>
 <meta charset="utf-8">
+
 <!-- map 커스텀 정보창 css -->
 <style>
 	.wrap {position: absolute;left: 0;bottom: 40px;width: 300px;height: 330px;margin-left: -144px;text-align: left;overflow: hidden;font-size: 12px;font-family: 'Malgun Gothic', dotum, '돋움', sans-serif;line-height: 1.5;}
