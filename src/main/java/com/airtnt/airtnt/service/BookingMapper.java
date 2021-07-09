@@ -17,7 +17,7 @@ public class BookingMapper {
 	@Autowired
 	private SqlSession sqlSession;
 	
-	// 여기 주인 이름
+	// 승훈
 	public List<BookingDTO> getPlanedBooking(String member_id) {
 		List<BookingDTO> list = sqlSession.selectList("getPlanedBooking", member_id);
 		
@@ -28,7 +28,11 @@ public class BookingMapper {
 		
 		return list;
 	}
-	
+	public List<BookingDTO> getToWriteBooking(String member_id) {
+		List<BookingDTO> list = sqlSession.selectList("getToWriteBooking", member_id);
+		
+		return list;
+	}
 	// 정석
 	
 	// 상세보기 페이지 달력 비활성화 목록
@@ -52,4 +56,5 @@ public class BookingMapper {
 	public TransactionDTO selectSameTransaction(TransactionDTO transaction) {
 		return sqlSession.selectOne("selectSameTransaction", transaction);
 	}
+	
 }

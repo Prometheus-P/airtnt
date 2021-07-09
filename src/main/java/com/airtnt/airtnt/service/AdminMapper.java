@@ -9,12 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.airtnt.airtnt.model.AmenityTypeDTO;
+import com.airtnt.airtnt.model.BookingDTO;
 import com.airtnt.airtnt.model.DashBoardDTO;
 import com.airtnt.airtnt.model.GuideDTO;
 import com.airtnt.airtnt.model.MemberDTO;
 import com.airtnt.airtnt.model.PropertyTypeDTO;
 import com.airtnt.airtnt.model.RoomTypeDTO;
 import com.airtnt.airtnt.model.SubPropertyTypeDTO;
+import com.airtnt.airtnt.model.TransactionDTO;
 
 
 @Service
@@ -46,6 +48,24 @@ public class AdminMapper {
 		
 		int cnt = sqlSession.selectOne("selectMemberCount", selectKeyMap);
 		return cnt;
+	}
+	
+	//[reports] : 예약 데이터 조회
+	public List<BookingDTO> selectBookingList(String startDate, String endDate){
+		Map<String, Object> selectKeyMap = new Hashtable<>();
+		selectKeyMap.put("startDate", startDate);
+		selectKeyMap.put("endDate", endDate);
+		List<BookingDTO> list = sqlSession.selectList("selectBookingList", selectKeyMap);
+		return list;
+	}
+	
+	//[reports] : 걸제 데이터 조회
+	public List<TransactionDTO> selectTransactionList(String startDate, String endDate) {
+		Map<String, Object> selectKeyMap = new Hashtable<>();
+		selectKeyMap.put("startDate", startDate);
+		selectKeyMap.put("endDate", endDate);
+		List<TransactionDTO> list = sqlSession.selectList("selectTransactionList", selectKeyMap);
+		return list;
 	}
 	
 	//[filter] : roomTypeList 

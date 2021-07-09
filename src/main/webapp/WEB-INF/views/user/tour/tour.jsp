@@ -15,7 +15,10 @@
 	    <div class="tab_content" id="all_content">
 		    <c:if test="${empty planedBookinglist}">
 		       <h5>다시 여행을 떠나실 준비가 되면 에어티앤티가 도와드리겠습니다.</h5><br>
-		        <h1 style="font-size: 400px">AirTnT</h1>
+		        <h1 style="font-size: 300px">AirTnT</h1>
+		        <a href="/property/search?addressKey=">
+						<button id="test_btn3" style="font-size:40px; padding-left:15px; padding-right:15px;" type="button" class="btn btn-outline-primary">둘러보기</button>
+				</a>
 		    </c:if>
 		    <c:if test="${not empty planedBookinglist}">
 		    	<ul class="nospace clear " style="margin-top: 50px;">

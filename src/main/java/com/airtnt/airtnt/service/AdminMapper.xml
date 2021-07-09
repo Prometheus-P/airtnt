@@ -36,6 +36,7 @@
 		order by c.months
 	</select>
 	
+	<!-- [member] -->
 	<select id= "selectMemberList" resultType="memberDTO" parameterType="java.util.Map">
 		select *
 		from (select rownum rn, a.*
@@ -70,6 +71,46 @@
 			and member_mode = #{member_mode}
 		</if>
 	</select>
+	
+	<!-- [reports] -->
+	<select id = "selectBookingList" resultType="bookingDTO" parameterType="java.util.Map">
+		select	id,
+				property_id as propertyId,
+				guest_id as guestId,
+    			host_id as hostId,
+   				total_price as totalPrice,
+   				booking_number as bookingNumber,
+    			check_in_date as checkInDate,
+   				check_out_date as checkOutDate,
+    			confirm_date as confirmDate,
+    			reg_date as regDate
+		from 	booking
+		where 1=1
+		<!-- 예약일자 -->
+		<![CDATA[
+	        and reg_date >= to_date(#{startDate},'YYYY-MM-DD') and reg_date < to_date(#{endDate},'YYYY-MM-DD')+1
+	    ]]>
+	</select>
+	
+	<select id = "selectTransactionList" resultType="transactionDTO" parameterType="java.util.Map">
+		select  id,
+            booking_id as bookingId,
+            is_refund as isRefund,
+            site_fee as siteFee,
+            pay_expt_date as payExptDate,
+            reg_date as regDate,
+            (select book.total_price
+             from booking book
+             where book.id = tran.booking_id
+            ) as totalPrice
+    	from transaction tran
+    	where 1=1
+    	<!-- 결제일자 -->
+		<![CDATA[
+	        and reg_date >= to_date(#{startDate},'YYYY-MM-DD') and reg_date < to_date(#{endDate},'YYYY-MM-DD')+1
+	    ]]>
+	</select>
+	
 	
 	<select id = "selectRoomTypeList" resultType="roomTypeDTO">
 		select 	id,
