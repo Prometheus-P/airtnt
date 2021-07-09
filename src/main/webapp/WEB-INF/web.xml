@@ -49,18 +49,16 @@
       <url-pattern>/*</url-pattern>
    </filter-mapping>
 
-<<<<<<< HEAD
-   <!-- image_upload를 위한 filter 등록 -->
-   <filter>
-      <filter-name>MultipartFilter</filter-name>
-      <filter-class>org.springframework.web.multipart.support.MultipartFilter
-      </filter-class>
-   </filter>
-   <filter-mapping>
-      <filter-name>MultipartFilter</filter-name>
-      <url-pattern>/*</url-pattern>
-   </filter-mapping>
-   
+	<!-- image_upload를 위한 filter 등록 -->
+	<filter>
+	  <filter-name>MultipartFilter</filter-name>
+	  <filter-class>org.springframework.web.multipart.support.MultipartFilter</filter-class>
+	</filter>
+	<filter-mapping>
+	  <filter-name>MultipartFilter</filter-name>
+	  <url-pattern>/*</url-pattern>
+	</filter-mapping>
+
 	<!-- <filter>
        <filter-name>LoginCheck</filter-name>
        <filter-class>
