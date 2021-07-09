@@ -19,20 +19,64 @@
 	    	var token = $("input[name='_csrf']").val();
 			var header = "X-CSRF-TOKEN";
 			
+			$("#bookingTab").click(function(){
+	            alert('test');
+		    });
+			
+			$('#searchBookingBtn').click(function(){
+				var startDate = $('#bookingSearchParamTable td').eq(1).children().val();
+				var endDate = $('#bookingSearchParamTable td').eq(3).children().val();
+	            searchReportData(startDate, endDate, "booking");
+	            alert('test');
+		    });
 	    })
 	    
+	    function searchReportData(startDate, endDate, mode){
+	    	alert('searchReportData');
+	    	
+	    	$.ajax({
+  		        url: "reports",
+  		        type: "POST",
+  		        beforeSend : function(xhr)
+  		        {
+  		        	xhr.setRequestHeader(header, token);
+  		        },
+  		        data: {
+  		        	startDate: startDate,
+  		        	endDate : endDate,
+  		        	mode : mode
+  		        },
+  		      	success: function(){
+		        	alert('성공');
+		        },
+  		        error: function(){
+  		            alert("err");
+  		        }
+  		  });
+	    }
 	    
  	</script>
  	<main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
 		<h1 class="h2">Reports</h1>
 		<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom"></div>
 		    <div class="container">
-		    	<table id ="searchParamTable">
+		    	<table id ="bookingSearchParamTable">
 		    		<tr>
 		    			<td>예약일자</td>
 		    			<td><input id="startDate" type="date" name="startDate" class="btmspace-15" value="${today}"></td>
 		    			<td> ~ </td>
 		    			<td><input id="endDate" type="date" name="endDate" class="btmspace-15" value="${today}"></td>
+		    			<td><button type="button" id="searchBookingBtn" style="float:right;" class="btn btn-primary btn-sm" >조회</button></td>
+		    		</tr>
+		    	</table>
+		    	
+		    	<table id ="transactionSearchParamTable" style="display:none;">
+		    		<tr>
+		    			<td>결제일자</td>
+		    			<td><input id="startDate" type="date" name="startDate" class="btmspace-15" value="${today}"></td>
+		    			<td> ~ </td>
+		    			<td><input id="endDate" type="date" name="endDate" class="btmspace-15" value="${today}"></td>
+		    			<td><button type="button" id="searchTransacionBtn" style="float:right;" class="btn btn-primary btn-sm" >조회</button></td>
 		    		</tr>
 		    	</table>
 	      	</div>

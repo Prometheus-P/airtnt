@@ -167,6 +167,7 @@ public class AdminController extends UserController {
 	 */
 	@RequestMapping(value="reports", method = RequestMethod.GET)
 	public String selectReportsData(HttpServletRequest req) {
+		System.out.println("test");
 		String startDate = strToday;
 		String endDate = strToday;
 		List<BookingDTO> bookingList = adminMapper.selectBookingList(startDate, endDate);
@@ -174,22 +175,27 @@ public class AdminController extends UserController {
 		req.setAttribute("bookingList", bookingList);
 		req.setAttribute("transactionList", transactionList);
 		req.setAttribute("today", strToday);
-		System.out.println(strToday);
 		return "admin/reports";
 	}
 	
-	@RequestMapping(value="reports", method = RequestMethod.POST)
-	public String selectReportsData(HttpServletRequest req, 
-									@RequestParam(value = "startDate", required = false) String startDate, 
-									@RequestParam(value = "endDate", required = false) String endDate
+	/*
+	 * [reports] : 날짜 조회조건 변경해서 요청한 리포트 데이터만 조회해온다
+	 */
+	@RequestMapping(value = "reports", method = RequestMethod.POST)
+	@ResponseBody
+	public List<?> selectSelectedReportData(HttpServletRequest req, 
+									@RequestParam String startDate, 
+									@RequestParam String endDate,
+									@RequestParam String mode
 									) {
-		if(startDate==null || endDate==null) {
-			startDate = strToday;
-			endDate = strToday;
+		System.out.println("mode : " + mode);
+		if(mode.equals("booking")) {
+			List<BookingDTO> list = adminMapper.selectBookingList(startDate, endDate);
+			return list;
+		}else {
+			List<TransactionDTO> list = adminMapper.selectTransactionList(startDate, endDate);
+			return list;
 		}
-		List<BookingDTO> list = adminMapper.selectBookingList(startDate, endDate);
-		req.setAttribute("bookingList", list);
-		return "admin/reports";
 	}
 	
 	/*
@@ -292,7 +298,6 @@ public class AdminController extends UserController {
 		int startRow = (currentPage-1) * pageSize + 1;
 		int endRow = startRow + pageSize - 1;
 		int rowCount = adminMapper.selectBoardCount();
-		System.out.println("rowCOUNT ::: " + rowCount);
 		int number = rowCount - startRow + 1;
 		if (endRow > rowCount) endRow = rowCount;
 		List<GuideDTO> list = adminMapper.selectBoardList(startRow, endRow);
