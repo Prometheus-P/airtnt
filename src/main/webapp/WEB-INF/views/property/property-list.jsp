@@ -45,7 +45,7 @@ crossorigin="anonymous"></script> -->
 <c:import url="/WEB-INF/views/top.jsp"/>
 
 <!-- 위시리스트 모달은 jQuery 라이브러리 적용을 위해서 top.jsp 아래 둬야함 -->
-<c:import url="/WEB-INF/views/property/wish-modal.jsp"/>
+<c:import url="/WEB-INF/views/property/_wish-modal.jsp"/>
 
 <form action="<c:url value='/property/search'/>" method="get" onsubmit="setParametersOnSubmit()">
 <!-- 검색 네비게이션 바 -->
@@ -339,7 +339,7 @@ crossorigin="anonymous"></script> -->
           </div>
           
           <!-- 최근 목록 -->
-          <c:import url="/WEB-INF/views/property/recent-list.jsp"/>
+          <c:import url="/WEB-INF/views/property/_recent-list.jsp"/>
           
         </div>
         

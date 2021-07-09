@@ -53,20 +53,21 @@ function setTotalPrice(){
 	document.getElementById("price_disp").innerHTML = totalPriceStr;
 }
 </script>
-<link href="/resources/calendar/main.css" rel="stylesheet"/>
-<link href="/resources/calendar/double-calendar.css" rel="stylesheet"/>
+
+<!-- date range picker -->
+<script type="text/javascript" src="/resources/daterangepicker/jquery.min.js"></script>
+<script type="text/javascript" src="/resources/daterangepicker/moment.min.js"></script>
+<script type="text/javascript" src="/resources/daterangepicker/moment-with-locales.js"></script>
+<script type="text/javascript" src="/resources/daterangepicker/daterangepicker.js"></script>
+<link rel="stylesheet" type="text/css" href="/resources/daterangepicker/daterangepicker.css" />
+
 </head>
 <body id="top">
 
 <jsp:include page="/WEB-INF/views/top.jsp"/>
 
 <!-- 위시리스트 모달은 jQuery 라이브러리 적용을 위해서 top.jsp 아래 둬야함 -->
-<c:import url="/WEB-INF/views/property/wish-modal.jsp"/>
-
-
-<script src="/resources/calendar/main.js"></script>
-<script src="/resources/calendar/double-calendar.js"></script>
-
+<c:import url="/WEB-INF/views/property/_wish-modal.jsp"/>
 
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
@@ -275,7 +276,7 @@ function setTotalPrice(){
 	      </div>
 	      
           <!-- 최근 목록 -->
-          <c:import url="/WEB-INF/views/property/recent-list.jsp"/>
+          <c:import url="/WEB-INF/views/property/_recent-list.jsp"/>
           
 	   </div><!-- end of two_third first -->
 	   <div class="one_third">
