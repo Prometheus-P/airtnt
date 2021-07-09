@@ -17,7 +17,7 @@ public class LoginInterceptor implements HandlerInterceptor {
 		HttpSession session = request.getSession();
 		if (session.getAttribute("member_id") == null && session.getAttribute("member_name") == null) {
 			System.out.println("로그인 중이 아님!");
-			response.sendRedirect(request.getContextPath() + "/message"); 
+			response.sendRedirect(request.getContextPath() + "/message_login"); 
 			return false;
 		}
 		System.out.println("로그인 확인!");

@@ -46,8 +46,6 @@
 	<interceptors>
 		<interceptor>
 			<mapping path="/host/**"/>
-			<mapping path="/guide_home"/>
-			<mapping path="/guide_context"/>
 			<mapping path="/property/booking*"/>
 			<beans:ref bean="loginInterceptor" />
 		</interceptor>

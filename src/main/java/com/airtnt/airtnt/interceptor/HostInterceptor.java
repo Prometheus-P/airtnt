@@ -21,9 +21,7 @@ public class HostInterceptor implements HandlerInterceptor {
 		System.out.println("호스트 검사");
 		if (session.getAttribute("member_mode").equals("1")) {
 			System.out.println("호스트 아님");
-			response.sendRedirect("/message");
-			request.setAttribute("msg", "먼저 숙소를 등록해서 호스트가 되어 주세요!");
-			request.setAttribute("url", "<c:url value='/host/guide_home'/>");
+			response.sendRedirect(request.getContextPath() + "/message_host");
 			return false;
 		}
 		System.out.println("호스트 맞음");

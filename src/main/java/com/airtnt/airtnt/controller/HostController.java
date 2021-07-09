@@ -45,12 +45,20 @@ import com.airtnt.airtnt.service.HostMapper;
 public class HostController implements HostControllerInterface {
 	@Autowired
 	private HostMapper hostMapper;
-	
-	@RequestMapping("message")
-	public String message(HttpServletRequest req) {
+
+	@RequestMapping("message_login")
+	public String message_login(HttpServletRequest req) {
 		System.out.println("도착");
-		req.setAttribute("msg", "로그인 해주세요!"); 
-		req.setAttribute("url", "stay"); 
+		req.setAttribute("msg", "로그인 해주세요!");
+		req.setAttribute("url", "stay");
+		return "message";
+	}
+
+	@RequestMapping("message_host")
+	public String message_host(HttpServletRequest req) {
+		System.out.println("도착");
+		req.setAttribute("msg", "먼저 숙소를 등록해서 호스트가 되어 주세요!");
+		req.setAttribute("url", "<c:url value='/host/guide_home'/>");
 		return "message";
 	}
 
@@ -400,8 +408,6 @@ public class HostController implements HostControllerInterface {
 	//////////////////////////////////////////////////////////////////////////////////////
 	// 3. host_mode 페이지
 	//////////////////////////////////////////////////////////////////////////////////////
-
-	
 
 	/*
 	 * session.setAttribute("member_id", dto.getId());
