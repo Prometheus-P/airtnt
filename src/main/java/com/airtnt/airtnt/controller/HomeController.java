@@ -55,9 +55,6 @@ public class HomeController {
 		
 		// 우리 프로젝트 내에 파일 저장되는 실제 경로
 		System.out.println(req.getServletContext().getRealPath(req.getContextPath()));
-		System.out.println(req.getPathInfo());
-		System.out.println(req.getPathTranslated());
-		System.out.println(req.getServletPath());
 		
 		return "home";
 	}

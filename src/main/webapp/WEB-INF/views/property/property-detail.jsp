@@ -54,8 +54,6 @@ function setTotalPrice(){
 }
 </script>
 <link href="/resources/calendar/main.css" rel="stylesheet"/>
-<script src="/resources/calendar/main.js"></script>
-<script src="/resources/calendar/double-calendar.js"></script>
 <link href="/resources/calendar/double-calendar.css" rel="stylesheet"/>
 </head>
 <body id="top">
@@ -65,6 +63,9 @@ function setTotalPrice(){
 <!-- 위시리스트 모달은 jQuery 라이브러리 적용을 위해서 top.jsp 아래 둬야함 -->
 <c:import url="/WEB-INF/views/property/wish-modal.jsp"/>
 
+
+<script src="/resources/calendar/main.js"></script>
+<script src="/resources/calendar/double-calendar.js"></script>
 
 
 <!-- ################################################################################################ -->
@@ -301,8 +302,8 @@ function setTotalPrice(){
                    <button type="button" class="btn btn-secondary" id="dropdownTrigger" aria-expanded="false">
                      체크아웃
                    </button>
-                   <ul class="dropdown-menu" aria-labelledby="dropdownMenuClickableInside" style="width: 900px">
-                     <li style="height: 800px">
+                   <ul class="dropdown-menu" aria-labelledby="dropdownMenuClickableInside">
+                     <li>
                        <div id='source-calendar'></div>
                        <div id='destination-calendar'></div>
                      </li>
