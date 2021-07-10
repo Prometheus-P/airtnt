@@ -87,6 +87,7 @@
 			</when>
 			<otherwise>
 				wl.is_admin='Y'
+				and member_id='0'
 			</otherwise>
 		</choose>
 	</select>

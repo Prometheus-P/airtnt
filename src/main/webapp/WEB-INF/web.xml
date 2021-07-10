@@ -60,7 +60,6 @@
 	</filter-mapping>
 
 	<!-- <filter>
->>>>>>> branch 'master' of https://github.com/ccd485/airtnt.git
        <filter-name>LoginCheck</filter-name>
        <filter-class>
           com.airtnt.airtnt.filter.LoginCheckFilter

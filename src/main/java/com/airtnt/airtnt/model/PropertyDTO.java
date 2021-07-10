@@ -4,7 +4,7 @@ import java.sql.Date;
 import java.util.List;
 
 public class PropertyDTO {
-
+	
 	private Integer id; // pk
 	private String name;
 	private String hostId;

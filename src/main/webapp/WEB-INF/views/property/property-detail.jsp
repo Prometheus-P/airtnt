@@ -53,19 +53,21 @@ function setTotalPrice(){
 	document.getElementById("price_disp").innerHTML = totalPriceStr;
 }
 </script>
-<link href="/resources/calendar/main.css" rel="stylesheet"/>
-<script src="/resources/calendar/main.js"></script>
-<script src="/resources/calendar/double-calendar.js"></script>
-<link href="/resources/calendar/double-calendar.css" rel="stylesheet"/>
+
+<!-- date range picker -->
+<script type="text/javascript" src="/resources/daterangepicker/jquery.min.js"></script>
+<script type="text/javascript" src="/resources/daterangepicker/moment.min.js"></script>
+<script type="text/javascript" src="/resources/daterangepicker/moment-with-locales.js"></script>
+<script type="text/javascript" src="/resources/daterangepicker/daterangepicker.js"></script>
+<link rel="stylesheet" type="text/css" href="/resources/daterangepicker/daterangepicker.css" />
+
 </head>
 <body id="top">
 
 <jsp:include page="/WEB-INF/views/top.jsp"/>
 
 <!-- 위시리스트 모달은 jQuery 라이브러리 적용을 위해서 top.jsp 아래 둬야함 -->
-<c:import url="/WEB-INF/views/property/wish-modal.jsp"/>
-
-
+<c:import url="/WEB-INF/views/property/_wish-modal.jsp"/>
 
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
@@ -274,7 +276,7 @@ function setTotalPrice(){
 	      </div>
 	      
           <!-- 최근 목록 -->
-          <c:import url="/WEB-INF/views/property/recent-list.jsp"/>
+          <c:import url="/WEB-INF/views/property/_recent-list.jsp"/>
           
 	   </div><!-- end of two_third first -->
 	   <div class="one_third">
@@ -292,11 +294,26 @@ function setTotalPrice(){
 	       <ul class="list-group" style="font-size: 20px">
 	         <li class="list-group-item">
 	           <!-- 달력넣자 -->
-	           <div class="one_third first">
+	           <!-- Default dropstart button -->
+                 <div class="btn-group dropstart">
+                   <button type="button" class="btn btn-secondary dropdown-toggle" id="dropdownMenuClickableInside"
+                   data-bs-auto-close="outside" data-bs-toggle="dropdown" aria-expanded="false">
+                     체크인
+                   </button>
+                   <button type="button" class="btn btn-secondary" id="dropdownTrigger" aria-expanded="false">
+                     체크아웃
+                   </button>
+                   <ul class="dropdown-menu" aria-labelledby="dropdownMenuClickableInside">
+                     <li>
+                       <div id='source-calendar'></div>
+                       <div id='destination-calendar'></div>
+                     </li>
+                    </ul>
+                   </div>
+	           <%-- <div class="one_third first">
 	             체크인
 	           </div>
 	           <div class="two_third">
-	             <div id='source-calendar'></div>
 	             <input id="check_in_date" type="date" name="checkInDate"
 	             min="${tomorrow}" value="${tomorrow}" onchange="javascript:setTotalPrice()">
 	           </div>
@@ -306,10 +323,9 @@ function setTotalPrice(){
 	             체크아웃
 	           </div>
 	           <div class="two_third">
-	             <div id='destination-calendar'></div>
 	             <input id="check_out_date" type="date" name="checkOutDate"
 	             min="${dayAfterTomorrow}" value="${dayAfterTomorrow}" onchange="javascript:setTotalPrice()">
-	           </div>
+	           </div> --%>
 	         </li>
 	         <li class="list-group-item">
 	           <div class="one_third first">

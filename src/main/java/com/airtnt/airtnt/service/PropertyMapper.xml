@@ -129,7 +129,19 @@
 			i.mod_date image_mod_date
 			
 		from
-			property p
+		<choose>
+			<when test="addressKey != null">
+				<bind name="addressKey" value="'%' + addressKey + '%'"/>
+				(
+					select p.*,rownum rnum
+					from property p
+					where p.address like #{addressKey}
+				) p
+			</when>
+			<otherwise>
+				property p
+			</otherwise>
+		</choose>
 			left join property_type pt on p.property_type_id=pt.id
 			left join sub_property_type spt on p.sub_property_type_id=spt.id
 			left join room_type rt on p.room_type_id=rt.id
@@ -137,74 +149,70 @@
 			left join amenity_type at on at.id=a.amenity_type_id
 			left join image i on p.id=i.property_id
 			
-		where
-		<choose>
-			<!-- choose절 안의 파라미터가 없으면 bad grammar 예외 발생 -->
+		<where>
+			<choose>
+				<when test="addressKey != null">
+					<!-- rnum <![CDATA[ >= ]]> #{startNum} and
+					rnum <![CDATA[ < ]]> #{endNum} -->
+				</when>
+				<when test="propertyId != null">
+					p.id=#{propertyId}
+				</when>
+				<when test="propertyIdList != null">
+					p.id in
+					<foreach item="propertyId" collection="propertyIdList"
+					open="(" separator="," close=")">
+						#{propertyId}
+					</foreach>
+				</when>
+			</choose>
 			
-			<!-- 숙소 리스트 페이지 검색 -->
-			<when test="addressKey != null">
-				<bind name="addressKey" value="'%' + addressKey + '%'"/>
-				p.address like #{addressKey}
-			</when>
-			<!-- 최근목록 리스트 -->
-			<when test="propertyIdList != null">
-				p.id in
-				<foreach item="propertyId" collection="propertyIdList"
+			<!-- 검색 필터라서 거의 안들어감 -->
+			<if test="propertyTypeIdKeyArray != null">
+				and pt.id in
+				<foreach item="propertyTypeIdKey" collection="propertyTypeIdKeyArray"
 				open="(" separator="," close=")">
-					#{propertyId}
+					#{propertyTypeIdKey}
 				</foreach>
-			</when>
-			<!-- 상세보기 페이지 -->
-			<when test="propertyId != null">
-				p.id=#{propertyId}
-			</when>
-		</choose>
-		
-		<!-- 검색 필터라서 거의 안들어감 -->
-		<if test="propertyTypeIdKeyArray != null">
-			and pt.id in
-			<foreach item="propertyTypeIdKey" collection="propertyTypeIdKeyArray"
-			open="(" separator="," close=")">
-				#{propertyTypeIdKey}
-			</foreach>
-			and pt.is_use='Y'
-		</if>
-		<if test="subPropertyTypeIdKeyArray != null">
-			and spt.id in
-			<foreach item="subPropertyTypeIdKey" collection="subPropertyTypeIdKeyArray"
-			open="(" separator="," close=")">
-				#{subPropertyTypeIdKey}
-			</foreach>
-			and spt.is_use='Y'
-		</if>
-		<if test="roomTypeIdKeyArray != null">
-			 and rt.id in
-			<foreach item="roomTypeIdKey" collection="roomTypeIdKeyArray"
-			open="(" separator="," close=")">
-				#{roomTypeIdKey}
-			</foreach>
-			and rt.is_use='Y'
-		</if>
-		<if test="amenityTypeIdKeyArray != null">
-			and at.id in
-			<foreach item="amenityTypeIdKey" collection="amenityTypeIdKeyArray"
-			open="(" separator="," close=")">
-				#{amenityTypeIdKey}
-			</foreach>
-			and at.is_use='Y'
-		</if>
-		<if test="guestCountKey != null">
-			and p.max_guest <![CDATA[ >= ]]> #{guestCountKey}
-		</if>
-		<if test="bedCountKey != null">
-			and p.bed_count <![CDATA[ >= ]]> #{bedCountKey}
-		</if>
-		<if test="minPriceKey != null">
-			and p.price <![CDATA[ >= ]]> #{minPriceKey}
-		</if>
-		<if test="maxPriceKey != null">
-			and p.price <![CDATA[ <= ]]> #{maxPriceKey}
-		</if>
+				and pt.is_use='Y'
+			</if>
+			<if test="subPropertyTypeIdKeyArray != null">
+				and spt.id in
+				<foreach item="subPropertyTypeIdKey" collection="subPropertyTypeIdKeyArray"
+				open="(" separator="," close=")">
+					#{subPropertyTypeIdKey}
+				</foreach>
+				and spt.is_use='Y'
+			</if>
+			<if test="roomTypeIdKeyArray != null">
+				 and rt.id in
+				<foreach item="roomTypeIdKey" collection="roomTypeIdKeyArray"
+				open="(" separator="," close=")">
+					#{roomTypeIdKey}
+				</foreach>
+				and rt.is_use='Y'
+			</if>
+			<if test="amenityTypeIdKeyArray != null">
+				and at.id in
+				<foreach item="amenityTypeIdKey" collection="amenityTypeIdKeyArray"
+				open="(" separator="," close=")">
+					#{amenityTypeIdKey}
+				</foreach>
+				and at.is_use='Y'
+			</if>
+			<if test="guestCountKey != null">
+				and p.max_guest <![CDATA[ >= ]]> #{guestCountKey}
+			</if>
+			<if test="bedCountKey != null">
+				and p.bed_count <![CDATA[ >= ]]> #{bedCountKey}
+			</if>
+			<if test="minPriceKey != null">
+				and p.price <![CDATA[ >= ]]> #{minPriceKey}
+			</if>
+			<if test="maxPriceKey != null">
+				and p.price <![CDATA[ <= ]]> #{maxPriceKey}
+			</if>
+		</where>
 	</select>
 	
 	<select id="selectPropertyTypes" resultMap="propertyTypeMap">
@@ -220,9 +228,13 @@
 		from
 			property_type pt
 			join sub_property_type spt on pt.id=spt.property_type_id
+			
 		where
 			pt.is_use='Y' and
 			spt.is_use='Y'
+			
+		order by
+			pt.id asc, spt.id asc
 	</select>
 	
 	<select id="selectRoomTypes" resultMap="roomTypeMap">

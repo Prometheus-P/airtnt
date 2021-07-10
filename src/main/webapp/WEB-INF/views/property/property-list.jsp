@@ -45,7 +45,7 @@ crossorigin="anonymous"></script> -->
 <c:import url="/WEB-INF/views/top.jsp"/>
 
 <!-- 위시리스트 모달은 jQuery 라이브러리 적용을 위해서 top.jsp 아래 둬야함 -->
-<c:import url="/WEB-INF/views/property/wish-modal.jsp"/>
+<c:import url="/WEB-INF/views/property/_wish-modal.jsp"/>
 
 <form action="<c:url value='/property/search'/>" method="get" onsubmit="setParametersOnSubmit()">
 <!-- 검색 네비게이션 바 -->
@@ -287,7 +287,7 @@ crossorigin="anonymous"></script> -->
                         <div class="carousel-inner">
                           <c:forEach var="image" items="${property.images}" varStatus="status">
                             <div class="carousel-item <c:if test='${status.count == 1}'>active</c:if>">
-                              <img src="${image.path}" class="d-block w-100" alt="">
+                              <img src="${image.path}" class="d-block w-100" alt="" style="object-fit: cover; width:200px;height: 150px">
                             </div>
                           </c:forEach>
                         </div>
@@ -339,7 +339,7 @@ crossorigin="anonymous"></script> -->
           </div>
           
           <!-- 최근 목록 -->
-          <c:import url="/WEB-INF/views/property/recent-list.jsp"/>
+          <c:import url="/WEB-INF/views/property/_recent-list.jsp"/>
           
         </div>
         
@@ -353,7 +353,7 @@ crossorigin="anonymous"></script> -->
 	      		var mapContainer = document.getElementById('map'), // 지도를 표시할 div
 	      		 mapOption = { 
 			        center: new kakao.maps.LatLng(37.65634637629008, 127.07345281096936), // 지도의 중심좌표
-			        level: 3 // 지도의 확대 레벨
+			        level: 5 // 지도의 확대 레벨
 			    };
 	      		
 		      	var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
@@ -361,7 +361,7 @@ crossorigin="anonymous"></script> -->
 		      	
 		     	// 마커 객체 배열 생성(positions)
 		      	var positions = []; 
-		      	var selectedMaker = null; //클릭한 마커 담을 변수
+		      	var selectedMarker = null; //클릭한 마커 담을 변수
 		      	var table = $('#markerPositionTb tr'); //숙소 조회 리스트
 		      	for(var i=0; i<table.length; i++){
 		      		
@@ -397,10 +397,9 @@ crossorigin="anonymous"></script> -->
 		      	    var imageSize = new kakao.maps.Size(38, 40); 
 		      	    
 		      	    // 마커 이미지 생성    
-		      	    //var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize); 
-		      	    var markerImage = new kakao.maps.MarkerImage("/resources/property_img/marker.png", imageSize); 
-		      	    var clickedMakerImage = new kakao.maps.MarkerImage("/resources/property_img/marker3.png", imageSize); 
-		      	    var selectedMarkerImage = new kakao.maps.MarkerImage("/resources/property_img/marker1.png", imageSize); 
+		      	    var markerImage = new kakao.maps.MarkerImage("/resources/property_img/marker5.png", imageSize); 
+		      	    var overMarkerImage = new kakao.maps.MarkerImage("/resources/property_img/marker4.png", imageSize); 
+		      	    var selectedMarkerImage = new kakao.maps.MarkerImage("/resources/property_img/marker7.png", imageSize); 
 		      	    
 		      	    var marker = new kakao.maps.Marker({
 		      	        map: map,
@@ -409,7 +408,7 @@ crossorigin="anonymous"></script> -->
 		      	    });
 		      	    
 		      	 	marker.setMap(map); //마커 표시
-		      	 	bounds.extend(positions[i].latlng);
+		      	 	bounds.extend(positions[i].latlng); //최종단계에서 맵 중앙 재조정할때 사용
 		      	 	
 		      	 	//오버레이 생성
 		      	    var overlay = new kakao.maps.CustomOverlay({
@@ -478,20 +477,39 @@ crossorigin="anonymous"></script> -->
 		      	  	content.appendChild(desc);
 		      	    
 		      	    overlay.setContent(content);
+
 					
-		      	    //마커 클릭 이벤트 : 맵에 오버레이 표시
+		      	    //마커 클릭 이벤트
 		      	    kakao.maps.event.addListener(marker, 'click', function() {
+		      	    	//클릭되어있는 기존 마커 over 처리
+		      	    	//지금 선택한 마커가 클릭되어있는 기존 마커가 아니고, null 이 아니면
+		      	    	if(selectedMarker !== marker && selectedMarker != null){
+		      	    		//overlay.setMap(null);
+		      	    		selectedMarker.setImage(overMarkerImage);
+		      	    	}
+		      	    	
+		      	    	// 클릭한 마커 이미지 변경
+		      	        if (!selectedMarker || selectedMarker !== marker) {
+		      	            marker.setImage(selectedMarkerImage);
+		      	        }
+
+		      	        // 클릭된 마커를 현재 클릭된 마커 객체로 설정
+		      	        selectedMarker = marker;
+		      	        
+		      	    	//맵에 오버레이 세팅
 		      	    	overlay.setMap(map);
-		      	    	marker.setImage(selectedMarkerImage);
-		      	    	selectedMarker = marker;
 		      	    });
 		      	    
-		      	    //맵 클릭 이벤트 : 오버레이 닫음
+		      	    //맵 클릭 이벤트
 		      	  	kakao.maps.event.addListener(map, 'click', function() {
+		      	  		// 클릭된 마커 객체가 null이 아니면
+	      	            // 클릭된 마커의 이미지를 조회기록있는 마커이미지로 변경
+		      	  		!!selectedMarker && selectedMarker.setImage(overMarkerImage);
+		      	  		
+		      	  		//오버레이 맵에서 제거
 		      	        overlay.setMap(null);
 		      	    });
 		      	    
-		      		
 		      		
 		      	}
 		      	
