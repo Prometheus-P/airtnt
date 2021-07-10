@@ -1,7 +1,6 @@
 /**
  * property list 페이지에 스크립트가 너무 많아져서 따로 옮김
  */
-
 function setParametersOnSubmit(){
 	var numberArray = [
 		document.querySelector("input#guest-count"),
@@ -17,6 +16,12 @@ function setParametersOnSubmit(){
 			numberTag.disabled = true;
 		}
 	}
+}
+
+function movePage(pageButton){
+	var pageNum = pageButton.id.split('-')[1];
+	document.querySelector("input#page-num").value = pageNum;
+	document.querySelector("form#search-form").submit();
 }
 
 function modSubPropertyTypes(propertyTypeTag){

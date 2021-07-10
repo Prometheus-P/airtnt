@@ -90,8 +90,11 @@
         <nav class="navbar navbar-light">
 		  <div class="container-fluid">
 		    <form class="d-flex" action="/property/search" method="get">
-		      <input name="addressKey" class="form-control me-2" type="search" placeholder="위치" aria-label="Search">
-		      <button  class="btn btn-outline-primary" type="submit" style="background-color:#01546b; border: 0px;">Search</button>
+		      <input type="hidden" name="pageNum" value="1">
+		      <input type="search" name="addressKey" class="form-control me-2"
+		      placeholder="위치" aria-label="Search">
+		      <input  class="btn btn-outline-primary" type="submit" value="검색"
+		      style="background-color:#01546b; border: 0px;">
 		    </form>
 		  </div>
 		</nav>

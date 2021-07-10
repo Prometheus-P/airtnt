@@ -3,9 +3,10 @@
  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.airtnt.airtnt.service.PropertyMapper">
-
+	
 	<resultMap type="propertyDTO" id="propertyMap">
 		<id property="id" column="id"/>
+		<result property="rowNum" column="rnum"/>
 		<result property="name" column="name"/>
 		<result property="hostId" column="host_id"/>
 		<result property="propertyDesc" column="property_desc"/>
@@ -27,8 +28,8 @@
 		<association property="roomType" column="room_type_id"
 			columnPrefix="room_type_" resultMap="roomTypeMap"/>
 		
-		<collection property="amenities" ofType="amenityDTO"
-			columnPrefix="amenity_" resultMap="amenityMap" />
+		<collection property="amenityTypes" ofType="amenityTypeDTO"
+			columnPrefix="amenity_type_" resultMap="amenityTypeMap" />
 		
 		<collection property="images" ofType="imageDTO"
 			columnPrefix="image_" resultMap="imageMap"/>
@@ -71,13 +72,6 @@
 		<result property="modDate" column="mod_date"/>
 	</resultMap>
 	
-	<resultMap type="amenityDTO" id="amenityMap">
-		<id property="id" column="id"/>
-		<result property="propertyId" column="property_id"/>
-		<association property="amenityType" column="amenity_type_id"
-		columnPrefix="type_" resultMap="amenityTypeMap"/>
-	</resultMap>
-	
 	<resultMap type="imageDTO" id="imageMap">
 		<id property="id" column="id"/>
 		<result property="propertyId" column="property_id"/>
@@ -88,131 +82,247 @@
 		<result property="modDate" column="mod_date"/>
 	</resultMap>
 	
-	<select id="selectProperty" parameterType="java.util.Map" resultMap="propertyMap">
+	<!-- 중복되는 sql 구문들을 따로 빼둠 -->
+	
+	<!-- select property에서 기준이 되는 property 테이블의 select문 -->
+	<sql id="standardSelectProperty">
+		p.id,
+		p.name,
+		p.host_id,
+		p.property_desc,
+		p.address,
+		p.latitude,
+		p.longitude,
+		p.price,
+		p.bed_count,
+		p.max_guest,
+		p.reg_date,
+		p.mod_date
+	</sql>
+	
+	<!-- select property에서 property와 1:1 관계인 테이블의 select문 -->
+	<sql id="oneToOneSelectProperty">
+		pt.id property_type_id,
+		pt.name property_type_name,
+		pt.is_use property_type_is_use,
+		pt.reg_date property_type_reg_date,
+		pt.mod_date property_type_mod_date,
+		
+		spt.id sub_property_type_id,
+		spt.name sub_property_type_name,
+		spt.is_use sub_property_type_is_use,
+		spt.reg_date sub_property_type_reg_date,
+		spt.mod_date sub_property_type_mod_date,
+		
+		rt.id room_type_id,
+		rt.name room_type_name,
+		rt.is_use room_type_is_use,
+		rt.reg_date room_type_reg_date,
+		rt.mod_date room_type_mod_date
+	</sql>
+	
+	<!-- select property에서 1:1 관계인 테이블의 join문 -->
+	<sql id="oneToOneJoinProperty">
+		left join property_type pt on p.property_type_id=pt.id
+		left join sub_property_type spt on p.sub_property_type_id=spt.id
+		left join room_type rt on p.room_type_id=rt.id
+	</sql>
+	
+	<!-- select property에서 1:N 관계인 테이블의 select문 -->
+	<sql id="oneToNSelectProperty">
+		at.id amenity_type_id,
+		at.name amenity_type_name,
+		at.is_use amenity_type_is_use,
+		at.reg_date amenity_type_reg_date,
+		at.mod_date amenity_type_mod_date,
+		
+		i.id image_id,
+		i.is_main image_is_main,
+		i.path image_path,
+		i.file_size image_file_size,
+		i.reg_date image_reg_date,
+		i.mod_date image_mod_date
+	</sql>
+	
+	<!-- select property에서 1:N 관계인 테이블의 join문 -->
+	<sql id="oneToNJoinProperty">
+		left join amenity a on p.id=a.property_id
+		left join amenity_type at on at.id=a.amenity_type_id
+		left join image i on p.id=i.property_id
+	</sql>
+	
+	<!-- 검색페이지의 숙소목록 로딩에 사용 -->
+	<!--
+		select
+			filtered properties, amenity types, images
+		from
+		(
+			select
+				rownum, property, property type, sub-property type, room type
+			from
+				property
+				left join property type, sub-property type, room type
+			where
+				property address like '%주소%'
+				and (filter, rownum 처리 구문)
+		) as filtered properties
+		left join amenity, amenity type, image
+		의 구조임
+		
+		1:1 관계인 select문은 필터처리의 효율을 위해 안의 select문에 배치하고
+		1:N 관계인 select문은 rownum의 중복을 피하기 위해 밖의 select문에 배치
+	-->
+	<!-- select문을 최소 2번에서 최대 3번까지 실행 -->
+	<select id="searchProperties" parameterType="java.util.Map" resultMap="propertyMap">
 		select
 			p.*,
-			
-			pt.id property_type_id,
-			pt.name property_type_name,
-			pt.is_use property_type_is_use,
-			pt.reg_date property_type_reg_date,
-			pt.mod_date property_type_mod_date,
-			
-			spt.id sub_property_type_id,
-			spt.property_type_id,
-			spt.name sub_property_type_name,
-			spt.is_use sub_property_type_is_use,
-			spt.reg_date sub_property_type_reg_date,
-			spt.mod_date sub_property_type_mod_date,
-			
-			rt.id room_type_id,
-			rt.name room_type_name,
-			rt.is_use room_type_is_use,
-			rt.reg_date room_type_reg_date,
-			rt.mod_date room_type_mod_date,
-			
-			a.id amenity_id,
-			a.property_id amenity_property_id,
-			
-			at.id amenity_type_id,
-			at.name amenity_type_name,
-			at.is_use amenity_type_is_use,
-			at.reg_date amenity_type_reg_date,
-			at.mod_date amenity_type_mod_date,
-			
-			i.id image_id,
-			i.property_id image_property_id,
-			i.is_main image_is_main,
-			i.path image_path,
-			i.file_size image_file_size,
-			i.reg_date image_reg_date,
-			i.mod_date image_mod_date
+			<include refid="oneToNSelectProperty"/>
 			
 		from
-		<choose>
-			<when test="addressKey != null">
-				<bind name="addressKey" value="'%' + addressKey + '%'"/>
-				(
-					select p.*,rownum rnum
-					from property p
-					where p.address like #{addressKey}
-				) p
-			</when>
-			<otherwise>
-				property p
-			</otherwise>
-		</choose>
-			left join property_type pt on p.property_type_id=pt.id
-			left join sub_property_type spt on p.sub_property_type_id=spt.id
-			left join room_type rt on p.room_type_id=rt.id
-			left join amenity a on p.id=a.property_id
-			left join amenity_type at on at.id=a.amenity_type_id
-			left join image i on p.id=i.property_id
+		(
+			<!-- searchProperties의 필터와 rownum 처리 구문 -->
+			<include refid="searchFilters">
+				<property name="addressKey" value="addressKey"/>
+				<property name="propertyTypeIdKeyArray" value="propertyTypeIdKeyArray"/>
+				<property name="subPropertyTypeIdKeyArray" value="subPropertyTypeIdKeyArray"/>
+				<property name="roomTypeIdKeyArray" value="roomTypeIdKeyArray"/>
+				<property name="amenityTypeIdKeyArray" value="amenityTypeIdKeyArray"/>
+				<property name="guestCountKey" value="guestCountKey"/>
+				<property name="bedCountKey" value="bedCountKey"/>
+				<property name="minPriceKey" value="minPriceKey"/>
+				<property name="maxPriceKey" value="maxPriceKey"/>
+			</include>
+		) p	<!-- p : filtered properties + rownum -->
+		<include refid="oneToNJoinProperty"/>
+		
+		order by rnum
+	</select>
+	
+	<!-- searchProperties의 필터와 rownum 처리 구문 -->
+	<sql id="searchFilters">
+		select
+			rownum rnum,
+			<include refid="standardSelectProperty"/>,
+			<include refid="oneToOneSelectProperty"/>
 			
-		<where>
-			<choose>
-				<when test="addressKey != null">
-					<!-- rnum <![CDATA[ >= ]]> #{startNum} and
-					rnum <![CDATA[ < ]]> #{endNum} -->
-				</when>
-				<when test="propertyId != null">
-					p.id=#{propertyId}
-				</when>
-				<when test="propertyIdList != null">
-					p.id in
-					<foreach item="propertyId" collection="propertyIdList"
-					open="(" separator="," close=")">
-						#{propertyId}
-					</foreach>
-				</when>
-			</choose>
+		from
+			property p
+			<include refid="oneToOneJoinProperty"/>
 			
-			<!-- 검색 필터라서 거의 안들어감 -->
-			<if test="propertyTypeIdKeyArray != null">
-				and pt.id in
-				<foreach item="propertyTypeIdKey" collection="propertyTypeIdKeyArray"
-				open="(" separator="," close=")">
-					#{propertyTypeIdKey}
-				</foreach>
-				and pt.is_use='Y'
-			</if>
-			<if test="subPropertyTypeIdKeyArray != null">
-				and spt.id in
-				<foreach item="subPropertyTypeIdKey" collection="subPropertyTypeIdKeyArray"
-				open="(" separator="," close=")">
-					#{subPropertyTypeIdKey}
-				</foreach>
-				and spt.is_use='Y'
-			</if>
-			<if test="roomTypeIdKeyArray != null">
-				 and rt.id in
-				<foreach item="roomTypeIdKey" collection="roomTypeIdKeyArray"
-				open="(" separator="," close=")">
-					#{roomTypeIdKey}
-				</foreach>
-				and rt.is_use='Y'
-			</if>
-			<if test="amenityTypeIdKeyArray != null">
-				and at.id in
+		where
+			<bind name="addressKey" value="'%' + addressKey + '%'"/>
+			p.address like #{addressKey}
+		<!--
+			1:1 관계인 테이블의 컬럼들을 여기서 select하지 않으면
+			amenity type을 필터링하는 것과 마찬가지로
+			
+			and p.id in
+			(
+				select
+					p.id
+				from
+					property p
+					left join property_type pt on p.id = pt.id
+				where
+					pt.id in (filter의 property type id 값들)
+			)
+			
+			이런식으로 전부 select문을 돌려야하므로
+			1:1 관계인 테이블들은 조건문을 적용하는 레벨의 select문에서
+			join하는 것이 효율적임
+		-->
+		<if test="propertyTypeIdKeyArray != null">
+			and pt.id in
+			<foreach item="propertyTypeIdKey" collection="propertyTypeIdKeyArray"
+			open="(" separator="," close=")">
+				#{propertyTypeIdKey}
+			</foreach>
+			and pt.is_use='Y'
+		</if>
+		<if test="subPropertyTypeIdKeyArray != null">
+			and spt.id in
+			<foreach item="subPropertyTypeIdKey" collection="subPropertyTypeIdKeyArray"
+			open="(" separator="," close=")">
+				#{subPropertyTypeIdKey}
+			</foreach>
+			and spt.is_use='Y'
+		</if>
+		<if test="roomTypeIdKeyArray != null">
+			 and rt.id in
+			<foreach item="roomTypeIdKey" collection="roomTypeIdKeyArray"
+			open="(" separator="," close=")">
+				#{roomTypeIdKey}
+			</foreach>
+			and rt.is_use='Y'
+		</if>
+		<if test="amenityTypeIdKeyArray != null">
+			and p.id in
+			(
+				select p.id
+				from property p
+				left join amenity a on p.id=a.property_id
+				left join amenity_type at on at.id=a.amenity_type_id
+				where at.id in
 				<foreach item="amenityTypeIdKey" collection="amenityTypeIdKeyArray"
 				open="(" separator="," close=")">
 					#{amenityTypeIdKey}
 				</foreach>
 				and at.is_use='Y'
-			</if>
-			<if test="guestCountKey != null">
-				and p.max_guest <![CDATA[ >= ]]> #{guestCountKey}
-			</if>
-			<if test="bedCountKey != null">
-				and p.bed_count <![CDATA[ >= ]]> #{bedCountKey}
-			</if>
-			<if test="minPriceKey != null">
-				and p.price <![CDATA[ >= ]]> #{minPriceKey}
-			</if>
-			<if test="maxPriceKey != null">
-				and p.price <![CDATA[ <= ]]> #{maxPriceKey}
-			</if>
-		</where>
+			)
+		</if>
+		<if test="guestCountKey != null">
+			and p.max_guest <![CDATA[ >= ]]> #{guestCountKey}
+		</if>
+		<if test="bedCountKey != null">
+			and p.bed_count <![CDATA[ >= ]]> #{bedCountKey}
+		</if>
+		<if test="minPriceKey != null">
+			and p.price <![CDATA[ >= ]]> #{minPriceKey}
+		</if>
+		<if test="maxPriceKey != null">
+			and p.price <![CDATA[ <= ]]> #{maxPriceKey}
+		</if>
+	</sql>
+	
+	<!-- 쿠키의 최근목록 로딩과 상세페이지 로딩에 사용 -->
+	<!-- select문은 한번만 실행 -->
+	<!--
+		select
+			property, property type, sub-property type, room type, amenity types, images
+		from
+			property
+			left join property type, sub-property type, room type, amenity, amenity type, image
+		의 구조임
+		
+		전체 select문 실행횟수를 최소화하기위해
+		모든 관계에 대하여 같은 레벨의 select문에 배치
+	-->
+	<select id="selectProperty" parameterType="java.util.Map" resultMap="propertyMap">
+		select
+			<include refid="standardSelectProperty"/>,
+			<include refid="oneToOneSelectProperty"/>,
+			<include refid="oneToNSelectProperty"/>
+			
+		from
+			property p
+			<include refid="oneToOneJoinProperty"/>
+			<include refid="oneToNJoinProperty"/>
+			
+		where
+		<choose>
+			<!-- 쿠키에서 최근목록 불러오는 로직 -->
+			<when test="propertyIdList != null">
+				p.id in
+				<foreach item="propertyId" collection="propertyIdList"
+				open="(" separator="," close=")">
+					#{propertyId}
+				</foreach>
+			</when>
+			<!-- 상세페이지로 로딩하는 로직 -->
+			<when test="propertyId != null">
+				p.id=#{propertyId}
+			</when>
+		</choose>
 	</select>
 	
 	<select id="selectPropertyTypes" resultMap="propertyTypeMap">

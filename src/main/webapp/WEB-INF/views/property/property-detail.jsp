@@ -215,10 +215,10 @@ function setTotalPrice(){
 	        
 	        <div>
 	          <h1>편의 시설</h1><br>
-	          <c:forEach var="amenity" items="${property.amenities}">
+	          <c:forEach var="amenityType" items="${property.amenityTypes}">
 	            <ul style="font-size: 20px">
 	              <li>
-	                ${amenity.amenityType.name}
+	                ${amenityType.name}
 	              </li>
 	            </ul>
 	          </c:forEach>
@@ -293,24 +293,7 @@ function setTotalPrice(){
 	       <input id="total_price" type="hidden" name="totalPrice">
 	       <ul class="list-group" style="font-size: 20px">
 	         <li class="list-group-item">
-	           <!-- 달력넣자 -->
-	           <!-- Default dropstart button -->
-                 <div class="btn-group dropstart">
-                   <button type="button" class="btn btn-secondary dropdown-toggle" id="dropdownMenuClickableInside"
-                   data-bs-auto-close="outside" data-bs-toggle="dropdown" aria-expanded="false">
-                     체크인
-                   </button>
-                   <button type="button" class="btn btn-secondary" id="dropdownTrigger" aria-expanded="false">
-                     체크아웃
-                   </button>
-                   <ul class="dropdown-menu" aria-labelledby="dropdownMenuClickableInside">
-                     <li>
-                       <div id='source-calendar'></div>
-                       <div id='destination-calendar'></div>
-                     </li>
-                    </ul>
-                   </div>
-	           <%-- <div class="one_third first">
+	           <div class="one_third first">
 	             체크인
 	           </div>
 	           <div class="two_third">
@@ -325,7 +308,7 @@ function setTotalPrice(){
 	           <div class="two_third">
 	             <input id="check_out_date" type="date" name="checkOutDate"
 	             min="${dayAfterTomorrow}" value="${dayAfterTomorrow}" onchange="javascript:setTotalPrice()">
-	           </div> --%>
+	           </div>
 	         </li>
 	         <li class="list-group-item">
 	           <div class="one_third first">
