@@ -29,8 +29,7 @@ crossorigin="anonymous"></script>
 integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
 crossorigin="anonymous"></script> -->
 
-<!-- 검색필터 이벤트 처리와 초기화를 제어하는 커스텀 파일 -->
-<script src="/resources/script/search-control.js"></script>
+
 </head>
 <body>
 <!-- ################################################################################################ -->
@@ -43,6 +42,9 @@ crossorigin="anonymous"></script> -->
 
 <!-- 위시리스트 모달은 jQuery 라이브러리 적용을 위해서 top.jsp 아래 둬야함 -->
 <c:import url="/WEB-INF/views/property/_wish-modal.jsp"/>
+
+<!-- 검색필터 이벤트 처리와 초기화를 제어하는 커스텀 파일 -->
+<script src="/resources/script/search-control.js"></script>
 
 <form id="search-form" action="<c:url value='/property/search'/>" method="get" onsubmit="setParametersOnSubmit()">
 <input type="hidden" id="page-num" name="pageNum" value="1">

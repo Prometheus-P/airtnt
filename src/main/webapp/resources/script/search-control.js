@@ -21,6 +21,7 @@ function setParametersOnSubmit(){
 function movePage(pageButton){
 	var pageNum = pageButton.id.split('-')[1];
 	document.querySelector("input#page-num").value = pageNum;
+	setParametersOnSubmit();
 	document.querySelector("form#search-form").submit();
 }
 
