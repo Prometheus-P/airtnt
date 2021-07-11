@@ -373,6 +373,14 @@ public class HostController implements HostControllerInterface {
 		mav.addObject("today", today);
 		return mav;
 	}
+	
+	@ResponseBody
+	@RequestMapping("/host/bookConfirm")
+	public String bookConfirm(@RequestParam Map<String, String> param) {
+		int res = hostMapper.bookConfirm
+				(Integer.parseInt(param.get("bookingId")), java.sql.Date.valueOf(param.get("checkOutDate")));
+		return "승인 처리 됐습니다!";
+	}
 
 	@Override
 	@RequestMapping("host/host_properties_list")
@@ -426,33 +434,29 @@ public class HostController implements HostControllerInterface {
 	@RequestMapping("host/host_review_list")
 	public ModelAndView host_review_list(HttpServletRequest req) {
 		HttpSession session = req.getSession();
-		List<PropertyDTO> list = hostMapper.getPropertyList((String)session.getAttribute("member_id"));
+		List<PropertyDTO> list = hostMapper.getPropertyList((String) session.getAttribute("member_id"));
 		return new ModelAndView("/host/host_mode/host_review_list", "listProperty", list);
 	}
-	
+
 	@PostMapping("review_html")
 	public ModelAndView getReiview(HttpServletRequest req) {
 		Integer propertyId = Integer.parseInt(req.getParameter("propertyId"));
-
 		List<ReviewDTO> list = hostMapper.getReviewList(propertyId);
-		
-		/*List<Integer> listCount = hostMapper.getReviewWritingRate(propertyId);
-		 * long reviewRate = listCount.get(0) / listCount.get(1) * 100;
-		 * System.out.println("reviewRate: " +reviewRate);
-		 * mav.addObject("reviewRate", reviewRate);
-		 */
+		List<Map<String, Integer>> listMap = hostMapper.getReviewWritingRate(propertyId);
 		ModelAndView mav = new ModelAndView("/host/host_mode/review");
+		double reviewCount = Double.parseDouble(String.valueOf(listMap.get(0).get("reviewCount")));//무슨 에러 떠서 해결법 찾음
+		double bookingCount = Double.parseDouble(String.valueOf(listMap.get(0).get("bookingCount")));
+		double reviewRate = reviewCount / bookingCount * 100;
+		mav.addObject("reviewRate", reviewRate);
 		mav.addObject("listReview", list);
 		return mav;
 	}
 
-	
 	@GetMapping("review_send")
 	public ModelAndView review_html(@RequestParam String review) {
-		System.out.println("review_html:" +review);
+		System.out.println("review_html:" + review);
 		return new ModelAndView("/host/host_mode/host_review_list", "review", review);
 	}
-	
 
 	public java.util.Date addMonth(Date date, int months) {
 		Calendar cal = Calendar.getInstance();

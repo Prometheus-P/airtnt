@@ -156,11 +156,15 @@ public class HostMapper implements HostMapperInterface {
 		List<ReviewDTO> list = sqlSession.selectList("getReviewList", propertyId);
 		return list;
 	}
+
+	public List<Map<String, Integer>> getReviewWritingRate(Integer propertyId) {
+		List<Map<String, Integer>> listMap = sqlSession.selectList("getReviewWritingRate", propertyId);
+		return listMap;
+	}
 	
-	/*
-	 * public List<Integer> getReviewWritingRate(int propertyId) { List<Integer>
-	 * list = sqlSession.selectList("getReviewWritingRate", propertyId); return
-	 * list; }
-	 */
+	public int bookConfirm(int bookingId, java.sql.Date checkOutDate) {
+		int res = sqlSession.update("bookConfirm", bookingId);
+		return res;
+	}
 
 }

@@ -8,27 +8,33 @@
 	<select id="listGuide" resultType="GuideDTO">
 		select
 		id, subject,
-		reg_date as regDate,
+		reg_date as
+		regDate,
 		mod_date as modDate,
 		explanation from guide
 	</select>
 
 	<select id="getGuide" parameterType="int" resultType="guideDTO">
 		select
-		id, subject,
+		id,
+		subject,
 		reg_date as regDate,
 		mod_date as modDate,
 		explanation
-		from guide where id = #{id}
+		from guide
+		where id = #{id}
 	</select>
 
 	<insert id="insertProperty" parameterType="propertyDTO">
 		insert into property(name, host_id, property_desc, property_type_id,
 		sub_property_type_id,
-		room_type_id, address, price, bed_count, max_guest)
-		values(#{name}, #{hostId}, #{propertyDesc}, #{propertyTypeId}, #{subPropertyTypeId},
+		room_type_id, address, price, bed_count,
+		max_guest)
+		values(#{name}, #{hostId}, #{propertyDesc},
+		#{propertyTypeId}, #{subPropertyTypeId},
 		#{roomTypeId},
-		#{address}, #{price}, #{bedCount}, #{maxGuest})<!-- modeDate==null -->
+		#{address},
+		#{price}, #{bedCount}, #{maxGuest})<!-- modeDate==null -->
 	</insert>
 
 	<delete id="deleteProperty" parameterType="int">
@@ -37,10 +43,12 @@
 	<select id="propertyType" resultType="propertyTypeDTO">
 		select
 		id, name,
-		is_use as isUse,
+		is_use as
+		isUse,
 		reg_date as regDate,
 		mod_date as modDate
-		from property_type order by id
+		from property_type order
+		by id
 	</select>
 
 	<select id="subPropertyType" parameterType="int"
@@ -48,9 +56,11 @@
 		select
 		id, name,
 		property_type_id as propertyTypeId,
-		is_use as isUse,
+		is_use as
+		isUse,
 		reg_date as regDate,
-		mod_date as modDate from sub_property_type where property_type_id =
+		mod_date as modDate from sub_property_type
+		where property_type_id =
 		#{propertyTypeId}
 	</select>
 
@@ -63,9 +73,8 @@
 		from room_type
 	</select>
 
-	<select id="listBooking" parameterType="String"
-		resultType="BookingDTO">
-		select
+	<select id="listBooking" parameterType="String" resultType="BookingDTO">
+		SELECT
 		b.id,
 		b.property_id as propertyId,
 		b.guest_id as guestId,
@@ -75,15 +84,19 @@
 		b.total_price as totalPrice,
 		b.booking_number as bookingNumber,
 		b.check_in_date as checkInDate,
-		b.check_out_date as checkOutDate,
+		b.check_out_date as
+		checkOutDate,
 		b.confirm_date as confirmDate,
 		b.reg_date as regDate,
 		b.mod_date as modDate,
 		m.name as guestName,
-		m.id as memberId
-		from booking b, member m
-		where b.guest_id = m.id
-		and b.host_id = #{hostId}
+		m.id as memberId,
+		p.id as p_id,
+		p.name as propertyName
+		FROM booking b, member m, property p
+		WHERE b.guest_id = m.id
+		AND b.host_id = #{hostId}
+		AND b.property_id = p.id
 	</select>
 
 	<select id="getMemberDTO" parameterType="String"
@@ -104,10 +117,12 @@
 		p.mod_date as modDate,
 		p.room_type_id as roomTypeId,
 		r.id,
-		r.name as roomTypeName,
+		r.name as
+		roomTypeName,
 		p.sub_property_type_id as subPropertyTypeId,
 		s.id,
-		s.name as subPropertyTypeName
+		s.name
+		as subPropertyTypeName
 		from property p, sub_property_type s, room_type
 		r
 		where host_id = #{hostId}
@@ -130,13 +145,16 @@
 		t.booking_id as bookingId,
 		t.is_refund as isReFund,
 		t.site_fee as siteFee,
-		t.pay_expt_date as payExptDate,
+		t.pay_expt_date as
+		payExptDate,
 		t.reg_date as regDate,
 		t.mod_date as modDate,
-		p.name as propertyName,
+		p.name as
+		propertyName,
 		p.id
 		from transaction t, booking b, property p
-		where b.id = t.booking_id
+		where b.id =
+		t.booking_id
 		and b.host_id = #{hostId}
 		and p.id = b.property_id
 	</select>
@@ -148,10 +166,12 @@
 		t.site_fee as siteFee,
 		t.is_refund as isRefund,
 		t.pay_expt_date as payExptDate
-		from booking b, transaction t
+		from booking b,
+		transaction t
 		where b.id = t.id
 		and sysdate > t.pay_expt_date
-		and host_id = #{hostId}
+		and host_id
+		= #{hostId}
 	</select>
 
 	<select id="getProperty" parameterType="int"
@@ -167,10 +187,12 @@
 		p.mod_date as modDate,
 		p.room_type_id as roomTypeId,
 		r.id,
-		r.name as roomTypeName,
+		r.name as
+		roomTypeName,
 		p.sub_property_type_id as subPropertyTypeId,
 		s.id,
-		s.name as subPropertyTypeName
+		s.name
+		as subPropertyTypeName
 		from property p, sub_property_type s, room_type
 		r
 		where p.id = #{propertyId}
@@ -184,68 +206,99 @@
 	<select id="listAmenityType" resultType="AmenityTypeDTO">
 		select
 		id, name,
-		is_use as isUse
+		is_use as
+		isUse
 		from amenity_type
 	</select>
-	<select resultType="int" id="getPropertyId"	parameterType="String">
-		select id from 
-		(select * from property 
-		where host_id=#{hostId}
+	<select resultType="int" id="getPropertyId"
+		parameterType="String">
+		select id from
+		(select * from property
+		where
+		host_id=#{hostId}
 		order by reg_date desc)
 		where ROWNUM = 1
 	</select>
 
-	<select resultType="int" id="insertPropertyAmenity"	parameterType="AmenityDTO">
+	<select resultType="int" id="insertPropertyAmenity"
+		parameterType="AmenityDTO">
 		insert into amenity(property_id, amenity_type_id)
-		values(#{propertyId},#{amenityTypeId}) 
+		values(#{propertyId},#{amenityTypeId})
 	</select>
-	
-	<select id="updateMemberMode" resultType="int" parameterType="String">
+
+	<select id="updateMemberMode" resultType="int"
+		parameterType="String">
 		update member set member_mode= '2' where id=#{hostId}
 	</select>
-	
-	<select id="getGuideContext" resultType="GuideContextDTO" parameterType="int">
-		select 
-			id,
-			guide_id as guideId,
-			context,
-			reg_date as regDate,
-			mod_date as modeDate
+
+	<select id="getGuideContext" resultType="GuideContextDTO"
+		parameterType="int">
+		select
+		id,
+		guide_id as guideId,
+		context,
+		reg_date as
+		regDate,
+		mod_date as modeDate
 		from guide_context
-		where guide_id=#{guideId}
+		where
+		guide_id=#{guideId}
 	</select>
-	
-	<select id="getReviewList" resultType="ReviewDTO" parameterType="int">
-		SELECT 
-			r.*, 
-			b.id as b_id,
-			b.check_in_date,
-			b.check_out_date,
-			b.total_price as price,
-			p.id as p_id,
-			p.name
-		FROM review r, booking b, property p 
-		WHERE r.property_id = #{propertyId}
-		AND r.booking_id = b.id
-		AND r.property_id = p.id
-	</select>
-	
-	<!-- <select id="getReviewWritingRate" resultType="Integer" parameterType="int">
+
+	<select id="getReviewList" resultType="ReviewDTO"
+		parameterType="int">
 		SELECT
-			r.reviewCount,
-			b.bookingCount
+		r.*,
+		b.id as b_id,
+		b.check_in_date,
+		b.check_out_date,
+		b.total_price as price,
+		p.id as p_id,
+		p.name
+		FROM review
+		r, booking b, property p
+		WHERE r.property_id = #{propertyId}
+		AND
+		r.booking_id = b.id
+		AND r.property_id
+		= p.id
+	</select>
+
+	<select id="getReviewWritingRate" resultMap="selectMapList"
+		parameterType="int">
+		SELECT
+		r.reviewCount,
+		b.bookingCount
 		FROM
-		(select count(*) as reviewCount
-		FROM review 
+		(select count(*)
+		as reviewCount
+		FROM review
 		WHERE property_id = #{propertyId}
 		AND sysdate > reg_date) r,
-		(select count(*) as bookingCount 
-		FROM booking 
+		(select count(*)
+		as bookingCount
+		FROM booking
 		WHERE property_id = #{propertyId}
 		AND sysdate > reg_date) b
 	</select>
- -->
+	<resultMap type="map" id="selectMapList">
+		<result column="reviewCount" property="reviewCount" />
+		<result column="bookingCount" property="bookingCount" />
+	</resultMap>
 	
+	<update id="bookConfirm" parameterType="int">
+		UPDATE booking as b, transaction as t
+		SET 
+		b.confirm_date = sysdate,
+		t.pay_expt_date = 
+		WHERE b.id = #{bookingId}
+		
+		UPDATE  테이블1 AS a, 테이블2 AS b
+      SET  a.column_name = value,
+              b.column_name = value
+﻿ WHERE  a.조건컬럼 = value
+      AND  b.조건컬럼 = value
+	</update>
 	<!-- <insert id="saveImage" parameterType="java.util.Map">     I insert 
 		into img_table VALUES #{img}    </insert> -->
 	<!--<delete> </delete> <update> </update> -->

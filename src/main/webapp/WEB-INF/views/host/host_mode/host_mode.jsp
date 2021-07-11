@@ -41,6 +41,7 @@
 					<tr>
 						<th width="12%">상태</th>
 						<th width="12%">예약번호</th>
+						<th width="12%">숙소명</th>
 						<th width="12%">게스트</th>
 						<th width="25%">숙박 기간</th>
 						<th width="15%">예약 접수 날짜</th>
@@ -52,17 +53,17 @@
 						<c:if test="${dto.checkOutDate.after(today)}">
 							<tr>
 								<td><c:if test="${dto.confirmDate == null}">
-										<button type="button" class="btn btn-sm btn-info"
-											data-toggle="modal" data-target="#${dto.id}"
-											title="예약을 확인해주세요!" data-placement="right">승인대기</button>
-										<!-- 모달정보 입력 -->
-										<div id="${dto.id}" class="modal fade" role="dialog">
+										<button type="button" class="btn btn-sm btn-link"
+											data-toggle="modal" data-target="#modal${dto.id}"
+											title="예약을 확인해주세요!" data-placement="right" style="color: orange ">승인대기</button>
+										<!-- 예약 승인 시 상세 입력 -->
+										<div id="modal${dto.id}" class="modal fade" role="dialog">
 											<div class="modal-dialog">
 												<!-- Modal content-->
 												<div class="modal-content">
 													<div class="modal-header">
 														<button type="button" class="close" data-dismiss="modal">&times;</button>
-														<h4 class="modal-title">예약 확인</h4>
+														<h4 class="modal-title" style="font-weight: bold;">예약 확인</h4>
 													</div>
 													<div class="modal-body">
 														<div class="media">
@@ -71,15 +72,18 @@
 																<div class="calendar"></div>
 															</div>
 															<div class="media-body">
-																<h3 class="media-heading"></h3>
+																<h3 class="media-heading">${dto.guestName}님이 숙박을 원해요!</h3>
 																<br>
+																<p>숙소명 : ${dto.propertyName}</p>
+																<p>숙박인원 : ${dto.guestCount}</p>
+																<p>숙박 기간 : ${dto.checkInDate} ~ ${dto.checkOutDate}</p>
 																<p>
 																	<button type="button" class="btn btn-success"
-																		onclick="location.href='/host/confirm?id=${dto.id}'">
+																		onclick="confirm(${dto.id}, ${dto.checkOutDate})">
 																		승인</button>
-																	<button type="button" class="btn btn-sm btn-info"
+																	<button type="button" class="btn btn-warning"
 																		data-toggle="modal"
-																		data-target="#${dto.id + dto.propertyId}"
+																		data-target="#${dto.id}modal"
 																		title="신중히 고려해주세요!" data-placement="right">
 																		반려</button>
 																</p>
@@ -89,6 +93,43 @@
 													<div class="modal-footer">
 														<button type="button" class="btn btn-default" data-dismiss="modal">
 															닫기
+														</button>
+													</div>
+												</div>
+											</div>
+										</div>
+										<!-- 예약 반려시 다시 뜨는 모달 -->
+										<div id="${dto.id}modal" class="modal fade" role="dialog">
+											<div class="modal-dialog">
+												<!-- Modal content-->
+												<div class="modal-content">
+													<div class="modal-header">
+														<button type="button" class="close" data-dismiss="modal">&times;</button>
+														<h4 class="modal-title" style="font-weight: bold;">예약 반려</h4>
+													</div>
+													<div class="modal-body">
+														<div class="media">
+															<div class="media-body">
+																<h3 class="media-heading">
+																예약을 반려하시는 이유가 무엇인가요??<br>
+																게스트에게 전달할 메세지를 적어주세요.
+																</h3>
+																<br>
+																<p>
+																<textarea class="form-control col-sm-5" rows="3"
+													 placeholder="ex. 제가 휴가를 갑니다. 양해 바랍니다."></textarea>
+																</p>
+																<p>
+																	<button type="button" class="btn btn-warning"
+																		onclick="reject(${dto.id})">
+																		반려 확인</button>
+																</p>
+															</div>
+														</div>
+													</div>
+													<div class="modal-footer">
+														<button type="button" class="btn btn-default" data-dismiss="modal">
+															취소
 														</button>
 													</div>
 												</div>
@@ -104,6 +145,7 @@
 								</td>
 								<td><b>${dto.bookingNumber}</b></td>
 								<td><b>${dto.guestName}</b><br>${dto.guestCount}명</td>
+								<td><b>${dto.propertyName}</b></td>
 								<td><b>${dto.checkInDate} ~ ${dto.checkOutDate}</b><br>${dto.dayCount}박</td>
 								<td>${dto.regDate}</td>
 								<td>₩${dto.totalPrice}</td>
@@ -116,7 +158,34 @@
 		</div>
 	</div>
 	<!-- /container -->
-
+	<script>
+		function confirm(id, checkOut){
+			 $.ajax({
+	                type : "POST",
+	                url : "/host/comfirm",
+	                data : {bookingId : id, checkOutDate : checkOut},
+	                success : function(data){
+	                    alert(data);
+	                },
+	                error : function(XMLHttpRequest, textStatus, errorThrown){
+	                    alert("서버 문제 발생! 잠시만 기다려 주세요.")
+	                }
+	            });
+		}
+		function reject(id){
+			 $.ajax({
+	                type : "POST",
+	                url : "/host/reject",
+	                data : {propertyId : id},
+	                success : function(data){ 
+	                    alert(data);
+	                },
+	                error : function(XMLHttpRequest, textStatus, errorThrown){
+	                    alert("서버 문제 발생! 잠시만 기다려 주세요.")
+	                }
+	            });
+		}
+	</script>
 
 	<!-- Bootstrap core JavaScript
     ================================================== -->

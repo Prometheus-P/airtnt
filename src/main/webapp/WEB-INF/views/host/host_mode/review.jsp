@@ -12,26 +12,27 @@
 	<c:set var="count" value="${listReview.size()}" />
 	<div id="reviewHtmlAjax"
 		style="font-family: fantasy; font-weight: lighter;">
+
+		<div class="page-header">
+			<h2>
+				<b>리뷰 작성률<br>${reviewRate}%</b>
+			</h2>
+		</div>
+		<div class="progress">
+			<div class="progress-bar progress-bar-striped" role="progressbar"
+				aria-valuenow="${reviewRate}" aria-valuemin="0" aria-valuemax="100"
+				style="width: ${reviewRate}%"></div>
+		</div>
 		<c:if test="${empty listReview}">
 			<div class="well">
 				<h2>후기가 아직 없습니다.</h2>
 			</div>
 		</c:if>
-		<%-- <div class="page-header">
-			<h2><b>리뷰 작성률<br>${reviewRate}%</b></h2>
-		</div>
-		<div class="progress">
-			<div class="progress-bar progress-bar-striped" role="progressbar"
-				aria-valuenow="${reviewRate}" aria-valuemin="0" aria-valuemax="100"
-				style="width: ${reviewRate}%">
-			</div>
-		</div> --%>
 		<c:forEach items="${listReview}" var="dto">
 			<div class="page-header">
 				<h3>
-					#${count} <br>
-					<font style="font-style: italic;">평점 ${dto.rating}점</font> <br>
-					${dto.writer_id}님의 후기
+					#${count} <br> <font style="font-style: italic;">평점
+						${dto.rating}점<br> ${dto.writer_id}님의 후기</font> 
 				</h3>
 				<button type="button" class="btn btn-sm btn-default"
 					data-target="#modal${dto.id}" data-toggle="modal">상세정보보기</button>
@@ -42,7 +43,8 @@
 					<c:if test="${empty dto.content_host}">
 						<p>
 							<button type="button" class="btn btn-primary"
-							data-target="#${dto.id}modal" data-toggle="modal">답글 작성하기</button>
+								data-target="#${dto.id}modal" data-toggle="modal">답글
+								작성하기</button>
 						</p>
 						<div id="${dto.id}modal" class="modal" role="dialog">
 							<div class="modal-dialog">

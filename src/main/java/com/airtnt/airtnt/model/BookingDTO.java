@@ -37,6 +37,7 @@ public class BookingDTO {
 	//host_mode페이지에서 사용한답니다 *^^*
 	private String memberId;
 	private String guestName;
+	private String propertyName;
 	
 	public Integer getId() {
 		return id;
@@ -220,5 +221,11 @@ public class BookingDTO {
 	}
 	public void setGuestName(String guestName) {
 		this.guestName = guestName;
+	}
+	public String getPropertyName() {
+		return propertyName;
+	}
+	public void setPropertyName(String propertyName) {
+		this.propertyName = propertyName;
 	}
 }
