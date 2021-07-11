@@ -26,39 +26,9 @@ function loginCheck(){
 	}
 	return true;
 }
-
-function setTotalPrice(){
-	var checkInDateStr = document.getElementById("check_in_date").value;
-	var checkOutDateStr = document.getElementById("check_out_date").value;
-	var guestCount = document.getElementById("guest_count").value;
-	//console.log(checkInDateStr);
-	//console.log(checkOutDateStr);
-	if(checkInDateStr == "" || checkOutDateStr == ""){
-		return;
-	}
-	var checkInDate = new Date(checkInDateStr);
-	var checkOutDate = new Date(checkOutDateStr);
-	//console.log(checkInDate);
-	//console.log(checkOutDate);
-	
-	var diff = checkOutDate - checkInDate;
-	//console.log(diff);
-	var dayCount = diff / (24*60*60*1000);
-	//console.log(dayCount);
-	var totalPrice = guestCount * dayCount * ${property.price};
-	var totalPriceStr = new Intl.NumberFormat('ko-KR', {style: 'currency',currency: 'KRW', minimumFractionDigits: 0}).format(totalPrice);
-	
-	document.getElementById("day_count").value = dayCount;
-	document.getElementById("total_price").value = totalPrice;
-	document.getElementById("price_disp").innerHTML = totalPriceStr;
-}
 </script>
 
-<!-- date range picker -->
-<script type="text/javascript" src="/resources/daterangepicker/jquery.min.js"></script>
-<script type="text/javascript" src="/resources/daterangepicker/moment.min.js"></script>
-<script type="text/javascript" src="/resources/daterangepicker/moment-with-locales.js"></script>
-<script type="text/javascript" src="/resources/daterangepicker/daterangepicker.js"></script>
+<!-- date range picker css -->
 <link rel="stylesheet" type="text/css" href="/resources/daterangepicker/daterangepicker.css" />
 
 </head>
@@ -68,6 +38,163 @@ function setTotalPrice(){
 
 <!-- 위시리스트 모달은 jQuery 라이브러리 적용을 위해서 top.jsp 아래 둬야함 -->
 <c:import url="/WEB-INF/views/property/_wish-modal.jsp"/>
+
+<!-- date range picker js -->
+<script type="text/javascript" src="/resources/daterangepicker/jquery.min.js"></script>
+<script type="text/javascript" src="/resources/daterangepicker/moment.min.js"></script>
+<script type="text/javascript" src="/resources/daterangepicker/moment-with-locales.js"></script>
+<script type="text/javascript" src="/resources/daterangepicker/daterangepicker.js"></script>
+<script type="text/javascript" src="/resources/script/json2.js"></script>
+<script type="text/javascript">
+const MILLISECONDS_PER_DAY = 24*60*60*1000;
+const invalidDateStrArray = ${invalidDates};	console.log(invalidDateStrArray);
+var dayCount = 0;
+
+var applyButton;
+var cancelButton;
+
+var dateRangeInput;
+var checkInDateInput;
+var checkOutDateInput;
+var dayCountInput;
+var guestCountInput;
+var totalPriceInput;
+var priceDispArea;
+
+$(function(){
+	
+	$("input#date-range").daterangepicker({
+		startDate: moment().startOf("day").add(1, "day"),
+		endDate: moment().startOf("day").add(2, "day"),
+		locale: {
+			format: "YYYY-MM-DD",
+			separator: " ~ ",
+			applyLabel: "적용",
+			cancelLabel: "취소",
+			daysOfWeek: ["일","월","화","수","목","금","토"],
+			monthNames: ["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"],
+			firstDay: 1
+		},
+		opens: "left",
+		drops: "auto",
+		autoUpdateInput: false,
+		buttonClasses: "btn",
+		applyButtonClasses: "btn-primary",
+		cancelClass: "btn-default",
+		isInvalidDate: function(date) {
+			//console.log("입력 millisecond? " + date);
+			var dateToTime = new Date(date).getTime();
+			var todayToTime = new Date().getTime();
+			//console.log("입력 " + dateToDays);
+			//console.log("오늘 " + todayToDays);
+			// 오늘부터 이전 날짜는 전부 비활성화
+			if(dateToTime <= todayToTime){
+				return true;
+			}
+			// 체크인 ~ 체크아웃 -1 인 예약날짜는 전부 비활성화
+			for(var invalidDateStr of invalidDateStrArray){
+				if (date.format("YYYY-MM-DD") == invalidDateStr) {
+					return true;
+				}
+			}
+			return false;
+		}
+	}, function(startDate, endDate, label) {
+		console.log("A new date selection was made: " +
+				startDate.format("YYYY-MM-DD") + " to " + endDate.format("YYYY-MM-DD"));
+	}).attr("placeholder", "기간을 입력해주세요.");
+
+	$("input#date-range").on("apply.daterangepicker", function(ev, picker) {
+		dateRangeInput.placeholder = "";
+		
+		var checkInDateStr = picker.startDate.format("YYYY-MM-DD");
+		var checkOutDateStr = picker.endDate.format("YYYY-MM-DD");
+		
+		console.log(checkInDateStr);
+		console.log(checkOutDateStr);
+		
+		var checkInDateToTime = new Date(checkInDateStr).getTime();
+		var checkOutDateToTime = new Date(checkOutDateStr).getTime();
+		
+		if(checkInDateToTime >= checkOutDateToTime){
+			this.placeholder = "1박 이상 예약해주세요.";
+			initDateRangeInput();
+			return;
+		}
+		
+		if(invalidDateStrArray.length > 0){
+			var checkInDateToTime = new Date(checkInDateStr).getTime();
+			var checkOutDateToTime = new Date(checkOutDateStr).getTime();
+			//console.log("체크인 " + checkInDateToTime);
+			//console.log("체크아웃 " + checkOutDateToTime);
+			for(var invalidDateStr of invalidDateStrArray){
+				var invalidDateToTime = new Date(invalidDateStr).getTime();
+				//console.log("안되는날 " + invalidDateToTime);
+				for(var time = checkInDateToTime;
+						time < checkOutDateToTime; time += MILLISECONDS_PER_DAY){
+					//console.log("사이 날짜 " + time);
+					if(time == invalidDateToTime){
+						this.placeholder = "이미 예약되었습니다.";
+						initDateRangeInput();
+						return;
+					}
+				}
+			}
+		}
+		
+		$(this).val(checkInDateStr + " ~ " + checkOutDateStr);
+		checkInDateInput.value = checkInDateStr;
+		checkOutDateInput.value = checkOutDateStr;
+		dayCountInput.value = (checkOutDateToTime - checkInDateToTime) / MILLISECONDS_PER_DAY;
+		setTotalPrice();
+	});
+	
+	$("input#date-range").on("cancel.daterangepicker", function(ev, picker) {
+		this.placeholder = "기간을 입력해주세요.";
+		initDateRangeInput();
+	});
+	
+	$("input#date-range").click(function(){
+		this.placeholder = "기간을 입력해주세요.";
+	})
+	
+	applyButton = document.querySelector("button.applyBtn");
+	cancelButton = document.querySelector("button.cancelBtn");
+	
+	// 날짜 입력에 따라 바뀌는 태그 ///////////////////////////////////
+	dateRangeInput = document.querySelector("input#date-range");
+	checkInDateInput = document.querySelector("input#check-in-date");
+	checkOutDateInput = document.querySelector("input#check-out-date");
+	dayCountInput = document.querySelector("input#day-count");
+	///////////////////////////////////////////////////////////////////
+	
+	guestCountInput = document.querySelector("input#guest-count");
+	totalPriceInput = document.querySelector("input#total-price");
+	priceDispArea = document.querySelector("span#price-disp");
+	
+	setTotalPrice();
+});
+
+function initDateRangeInput(){
+	dateRangeInput.value = "";
+	checkInDateInput.value = "";
+	checkOutDateInput.value = "";
+	dayCountInput.value = 0;
+	setTotalPrice();
+}
+
+function setTotalPrice(){
+	var dayCount = dayCountInput.value;
+	var guestCount = guestCountInput.value;
+	var totalPrice = guestCount * dayCount * ${property.price};
+	var totalPriceStr = new Intl.NumberFormat('ko-KR', {style: 'currency',currency: 'KRW', minimumFractionDigits: 0}).format(totalPrice);
+	
+	totalPriceInput.value = totalPrice;
+	priceDispArea.innerHTML = totalPriceStr;
+}
+
+</script>
+
 
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
@@ -289,41 +416,31 @@ function setTotalPrice(){
 	       <input type="hidden" name="propertyId" value="${property.id}">
 	       <input type="hidden" name="hostId" value="${property.hostId}">
 	       <input type="hidden" name="guestId" value="${sessionScope.member_id}">
-	       <input id="day_count" type="hidden" name="dayCount">
-	       <input id="total_price" type="hidden" name="totalPrice">
+	       <input type="hidden" id="check-in-date" name="checkInDate" value=""/>
+	       <input type="hidden" id="check-out-date" name="checkOutDate" value=""/>
+	       <input type="hidden" id="day-count" name="dayCount" value="0">
+	       <input type="hidden" id="total-price" name="totalPrice" value="">
 	       <ul class="list-group" style="font-size: 20px">
 	         <li class="list-group-item">
 	           <div class="one_third first">
-	             체크인
+	             기간
 	           </div>
 	           <div class="two_third">
-	             <input id="check_in_date" type="date" name="checkInDate"
-	             min="${tomorrow}" value="${tomorrow}" onchange="javascript:setTotalPrice()">
+	             <input type="text" id="date-range" value="" style="font-size: 16px"/>
 	           </div>
 	         </li>
 	         <li class="list-group-item">
 	           <div class="one_third first">
-	             체크아웃
+	             인원수<br>
+	             (최대 ${property.maxGuest}명)
 	           </div>
 	           <div class="two_third">
-	             <input id="check_out_date" type="date" name="checkOutDate"
-	             min="${dayAfterTomorrow}" value="${dayAfterTomorrow}" onchange="javascript:setTotalPrice()">
-	           </div>
-	         </li>
-	         <li class="list-group-item">
-	           <div class="one_third first">
-	             인원수
-	           </div>
-	           <div class="two_third" style="height: 100px; width: 100px">
-	             <input id="guest_count" type="number" name="guestCount"
-	             min="1" max="${property.maxGuest}" value="1" onchange="javascript:setTotalPrice()">
+	             <input id="guest-count" type="number" name="guestCount"
+	             min="1" max="${property.maxGuest}" value="1" >
 	           </div>
 	         </li>
 	         <li class="list-group-item" style="font-size: 30px;color: blue">
-	           총액 <span id="price_disp"></span>
- 	           <script type="text/javascript">
-	             setTotalPrice();
-	           </script>
+	           총액 <span id="price-disp"></span>
 	         </li>
 	         <li class="list-group-item">
 	           <input class="btn btn-primary" type="submit"

@@ -15,13 +15,13 @@ Licence URI: https://www.os-templates.com/template-terms
 <c:if test="${empty booking}">
 	<script type="text/javascript">
 		alert("요청이 만료되었습니다.");
-		location.href = "/property/search";
+		location.href = "index";
 	</script>
 </c:if>
 <c:if test="${empty sessionScope.member_id}">
 	<script type="text/javascript">
 		alert("로그인 후 이용해주세요.");
-		location.href = "/property/search";
+		history.go(-2);
 	</script>
 </c:if>
 <!-- To declare your language - read more here: https://www.w3.org/International/questions/qa-html-language-declarations -->
@@ -149,11 +149,13 @@ Licence URI: https://www.os-templates.com/template-terms
            </ul>
          </div>
          <div>
-           <a href="<c:url value='/property/search'/>">
-             <button class="btn" type="button" style="width: 200px; height: 80px; font-size: 30px">확인</button>
+           <a href="<c:url value='/property/search?pageNum=1'/>">
+             <button class="btn" type="button"
+             style="width: 200px; height: 80px; font-size: 30px">확인</button>
            </a>
 	       <a href="<c:url value=''/>">
-	         <button class="btn" type="button"style="width: 200px; height: 80px; font-size: 30px">마이페이지</button>
+	         <button class="btn" type="button"
+	         style="width: 200px; height: 80px; font-size: 30px">마이페이지</button>
 	       </a>
          </div>
        </div>
