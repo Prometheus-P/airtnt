@@ -3,5 +3,20 @@
  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.airtnt.airtnt.service.ReviewMapper">
-	
+	<insert id="writerReview" parameterType="ReviewDTO">
+		insert into review values(seq_review_id.nextval, #{property_id}, #{booking_id}, #{writer_id}, #{rating}, #{content}, #{content_host, jdbcType=VARCHAR}, #{content_host_date, jdbcType=VARCHAR}, sysdate, sysdate)
+	</insert>
+	<select id="getReview" resultType="ReviewDTO" parameterType="String"> 
+		select *
+		from review_view
+        where writer_id=#{member_id}
+	</select>
+	<update id="deleteReview" parameterType="String">
+		delete from review where id =#{id}
+	</update>
+	<update id="updateReview" parameterType="java.util.Map">
+		update review 
+		set content=#{content}, rating=#{rating}
+		where id =#{id}
+	</update>
  </mapper>

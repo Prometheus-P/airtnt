@@ -3,9 +3,27 @@
 <%@ include file="/WEB-INF/views/top.jsp"%>
 <script type="text/javascript">
 			function check(){
-				if (update.filename.value==""){
-					alert("파일이 선택되지않았습니다")
-					return
+				var imgFile = $('#isFile').val();
+				var fileForm = /(.*?)\.(jpg|jpeg|png|gif|bmp|pdf)$/;
+				var maxSize = 5 * 1024 * 1024;
+				var fileSize;
+
+				if($('#isFile').val() == "") {
+					alert("첨부파일은 필수!");
+				    $("#isFile").focus();
+				    return;
+				}
+
+				if(imgFile != "" && imgFile != null) {
+					fileSize = document.getElementById("isFile").files[0].size;
+				    
+				    if(!imgFile.match(fileForm)) {
+				    	alert("이미지 파일만 업로드 가능");
+				        return;
+				    } else if(fileSize > maxSize) {
+				    	alert("파일 사이즈는 5MB까지 가능");
+				        return;
+				    }
 				}
 				
 				document.update.submit()
@@ -29,7 +47,7 @@
 					value="${memberData.member_image}">
 				<div>
 					<label for="formFileLg" class="form-label">프로필사진</label> <input
-						class="form-control form-control-lg" id="formFileLg" type="file"
+						class="form-control form-control-lg" id="isFile" type="file" accept="image/*"
 						name="filename">
 				</div>
 				<button type="button" class="btn" onclick="check()"

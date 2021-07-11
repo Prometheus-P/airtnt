@@ -237,11 +237,11 @@ function FindIdCheck(){
 }
 
 //[회원탈퇴 컨펌]
-function sure(){
-	var input = confirm('정말로 탈퇴하시겠습니까?');
+function sure(text,url){
+	var input = confirm(text);
 
     if(input) {
-    	window.location.href='/myPage/deleteMember';
+    	window.location.href=url;
     } else {
     	return
     }

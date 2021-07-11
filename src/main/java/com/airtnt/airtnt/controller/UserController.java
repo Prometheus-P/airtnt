@@ -338,41 +338,41 @@ public class UserController {
 		String member_id = (String) req.getSession().getAttribute("member_id");
 		
 		List<BookingDTO> toWriteReviews = bookingMapper.getToWriteBooking(member_id);
+		List<ReviewDTO> myReviews = reviewMapper.getReview(member_id);
+		
 		req.setAttribute("toWriteReviews", toWriteReviews);
+		req.setAttribute("myReviews", myReviews);
 		
 		return "user/user/review";
 	}
 	@RequestMapping("myPage/writeReview")
 	public String writeReview(HttpServletRequest req, @ModelAttribute ReviewDTO dto) {
 		String member_id = (String) req.getSession().getAttribute("member_id");
-		System.out.println("zz");
-		System.out.println(dto.getProperty_id());
+		dto.setWriter_id(member_id);
 		int res = reviewMapper.writeReview(dto);
 		
 		if(res>0) {
 			req.setAttribute("msg", "리뷰가 등록되었습니다");
 			req.setAttribute("url", "/myPage/review");
+		}else {
+			req.setAttribute("msg", "DB문제발생 관리자 문의");
+			req.setAttribute("url", "/myPage/review");
 		}
-		req.setAttribute("msg", "DB문제발생 관리자 문의");
-		req.setAttribute("url", "/myPage/review");
-	
 		return "message";
 	}
 	
 	@RequestMapping("myPage/deleteReview")
-	public String deleteReview(HttpServletRequest req) {
-		String member_id = (String) req.getSession().getAttribute("member_id");
-		
-		return "user/user/review";
+	public String deleteReview(HttpServletRequest req, @RequestParam("id") String id) {
+		int res = reviewMapper.deleteReview(id);
+		return "redirect:/myPage/Review";
 	}
 	
-
-	@RequestMapping("myPage/payment")
-	public String payment(HttpServletRequest req) {
-
-		return "user/user/payment";
+	@RequestMapping("myPage/updateReview")
+	public String updateReview(HttpServletRequest req, @RequestParam Map<String, String> params) {
+		int res = reviewMapper.updateReview(params);
+		return "redirect:/myPage/Review";
 	}
-
+	
 	// 위시리스트
 	@RequestMapping("wishList")
 	public String wishList(HttpServletRequest req) {
@@ -449,6 +449,20 @@ public class UserController {
 		req.setAttribute("planedBookinglist", planed);
 		req.setAttribute("preBookinglist", pre);
 		return "user/tour/tour";
+	}
+	
+	//[미구현 페이지]
+	@RequestMapping("myPage/payment")
+	public String payment(HttpServletRequest req) {
+		req.setAttribute("msg", "준비중입니다~");
+		req.setAttribute("url", "goback");
+		return "message";
+	}
+	@RequestMapping("help")
+	public String help(HttpServletRequest req) {
+		req.setAttribute("msg", "준비중입니다~");
+		req.setAttribute("url", "goback");
+		return "message";
 	}
 	
 	

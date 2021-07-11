@@ -1,5 +1,6 @@
 package com.airtnt.airtnt.service;
 
+import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
@@ -15,8 +16,23 @@ public class ReviewMapper {
 	private SqlSession sqlSession;
 
 	public int writeReview(ReviewDTO dto) {
-		// TODO Auto-generated method stub
-		return 0;
+		int res = sqlSession.insert("writerReview",dto);
+		return res;
+	}
+
+	public List<ReviewDTO> getReview(String member_id) {
+		List<ReviewDTO> list = sqlSession.selectList("getReview",member_id);
+		return list;
+	}
+
+	public int deleteReview(String id) {
+		int res = sqlSession.insert("deleteReview",id);
+		return res;
+	}
+
+	public int updateReview(Map<String, String> params) {
+		int res = sqlSession.insert("updateReview",params);
+		return res;
 	}
 	
 }

@@ -2,14 +2,16 @@
 	pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/top.jsp"%>
 <script>
-$(document).on("click", ".open-ReviewModal", function () {
-	var property_Id = $(this).data('property_Id'); 
-	$(".modal-body #propert_Id").val( property_Id );
-	alret("ㅋㅋ");
-	// As pointed out in comments, 
-	// it is superfluous to have to manually call the modal. 
-	// $('#addBookDialog').modal('show');
-	});
+	function transferData(property_id,booking_id){
+	$('#property_id').val(property_id)
+	$('#booking_id').val(booking_id)
+	
+	}
+	function transferDataForUpdate(id,rating,content){
+		$('#review_id').val(id)
+		$('#update_rating').val(rating)
+		$('#update_content').html(content)
+		}
 
 </script>
 <div class="hoc container clear" style="margin-left: 4vh;">
@@ -23,7 +25,7 @@ $(document).on("click", ".open-ReviewModal", function () {
 			<div class="fl_left " style="font-size: 13px;">최근 1년간 여행한 숙소에 한해 작성 가능</div>
 		</div>
 	</div>
-	<div class="tabs" style="margin-left: 0px; margin-top:10px;">
+	<div class="tabs" style="height:1200px; margin-left: 0px; margin-top:10px;">
 	    <input id="all" type="radio" name="tab_item" checked>
 	    <label class="tab_item" for="all">작성할 리뷰</label>
 	    <input id="programming" type="radio" name="tab_item">
@@ -53,7 +55,7 @@ $(document).on("click", ".open-ReviewModal", function () {
 			                <p>${dto.check_in_date} | ${dto.check_out_date}</p>
 			              </div>
 			              <div class="one_third text-right">
-			              	<button data-target="#ReviewModal" data-property_id="${dto.property_id}" data-toggle="modal" id="test_btn3" style="font-size:20px;" type="button" class="btn btn-outline-primary">리뷰작성하기</button>
+			              	<button data-target="#ReviewModal" onclick="transferData(${dto.property_id},${dto.id})" data-toggle="modal" id="test_btn3" style="font-size:20px;" type="button" class="btn btn-outline-primary">리뷰작성하기</button>
 			              </div>
 			            </li>
 			            <hr>
@@ -70,23 +72,33 @@ $(document).on("click", ".open-ReviewModal", function () {
 		    	<ul class="nospace clear " style="margin-top: 50px;">
 			            <c:forEach var="dto" items="${myReviews}">
 			            <li>
+			              <hr>
 			              <div class="one_third first text-center" style="width: 10%;">
 			                <a href="/property/detail?propertyId=${dto.property_id}">
 			                	<img src="${dto.path}" alt="" style="height:70px;"></a>
 			              </div>
 			              <div class="one_third text-left">
 			                <p class="fs-2"><a style="color:black" href="/guest/property-detail?propertyId=${dto.property_id}">${dto.property_name}</a></p>
-			                <p>${dto.type_name}/${dto.sub_type_name} ${dto.room_type_name}</p>
 			                <p>${dto.property_address}</p>
-			                <p>${dto.total_price}원</p>
+			                <p>${dto.price}원</p>
 			                <p>${dto.check_in_date} | ${dto.check_out_date}</p>
 			              </div>
-			              <div class="one_third text-right">
-			              	<button data-target="#ReviewModal" data-toggle="modal" id="test_btn3" style="font-size:20px;" type="button" class="btn btn-outline-primary">리뷰작성하기</button>
+			              <div class="one_third fl_right">
+			                <button onclick="sure('정말 삭제하시겠습니까?','/myPage/deleteReview?id=+${dto.id}')" 
+			                type="button" class="close">&times;</button>
 			              </div>
+			              <hr style="color: #00000061;">
+			              <div class="two_third first text-left">
+			              	<p>${dto.rating}</p>
+			              	<p>${dto.content}</p>
+			              </div>
+			              <div class="one_third fl_right">
+			              	<button data-target="#updateReviewModal" onclick="transferDataForUpdate('${dto.id}','${dto.rating}','${dto.content}')"
+											data-toggle="modal" style="font-size:10px;" type="button" class="btn">수정하기</button>
+			              </div><br>
 			            </li>
-			            <hr>
 			            </c:forEach>
+			            <hr>
 			          </ul>
 		    </c:if>
 		</div>
@@ -102,17 +114,46 @@ $(document).on("click", ".open-ReviewModal", function () {
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 			</div>
 			<div class="modal-body">
-				<form name="findId" action="/myPage/writeReview" method="post" onsubmit="return FindIdCheck()">
+				<form name="writeReview" action="/myPage/writeReview" method="post" onsubmit="return writeReview()">
 					<input type="hidden" name="property_id" id="property_id" value=""/>
+					<input type="hidden" name="booking_id" id="booking_id" value=""/>
 					<div class="form-group mb-3 col-sm-lg">
-						    <label for="InputPass" class="form-label">이름</label>
-						    <input type="text" name="name" class="form-control" id="FIname">
+						    <label for="InputRating" class="form-label">별점</label>
+						    <input type="text" name="rating" class="form-control" id="review_rating">
 					</div>
 					<div class="form-group mb-3 col-sm-lg">
-						    <label for="InputEmail" class="form-label"></label>
-						    <textarea rows="10" cols="58"></textarea>
-						    <input type="text" name="email" class="form-control" id="FIemail" aria-describedby="EmailHelp">
-						    <div id="EmailHelp" class="form-text">가입 시 입력한 이메일주소</div>
+						    <label for="InputContent" class="form-label">내용</label>
+						    <textarea name="content" class="form-control" id="review_content" rows="10" cols="58"></textarea>
+					</div>
+					<div class="form-group">
+						<button type="submit" class="btn btn-primary btn-lg btn-block login-btn" style="font-size: 15px">전송</button>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<p></p>
+			</div>
+		</div>
+	</div>
+</div>  
+<!-- updateReviewModal-->
+<div id="updateReviewModal" class="modal fade">
+	<div class="modal-dialog modal-login ">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">리뷰 수정</h4>	
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			</div>
+			<div class="modal-body">
+				<form name="updateReview" action="/myPage/updateReview" method="post" onsubmit="return writeReview()">
+					<input type="hidden" name="id" id="review_id" value=""/>
+					<div class="form-group mb-3 col-sm-lg">
+						    <label for="" class="form-label">별점</label>
+						    <input type="text" name="rating" class="form-control" id="update_rating" value="">
+					</div>
+					<div class="form-group mb-3 col-sm-lg">
+						    <label for="" class="form-label">내용</label>
+						    <textarea name="content" class="form-control" id="update_content" rows="10" cols="58" ></textarea>
 					</div>
 					<div class="form-group">
 						<button type="submit" class="btn btn-primary btn-lg btn-block login-btn" style="font-size: 15px">전송</button>
