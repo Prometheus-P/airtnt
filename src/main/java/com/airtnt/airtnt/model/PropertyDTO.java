@@ -5,6 +5,15 @@ import java.util.List;
 
 public class PropertyDTO {
 	
+	// 디버깅용
+	private int rowNum;
+	public int getRowNum() {
+		return rowNum;
+	}
+	public void setRowNum(int rowNum) {
+		this.rowNum = rowNum;
+	}
+	
 	private Integer id; // pk
 	private String name;
 	private String hostId;
@@ -36,7 +45,7 @@ public class PropertyDTO {
 	private SubPropertyTypeDTO subPropertyType;
 	private RoomTypeDTO roomType;
 
-	private List<AmenityDTO> amenities;
+	private List<AmenityTypeDTO> amenityTypes;
 	private List<ImageDTO> images;
 	
 	// 위시리스트에 있는지 판별하는 값
@@ -173,11 +182,11 @@ public class PropertyDTO {
 	public void setRoomType(RoomTypeDTO roomType) {
 		this.roomType = roomType;
 	}
-	public List<AmenityDTO> getAmenities() {
-		return amenities;
+	public List<AmenityTypeDTO> getAmenityTypes() {
+		return amenityTypes;
 	}
-	public void setAmenities(List<AmenityDTO> amenities) {
-		this.amenities = amenities;
+	public void setAmenityTypes(List<AmenityTypeDTO> amenityTypes) {
+		this.amenityTypes = amenityTypes;
 	}
 	public List<ImageDTO> getImages() {
 		return images;

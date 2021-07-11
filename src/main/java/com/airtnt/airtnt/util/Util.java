@@ -9,18 +9,6 @@ import javax.servlet.http.HttpSession;
 
 public class Util {
 	
-	// 쿠키 수명
-	// 월(1~12)*일(1~30)*시간(1~24)*분(1~60)*초(1~60)
-	public static final int SECOND = 1;
-	public static final int MINUTE = 60*SECOND;
-	public static final int HOUR = 60*MINUTE;
-	public static final int DAY = 24*HOUR;
-	public static final int WEEK = 7*DAY;
-	public static final int MONTH = 30*DAY;
-	public static final int YEAR = 12*MONTH;
-	
-	public static final String RECENT_COOKIE_PREFIX = "AirTnT_recent_";
-	
 	public static Cookie getCookie(HttpServletRequest req, String cookieName) {
 		Cookie[] cookieArray = req.getCookies();
 		if(cookieArray != null) {
