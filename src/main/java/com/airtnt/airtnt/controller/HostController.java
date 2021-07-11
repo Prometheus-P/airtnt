@@ -19,6 +19,8 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -36,6 +38,7 @@ import com.airtnt.airtnt.model.GuideDTO;
 import com.airtnt.airtnt.model.ImageDTO;
 import com.airtnt.airtnt.model.PropertyDTO;
 import com.airtnt.airtnt.model.PropertyTypeDTO;
+import com.airtnt.airtnt.model.ReviewDTO;
 import com.airtnt.airtnt.model.RoomTypeDTO;
 import com.airtnt.airtnt.model.SubPropertyTypeDTO;
 import com.airtnt.airtnt.model.TransactionDTO;
@@ -183,9 +186,9 @@ public class HostController implements HostControllerInterface {
 			HttpServletRequest req) {
 		HttpSession session = req.getSession();
 		String strResult = "{ \"result\":\"FAIL\" }";
-		//@SuppressWarnings("deprecation")
-		//String contextRoot = new HttpServletRequestWrapper(req).getRealPath("/");
-		//String fileRoot;
+		// @SuppressWarnings("deprecation")
+		// String contextRoot = new HttpServletRequestWrapper(req).getRealPath("/");
+		// String fileRoot;
 		long sizeSum = 0;
 		List<String> listImgUrl = new ArrayList<>();
 		try {
@@ -193,7 +196,7 @@ public class HostController implements HostControllerInterface {
 			if (multipartFile.size() > 0 && !multipartFile.get(0).getOriginalFilename().equals("")) {
 
 				for (MultipartFile file : multipartFile) {
-					//fileRoot = contextRoot + "resources/property_img/";
+					// fileRoot = contextRoot + "resources/property_img/";
 
 					String originalFileName = file.getOriginalFilename(); // 오리지날 파일명
 					String extension = originalFileName.substring(originalFileName.lastIndexOf(".")); // 파일 확장자
@@ -422,9 +425,34 @@ public class HostController implements HostControllerInterface {
 	@Override
 	@RequestMapping("host/host_review_list")
 	public ModelAndView host_review_list(HttpServletRequest req) {
-		// TODO Auto-generated method stub
-		return new ModelAndView("/host/host_mode/host_review_list");
+		HttpSession session = req.getSession();
+		List<PropertyDTO> list = hostMapper.getPropertyList((String)session.getAttribute("member_id"));
+		return new ModelAndView("/host/host_mode/host_review_list", "listProperty", list);
 	}
+	
+	@PostMapping("review_html")
+	public ModelAndView getReiview(HttpServletRequest req) {
+		Integer propertyId = Integer.parseInt(req.getParameter("propertyId"));
+
+		List<ReviewDTO> list = hostMapper.getReviewList(propertyId);
+		
+		/*List<Integer> listCount = hostMapper.getReviewWritingRate(propertyId);
+		 * long reviewRate = listCount.get(0) / listCount.get(1) * 100;
+		 * System.out.println("reviewRate: " +reviewRate);
+		 * mav.addObject("reviewRate", reviewRate);
+		 */
+		ModelAndView mav = new ModelAndView("/host/host_mode/review");
+		mav.addObject("listReview", list);
+		return mav;
+	}
+
+	
+	@GetMapping("review_send")
+	public ModelAndView review_html(@RequestParam String review) {
+		System.out.println("review_html:" +review);
+		return new ModelAndView("/host/host_mode/host_review_list", "review", review);
+	}
+	
 
 	public java.util.Date addMonth(Date date, int months) {
 		Calendar cal = Calendar.getInstance();

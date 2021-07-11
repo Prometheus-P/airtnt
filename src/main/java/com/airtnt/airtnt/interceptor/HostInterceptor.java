@@ -23,7 +23,7 @@ public class HostInterceptor implements HandlerInterceptor {
 			response.sendRedirect(request.getContextPath() + "/message_host");
 			return false;
 		}
-		System.out.println("=================호스트 맞음================");
+		System.out.println("===============호스트 확인==============");
 		session.setAttribute("isHostMode", true);
 		@SuppressWarnings("rawtypes")
 		Enumeration paramNames = request.getParameterNames();

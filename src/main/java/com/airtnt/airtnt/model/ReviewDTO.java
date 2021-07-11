@@ -11,7 +11,7 @@ public class ReviewDTO {
 	private int rating;
 	private String content;
 	private String content_host;
-	private Date content_Host_date;
+	private Date content_host_date;
 	private Date reg_date;
 	private Date mod_date;
 	
@@ -22,6 +22,7 @@ public class ReviewDTO {
 	private Date check_in_date;
 	private Date check_out_date;
 	private String path;
+	
 	public int getId() {
 		return id;
 	}
@@ -64,11 +65,11 @@ public class ReviewDTO {
 	public void setContent_host(String content_host) {
 		this.content_host = content_host;
 	}
-	public Date getContent_Host_date() {
-		return content_Host_date;
+	public Date getContent_host_date() {
+		return content_host_date;
 	}
-	public void setContent_Host_date(Date content_Host_date) {
-		this.content_Host_date = content_Host_date;
+	public void setContent_host_date(Date content_host_date) {
+		this.content_host_date = content_host_date;
 	}
 	public Date getReg_date() {
 		return reg_date;

@@ -16,6 +16,7 @@ import com.airtnt.airtnt.model.GuideDTO;
 import com.airtnt.airtnt.model.MemberDTO;
 import com.airtnt.airtnt.model.PropertyDTO;
 import com.airtnt.airtnt.model.PropertyTypeDTO;
+import com.airtnt.airtnt.model.ReviewDTO;
 import com.airtnt.airtnt.model.RoomTypeDTO;
 import com.airtnt.airtnt.model.SubPropertyTypeDTO;
 import com.airtnt.airtnt.model.TransactionDTO;
@@ -39,7 +40,7 @@ public class HostMapper implements HostMapperInterface {
 		GuideDTO guideDTO = sqlSession.selectOne("getGuide", id);
 		return guideDTO;
 	}
-	
+
 	public List<GuideContextDTO> getGuideContext(int guideId) {
 		List<GuideContextDTO> list = sqlSession.selectList("getGuideContext", guideId);
 		return list;
@@ -145,10 +146,21 @@ public class HostMapper implements HostMapperInterface {
 		int res = sqlSession.insert("insertPropertyAmenity", dto);
 		return res;
 	}
+
 	public int updateMemberMode(String memberId) {
 		int res = sqlSession.update("updateMemberMode", memberId);
 		return res;
 	}
+
+	public List<ReviewDTO> getReviewList(int propertyId) {
+		List<ReviewDTO> list = sqlSession.selectList("getReviewList", propertyId);
+		return list;
+	}
 	
+	/*
+	 * public List<Integer> getReviewWritingRate(int propertyId) { List<Integer>
+	 * list = sqlSession.selectList("getReviewWritingRate", propertyId); return
+	 * list; }
+	 */
 
 }

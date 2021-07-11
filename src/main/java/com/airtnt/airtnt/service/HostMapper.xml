@@ -214,6 +214,38 @@
 		from guide_context
 		where guide_id=#{guideId}
 	</select>
+	
+	<select id="getReviewList" resultType="ReviewDTO" parameterType="int">
+		SELECT 
+			r.*, 
+			b.id as b_id,
+			b.check_in_date,
+			b.check_out_date,
+			b.total_price as price,
+			p.id as p_id,
+			p.name
+		FROM review r, booking b, property p 
+		WHERE r.property_id = #{propertyId}
+		AND r.booking_id = b.id
+		AND r.property_id = p.id
+	</select>
+	
+	<!-- <select id="getReviewWritingRate" resultType="Integer" parameterType="int">
+		SELECT
+			r.reviewCount,
+			b.bookingCount
+		FROM
+		(select count(*) as reviewCount
+		FROM review 
+		WHERE property_id = #{propertyId}
+		AND sysdate > reg_date) r,
+		(select count(*) as bookingCount 
+		FROM booking 
+		WHERE property_id = #{propertyId}
+		AND sysdate > reg_date) b
+	</select>
+ -->
+	
 	<!-- <insert id="saveImage" parameterType="java.util.Map">     I insert 
 		into img_table VALUES #{img}    </insert> -->
 	<!--<delete> </delete> <update> </update> -->
