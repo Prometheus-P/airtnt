@@ -3,7 +3,6 @@ package com.airtnt.airtnt.controller;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 import javax.servlet.http.Cookie;
@@ -43,12 +42,14 @@ public class PropertyController {
 	private static final int MONTH = 30*DAY;
 	private static final int YEAR = 12*MONTH;
 	
+	private static final long MILLISECONDS_PER_DAY = 24*60*60*1000;
+	
 	private static final String RECENT_COOKIE_PREFIX = "AirTnT_recent_";
 	
 	private final String encoding = Encoding.UTF_8;
 	private final int cookieMaxAge = 10*MINUTE;
 	
-	private final Integer numPerPage = 1;
+	private final Integer numPerPage = 3;
 	
 	@Autowired
 	private PropertyMapper propertyMapper;
@@ -76,6 +77,9 @@ public class PropertyController {
 		
 		if(addressKey == null) {
 			addressKey = "노원";
+		}
+		if(pageNum == null || pageNum < 1) {
+			pageNum = 1;
 		}
 		
 		// sql 조건문 맵
@@ -204,11 +208,13 @@ public class PropertyController {
 		
 		// 달력에 비활성화를 하는 기준값
 		List<BookingDTO> bookings = bookingMapper.selectFutureBookings(propertyId);
-		if(debug) {
-			for(BookingDTO booking : bookings) {
-				System.out.println(booking);
-			}
-		}
+		// 체크인 날짜부터 체크아웃 전날까지 비활성화
+		List<String> invalidDates = setInvalidDates(bookings);
+//		if(invalidDates != null) {
+//			for(String date : invalidDates) {
+//				System.out.println(date);
+//			}
+//		}
 		
 		// 위시리스트
 		Map<String, Object> wishMap = new Hashtable<>();
@@ -240,7 +246,7 @@ public class PropertyController {
 		req.setAttribute("dayAfterTomorrow", Util.getDayAfterTomorrowString());
 		req.setAttribute("property", property);
 		
-		req.setAttribute("bookings", bookings);
+		req.setAttribute("invalidDates", invalidDates);
 		
 		req.setAttribute("wishLists", wishLists);
 		req.setAttribute("recentProperties", recentProperties);
@@ -402,6 +408,28 @@ public class PropertyController {
 		}
 	}
 	
+	public List<String> setInvalidDates(List<BookingDTO> bookings) {
+		List<String> invalidDates = new ArrayList<>();
+		if(bookings.size() != 0) {
+			long todayToTime = new java.util.Date().getTime();
+			for(BookingDTO booking : bookings) {
+				System.out.println(booking.getCheckInDate());
+				System.out.println(booking.getCheckOutDate());
+				long checkInDateToTime = booking.getCheckInDate().getTime();
+				long checkOutDateToTime = booking.getCheckOutDate().getTime();
+				// 체크인 날짜부터 체크아웃 날짜 하루 전까지 돌리며 invalid 날짜 추가
+				for(long time = checkInDateToTime;
+						time < checkOutDateToTime; time += MILLISECONDS_PER_DAY) {
+					if(time >= todayToTime) {
+						// 자바스크립트에서 바로 배열로 받기위해 따옴표를 붙임
+						invalidDates.add("\"" + new java.sql.Date(time).toString() + "\"");
+					}
+				}
+			}
+		}
+		return invalidDates;
+	}
+	
 	public List<PropertyDTO> loadRecentProperties(
 			HttpServletRequest req, HttpServletResponse resp) {
 		// 로그인하지 않았다면 비회원 최근목록을 가져옴
@@ -444,13 +472,13 @@ public class PropertyController {
 				// 쿠키에 등록되어있던 값을 앞에서부터 읽으면서
 				// id가 같은 숙소를 맨 뒤로 이동시키기를 반복하면
 				// 쿠키에 등록되어있던 순서와 똑같이 정렬됨
-				for(int i = 0; i < recentPropertyIdArray.length; i++) {
-					inner: for(int j = 0; j < recentProperties.size(); j++) {
+				outer: for(int i = 0; i < recentPropertyIdArray.length; i++) {
+					for(int j = 0; j < recentProperties.size(); j++) {
 						PropertyDTO recentProperty = recentProperties.get(j);
 						if(recentProperty.getId() == recentPropertyIdArray[i]) {
 							recentProperties.remove(j);
 							recentProperties.add(recentProperty);
-							break inner;
+							continue outer;
 						}
 					}
 				}

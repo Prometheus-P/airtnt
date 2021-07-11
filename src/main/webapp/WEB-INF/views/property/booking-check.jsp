@@ -16,13 +16,13 @@ Licence URI: https://www.os-templates.com/template-terms
 <c:if test="${empty property}">
 	<script type="text/javascript">
 		alert("요청이 만료되었습니다.");
-		location.href = "/property/search";
+		location.href = "index";
 	</script>
 </c:if>
 <c:if test="${empty sessionScope.member_id}">
 	<script type="text/javascript">
 		alert("로그인 후 이용해주세요.");
-		location.href = "/property/search";
+		history.back();
 	</script>
 </c:if>
 <!-- To declare your language - read more here: https://www.w3.org/International/questions/qa-html-language-declarations -->
