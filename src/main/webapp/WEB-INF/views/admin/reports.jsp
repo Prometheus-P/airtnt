@@ -19,41 +19,27 @@
 	    	var token = $("input[name='_csrf']").val();
 			var header = "X-CSRF-TOKEN";
 			
-			$("#bookingTab").click(function(){
-	            alert('test');
-		    });
-			
 			$('#searchBookingBtn').click(function(){
 				var startDate = $('#bookingSearchParamTable td').eq(1).children().val();
 				var endDate = $('#bookingSearchParamTable td').eq(3).children().val();
 	            searchReportData(startDate, endDate, "booking");
-	            alert('test');
 		    });
-	    })
-	    
-	    function searchReportData(startDate, endDate, mode){
-	    	alert('searchReportData');
 	    	
-	    	$.ajax({
-  		        url: "reports",
-  		        type: "POST",
-  		        beforeSend : function(xhr)
-  		        {
-  		        	xhr.setRequestHeader(header, token);
-  		        },
-  		        data: {
-  		        	startDate: startDate,
-  		        	endDate : endDate,
-  		        	mode : mode
-  		        },
-  		      	success: function(){
-		        	alert('성공');
-		        },
-  		        error: function(){
-  		            alert("err");
-  		        }
-  		  });
-	    }
+			function searchReportData(startDate, endDate, mode){
+		    	alert(startDate+":"+endDate+":"+mode);
+		    	$.ajax({
+	  		        url: "reports/test",
+	  		        type: "POST",
+	  		      	beforeSend : function(xhr)
+	  		        {
+	  		        	xhr.setRequestHeader(header, token);
+	  		        }
+		    	});
+		    	
+		    	alert('-------');
+			}
+			
+	    })
 	    
  	</script>
  	<main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">

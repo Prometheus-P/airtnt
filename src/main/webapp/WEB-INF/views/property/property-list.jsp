@@ -359,6 +359,11 @@ crossorigin="anonymous"></script> -->
 		      	var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
 		      	var bounds = new kakao.maps.LatLngBounds(); // 지도를 재설정할 범위정보를 가지고 있을 LatLngBounds 객체
 		      	
+		      	var box = map.getNode().getBoundingClientRect();
+		      	var map_width = box.width;
+		      	var map_height = box.height;
+		      	
+		      	
 		     	// 마커 객체 배열 생성(positions)
 		      	var positions = []; 
 		      	var selectedMarker = null; //클릭한 마커 담을 변수
@@ -481,10 +486,12 @@ crossorigin="anonymous"></script> -->
 					
 		      	    //마커 클릭 이벤트
 		      	    kakao.maps.event.addListener(marker, 'click', function() {
+		      	    	
+		      	    	
 		      	    	//클릭되어있는 기존 마커 over 처리
 		      	    	//지금 선택한 마커가 클릭되어있는 기존 마커가 아니고, null 이 아니면
 		      	    	if(selectedMarker !== marker && selectedMarker != null){
-		      	    		//overlay.setMap(null);
+		      	    		overlay.setMap(null);
 		      	    		selectedMarker.setImage(overMarkerImage);
 		      	    	}
 		      	    	
@@ -498,6 +505,8 @@ crossorigin="anonymous"></script> -->
 		      	        
 		      	    	//맵에 오버레이 세팅
 		      	    	overlay.setMap(map);
+		      	    	var overlayTxt = overlay.getContent();
+		      	    	alert(overlayTxt.width);
 		      	    });
 		      	    
 		      	    //맵 클릭 이벤트
@@ -509,15 +518,17 @@ crossorigin="anonymous"></script> -->
 		      	  		//오버레이 맵에서 제거
 		      	        overlay.setMap(null);
 		      	    });
-		      	    
 		      		
 		      	}
 		      	
+		      	kakao.maps.event.addListener(map, 'center_changed', function() {
+		      		//overlay.setPosition(map.getCenter()); 
+	      		});
+		      	
 		     	//마커 범위 재설정
-		      	map.setBounds(bounds);
+		      	map.setBounds(bounds, 100, 100, 100, 100);
 		     	//재설정한 지도 기준으로 오버레이가 맵 중앙에 표시되도록 위치 재설정
 		      	overlay.setPosition(map.getCenter()); 
-		     	
 	        })
 	        
           </script>
