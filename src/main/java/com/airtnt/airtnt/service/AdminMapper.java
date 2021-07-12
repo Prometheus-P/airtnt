@@ -59,7 +59,7 @@ public class AdminMapper {
 		return list;
 	}
 	
-	//[reports] : 걸제 데이터 조회
+	//[reports] : 결제 데이터 조회
 	public List<TransactionDTO> selectTransactionList(String startDate, String endDate) {
 		Map<String, Object> selectKeyMap = new Hashtable<>();
 		selectKeyMap.put("startDate", startDate);
@@ -68,31 +68,31 @@ public class AdminMapper {
 		return list;
 	}
 	
-	//[filter] : roomTypeList 
+	//[filter] : roomTypeList 조회
 	public List<RoomTypeDTO> selectRoomTypeList(){
 		List<RoomTypeDTO> list = sqlSession.selectList("selectRoomTypeList");
 		return list;
 	}
 	
-	//[filter] : propertyTypeList
+	//[filter] : propertyTypeList 조회
 	public List<PropertyTypeDTO> selectPropertyTypeList(){
 		List<PropertyTypeDTO> list = sqlSession.selectList("selectPropertyTypeList");
 		return list;
 	}
 	
-	//[filter] : subPropertyTypeList 
+	//[filter] : subPropertyTypeList 조회
 	public List<SubPropertyTypeDTO> selectSubPropertyTypeList(){
 		List<SubPropertyTypeDTO> list = sqlSession.selectList("selectSubPropertyTypeList");
 		return list;
 	}
 	
-	//[filter] : subPropertyTypeList 
+	//[filter] : subPropertyTypeList 조회
 	public List<SubPropertyTypeDTO> getSubPropertyType(String propertyTypeId){
 		List<SubPropertyTypeDTO> list = sqlSession.selectList("getSubPropertyType", propertyTypeId);
 		return list;
 	}
 	
-	//[filter] : amenityTypeList
+	//[filter] : amenityTypeList 조회
 	public List<AmenityTypeDTO> selectAmenityTypeList(){
 		List<AmenityTypeDTO> list = sqlSession.selectList("selectAmenityTypeList");
 		return list;
@@ -121,6 +121,14 @@ public class AdminMapper {
 			else res = sqlSession.update("updatePropertyTypeDTO", dto);
 			return res;
 		}
+		
+	//[filter] : subPropertyTypeList > insert/update
+		public int updateSubPropertyTypeDTO(String mode, SubPropertyTypeDTO dto){
+			int res = 0;
+			if(mode.equals("I")) res = sqlSession.insert("insertSubPropertyTypeDTO", dto);
+			else res = sqlSession.update("updateSubPropertyTypeDTO", dto);
+			return res;
+		}	
 	
 	//[guide] : 게시글 등록
 	public int insertBoard(GuideDTO dto) {

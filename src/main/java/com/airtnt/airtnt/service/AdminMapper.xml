@@ -197,6 +197,17 @@
 		where id = #{id}
 	</update>
 	
+	<insert id = "insertSubPropertyTypeDTO" parameterType="subPropertyTypeDTO">
+		insert into sub_property_type values ((select nvl(max(id),0)+1 from sub_property_type), #{propertyTypeId}, #{name}, #{isUse}, sysdate, sysdate)
+	</insert>
+	
+	<update id = "updateSubPropertyTypeDTO" parameterType="subPropertyTypeDTO">
+		update sub_property_type 
+		set name = #{name},
+			is_use = #{isUse}
+		where id = #{id}
+	</update>
+	
 	<insert id ="insertBoard" parameterType="guideDTO">
 		insert into guide values(
 			seq_content_id.nextval,
