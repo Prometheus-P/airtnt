@@ -13,7 +13,7 @@ Licence URI: https://www.os-templates.com/template-terms
 <html lang="">
 <!-- To declare your language - read more here: https://www.w3.org/International/questions/qa-html-language-declarations -->
 <head>
-<title>AirTnT/숙소검색(키워드:${param.addressKey})</title>
+<title>AirTnT/숙소검색(키워드:${addressKey})</title>
 <meta charset="utf-8">
 
 <!-- map 커스텀 정보창 css -->
@@ -28,14 +28,14 @@ crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
 integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
 crossorigin="anonymous"></script> -->
-
-
 </head>
 <body>
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
 <!-- Top Background Image Wrapper -->
+
+<script src="/resources/script/json2.js"></script>
 
 <!-- 상단 로그인 바 -->
 <c:import url="/WEB-INF/views/top.jsp"/>
@@ -46,17 +46,32 @@ crossorigin="anonymous"></script> -->
 <!-- 검색필터 이벤트 처리와 초기화를 제어하는 커스텀 파일 -->
 <script src="/resources/script/search-control.js"></script>
 
+<script type="text/javascript">
+console.log("${latitude}");
+console.log("${longitude}");
+</script>
+
 <form id="search-form" action="<c:url value='/property/search'/>" method="get" onsubmit="setParametersOnSubmit()">
 <input type="hidden" id="page-num" name="pageNum" value="1">
+
 <!-- 검색 네비게이션 바 -->
 <!-- <div id="pageintro" class="hoc clear justify-content-center" style="height: 10px"> -->
     <!-- ################################################################################################ -->
-<div class="position-absolute top-0 start-50 translate-middle-x">
+<div class="position-absolute top-0 start-50 translate-middle-x" style="z-index: 999">
   <nav id="mainnav" class="navbar navbar-light">
-    <div class="container-fluid" >
-      <input name="addressKey" class="form-control me-2" type="search" 
+    <div class="container-fluid btn-group" >
+      <input id="search" name="addressKey" class="form-control me-2" type="search" 
       placeholder="위치" value="${param.addressKey}"
       aria-label="Search" style="height: 50px; width: 300px; font-size: 20px">
+      
+      <input type="hidden" id="temp-search" name="tempAddressKey">
+      <input type="hidden" id="latitude" name="latitude" value="${latitude}">
+      <input type="hidden" id="longitude" name="longitude" value="${longitude}">
+      
+      <ul id="auto-complete-area" class="dropdown-menu list-group" style="width: 40rem; font-size: 2rem;">
+        <!-- 주소 자동완성 목록 -->
+      </ul>
+      
       <input class="btn btn-primary" type="submit" value="검색"
       style="border: 0px; height: 50px; width: 100px; font-size: 20px">
     </div>
@@ -247,7 +262,7 @@ crossorigin="anonymous"></script> -->
     <!-- ################################################################################################ -->
     <div class="content"> 
       <!-- ################################################################################################ -->
-      <h2>${param.addressKey} 주변의 숙소 목록</h2>
+      <h2>${addressKey} 주변의 숙소 목록</h2>
       <!-- ################################################################################################ -->
       <div class="group btmspace-50 demo">
         <!-- 숙소 리스트 -->
