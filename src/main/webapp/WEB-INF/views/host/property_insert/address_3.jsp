@@ -28,7 +28,7 @@
 				<div id="detail" style="display: none" >
 				<br><br>
 					<input type="text" class="form-control" id=addressDetail name="addressDetail" 
-					style="text-align: center; width: 400px; height: 50px;" placeholder="상세 주소 입력">
+					style="text-align: center; width: 400px; height: 50px;" placeholder="상세 주소 입력" required>
 				</div>
 				<button type="button" class="btn btn-primary" id="addressDetail" name="addressDetail" 
 					onclick="address_DaumPostcode(); displayDetail()" value="주소 검색">

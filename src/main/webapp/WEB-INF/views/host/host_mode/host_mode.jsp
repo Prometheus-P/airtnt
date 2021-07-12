@@ -79,7 +79,7 @@
 																<p>숙박 기간 : ${dto.checkInDate} ~ ${dto.checkOutDate}</p>
 																<p>
 																	<button type="button" class="btn btn-success"
-																		onclick="confirm(${dto.id}, ${dto.checkOutDate})">
+																		onclick="confirm(${dto.id}, '${dto.checkOutDate}')">
 																		승인</button>
 																	<button type="button" class="btn btn-warning"
 																		data-toggle="modal"
@@ -91,7 +91,7 @@
 														</div>
 													</div>
 													<div class="modal-footer">
-														<button type="button" class="btn btn-default" data-dismiss="modal">
+														<button id="close" type="button" class="btn btn-default" data-dismiss="modal">
 															닫기
 														</button>
 													</div>
@@ -111,8 +111,7 @@
 														<div class="media">
 															<div class="media-body">
 																<h3 class="media-heading">
-																예약을 반려하시는 이유가 무엇인가요??<br>
-																게스트에게 전달할 메세지를 적어주세요.
+																예약을 반려하시는 이유가 무엇인가요??
 																</h3>
 																<br>
 																<p>
@@ -128,7 +127,7 @@
 														</div>
 													</div>
 													<div class="modal-footer">
-														<button type="button" class="btn btn-default" data-dismiss="modal">
+														<button id="close_cancel" type="button" class="btn btn-default" data-dismiss="modal">
 															취소
 														</button>
 													</div>
@@ -144,8 +143,8 @@
 									</c:if>
 								</td>
 								<td><b>${dto.bookingNumber}</b></td>
-								<td><b>${dto.guestName}</b><br>${dto.guestCount}명</td>
 								<td><b>${dto.propertyName}</b></td>
+								<td><b>${dto.guestName}</b><br>${dto.guestCount}명</td>
 								<td><b>${dto.checkInDate} ~ ${dto.checkOutDate}</b><br>${dto.dayCount}박</td>
 								<td>${dto.regDate}</td>
 								<td>₩${dto.totalPrice}</td>
@@ -160,28 +159,35 @@
 	<!-- /container -->
 	<script>
 		function confirm(id, checkOut){
+			//var checkOutDate = new Date(checkOut);
 			 $.ajax({
 	                type : "POST",
-	                url : "/host/comfirm",
-	                data : {bookingId : id, checkOutDate : checkOut},
-	                success : function(data){
-	                    alert(data);
+	                url : "/host/bookConfirm",
+	                data : {'bookingId' : id, 'checkOutDate' : checkOut},
+	                success : function(text){
+	                    alert(text);
+	                    $('#close').click();
 	                },
 	                error : function(XMLHttpRequest, textStatus, errorThrown){
-	                    alert("서버 문제 발생! 잠시만 기다려 주세요.")
+	                    alert("서버 문제 발생! 다시 시도해 주세요.");
+	                    $('#close').click();
 	                }
 	            });
 		}
 		function reject(id){
 			 $.ajax({
 	                type : "POST",
-	                url : "/host/reject",
-	                data : {propertyId : id},
-	                success : function(data){ 
-	                    alert(data);
+	                url : "/host/bookReject",
+	                data : {'bookingId' : id},
+	                success : function(text){ 
+	                    alert(text);
+	                    $('#close_cancel').click();
+	                    $('#close').click();
 	                },
 	                error : function(XMLHttpRequest, textStatus, errorThrown){
-	                    alert("서버 문제 발생! 잠시만 기다려 주세요.")
+	                    alert("서버 문제 발생! 다시 시도해 주세요.");
+	                    $('#close_cancel').click();
+	                    $('#close').click();
 	                }
 	            });
 		}

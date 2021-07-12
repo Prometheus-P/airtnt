@@ -25,7 +25,10 @@ input[type=checkbox] {
 
 		<div class="col-sm-6 col-md-4" style="font-family: fantasy;">
 			<div class="thumbnail">
-				<img src="..." alt="...">
+			<c:forEach var="dto" items="${listImgUrl}">
+				<c:set var="count" value="${count+1}"/>
+				<img src="${dto}" alt="${count}">
+			</c:forEach>
 				<div class="caption">
 					<h2>${sessionScope.name}</h2>
 					<h3>${sessionScope.memeber_name}님이호스팅하는
@@ -46,6 +49,11 @@ input[type=checkbox] {
 					<hr class="divider" />
 					<h4>위치<br></h4>
 					<p>${sessionScope.address}</p>
+					
+					<hr class="divider" />
+					<h4>설명<br></h4>
+					<p>${sessionScope.description}</p>
+					
 					<p>
 						<a href="<c:url value='/host/publish_celebration'/>" class="btn btn-lg btn-primary" role="button">
 						숙소 저장하기</a>

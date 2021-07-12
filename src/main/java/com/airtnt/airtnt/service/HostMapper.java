@@ -1,9 +1,11 @@
 package com.airtnt.airtnt.service;
 
 import java.sql.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -161,10 +163,26 @@ public class HostMapper implements HostMapperInterface {
 		List<Map<String, Integer>> listMap = sqlSession.selectList("getReviewWritingRate", propertyId);
 		return listMap;
 	}
-	
-	public int bookConfirm(int bookingId, java.sql.Date checkOutDate) {
+
+	public int bookConfirm(int bookingId) {
 		int res = sqlSession.update("bookConfirm", bookingId);
 		return res;
 	}
+	
+	public int payExptDateConfirm(int bookingId, java.sql.Date checkOutDate) {
+		int res = sqlSession.update("payExptDateConfirm", checkOutDate);
+		return res;
+	}
+
+	public int bookReject(int bookingId) {
+		int res = sqlSession.update("bookReject", bookingId);
+		return res;
+	}
+
+	public int transactionRefund(int bookingId) {
+		int res = sqlSession.update("transactionRefund", bookingId);
+		return res;
+	}
+
 
 }

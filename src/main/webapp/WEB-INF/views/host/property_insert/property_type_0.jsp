@@ -9,9 +9,8 @@
 <body>
 	<%@include file="top.jsp" %>
 	<%@include file="../../top.jsp"%>
-	<!-- <form name="f" method="post"
-		action="<c:url value='/host/property_detail_1'/>" onsubmit="send()"> -->
-		<div class="container theme-showcase" role="main">
+	
+		<div id="mainBody" class="container theme-showcase" role="main">
 			<div class="page-header">
 				<h1 style="font-style: italic; font-weight: bold; font-family: fantasy;">
 				호스팅 할 숙소 유형을 알려주세요</h1>
@@ -20,38 +19,50 @@
 			<form name="f" method="post" action="<c:url value='/host/sub_property_type_1'/>" onsubmit="return check()"> 
 				<c:forEach var="dto" items="${listPropertyType}">
 					<div class="list-group" style="font-family: fantasy;">
-						<a href="javascript:void(0)" id="${dto.id}"
-							class="list-group-item
-							<c:if test='${sessionScope.propertyTypeId == dto.id}'>
-							 active
-							<c:remove var="propertyTypeId" scope="session"/>
-							<c:remove var="propertyTypeName" scope="session"/>
-							</c:if>"
-							onclick="<c:set var='propertyTypeId' value='${dto.id}' scope="page"/>;
-							<c:set var='propertyTypeName' value='${dto.name}' scope="page"/>" >
+						<button type="button" id="${dto.id}" name="${dto.name}"
+							class="list-group-item 
+							<c:if test='${sessionScope.propertyTypeId eq dto.id}'>
+							 	active
+							</c:if>">
 							<h1 class="list-group-item-heading">${dto.name}</h1>
-						</a>
+						</button>
 					</div>
+
 				</c:forEach>
-				<input type="hidden" name="propertyTypeId" value="${pageScope.propertyTypeId}">
-				<input type="hidden" name="propertyTypeName" value="${pageScope.propertyTypeName}">
+				<div id="set"></div>
 				<button type="submit" class="btn btn-lg btn-success">확인</button>
 				</form>
 			</div>
+		</div>
+		<div id="remove"></div>
 			<br><br><br><br><br><br><br><br><br><br><br>
 	<%@include file='bottom.jsp'%>
 	<script>
+		$("#mainBody").load(
+			$("#remove").append(
+				"<c:remove var='propertyTypeId' scope='session'/>"+
+				"<c:remove var='propertyTypeName' scope='session'/>")
+			);
+		
+		var id = 0;
+		var name = null;
 		$('.list-group-item').click(function() {
 			$('.list-group-item').not(this).removeClass('active');
 			$(this).toggleClass('active');
+			id = $(this).attr('id');
+			name = $(this).attr('name');
 		});
+		
 		function check(){
 			var propertyTypeId = "<c:out value='${propertyTypeId}'/>"
 			if(propertyTypeId == null){
 				alert("숙소 유형을 정해 주세요!")
 				return false;
 			}
-			document.f.submit();
+			$('#set').html(
+				"<input type='hidden' name='propertyTypeId' value='${"+id+"}'>"+
+				"<input type='hidden' name='propertyTypeName' value='${"+name+"}'>"
+			)
 			return true;
 		}
 	</script>

@@ -264,8 +264,7 @@
 		= p.id
 	</select>
 
-	<select id="getReviewWritingRate" resultMap="selectMapList"
-		parameterType="int">
+	<select id="getReviewWritingRate" resultMap="selectMapList" parameterType="int">
 		SELECT
 		r.reviewCount,
 		b.bookingCount
@@ -281,25 +280,42 @@
 		WHERE property_id = #{propertyId}
 		AND sysdate > reg_date) b
 	</select>
+	
 	<resultMap type="map" id="selectMapList">
 		<result column="reviewCount" property="reviewCount" />
 		<result column="bookingCount" property="bookingCount" />
 	</resultMap>
 	
 	<update id="bookConfirm" parameterType="int">
-		UPDATE booking as b, transaction as t
-		SET 
-		b.confirm_date = sysdate,
-		t.pay_expt_date = 
-		WHERE b.id = #{bookingId}
-		
-		UPDATE  테이블1 AS a, 테이블2 AS b
-      SET  a.column_name = value,
-              b.column_name = value
-﻿ WHERE  a.조건컬럼 = value
-      AND  b.조건컬럼 = value
+		UPDATE booking SET confirm_date = sysdate WHERE id = #{bookingId}
 	</update>
-	<!-- <insert id="saveImage" parameterType="java.util.Map">     I insert 
-		into img_table VALUES #{img}    </insert> -->
-	<!--<delete> </delete> <update> </update> -->
+		<!-- UPDATE A T1 RIGHT JOIN B T2 
+		ON (T2.a = T1.a) 
+		SET T1.c = '값1', T2.d = '값2' 
+		WHERE A.e = '조건 값' -->
+	<update id="payExptDateConfirm" parameterType="java.util.Map">
+		UPDATE transaction 
+		SET pay_expt_date = TO_DATE('#{payExptDate}', 'YYYY-MM-DD') 
+		WHERE booking_id = #{bookingId}
+	</update>
+	
+	<update id="bookReject" parameterType="int">
+		UPDATE booking
+		SET 
+		booking_number = -1
+		WHERE id = #{bookingId}
+	</update>
+	
+	<update id="transactionRefund" parameterType="int">
+		UPDATE transaction 
+		SET 
+		is_refund = 'Y'
+		WHERE booking_id = #{bookingId}
+	</update>
+	<!-- <update id="payExptDateConfirm" parameterType="java.sql.Date" >
+		UPDATE transaction 
+		SET confirm_date = sysdate 
+		WHERE id = #{bookingId}
+	</update> -->
+	
 </mapper>
