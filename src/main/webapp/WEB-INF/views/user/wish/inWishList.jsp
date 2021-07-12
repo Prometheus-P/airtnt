@@ -1,6 +1,77 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ include file="/WEB-INF/views/top.jsp"%>
+<script type="text/javascript">
+const FULL_HEART = "https://img.icons8.com/fluent/48/000000/like.png";
+const EMPTY_HEART = "https://img.icons8.com/fluent-systems-regular/48/000000/like--v1.png";
+var wishButton;
+var imgTag;
+var wishPropertyId;
+
+$(function(){
+	
+	$(".wish-button").click(function(){
+		wishButton = this;
+		imgTag = this.querySelector("img.heart");
+		wishPropertyId = this.getAttribute("id").split('-')[1];
+		
+		if($(this).hasClass("unwish")){
+			// 위시리스트 삭제
+			console.log("wish list id : ${wish_id}");
+			console.log("property id : " + wishPropertyId);
+			
+			$.ajax("/unwish/async", {
+				type : "get",
+				data : {
+					wish_id : "${wish_id}",
+					property_id : wishPropertyId
+				}
+			})
+			.done(function(result){
+				console.log("sql 실행 횟수 : " + result);
+				if(result < 1){
+					alert("위시리스트 삭제 실패 : DB 오류");
+				} else {
+					// 빈 하트
+					imgTag.src = EMPTY_HEART;
+					$("a#wishProperty-" + wishPropertyId).removeClass("unwish");
+				}
+			})
+			.fail(function(){
+				alert("서버와 통신 실패");
+			});
+			
+		} else {
+			// 위시리스트 재등록
+			var wishListId = this.getAttribute("id").split("-")[1];
+			console.log("wish list id : ${wish_id}");
+			console.log("property id : " + wishPropertyId);
+			
+			$.ajax("/wish/async", {
+				type : "get",
+				data : {
+					wish_id : "${wish_id}",
+					property_id : wishPropertyId
+				}
+			})
+			.done(function(result){
+				console.log("sql 실행 횟수 : " + result);
+				if(result < 1){
+					alert("위시리스트 추가 실패 : DB 오류");
+				} else {
+					// 찬 하트
+					imgTag.src = FULL_HEART;
+					$("a#wishProperty-" + wishPropertyId).addClass("unwish");
+				}
+			})
+			.fail(function(){
+				alert("서버와 통신 실패");
+			});
+		}
+	});
+});
+</script>
 	<style>
 	 #test_btn{ border-top-left-radius: 5px; border-bottom-left-radius: 5px; border-top-right-radius: 5px; border-bottom-right-radius: 5px; margin-right:-4px; } 
 	 #test_btn2{ border-top-left-radius: 20px; border-bottom-left-radius: 20px; border-top-right-radius: 20px; border-bottom-right-radius: 20px; margin-right:0px; } 
@@ -49,12 +120,23 @@
 			            <c:forEach var="dto" items="${properties}">
 			            <li style="height: 150px;">
 			              <div class="one_third first" >
-			                <a href="/guest/property-detail?propertyId=${dto.property_id}"><img src="${dto.path}" alt="" style="object-fit:contain; width:200px; height:150px;"></a>
+			                <a href="/property/detail?propertyId=${dto.property_id}"><img src="${dto.path}" alt="" style="object-fit:contain; width:200px; height:150px;"></a>
 			              </div>
-			              <div class="two_third">
-			                <h2><a href="/guest/property-detail?propertyId=${dto.property_id}">${dto.property_name}</a></h2>
+			              <div class="one_third">
+			                <h2><a href="/property/detail?propertyId=${dto.property_id}">${dto.property_name}</a></h2>
 			                <h4>${dto.type_name}/${dto.sub_type_name} ${dto.room_type_name}</h4>
 			                <h4>${dto.property_address}</h4>
+			              </div>
+			              <div class="one_third fl_right position-relative">
+			                <div class="position-absolute top-0 end-0">
+			                  <!-- Button trigger modal -->
+                               <a href="#" class="wish-button unwish" id="wishProperty-${dto.property_id}"
+                               style="font-size: 20px">
+                                 <!-- 빈 하트 -->
+                                 <img class="heart" src="https://img.icons8.com/fluent/48/000000/like.png"
+                                 style="width: 3rem; height: 3rem">
+                               </a>
+			                </div>
 			              </div>
 			            </li>
 			            <hr>
@@ -64,6 +146,7 @@
 			    </div>
 	    </div>
 	</div>
+	
 <!-- NewWishModal-->
 <div id="UpdateWish" class="modal fade">
 	<div class="modal-dialog modal-login">

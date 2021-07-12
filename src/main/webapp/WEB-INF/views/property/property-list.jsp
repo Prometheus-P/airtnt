@@ -13,7 +13,7 @@ Licence URI: https://www.os-templates.com/template-terms
 <html lang="">
 <!-- To declare your language - read more here: https://www.w3.org/International/questions/qa-html-language-declarations -->
 <head>
-<title>AirTnT/숙소검색(키워드:${param.addressKey})</title>
+<title>AirTnT/숙소검색(키워드:${addressKey})</title>
 <meta charset="utf-8">
 
 <!-- map 커스텀 정보창 css -->
@@ -28,12 +28,6 @@ crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
 integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
 crossorigin="anonymous"></script> -->
-
-<!-- <script src="/resources/script/wish-control.js"></script> -->
-
-<!-- 검색필터 이벤트 처리와 초기화를 제어하는 커스텀 파일 -->
-<script src="/resources/script/search-control.js"></script>
-
 </head>
 <body>
 <!-- ################################################################################################ -->
@@ -41,24 +35,45 @@ crossorigin="anonymous"></script> -->
 <!-- ################################################################################################ -->
 <!-- Top Background Image Wrapper -->
 
+<script src="/resources/script/json2.js"></script>
+
 <!-- 상단 로그인 바 -->
 <c:import url="/WEB-INF/views/top.jsp"/>
 
 <!-- 위시리스트 모달은 jQuery 라이브러리 적용을 위해서 top.jsp 아래 둬야함 -->
-<c:import url="/WEB-INF/views/property/wish-modal.jsp"/>
+<c:import url="/WEB-INF/views/property/_wish-modal.jsp"/>
 
-<form action="<c:url value='/property/search'/>" method="get" onsubmit="setParametersOnSubmit()">
+<!-- 검색필터 이벤트 처리와 초기화를 제어하는 커스텀 파일 -->
+<script src="/resources/script/search-control.js"></script>
+
+<script type="text/javascript">
+console.log("${latitude}");
+console.log("${longitude}");
+</script>
+
+<form id="search-form" action="<c:url value='/property/search'/>" method="get" onsubmit="setParametersOnSubmit()">
+<input type="hidden" id="page-num" name="pageNum" value="1">
+
 <!-- 검색 네비게이션 바 -->
 <!-- <div id="pageintro" class="hoc clear justify-content-center" style="height: 10px"> -->
     <!-- ################################################################################################ -->
-<div class="position-absolute top-0 start-50 translate-middle-x">
+<div class="position-absolute top-0 start-50 translate-middle-x" style="z-index: 999">
   <nav id="mainnav" class="navbar navbar-light">
-    <div class="container-fluid" >
-      <input name="addressKey" class="form-control me-2" type="search" 
+    <div class="container-fluid btn-group" >
+      <input id="search" name="addressKey" class="form-control me-2" type="search" 
       placeholder="위치" value="${param.addressKey}"
       aria-label="Search" style="height: 50px; width: 300px; font-size: 20px">
-      <button class="btn btn-primary" type="submit"
-      style="border: 0px; height: 50px; width: 100px; font-size: 20px">검색</button>
+      
+      <input type="hidden" id="temp-search" name="tempAddressKey">
+      <input type="hidden" id="latitude" name="latitude" value="${latitude}">
+      <input type="hidden" id="longitude" name="longitude" value="${longitude}">
+      
+      <ul id="auto-complete-area" class="dropdown-menu list-group" style="width: 40rem; font-size: 2rem;">
+        <!-- 주소 자동완성 목록 -->
+      </ul>
+      
+      <input class="btn btn-primary" type="submit" value="검색"
+      style="border: 0px; height: 50px; width: 100px; font-size: 20px">
     </div>
   </nav>
 </div>
@@ -247,7 +262,7 @@ crossorigin="anonymous"></script> -->
     <!-- ################################################################################################ -->
     <div class="content"> 
       <!-- ################################################################################################ -->
-      <h2>${param.addressKey} 주변의 숙소 목록</h2>
+      <h2>${addressKey} 주변의 숙소 목록</h2>
       <!-- ################################################################################################ -->
       <div class="group btmspace-50 demo">
         <!-- 숙소 리스트 -->
@@ -287,7 +302,7 @@ crossorigin="anonymous"></script> -->
                         <div class="carousel-inner">
                           <c:forEach var="image" items="${property.images}" varStatus="status">
                             <div class="carousel-item <c:if test='${status.count == 1}'>active</c:if>">
-                              <img src="${image.path}" class="d-block w-100" alt="">
+                              <img src="${image.path}" class="d-block w-100" alt="" style="object-fit: cover; width:200px;height: 150px">
                             </div>
                           </c:forEach>
                         </div>
@@ -338,9 +353,106 @@ crossorigin="anonymous"></script> -->
               </ul>
           </div>
           
+          <!-- 페이지 버튼 값 설정 -->
+          <c:set var="startPageNum" value="${param.pageNum - 3}"/>
+          <c:set var="endPageNum" value="${param.pageNum + 3}"/>
+          <c:if test="${startPageNum < 1}">
+          	<c:set var="startPageNum" value="1"/>
+          </c:if>
+          <c:if test="${endPageNum > totalPagesNum}">
+          	<c:set var="endPageNum" value="${totalPagesNum}"/>
+          </c:if>
+          <!-- 페이지 버튼 -->
+          <div class="position-relative">
+            <nav class="position-absolute end-0" aria-label="Page navigation">
+              <ul class="pagination">
+                <c:if test="${startPageNum > 1}">
+                  <li class="page-item">
+                    <a href="#" id="page-1" class="page-link" onclick="movePage(this)"
+                    style="width: 5rem;height: 5rem;font-size: 2rem">
+                      1
+                    </a>
+                  </li>
+                  <li class="page-item disabled">
+                    <span class="page-link" style="width: 5rem;height: 5rem;font-size: 2rem">
+                      ...
+                    </span>
+                  </li>
+                </c:if>
+                <c:choose>
+                  <c:when test="${startPageNum == 1}">
+                    <li class="page-item disabled">
+                      <span class="page-link" style="width: 5rem; height: 5rem;font-size: 2rem">
+                        &laquo;
+                      </span>
+                    </li>
+                  </c:when>
+                  <c:otherwise>
+                    <li class="page-item">
+                      <a id="page-${pageNum - 4}" class="page-link" href="#" onclick="movePage(this)"
+                      aria-label="Previous" style="width: 5rem; height: 5rem;font-size: 2rem">
+                        &laquo;
+                      </a>
+                    </li>
+                  </c:otherwise>
+                </c:choose>
+                <c:forEach var="pageNum" begin="${startPageNum}" end="${endPageNum}">
+                  <c:choose>
+                    <c:when test="${pageNum == param.pageNum}">
+                      <li class="page-item active" aria-current="page">
+                        <span class="page-link" style="width: 5rem;height: 5rem;font-size: 2rem">
+                          ${pageNum}
+                        </span>
+                      </li>
+                    </c:when>
+                    <c:otherwise>
+                      <li class="page-item">
+                        <a id="page-${pageNum}" class="page-link" href="#" onclick="movePage(this)"
+                        style="width: 5rem;height: 5rem;font-size: 2rem">
+                          ${pageNum}
+                        </a>
+                      </li>
+                    </c:otherwise>
+                  </c:choose>
+                </c:forEach>
+                <c:choose>
+                  <c:when test="${endPageNum == totalPagesNum}">
+                    <li class="page-item disabled">
+                      <span class="page-link" style="width: 5rem; height: 5rem;font-size: 2rem">
+                        &raquo;
+                      </span>
+                    </li>
+                  </c:when>
+                  <c:otherwise>
+                    <li class="page-item">
+                      <a id="page-${pageNum + 4}" class="page-link" href="#" onclick="movePage(this)"
+                      aria-label="Next" style="width: 5rem; height: 5rem;font-size: 2rem">
+                        &raquo;
+                      </a>
+                    </li>
+                  </c:otherwise>
+                </c:choose>
+                <c:if test="${endPageNum < totalPagesNum}">
+                  <li class="page-item disabled">
+                    <span class="page-link" style="width: 5rem;height: 5rem;font-size: 2rem">
+                      ...
+                    </span>
+                  </li>
+                  <li class="page-item">
+                    <a href="#" id="page-${endPageNum}" class="page-link" onclick="movePage(this)"
+                    style="width: 5rem;height: 5rem;font-size: 2rem">
+                      ${totalPagesNum}
+                    </a>
+                  </li>
+                </c:if>
+              </ul>
+            </nav>
+          </div>
+            
           <!-- 최근 목록 -->
-          <c:import url="/WEB-INF/views/property/recent-list.jsp"/>
-          
+          <div style="padding-top: 8rem">
+            <c:import url="/WEB-INF/views/property/_recent-list.jsp"/>
+          </div>
         </div>
         
         <!-- 카카오맵 -->

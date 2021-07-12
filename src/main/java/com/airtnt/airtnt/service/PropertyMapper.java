@@ -18,7 +18,7 @@ public class PropertyMapper {
 	
 	// 주소로 검색
 	public List<PropertyDTO> searchProperties(Map<String, Object> searchKeyMap) {
-		return sqlSession.selectList("selectProperty", searchKeyMap);
+		return sqlSession.selectList("searchProperties", searchKeyMap);
 	}
 	
 	// 최근 목록

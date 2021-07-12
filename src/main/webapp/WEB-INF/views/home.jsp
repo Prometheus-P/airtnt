@@ -19,6 +19,8 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<script src="/resources/script/check.js"></script>
+	
+	<script src="/resources/script/search-control.js"></script>
 	<!-- JAVASCRIPTS -->
 	<!-- <script src="layout/scripts/jquery.min.js"></script>
 	<script src="layout/scripts/jquery.backtotop.js"></script>
@@ -90,8 +92,20 @@
         <nav class="navbar navbar-light">
 		  <div class="container-fluid">
 		    <form class="d-flex" action="/property/search" method="get">
-		      <input name="addressKey" class="form-control me-2" type="search" placeholder="위치" aria-label="Search">
-		      <button  class="btn btn-outline-primary" type="submit" style="background-color:#01546b; border: 0px;">Search</button>
+		      <input type="hidden" name="pageNum" value="1">
+              <input id="search" name="addressKey" class="form-control me-2" type="search" 
+              placeholder="위치" value="${param.addressKey}"
+              aria-label="Search" style="height: 50px; width: 300px; font-size: 20px">
+              
+              <input type="hidden" id="temp-search" name="tempAddressKey">
+              <input type="hidden" id="latitude" name="latitude" value="${latitude}">
+              <input type="hidden" id="longitude" name="longitude" value="${longitude}">
+              
+              <ul id="auto-complete-area" class="dropdown-menu list-group" style="width: 40rem; font-size: 2rem;">
+                <!-- 주소 자동완성 목록 -->
+              </ul>
+		      <input  class="btn btn-outline-primary" type="submit" value="검색"
+		      style="background-color:#01546b; border: 0px;">
 		    </form>
 		  </div>
 		</nav>

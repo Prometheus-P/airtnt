@@ -3,7 +3,6 @@ package com.airtnt.airtnt.controller;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 import javax.servlet.http.Cookie;
@@ -30,11 +29,27 @@ import com.airtnt.airtnt.util.*;
 public class PropertyController {
 	// debug index가 0이면 콘솔에 아무것도 안찍고 나머지는 다 콘솔에 찍음
 	// 생성자 참고
-	private final int debugIndex = 0;
+	private final int debugIndex = 1;
 	private final boolean debug = (this.debugIndex != 0);
 	
+	// 쿠키 수명
+	// 월(1~12)*일(1~30)*시간(1~24)*분(1~60)*초(1~60)
+	private static final int SECOND = 1;
+	private static final int MINUTE = 60*SECOND;
+	private static final int HOUR = 60*MINUTE;
+	private static final int DAY = 24*HOUR;
+	private static final int WEEK = 7*DAY;
+	private static final int MONTH = 30*DAY;
+	private static final int YEAR = 12*MONTH;
+	
+	private static final long MILLISECONDS_PER_DAY = 24*60*60*1000;
+	
+	private static final String RECENT_COOKIE_PREFIX = "AirTnT_recent_";
+	
 	private final String encoding = Encoding.UTF_8;
-	private final int cookieMaxAge = 5*Util.MINUTE;
+	private final int cookieMaxAge = 10*MINUTE;
+	
+	private final Integer numPerPage = 3;
 	
 	@Autowired
 	private PropertyMapper propertyMapper;
@@ -46,6 +61,12 @@ public class PropertyController {
 	@GetMapping("search")
 	public String search(HttpServletRequest req, HttpServletResponse resp,
 			@RequestParam(value = "addressKey", required = false) String addressKey,
+			@RequestParam(value = "tempAddressKey", required = false) String tempAddressKey,
+			@RequestParam(value = "latitude", required = false) String latitude,
+			@RequestParam(value = "longitude", required = false) String longitude,
+			
+			@RequestParam(value = "pageNum", required = false) Integer pageNum,
+			
 			@RequestParam(value = "propertyTypeId", required = false) Integer[] propertyTypeIdKeyArray,
 			@RequestParam(value = "subPropertyTypeId", required = false) Integer[] subPropertyTypeIdKeyArray,
 			@RequestParam(value = "roomTypeId", required = false) Integer[] roomTypeIdKeyArray,
@@ -54,12 +75,28 @@ public class PropertyController {
 			@RequestParam(value = "bedCount", required = false) Integer bedCountKey,
 			@RequestParam(value = "minPrice", required = false) Integer minPriceKey,
 			@RequestParam(value = "maxPrice", required = false) Integer maxPriceKey) {
+		System.out.println(pageNum + "페이지");
 		// 로그인 후 돌아갈 url
 		String currentURI = Util.getCurrentURI(req);
 		req.setAttribute("currentURI", currentURI);
 		
-		if(addressKey == null) {
-			addressKey = "노원";
+		if(tempAddressKey == null || tempAddressKey.trim().equals("")) {
+			if(addressKey == null || addressKey.trim().equals("")) {
+				addressKey = "서울";
+				// 서울 시청
+				latitude = "37.566826004661";
+				longitude = "126.978652258309";
+			} /*else {
+				addressKey만 넘어왔으면 자동완성 주소로 넘어온 것임
+			}*/
+		} else {
+			// 자동완성으로 검색하지 않아도 맨 상단에 있던 주소로 세팅
+			addressKey = tempAddressKey;
+		}
+		
+		// 페이지
+		if(pageNum == null || pageNum < 1) {
+			pageNum = 1;
 		}
 		
 		// sql 조건문 맵
@@ -81,8 +118,18 @@ public class PropertyController {
 			}
 		}
 		
-		// 숙소 목록
-		List<PropertyDTO> properties = propertyMapper.searchProperties(searchKeyMap);
+		// 전체 숙소 목록
+		List<PropertyDTO> tempProperties = propertyMapper.searchProperties(searchKeyMap);
+		// 총 페이지 수
+		// = ceil(숙소 수 / 페이지당 숙소 수)
+		// = floor((숙소 수 - 1 + 페이지당 숙소 수) / 페이지당 숙소 수)
+		int totalPagesNum = (tempProperties.size() -1 + numPerPage) / numPerPage;
+		if(totalPagesNum == 0) {
+			// 로딩된 숙소가 없으면 1페이지로 유지
+			totalPagesNum = 1;
+		}
+		// 화면에 보여질 숙소 목록
+		List<PropertyDTO> properties = setPageProperties(tempProperties, pageNum);
 		
 		// 검색 필터 목록
 		List<PropertyTypeDTO> propertyTypes = propertyMapper.selectTypes(PropertyTypeDTO.class);
@@ -122,6 +169,12 @@ public class PropertyController {
 			System.out.println("max price : " + maxPriceKey);
 			System.out.println("-----------------");
 			
+			
+			System.out.println("전체 페이지 수 : " + totalPagesNum);
+			for(PropertyDTO property : properties) {
+				System.out.println("rownum : " + property.getRowNum());
+			}
+			
 			System.out.println("----- 위시리스트별 숙소 목록 -----");
 			for(WishListDTO wishList : wishLists) {
 				System.out.print("위시리스트[" + wishList.getName() + "] : ");
@@ -139,8 +192,15 @@ public class PropertyController {
 			System.out.println("---------------------------------------");
 		}
 		
+		req.setAttribute("addressKey", addressKey);
+		req.setAttribute("latitude", latitude);
+		req.setAttribute("longitude", longitude);
+		
 		// 숙소 목록
 		req.setAttribute("properties", properties);
+		
+		// 페이징 처리값
+		req.setAttribute("totalPagesNum", totalPagesNum);
 		
 		// 검색 필터 목록
 		req.setAttribute("propertyTypes", propertyTypes);
@@ -170,11 +230,8 @@ public class PropertyController {
 		
 		// 달력에 비활성화를 하는 기준값
 		List<BookingDTO> bookings = bookingMapper.selectFutureBookings(propertyId);
-		if(debug) {
-			for(BookingDTO booking : bookings) {
-				System.out.println(booking);
-			}
-		}
+		// 체크인 날짜부터 체크아웃 전날까지 비활성화
+		List<String> invalidDates = setInvalidDates(bookings);
 		
 		// 위시리스트
 		Map<String, Object> wishMap = new Hashtable<>();
@@ -195,7 +252,7 @@ public class PropertyController {
 		}
 		
 		// 기존의 최근목록 쿠키가 있는지 찾아봄
-		Cookie cookie = Util.getCookie(req, Util.RECENT_COOKIE_PREFIX + cookieUser);
+		Cookie cookie = Util.getCookie(req, RECENT_COOKIE_PREFIX + cookieUser);
 		
 		// 최근목록 조회 및 쿠키에 저장
 		List<PropertyDTO> recentProperties = loadRecentProperties(cookie, resp);
@@ -206,7 +263,7 @@ public class PropertyController {
 		req.setAttribute("dayAfterTomorrow", Util.getDayAfterTomorrowString());
 		req.setAttribute("property", property);
 		
-		req.setAttribute("bookings", bookings);
+		req.setAttribute("invalidDates", invalidDates);
 		
 		req.setAttribute("wishLists", wishLists);
 		req.setAttribute("recentProperties", recentProperties);
@@ -216,7 +273,7 @@ public class PropertyController {
 	
 	// 1. 화면에 뿌려질 값들을 설정하는 단계
 	@PostMapping("booking")
-	public String booking(RedirectAttributes ra, @ModelAttribute BookingDTO booking) {
+	public String booking(HttpServletRequest req, RedirectAttributes ra, @ModelAttribute BookingDTO booking) {
 		// params :
 		// propertyId, hostId, guestId, dayCount, guestCount, totalPrice,
 		// checkInDate, checkOutDate
@@ -291,6 +348,29 @@ public class PropertyController {
 		return "property/booking-complete";
 	}
 	
+	public List<PropertyDTO> setPageProperties(List<PropertyDTO> tempProperties, int pageNum){
+		List<PropertyDTO> properties = new ArrayList<>();
+		int maxRownum = tempProperties.size();
+		if(maxRownum > 0) {
+			// List에 접근할 인덱스 값
+			int lastIndex = maxRownum - 1;
+			// List 인덱스의 이상, 미만 값
+			int greaterEqualIndex, lessThanIndex;
+			
+			// 숙소 목록의 시작과 끝 인덱스
+			// 인덱스 == rownum - 1
+			// 0 ~ 4, 5 ~ 9, 10 ~ 14, ...
+			greaterEqualIndex = numPerPage * (pageNum - 1);	// 이상
+			lessThanIndex = numPerPage * pageNum;	// 미만
+			
+			// 페이지에 띄울 숙소 목록 저장
+			for(int i = greaterEqualIndex; i < lessThanIndex && i <= lastIndex; i++) {
+				properties.add(tempProperties.get(i));
+			}
+		}
+		return properties;
+	}
+	
 	public void setFilter(List<? extends AbstractTypeDTO> types, Integer[] paramArray) {
 		setFilter(types, paramArray, null);
 	}
@@ -335,6 +415,7 @@ public class PropertyController {
 			for(WishListDTO wishList : wishLists) {
 				for(PropertyDTO wishProperty : wishList.getProperties()) {
 					if(property.getId() == wishProperty.getId()) {
+						System.out.println(wishList.getId());
 						property.setWished(true);
 						property.setWishListId(wishList.getId());
 						continue outer;
@@ -342,6 +423,28 @@ public class PropertyController {
 				}
 			}
 		}
+	}
+	
+	public List<String> setInvalidDates(List<BookingDTO> bookings) {
+		List<String> invalidDates = new ArrayList<>();
+		if(bookings.size() != 0) {
+			long todayToTime = new java.util.Date().getTime();
+			for(BookingDTO booking : bookings) {
+				System.out.println(booking.getCheckInDate());
+				System.out.println(booking.getCheckOutDate());
+				long checkInDateToTime = booking.getCheckInDate().getTime();
+				long checkOutDateToTime = booking.getCheckOutDate().getTime();
+				// 체크인 날짜부터 체크아웃 날짜 하루 전까지 돌리며 invalid 날짜 추가
+				for(long time = checkInDateToTime;
+						time < checkOutDateToTime; time += MILLISECONDS_PER_DAY) {
+					if(time >= todayToTime) {
+						// 자바스크립트에서 바로 배열로 받기위해 따옴표를 붙임
+						invalidDates.add("\"" + new java.sql.Date(time).toString() + "\"");
+					}
+				}
+			}
+		}
+		return invalidDates;
 	}
 	
 	public List<PropertyDTO> loadRecentProperties(
@@ -354,7 +457,7 @@ public class PropertyController {
 		}
 		
 		// 기존의 최근목록 쿠키가 있는지 찾아봄
-		Cookie cookie = Util.getCookie(req, Util.RECENT_COOKIE_PREFIX + cookieUser);
+		Cookie cookie = Util.getCookie(req, RECENT_COOKIE_PREFIX + cookieUser);
 		
 		return loadRecentProperties(cookie, resp);
 	}
@@ -386,13 +489,13 @@ public class PropertyController {
 				// 쿠키에 등록되어있던 값을 앞에서부터 읽으면서
 				// id가 같은 숙소를 맨 뒤로 이동시키기를 반복하면
 				// 쿠키에 등록되어있던 순서와 똑같이 정렬됨
-				for(int i = 0; i < recentPropertyIdArray.length; i++) {
-					inner: for(int j = 0; j < recentProperties.size(); j++) {
+				outer: for(int i = 0; i < recentPropertyIdArray.length; i++) {
+					for(int j = 0; j < recentProperties.size(); j++) {
 						PropertyDTO recentProperty = recentProperties.get(j);
 						if(recentProperty.getId() == recentPropertyIdArray[i]) {
 							recentProperties.remove(j);
 							recentProperties.add(recentProperty);
-							break inner;
+							continue outer;
 						}
 					}
 				}
@@ -419,7 +522,7 @@ public class PropertyController {
 		}
 
 		// 기존의 최근목록 쿠키가 있는지 찾아봄
-		Cookie cookie = Util.getCookie(req, Util.RECENT_COOKIE_PREFIX + cookieUser);
+		Cookie cookie = Util.getCookie(req, RECENT_COOKIE_PREFIX + cookieUser);
 		
 		return saveRecentProperties(cookie, cookieUser, resp, propertyId);
 	}
@@ -450,7 +553,7 @@ public class PropertyController {
 					System.out.println("최근목록 저장 : 인코딩 후");
 					System.out.println(encodedCookieString);
 				}
-				cookie = new Cookie(Util.RECENT_COOKIE_PREFIX + cookieUser, encodedCookieString);
+				cookie = new Cookie(RECENT_COOKIE_PREFIX + cookieUser, encodedCookieString);
 				
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
