@@ -25,7 +25,8 @@
           <div class="one_half <c:if test='${i % 2 == 1}'>first</c:if>" align="center">
             <a class="wishList-button" id="wishList-${wishList.id}" role="button">
               <img src="
-                <c:if test="${wishList.properties.size() > 0}">
+                <c:if test="${not empty wishList.properties && 
+                not empty wishList.properties.get(0).images}">
                   ${wishList.properties.get(0).images.get(0).path}
                 </c:if>" style="width: 20rem;height: 15rem"><br>
               ${wishList.name}

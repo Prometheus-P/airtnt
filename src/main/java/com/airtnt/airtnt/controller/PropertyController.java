@@ -61,7 +61,12 @@ public class PropertyController {
 	@GetMapping("search")
 	public String search(HttpServletRequest req, HttpServletResponse resp,
 			@RequestParam(value = "addressKey", required = false) String addressKey,
+			@RequestParam(value = "tempAddressKey", required = false) String tempAddressKey,
+			@RequestParam(value = "latitude", required = false) String latitude,
+			@RequestParam(value = "longitude", required = false) String longitude,
+			
 			@RequestParam(value = "pageNum", required = false) Integer pageNum,
+			
 			@RequestParam(value = "propertyTypeId", required = false) Integer[] propertyTypeIdKeyArray,
 			@RequestParam(value = "subPropertyTypeId", required = false) Integer[] subPropertyTypeIdKeyArray,
 			@RequestParam(value = "roomTypeId", required = false) Integer[] roomTypeIdKeyArray,
@@ -75,9 +80,21 @@ public class PropertyController {
 		String currentURI = Util.getCurrentURI(req);
 		req.setAttribute("currentURI", currentURI);
 		
-		if(addressKey == null) {
-			addressKey = "노원";
+		if(tempAddressKey == null || tempAddressKey.trim().equals("")) {
+			if(addressKey == null || addressKey.trim().equals("")) {
+				addressKey = "서울";
+				// 서울 시청
+				latitude = "37.566826004661";
+				longitude = "126.978652258309";
+			} /*else {
+				addressKey만 넘어왔으면 자동완성 주소로 넘어온 것임
+			}*/
+		} else {
+			// 자동완성으로 검색하지 않아도 맨 상단에 있던 주소로 세팅
+			addressKey = tempAddressKey;
 		}
+		
+		// 페이지
 		if(pageNum == null || pageNum < 1) {
 			pageNum = 1;
 		}
@@ -152,6 +169,7 @@ public class PropertyController {
 			System.out.println("max price : " + maxPriceKey);
 			System.out.println("-----------------");
 			
+			
 			System.out.println("전체 페이지 수 : " + totalPagesNum);
 			for(PropertyDTO property : properties) {
 				System.out.println("rownum : " + property.getRowNum());
@@ -173,6 +191,10 @@ public class PropertyController {
 			}
 			System.out.println("---------------------------------------");
 		}
+		
+		req.setAttribute("addressKey", addressKey);
+		req.setAttribute("latitude", latitude);
+		req.setAttribute("longitude", longitude);
 		
 		// 숙소 목록
 		req.setAttribute("properties", properties);
@@ -210,11 +232,6 @@ public class PropertyController {
 		List<BookingDTO> bookings = bookingMapper.selectFutureBookings(propertyId);
 		// 체크인 날짜부터 체크아웃 전날까지 비활성화
 		List<String> invalidDates = setInvalidDates(bookings);
-//		if(invalidDates != null) {
-//			for(String date : invalidDates) {
-//				System.out.println(date);
-//			}
-//		}
 		
 		// 위시리스트
 		Map<String, Object> wishMap = new Hashtable<>();
@@ -332,7 +349,7 @@ public class PropertyController {
 	}
 	
 	public List<PropertyDTO> setPageProperties(List<PropertyDTO> tempProperties, int pageNum){
-		List<PropertyDTO> properties = null;
+		List<PropertyDTO> properties = new ArrayList<>();
 		int maxRownum = tempProperties.size();
 		if(maxRownum > 0) {
 			// List에 접근할 인덱스 값
@@ -347,7 +364,6 @@ public class PropertyController {
 			lessThanIndex = numPerPage * pageNum;	// 미만
 			
 			// 페이지에 띄울 숙소 목록 저장
-			properties = new ArrayList<>();
 			for(int i = greaterEqualIndex; i < lessThanIndex && i <= lastIndex; i++) {
 				properties.add(tempProperties.get(i));
 			}
@@ -399,6 +415,7 @@ public class PropertyController {
 			for(WishListDTO wishList : wishLists) {
 				for(PropertyDTO wishProperty : wishList.getProperties()) {
 					if(property.getId() == wishProperty.getId()) {
+						System.out.println(wishList.getId());
 						property.setWished(true);
 						property.setWishListId(wishList.getId());
 						continue outer;
