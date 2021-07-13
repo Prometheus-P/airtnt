@@ -35,8 +35,6 @@ crossorigin="anonymous"></script> -->
 <!-- ################################################################################################ -->
 <!-- Top Background Image Wrapper -->
 
-<script src="/resources/script/json2.js"></script>
-
 <!-- 상단 로그인 바 -->
 <c:import url="/WEB-INF/views/top.jsp"/>
 
@@ -46,9 +44,11 @@ crossorigin="anonymous"></script> -->
 <!-- 검색필터 이벤트 처리와 초기화를 제어하는 커스텀 파일 -->
 <script src="/resources/script/search-control.js"></script>
 
+<!-- 실시간 추전 주소 검색어를 띄워주는 파일 -->
+<script src="/resources/script/address-control.js"></script>
+
 <script type="text/javascript">
-console.log("${latitude}");
-console.log("${longitude}");
+console.log("(${latitude}, ${longitude})");
 </script>
 
 <form id="search-form" action="<c:url value='/property/search'/>" method="get" onsubmit="setParametersOnSubmit()">
@@ -61,13 +61,12 @@ console.log("${longitude}");
   <nav id="mainnav" class="navbar navbar-light">
     <div class="container-fluid btn-group" >
       <input id="search" name="addressKey" class="form-control me-2" type="search" 
-      placeholder="위치" value="${param.addressKey}"
+      placeholder="어디로 여행하실건가요?" value="${param.addressKey}"
       aria-label="Search" style="height: 50px; width: 300px; font-size: 20px">
       
       <input type="hidden" id="temp-search" name="tempAddressKey">
       <input type="hidden" id="latitude" name="latitude" value="${latitude}">
       <input type="hidden" id="longitude" name="longitude" value="${longitude}">
-      
       <ul id="auto-complete-area" class="dropdown-menu list-group" style="width: 40rem; font-size: 2rem;">
         <!-- 주소 자동완성 목록 -->
       </ul>
@@ -80,8 +79,8 @@ console.log("${longitude}");
 <!-- </div> -->
 
 <!-- 검색 필터 -->
-<div class="wrapper row1" style="height: 50px">
-  <div class="hoc container clear position-relative" >
+<div class="hoc wrapper row1" style="height: 50px">
+  <div class="container clear position-relative" >
     <div class="position-absolute top-0 start-0">
       <input type="button" class="btn btn-secondary"
       value="전체 초기화" onclick="resetTags('all')">
@@ -89,8 +88,8 @@ console.log("${longitude}");
   </div>
 </div>
 
-<div class="wrapper row2" style="height: 100px">
-  <div class="hoc container clear" style="padding-top: 20px">
+<div class="hoc clear wrapper row2" style="height: 100px">
+  <div class="container" style="padding-top: 20px">
   
       <!-- 숙소 유형 검색 필터 -->
       <div class="one_quarter first" >
@@ -115,22 +114,30 @@ console.log("${longitude}");
                 </div>
                 
                 <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="collapse"
-                data-bs-target="#collapse${propertyType.id}" aria-expanded="false" aria-controls="collapseExample${propertyType.id}">
+                data-bs-target="#collapse-${propertyType.id}" aria-expanded="false" aria-controls="collapse-${propertyType.id}">
                    ${propertyType.name} 세부유형
                 </button>
-                <div class="collapse" id="collapse${propertyType.id}">
+                <c:set var="isChecked" value="${false}"/>
+                <div class="collapse" id="collapse-${propertyType.id}">
                   <c:forEach var="subPropertyType" items="${propertyType.subPropertyTypes}">
                     <div class="form-check form-check-inline">
                       <input type="checkbox" id="subPropertyType-${propertyType.id}-${subPropertyType.id}"
-                      class="form-check-input" name="subPropertyTypeId" value="${subPropertyType.id}"
                         <c:forEach var='tagAttribute' items='${subPropertyType.tagAttributes}'>
                           ${tagAttribute}="${subPropertyType.getTagAttributeMapValue(tagAttribute)}"
+                          <c:if test='${tagAttribute == "checked"}'>
+                            <c:set var='isChecked' value='${true}'/>
+                          </c:if>
                         </c:forEach>
-                      >
+                      class="form-check-input" name="subPropertyTypeId" value="${subPropertyType.id}">
                       <label class="form-check-label">${subPropertyType.name}</label>
                     </div>
                   </c:forEach>
                 </div>
+                <c:if test="${isChecked}">
+                  <script type="text/javascript">
+                    document.querySelector("div#collapse-${propertyType.id}").setAttribute("class", "collapse show");
+                  </script>
+                </c:if>
               </li>
             </c:forEach>
             <li>
@@ -255,9 +262,7 @@ console.log("${longitude}");
 </form>
 
 <!-- 메인 화면 -->
-<div class="wrapper row3">
-  <div class="hoc clear" style="margin-left: 50px; margin-right: 50px">
-
+<div class="hoc clear wrapper row3">
     <!-- main body -->
     <!-- ################################################################################################ -->
     <div class="content"> 
@@ -281,9 +286,9 @@ console.log("${longitude}");
                   	<td>${property.name}</td>
                   	<td>${property.propertyType.name}</td>
                   	<td>
-                  		 <c:forEach var="image" items="${property.images}">
+                  		<c:forEach var="image" items="${property.images}">
                               ${image.path}:
-                         </c:forEach>
+                        </c:forEach>
                     </td>      
                   	</tr>
 	          	</c:forEach>
@@ -636,15 +641,16 @@ console.log("${longitude}");
         </div>
       </div>
     </div>
-  </div>
 </div>
+
+<c:import url="/WEB-INF/views/bottom.jsp"></c:import>
 
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
-<div class="wrapper row4">
-  <footer id="footer" class="hoc clear"> 
-    <!-- ################################################################################################ -->
+<!-- <div class="hoc clear wrapper row4">
+  <footer id="footer" class=""> 
+    ################################################################################################
     <div class="one_quarter first">
       <h6 class="heading">Praesent id aliquam</h6>
       <p>Non tellus nec sapien lobortis lobortis mauris egestas massa ac cursus pellentesque leo risus convallis nulla et fringilla sapien magna sit amet magna aliquam tempus praesent sit amet neque sed lobortis nulla facilisi [<a href="#">&hellip;</a>]</p>
@@ -697,28 +703,28 @@ console.log("${longitude}");
         </li>
       </ul>
     </div>
-    <!-- ################################################################################################ -->
+    ################################################################################################
   </footer>
-</div>
+</div> -->
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
-<div class="wrapper row5">
-  <div id="copyright" class="hoc clear"> 
-    <!-- ################################################################################################ -->
+<!-- <div class="hoc clear wrapper row5">
+  <div id="copyright" class=""> 
+    ################################################################################################
     <p class="fl_left">Copyright &copy; 2018 - All Rights Reserved - <a href="#">Domain Name</a></p>
     <p class="fl_right">Template by <a target="_blank" href="https://www.os-templates.com/" title="Free Website Templates">OS Templates</a></p>
-    <!-- ################################################################################################ -->
+    ################################################################################################
   </div>
-</div>
+</div> -->
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
 <a id="backtotop" href="#top"><i class="fas fa-chevron-up"></i></a>
 <!-- JAVASCRIPTS -->
-<!-- <script src="../layout/scripts/jquery.min.js"></script>
+<!-- <script src="/resources/layout/scripts/jquery.min.js"></script> -->
 <script src="../layout/scripts/jquery.backtotop.js"></script>
-<script src="../layout/scripts/jquery.mobilemenu.js"></script> -->
+<!-- <script src="/resources/layout/scripts/jquery.mobilemenu.js"></script> -->
 </body>
 
 </html>

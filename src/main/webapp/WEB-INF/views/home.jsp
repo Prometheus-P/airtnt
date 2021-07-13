@@ -20,7 +20,9 @@
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<script src="/resources/script/check.js"></script>
 	
-	<script src="/resources/script/search-control.js"></script>
+	<!-- 실시간 추전 주소 검색어를 띄워주는 파일 -->
+	<script src="/resources/script/address-control.js"></script>
+	
 	<!-- JAVASCRIPTS -->
 	<!-- <script src="layout/scripts/jquery.min.js"></script>
 	<script src="layout/scripts/jquery.backtotop.js"></script>
@@ -30,7 +32,7 @@
 	<c:set var="isLogin" value="false"/>
 	<c:if test="${not empty member_id && not empty member_name}"><c:set var="isLogin" value="true"/></c:if>
 	
-<div class="bgded overlay padtop" style="background-image:url('<c:url value='/resources/img/main3.jpg'/>');">
+<div class="hoc bgded overlay padtop" style="background-image:url('<c:url value='/resources/img/main3.jpg'/>');">
   <!-- ################################################################################################ -->
   <!-- ################################################################################################ -->
   <!-- ################################################################################################ -->
@@ -94,7 +96,7 @@
 		    <form class="d-flex" action="/property/search" method="get">
 		      <input type="hidden" name="pageNum" value="1">
               <input id="search" name="addressKey" class="form-control me-2" type="search" 
-              placeholder="위치" value="${param.addressKey}"
+              placeholder="어디로 여행하실건가요?" value=""
               aria-label="Search" style="height: 50px; width: 300px; font-size: 20px">
               
               <input type="hidden" id="temp-search" name="tempAddressKey">
@@ -175,12 +177,15 @@
     <div class="clear"></div>
   </main>
 </div>
+
+<c:import url="/WEB-INF/views/bottom.jsp"/>
+
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
-<div class="wrapper row1">
+<!-- <div class="wrapper row1">
   <section id="ctdetails" class="hoc clear"> 
-    <!-- ################################################################################################ -->
+    ################################################################################################
     <ul class="nospace clear">
       <li class="one_quarter first">
         <div class="block clear"><a href="#"><i class="fas fa-phone"></i></a> <span><strong>Give us a call:</strong> +00 (123) 456 7890</span></div>
@@ -195,9 +200,9 @@
         <div class="block clear"><a href="#"><i class="fas fa-map-marker-alt"></i></a> <span><strong>Come visit us:</strong> Directions to <a href="#">our location</a></span></div>
       </li>
     </ul>
-    <!-- ################################################################################################ -->
+    ################################################################################################
   </section>
-</div>
+</div> -->
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
