@@ -252,6 +252,7 @@
 								onchange="changeContent(this.name)" id = "propName" value="${dto.name}" 
 								style="text-align:center; height:23px; font-size:13px"></td> <!-- event.cancelBubble=true : 해당 td는 클릭이벤트 제외 -->
 						<c:set var = "chk" value="${dto.isUse}"></c:set>
+						<c:set var='propertyTypeId' value="propertyTypeId"></c:set>
 						<td colspan="2">
 							<!-- isUse 값에 따른 체크박스 체크값 분기 처리 -->
 							<input type="checkbox" name="isUseYnRoomType" <c:if test="${fn:contains(chk, 'Y')}"> checked</c:if>>

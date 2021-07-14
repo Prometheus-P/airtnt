@@ -167,7 +167,6 @@ public class AdminController extends UserController {
 	 */
 	@RequestMapping(value="reports", method = RequestMethod.GET)
 	public String selectReportsData(HttpServletRequest req) {
-		System.out.println("test");
 		String startDate = strToday;
 		String endDate = strToday;
 		List<BookingDTO> bookingList = adminMapper.selectBookingList(startDate, endDate);
@@ -181,18 +180,13 @@ public class AdminController extends UserController {
 	/*
 	 * [reports] : 날짜 조회조건 변경해서 요청한 리포트 데이터만 조회해온다
 	 */
-	@RequestMapping(value = "reports/test", method = RequestMethod.POST)
-	public String test() {
-		System.out.println("test:::::::");
-		return null;
-	}
-	/*
+	@RequestMapping(value = "reports/search", method = RequestMethod.POST)
+	@ResponseBody
 	public List<?> selectSelectedReportData(HttpServletRequest req, 
 									@RequestParam String startDate, 
 									@RequestParam String endDate,
 									@RequestParam String mode
 									)  throws Exception {
-		System.out.println("mode : " + mode);
 		if(mode.equals("booking")) {
 			List<BookingDTO> list = adminMapper.selectBookingList(startDate, endDate);
 			return list;
@@ -201,10 +195,10 @@ public class AdminController extends UserController {
 			return list;
 		}
 	}
-	*/
 	
 	/*
 	 * [filter] : 필터 화면 첫 조회시 전체 데이터 불러온다
+	
 	 */
 	@RequestMapping(value = "filter", method = RequestMethod.GET)
 	public String selectFilterTables(HttpServletRequest req) throws Exception {

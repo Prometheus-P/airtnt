@@ -83,7 +83,7 @@
     			check_in_date as checkInDate,
    				check_out_date as checkOutDate,
     			confirm_date as confirmDate,
-    			reg_date as regDate
+    			reg_Date as regDate
 		from 	booking
 		where 1=1
 		<!-- 예약일자 -->
