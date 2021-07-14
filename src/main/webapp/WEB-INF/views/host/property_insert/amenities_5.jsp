@@ -32,9 +32,9 @@ footer{
 				숙소 편의시설 정보를 추가해 주세요</h1>
 			</div>
 			<form name="f" method="post" action="<c:url value='/host/photos_6'/>" onsubmit="return check()">
-			<div class="col-sm-4" style="font-family: fantasy;">
+			<div class="col-sm-6" style="font-family: fantasy;">
 				<c:forEach var="dto" items="${listAmenityType}">
-					<input class="checkbox" type="checkbox" name="amenities" id="${dto.id}" value="${dto.id}" 
+					<input class="checkbox" type="checkbox" name="listAmenity" id="${dto.id}" value="${dto.id}" 
 						<c:forEach var="regId" items="${sessionScope.listAmenities}">
 							<c:if test="${regId eq dto.id}">checked</c:if>
 						</c:forEach> >
@@ -67,11 +67,10 @@ footer{
 		document.getElementById('next').style.display="block";
 	});
 	function check(){
-		if($("input:checkbox[name=amenities]:checked").length < 1){
+		if($("input:checkbox[name=listAmenity]:checked").length < 1){
 			alert("한 개 이상의 편의시설이 필요합니다!");
 			return false;
 		}
-		document.f.submit;
 		return true;
 	}
 	</script>

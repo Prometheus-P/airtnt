@@ -26,11 +26,11 @@
 	</select>
 
 	<insert id="insertProperty" parameterType="propertyDTO">
-		insert into property(name, host_id, property_desc, property_type_id,
+		insert into property(id, name, host_id, property_desc, property_type_id,
 		sub_property_type_id,
 		room_type_id, address, price, bed_count,
 		max_guest)
-		values(#{name}, #{hostId}, #{propertyDesc},
+		values(seq_property.nextval,#{name}, #{hostId}, #{propertyDesc},
 		#{propertyTypeId}, #{subPropertyTypeId},
 		#{roomTypeId},
 		#{address},
@@ -210,8 +210,7 @@
 		isUse
 		from amenity_type
 	</select>
-	<select resultType="int" id="getPropertyId"
-		parameterType="String">
+	<select resultType="int" id="getPropertyId" parameterType="String">
 		select id from
 		(select * from property
 		where
@@ -311,23 +310,18 @@
 		INSERT 
 		INTO image(property_id, is_main, path, file_size)
 		VALUES
-		<foreach item="dto" collection="list">
-			(#{dto.propertyId}, #{dto.isMain, jdbcType=VARCHAR}, #{dto.path}, #{dto.fileSize})
+		<foreach item="item" collection="list" separator=",">
+			(#{item.propertyId}, #{item.isMain, jdbcType=VARCHAR}, #{item.path}, #{item.fileSize})
 		</foreach>
 	</insert>
 	
-	<insert id="insertAmenities" parameterType="java.util.List">
+	<insert id="insertListAmenity" parameterType="java.util.List">
 		INSERT
-		INTO amenity()
+		INTO amenity(property_id, amenity_type_id)
 		VALUES
-		<foreach item="dto" collection="list">
-		
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			(#{item.propertyId}, #{item.id})	
 		</foreach>
 	</insert>
-	<!-- <update id="payExptDateConfirm" parameterType="java.sql.Date" >
-		UPDATE transaction 
-		SET confirm_date = sysdate 
-		WHERE id = #{bookingId}
-	</update> -->
-	
+
 </mapper>

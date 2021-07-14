@@ -86,8 +86,7 @@ public class HostController implements HostControllerInterface {
 	//////////////////////////////////////////////////////////////////////////////////////
 
 	@RequestMapping("host/property_insert")
-	public ModelAndView property_type_0_new(HttpServletRequest req) {
-		HttpSession session = req.getSession();
+	public ModelAndView property_type_0_new(HttpSession session) {
 		session.removeAttribute("propertyTypeId");
 		session.removeAttribute("propertyTypeName");
 		session.removeAttribute("subPropertyTypeId");
@@ -103,28 +102,28 @@ public class HostController implements HostControllerInterface {
 		session.removeAttribute("listAmenity");
 		session.removeAttribute("price");
 		Enumeration<String> emu = session.getAttributeNames();
-		System.out.print("====세션에 담긴 값====");
-		while(emu.hasMoreElements()) {
+		System.out.println("====세션에 담긴 값====");
+		while (emu.hasMoreElements()) {
 			String name = emu.nextElement();
 			Object attrValue = session.getAttribute(name);
-			System.out.println(name+": " + attrValue);
+			System.out.println(name + ": " + attrValue);
 		}
-		List<PropertyTypeDTO> listPropertyType = hostMapper.getPropertyType();
-		return new ModelAndView("host/property_insert/property_type_0", "listPropertyType", listPropertyType);
-	}
-	
-	@Override
-	@RequestMapping("host/property_type_0")
-	public ModelAndView property_type_0(HttpServletRequest req) {
 		List<PropertyTypeDTO> listPropertyType = hostMapper.getPropertyType();
 		return new ModelAndView("host/property_insert/property_type_0", "listPropertyType", listPropertyType);
 	}
 
 	@Override
-	@RequestMapping("host/sub_property_type_1") 
-	public ModelAndView sub_property_type_1
-	(HttpServletRequest req, @RequestParam(value="propertyTypeId") Integer propertyTypeId, @RequestParam(value="propertyTypeName") String propertyTypeName) {
-		HttpSession session = req.getSession();
+	@RequestMapping("host/property_type_0")
+	public ModelAndView property_type_0() {
+		List<PropertyTypeDTO> listPropertyType = hostMapper.getPropertyType();
+		return new ModelAndView("host/property_insert/property_type_0", "listPropertyType", listPropertyType);
+	}
+
+	@Override
+	@RequestMapping("host/sub_property_type_1")
+	public ModelAndView sub_property_type_1(HttpSession session,
+			@RequestParam(value = "propertyTypeId") Integer propertyTypeId,
+			@RequestParam(value = "propertyTypeName") String propertyTypeName) {
 		session.setAttribute("propertyTypeId", propertyTypeId);
 		session.setAttribute("propertyTypeName", propertyTypeName);
 		List<SubPropertyTypeDTO> listSubPropertyType = hostMapper.getSubPropertyType(propertyTypeId);
@@ -133,9 +132,9 @@ public class HostController implements HostControllerInterface {
 
 	@Override
 	@RequestMapping("host/room_type_2")
-	public ModelAndView room_type_2
-	(HttpServletRequest req, @RequestParam(value="subPropertyTypeId") Integer subPropertyTypeId, @RequestParam(value="subPropertyTypeName") String subPropertyTypeName) {
-		HttpSession session = req.getSession();
+	public ModelAndView room_type_2(HttpSession session,
+			@RequestParam(value = "subPropertyTypeId") Integer subPropertyTypeId,
+			@RequestParam(value = "subPropertyTypeName") String subPropertyTypeName) {
 		session.setAttribute("subPropertyTypeId", subPropertyTypeId);
 		session.setAttribute("subPropertyTypeName", subPropertyTypeName);
 		List<RoomTypeDTO> listRoomType = hostMapper.getRoomType();
@@ -146,9 +145,8 @@ public class HostController implements HostControllerInterface {
 
 	@Override
 	@RequestMapping("host/address_3")
-	public String address_3
-	(HttpServletRequest req, @RequestParam(value="roomTypeId") Integer roomTypeId, @RequestParam(value="roomTypeName") String roomTypeName) {
-		HttpSession session = req.getSession();
+	public String address_3(HttpSession session, @RequestParam(value = "roomTypeId") Integer roomTypeId,
+			@RequestParam(value = "roomTypeName") String roomTypeName) {
 		session.setAttribute("roomTypeId", roomTypeId);
 		session.setAttribute("roomTypeName", roomTypeName);
 		return "host/property_insert/address_3";
@@ -156,9 +154,8 @@ public class HostController implements HostControllerInterface {
 
 	@Override
 	@RequestMapping("host/floor_plan_4")
-	public String floor_plan_4
-	(HttpServletRequest req, @RequestParam(value="address") String address, @RequestParam(value="addressDetail") String addressDetail) {
-		HttpSession session = req.getSession();
+	public String floor_plan_4(HttpSession session, @RequestParam(value = "address") String address,
+			@RequestParam(value = "addressDetail") String addressDetail) {
 		session.setAttribute("checkAddress", address);
 		session.setAttribute("address", address + " " + addressDetail);
 
@@ -169,9 +166,8 @@ public class HostController implements HostControllerInterface {
 
 	@Override
 	@RequestMapping("host/amenities_5")
-	public ModelAndView amenities_5
-	(HttpServletRequest req, @RequestParam(value="maxGuest") Integer maxGuest, @RequestParam(value="bedCount") Integer bedCount) {
-		HttpSession session = req.getSession();
+	public ModelAndView amenities_5(HttpSession session, @RequestParam(value = "maxGuest") Integer maxGuest,
+			@RequestParam(value = "bedCount") Integer bedCount) {
 		session.setAttribute("maxGuest", maxGuest);
 		session.setAttribute("bedCount", bedCount);
 		List<AmenityTypeDTO> list = hostMapper.getAmenityTypeList();
@@ -180,30 +176,31 @@ public class HostController implements HostControllerInterface {
 	}
 
 	@Override
-	@RequestMapping("host/photos_6") 
-	public String photos_6(HttpServletRequest req,
-			@RequestParam(value = "amenities", required = true) List<Integer> amenities) {
-		HttpSession session = req.getSession();
-		List<AmenityTypeDTO> listAmenity = (List<AmenityTypeDTO>)session.getAttribute("list");
+	@RequestMapping("host/photos_6")
+	public String photos_6(HttpSession session,
+			@RequestParam(value = "listAmenity", required = true) List<Integer> amenities) {
+		List<AmenityTypeDTO> listAmenity = (List<AmenityTypeDTO>) session.getAttribute("list");
 		listAmenity.removeIf(dto -> {
-			boolean isRemove = false;
+			boolean isRemove = true;
 			for (int id : amenities) {
-				if (dto.getId() != id)
-					isRemove = true;
-				}
+				if (dto.getId() == id) {
+					isRemove = false;
+					break;
+				}	
+			}
 			return isRemove;
 		});
+		session.removeAttribute("list");
 		session.setAttribute("listAmenity", listAmenity);
-		
+
 		return "/host/property_insert/photos_6";
 	}
 
 	@Override
 	@ResponseBody
 	@RequestMapping(value = "/host/file-upload", method = RequestMethod.POST)
-	public String photos_upload
-	(@RequestParam("article_file") List<MultipartFile> multipartFile, HttpServletRequest req) {
-		HttpSession session = req.getSession();
+	public String photos_upload(@RequestParam("article_file") List<MultipartFile> multipartFile,
+			HttpSession session) {
 		String strResult = "{ \"result\":\"FAIL\" }";
 		long sizeSum = 0;
 		List<ImageDTO> listImgUrl = new ArrayList<>();
@@ -215,8 +212,9 @@ public class HostController implements HostControllerInterface {
 					long time = System.currentTimeMillis();
 					String savedFileName = time + "-" + originalFileName; // 저장될 파일 명
 					String upPath = "C:\\Users\\Haseong\\git\\airtnt\\src\\main\\webapp\\resources\\files\\property\\property-";
-					//HS >> D:\bigdata\study3\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\airtnt\resources\files\property
-					
+					// HS >>
+					// D:\bigdata\study3\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\airtnt\resources\files\property
+
 					if (!isValidExtension(originalFileName)) { // 확장자 검사
 						return strResult = "{ \"result\":\"UNACCEPTED_EXTENSION\" }";
 					}
@@ -275,8 +273,8 @@ public class HostController implements HostControllerInterface {
 
 	@Override
 	@RequestMapping("host/price_8")
-	public String price_8(HttpServletRequest req, @RequestParam(value="name") String name, @RequestParam(value="description") String description) {
-		HttpSession session = req.getSession();
+	public String price_8(HttpSession session, @RequestParam(value = "name") String name,
+			@RequestParam(value = "description") String description) {
 		session.setAttribute("name", name);
 		session.setAttribute("description", description);
 		return "/host/property_insert/price_8";
@@ -284,21 +282,20 @@ public class HostController implements HostControllerInterface {
 
 	@Override
 	@RequestMapping("host/preview_9")
-	public String preview_9(HttpServletRequest req, @RequestParam(value="price") int price) {
-		HttpSession session = req.getSession();
+	public String preview_9(HttpSession session, @RequestParam(value = "price") int price) {
 		session.setAttribute("price", price);
 		return "/host/property_insert/preview_9";
 	}
 
 	@Override
-	@RequestMapping("host/publish_celebration_10")
-	public String publish_celebration_10(HttpServletRequest req) {
-		HttpSession session = req.getSession();
+	@ResponseBody
+	@RequestMapping("host/property_save")
+	public String property_save(HttpSession session) {
 		session.setAttribute("isMemberMode", true);
 		List<AmenityTypeDTO> listAmenity = (List<AmenityTypeDTO>) session.getAttribute("listAmenity");
 		List<ImageDTO> listImgUrl = (List<ImageDTO>) session.getAttribute("listImgUrl");
 		String hostId = (String) session.getAttribute("member_id");
-		
+
 		PropertyDTO dtoPro = new PropertyDTO();
 		dtoPro.setHostId(hostId);
 		dtoPro.setPropertyTypeId((int) session.getAttribute("propertyTypeId"));
@@ -310,28 +307,34 @@ public class HostController implements HostControllerInterface {
 		dtoPro.setName((String) session.getAttribute("name"));
 		dtoPro.setPropertyDesc((String) session.getAttribute("description"));
 		dtoPro.setPrice((int) session.getAttribute("price"));
-		
-		int ok = hostMapper.insertProperty(dtoPro); // 1. property입력
-		if(ok <= 0) {
-			req.setAttribute("msg", "숙소 저장 중 서버에 문제가 생겼습니다! 잠시만 기다려 주세요");
-			req.setAttribute("url", "stay");
-			return "message";
-		}
+
+		int propertyOk = hostMapper.insertProperty(dtoPro); // 1. property입력
 		
 		int propertyId = hostMapper.getPropertyId(hostId); // 2. propertyId 가져오기
-		//int amenityOk = hostMapper.insertListAmenity(listAmenity);
+		for (AmenityTypeDTO dto : listAmenity) {
+			dto.setPropertyId(propertyId);
+		}
 		for (ImageDTO dto : listImgUrl) {
 			dto.setPropertyId(propertyId);
 		}
-		listImgUrl.get(0).setIsMain('Y');
+		listImgUrl.get(0).setIsMain('Y'); // 메인 사진 설정
+		int amenityOk = hostMapper.insertListAmenity(listAmenity); // 3. 편의시설 입력
+		int imageOk = hostMapper.imageInsert(listImgUrl); // 4. 숙소 사진 입력
+		int memberChangeOk = hostMapper.updateMemberMode(hostId); // 5. 멤버모드 변경 1 -> 2
 		
-		
-		
-		
-		
-		int memberChange = hostMapper.updateMemberMode(hostId); // 1 -> 2
-
-		
+		if (propertyOk <= 0 ) {
+			System.out.println("PROPERTY_ERROR");
+			return "{ \"result\":\"PROPERTY_ERROR\" }";
+		}else if(amenityOk <= 0) {
+			System.out.println("AMENITY_ERROR");
+			return "{ \"result\":\"AMENITY_ERROR\" }";
+		}else if(imageOk <= 0) {
+			System.out.println("IMAGE_ERROR");
+			return "{ \"result\":\"IMAGE_ERROR\" }";
+		}else if(memberChangeOk <= 0) {
+			System.out.println("MEMBER_CHANGE_ERROR");
+			return "{ \"result\":\"MEMBER_CHANGE_ERROR\" }";
+		}
 		session.removeAttribute("propertyTypeId");
 		session.removeAttribute("propertyTypeName");
 		session.removeAttribute("subPropertyTypeId");
@@ -347,21 +350,16 @@ public class HostController implements HostControllerInterface {
 		session.removeAttribute("price");
 		session.removeAttribute("listImgUrl");
 		// 사진도 지우기
-		return "/host/property_insert/publish_celebration_10";
+		return "{ \"result\":\"OK\" }";
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////
 	// 3. host_mode 페이지
 	//////////////////////////////////////////////////////////////////////////////////////
 
-	/*
-	 * session.setAttribute("member_id", dto.getId());
-	 * session.setAttribute("member_name", dto.getName());
-	 */
 	@Override
 	@RequestMapping("host/host_mode")
-	public ModelAndView host_mode(HttpServletRequest req) {
-		HttpSession session = req.getSession();
+	public ModelAndView host_mode(HttpSession session) {
 		String hostId = (String) session.getAttribute("member_id");
 		List<BookingDTO> listBooking = hostMapper.getBookingList(hostId);
 
@@ -385,7 +383,7 @@ public class HostController implements HostControllerInterface {
 
 	@ResponseBody
 	@RequestMapping(value = "host/bookConfirm", method = RequestMethod.POST)
-	public String bookConfirm(@RequestParam Map<String, Object> param, HttpServletRequest req) {
+	public String bookConfirm(@RequestParam Map<String, Object> param) {
 		int bookingId = Integer.valueOf((String) param.get("bookingId"));
 		java.text.DateFormat format = new SimpleDateFormat("yyyyMMdd");
 		java.sql.Date payExptDate = null;
@@ -428,8 +426,7 @@ public class HostController implements HostControllerInterface {
 
 	@Override
 	@RequestMapping("host/host_properties_list")
-	public ModelAndView host_properties_list(HttpServletRequest req) {
-		HttpSession session = req.getSession();
+	public ModelAndView host_properties_list(HttpSession session) {
 		String hostId = (String) session.getAttribute("member_id");
 		List<PropertyDTO> listProperty = hostMapper.getPropertyList(hostId);
 		ModelAndView mav = new ModelAndView("/host/host_mode/host_properties_list", "listProperty", listProperty);
@@ -438,7 +435,7 @@ public class HostController implements HostControllerInterface {
 
 	@Override
 	@RequestMapping(value = "host/properties_update", method = RequestMethod.GET)
-	public ModelAndView host_getProperty(HttpServletRequest req, int propertyId) {
+	public ModelAndView host_getProperty(int propertyId) {
 		PropertyDTO dto = hostMapper.getProperty(propertyId);
 		ModelAndView mav = new ModelAndView("/host/host_mode/properties_update", "propertyDTO", dto);
 		return mav;
@@ -446,7 +443,7 @@ public class HostController implements HostControllerInterface {
 
 	@Override
 	@RequestMapping(value = "host/properties_update", method = RequestMethod.POST)
-	public ModelAndView host_property_update(HttpServletRequest req, @RequestParam Map<String, String> map,
+	public ModelAndView host_property_update(HttpSession session, @RequestParam Map<String, String> map,
 			@RequestParam("files") List<MultipartFile> images) {
 		// msg, url
 		return new ModelAndView("/message");
@@ -454,8 +451,7 @@ public class HostController implements HostControllerInterface {
 
 	@Override
 	@RequestMapping("host/transaction_list")
-	public ModelAndView transaction_list(HttpServletRequest req) {
-		HttpSession session = req.getSession();
+	public ModelAndView transaction_list(HttpSession session) {
 		String hostId = (String) session.getAttribute("member_id");
 		List<TransactionDTO> listTransaction = hostMapper.getTransactionList(hostId);
 		// 6월 29, 2021 10:31:02 오전
@@ -476,8 +472,7 @@ public class HostController implements HostControllerInterface {
 
 	@Override
 	@RequestMapping("host/host_review_list")
-	public ModelAndView host_review_list(HttpServletRequest req) {
-		HttpSession session = req.getSession();
+	public ModelAndView host_review_list(HttpSession session) {
 		List<PropertyDTO> list = hostMapper.getPropertyList((String) session.getAttribute("member_id"));
 		return new ModelAndView("/host/host_mode/host_review_list", "listProperty", list);
 	}
@@ -511,8 +506,7 @@ public class HostController implements HostControllerInterface {
 
 	@Override
 	@RequestMapping("host/total_earning")
-	public ModelAndView total_earning(HttpServletRequest req) {
-		HttpSession session = req.getSession();
+	public ModelAndView total_earning(HttpSession session) {
 		String hostId = (String) session.getAttribute("member_id");
 		List<TransactionDTO> list = hostMapper.getTotalEarning(hostId);
 		java.util.Date date = new Date();
@@ -541,7 +535,7 @@ public class HostController implements HostControllerInterface {
 
 	@Override
 	@RequestMapping("host/host_support")
-	public ModelAndView host_support(HttpServletRequest req) {
+	public ModelAndView host_support(HttpSession session) {
 		// TODO Auto-generated method stub
 		return new ModelAndView("/host/host_mode/host_support");
 	}

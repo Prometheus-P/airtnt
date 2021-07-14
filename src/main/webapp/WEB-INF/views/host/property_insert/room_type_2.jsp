@@ -75,20 +75,23 @@ footer{
 		});
 		
 		function send(){
-			var obj1 = document.createElement('input');
-			obj1.setAttribute('type', 'hidden');
-			obj1.setAttribute('name', 'roomTypeId');
-			obj1.setAttribute('value', roomTypeId);
+			if($('.list-group-item').hasClass('active')){
+				var obj1 = document.createElement('input');
+				obj1.setAttribute('type', 'hidden');
+				obj1.setAttribute('name', 'roomTypeId');
+				obj1.setAttribute('value', roomTypeId);
 			
-			var obj2 = document.createElement('input');
-			obj2.setAttribute('type', 'hidden');
-			obj2.setAttribute('name', 'roomTypeName');
-			obj2.setAttribute('value', roomTypeName);
+				var obj2 = document.createElement('input');
+				obj2.setAttribute('type', 'hidden');
+				obj2.setAttribute('name', 'roomTypeName');
+				obj2.setAttribute('value', roomTypeName);
 			
-			alert(roomTypeId + roomTypeName);
-			$('#set').append(obj1);
-			$('#set').append(obj2);
-			return true;
+				$('#set').append(obj1);
+				$('#set').append(obj2);
+				return true;
+			}
+			alert("숙소 유형을 선택해주세요!");
+			return false;
 		}
 	</script>
 </body>

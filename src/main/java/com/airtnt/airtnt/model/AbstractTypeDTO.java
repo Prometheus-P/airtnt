@@ -1,5 +1,6 @@
 package com.airtnt.airtnt.model;
 
+import java.io.Serializable;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -8,8 +9,9 @@ import java.util.List;
 
 import com.airtnt.airtnt.util.TagAttribute;
 
-public abstract class AbstractTypeDTO {
-	
+public abstract class AbstractTypeDTO implements Serializable{
+
+	private static final long serialVersionUID = 1L;
 	// basic
 	private Integer id;	// fk
 	private String name;

@@ -184,13 +184,13 @@ public class HostMapper implements HostMapperInterface {
 		return res;
 	}
 	
-	public int imageInsert(List<ImageDTO> list) {
-		int res = sqlSession.insert("imageInsert", list);
+	public int imageInsert(List<ImageDTO> listImage) {
+		int res = sqlSession.insert("imageInsert", listImage);
 		return res;
 	}
 
-	public int insertListAmenity(List<AmenityDTO> list) {
-		int res = sqlSession.insert("insertAmenities", list);
+	public int insertListAmenity(List<AmenityTypeDTO> listAmenity) {
+		int res = sqlSession.insert("insertListAmenity", listAmenity);
 		return res;
 	}
 

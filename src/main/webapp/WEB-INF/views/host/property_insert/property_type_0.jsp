@@ -55,10 +55,7 @@ footer{
 	</div>
 	<br><br><br><br>
 	<script>
-			$("#mainBody").load(
-			$("#remove").append(
-			"<c:remove var='propertyTypeId' scope='request'/>"
-			+ "<c:remove var='propertyTypeName' scope='request'/>"));
+			
 			var propertyTypeId = null;
 			var propertyTypeName = null;
 		$('.list-group-item').click(
@@ -76,20 +73,23 @@ footer{
 			}
 		});
 		function send(){
-			var obj1 = document.createElement('input');
-			obj1.setAttribute('type', 'hidden');
-			obj1.setAttribute('name', 'propertyTypeId');
-			obj1.setAttribute('value', propertyTypeId);
+			if($('.list-group-item').hasClass('active')){
+				var obj1 = document.createElement('input');
+				obj1.setAttribute('type', 'hidden');
+				obj1.setAttribute('name', 'propertyTypeId');
+				obj1.setAttribute('value', propertyTypeId);
 			
-			var obj2 = document.createElement('input');
-			obj2.setAttribute('type', 'hidden');
-			obj2.setAttribute('name', 'propertyTypeName');
-			obj2.setAttribute('value', propertyTypeName);
+				var obj2 = document.createElement('input');
+				obj2.setAttribute('type', 'hidden');
+				obj2.setAttribute('name', 'propertyTypeName');
+				obj2.setAttribute('value', propertyTypeName);
 			
-			alert(propertyTypeId + propertyTypeName);
-			$('#set').append(obj1);
-			$('#set').append(obj2);
-			return true;
+				$('#set').append(obj1);
+				$('#set').append(obj2);
+				return true;
+			}
+			alert("숙소 유형을 선택해주세요!");
+			return false;
 		}
 		/* 	$(window).bind("pageshow", function (event){
 				if(event.originalEvent.persisted){
