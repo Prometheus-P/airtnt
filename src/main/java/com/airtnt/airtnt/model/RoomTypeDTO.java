@@ -4,9 +4,12 @@ public class RoomTypeDTO extends AbstractTypeDTO {
 	
 	public RoomTypeDTO() {}
 	public RoomTypeDTO(String name, String isUse) {
-		super(name, isUse);
+		setName(name);
+		setIsUse(isUse.charAt(0));
 	}
 	public RoomTypeDTO(String id, String name, String isUse) {
-		super(id, name, isUse);
+		setId(Integer.parseInt(id));
+		setName(name);
+		setIsUse(isUse.charAt(0));
 	}
 }

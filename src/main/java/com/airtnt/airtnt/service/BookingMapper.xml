@@ -39,15 +39,29 @@
 	</select>
 	<select id="getPreBooking" resultType="BookingDTO" parameterType="String"> 
 		select *
-		from booking_view
-		where guest_id=#{member_id} and sysdate > check_out_date
+		from (select rownum num, b.* from booking_view b) 
+		where 
+			guest_id=#{member_id}
+			and sysdate > check_out_date
+			and num BETWEEN 1 and 10
 	</select>
 	<select id="getToWriteBooking" resultType="BookingDTO" parameterType="String"> 
 		select *
-		from booking_view
+		from (
+            select * 
+            from booking_view
+            where is_reviewed is null and booking_view.confirm_date is not null
+            )
 		where guest_id=#{member_id} and sysdate > check_out_date
 	</select>
-	
+	<select id="getMorePreBooking" resultType="BookingDTO" parameterType="java.util.Map"> 
+		select *
+		from (select rownum num, b.* from booking_view b) 
+		where 
+			guest_id=#{member_id}
+			and sysdate > check_out_date
+			and num BETWEEN #{startNum} and #{lastNum}
+	</select>
 	<!-- 정석 -->
 	
 	<!-- booking -->

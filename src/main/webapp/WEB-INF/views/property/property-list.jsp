@@ -17,11 +17,6 @@ Licence URI: https://www.os-templates.com/template-terms
 <title>AirTnT/숙소검색(키워드:${addressKey})</title>
 <meta charset="utf-8">
 
-<!-- map 커스텀 정보창 css -->
-<style>
-	.wrap {position: absolute;left: 0;bottom: 40px;width: 300px;height: 330px;margin-left: -144px;text-align: left;overflow: hidden;font-size: 12px;font-family: 'Malgun Gothic', dotum, '돋움', sans-serif;line-height: 1.5;}
-</style>
-
 <!-- drop down, popup, ... -->
 <!-- <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
 integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
@@ -487,12 +482,13 @@ console.log("(${latitude}, ${longitude})");
 	      	$(document).ready(function(){
 	      		var mapContainer = document.getElementById('map'), // 지도를 표시할 div
 	      		 mapOption = { 
-			        center: new kakao.maps.LatLng(37.65634637629008, 127.07345281096936), // 지도의 중심좌표
-			        level: 5 // 지도의 확대 레벨
+			        center: new kakao.maps.LatLng("${latitude}", "${longitude}"), // 지도의 중심좌표
+			        level: 7 // 지도의 확대 레벨
 			    };
 	      		
 		      	var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
 		      	var bounds = new kakao.maps.LatLngBounds(); // 지도를 재설정할 범위정보를 가지고 있을 LatLngBounds 객체
+		      			      
 		      	
 		     	// 마커 객체 배열 생성(positions)
 		      	var positions = []; 
@@ -545,24 +541,24 @@ console.log("(${latitude}, ${longitude})");
 		      	 	marker.setMap(map); //마커 표시
 		      	 	bounds.extend(positions[i].latlng); //최종단계에서 맵 중앙 재조정할때 사용
 		      	 	
-		      	 	//오버레이 생성
+					///////////////////////////////오버레이////////////////////////////////////////
+					//오버레이 생성
 		      	    var overlay = new kakao.maps.CustomOverlay({
-		      	        yAnchor: 1,
+		      	        //yAnchor: 0,
 		      	      	clickable: true, //지도 클릭 이벤트 막음
-		      	      	position : map.getCenter()
+		      	      	position : data.latlng
 		      	    });
-		      	    
-		      		//오버레이 내용 구성
+		      	
+		      	 	//오버레이 내용 구성
 		      	    var content = document.createElement('div');
 		      	  	content.className = 'wrap';
-		      	    content.style.cssText = 'background: white; border-radius: 10px;border-bottom: 2px solid #ccc;border-right: 1px solid #ccc; box-shadow: 0px 0px 20px #000;';
+		      	    content.style.cssText = 'background: white; border-radius: 10px;border-bottom: 2px solid #ccc;border-right: 1px solid #ccc; box-shadow: 0px 0px 20px #000; height:330px;';
 		      	    
-		      	  	
 		      	  	//오버레이 안의 이미지 구현
 		      	    var imageArea = document.createElement('div');
 		      	  	imageArea.id = 'carouselControls-img'+data.id;
 		      	  	imageArea.className = 'carousel slide';
-		      	  	imageArea.style.cssText = '{position: relative;width: 300px;height: 220px;overflow: hidden;}';
+		      	  	imageArea.style.cssText = 'width: 300px;height: 200px;overflow: hidden; padding:0.5px; border-radius: 10px;' ;
 		      	  	content.appendChild(imageArea);
 		      	  	
 		      		//마커객체에 담아놓았던 이미지 경로 split 하여 경로 배열(arr)에 넣음
@@ -591,14 +587,14 @@ console.log("(${latitude}, ${longitude})");
 		      	  	//첫번째 img
 		      	  	var image = document.createElement('div');
 		      	  	image.className = 'carousel-item active';
-		      	  	image.innerHTML = '<img src="'+ arr[0] +'" style="object-fit: cover;">';
+		      	  	image.innerHTML = '<img src="'+ arr[0] +'" >';
 		      	  	carousel.appendChild(image);
 		      	  	
 		      	  	//else img
 		      	  	for(let i=1; i<size-1; i++){
 			      	  	var imageElse = document.createElement('div');
 			      	  	imageElse.className = 'carousel-item';
-			      	  	imageElse.innerHTML = '<img src="'+ arr[i] +'" style="object-fit: cover;">';
+			      	  	imageElse.innerHTML = '<img src="'+ arr[i] +'" >';
 			      	  	carousel.appendChild(imageElse);
 		      	  	}
 		      	  	
@@ -616,6 +612,7 @@ console.log("(${latitude}, ${longitude})");
 					
 		      	    //마커 클릭 이벤트
 		      	    kakao.maps.event.addListener(marker, 'click', function() {
+		      	    	
 		      	    	//클릭되어있는 기존 마커 over 처리
 		      	    	//지금 선택한 마커가 클릭되어있는 기존 마커가 아니고, null 이 아니면
 		      	    	if(selectedMarker !== marker && selectedMarker != null){
@@ -633,6 +630,8 @@ console.log("(${latitude}, ${longitude})");
 		      	        
 		      	    	//맵에 오버레이 세팅
 		      	    	overlay.setMap(map);
+		      	    	//오버레이 위치 맞춰서 맵 이동
+		      	    	map.setCenter(overlay.getPosition());
 		      	    });
 		      	    
 		      	    //맵 클릭 이벤트
@@ -645,13 +644,10 @@ console.log("(${latitude}, ${longitude})");
 		      	        overlay.setMap(null);
 		      	    });
 		      	    
-		      		
 		      	}
 		      	
-		     	//마커 범위 재설정
+		      	//마커 범위 재설정
 		      	map.setBounds(bounds);
-		     	//재설정한 지도 기준으로 오버레이가 맵 중앙에 표시되도록 위치 재설정
-		      	overlay.setPosition(map.getCenter()); 
 		     	
 	        })
 	        
@@ -663,86 +659,16 @@ console.log("(${latitude}, ${longitude})");
 
 <c:import url="/WEB-INF/views/bottom.jsp"></c:import>
 
-<!-- ################################################################################################ -->
-<!-- ################################################################################################ -->
-<!-- ################################################################################################ -->
-<!-- <div class="hoc clear wrapper row4">
-  <footer id="footer" class=""> 
-    ################################################################################################
-    <div class="one_quarter first">
-      <h6 class="heading">Praesent id aliquam</h6>
-      <p>Non tellus nec sapien lobortis lobortis mauris egestas massa ac cursus pellentesque leo risus convallis nulla et fringilla sapien magna sit amet magna aliquam tempus praesent sit amet neque sed lobortis nulla facilisi [<a href="#">&hellip;</a>]</p>
-      <ul class="faico clear">
-        <li><a class="faicon-facebook" href="#"><i class="fab fa-facebook"></i></a></li>
-        <li><a class="faicon-google-plus" href="#"><i class="fab fa-google-plus-g"></i></a></li>
-        <li><a class="faicon-linkedin" href="#"><i class="fab fa-linkedin"></i></a></li>
-        <li><a class="faicon-twitter" href="#"><i class="fab fa-twitter"></i></a></li>
-        <li><a class="faicon-vk" href="#"><i class="fab fa-vk"></i></a></li>
-      </ul>
-    </div>
-    <div class="one_quarter">
-      <h6 class="heading">Rutrum amet sodales</h6>
-      <ul class="nospace linklist">
-        <li><a href="#">Nulla tincidunt magna</a></li>
-        <li><a href="#">Vel iaculis mollis mi</a></li>
-        <li><a href="#">Lacus tincidunt diam ac</a></li>
-        <li><a href="#">Varius purus justo pretium</a></li>
-        <li><a href="#">Nunc proin tortor elit</a></li>
-      </ul>
-    </div>
-    <div class="one_quarter">
-      <h6 class="heading">At feugiat in diam</h6>
-      <p class="nospace btmspace-15">In vestibulum dolor et augue fusce neque enim scelerisque at fermentum.</p>
-      <form action="#" method="post">
-        <fieldset>
-          <legend>Newsletter:</legend>
-          <input class="btmspace-15" type="text" value="" placeholder="Name">
-          <input class="btmspace-15" type="text" value="" placeholder="Email">
-          <button class="btn" type="submit" value="submit">Submit</button>
-        </fieldset>
-      </form>
-    </div>
-    <div class="one_quarter last">
-      <h6 class="heading">Sed imperdiet pharetra</h6>
-      <ul class="nospace linklist">
-        <li>
-          <article>
-            <h6 class="nospace font-x1"><a href="#">Massa nam nulla augue</a></h6>
-            <time class="font-xs block btmspace-10" datetime="2045-04-06">Friday, 6<sup>th</sup> April 2045</time>
-            <p class="nospace">Faucibus nec lacinia quis ornare a eros pellentesque in orci vitae</p>
-          </article>
-        </li>
-        <li>
-          <article>
-            <h6 class="nospace font-x1"><a href="#">Velit vehicula auctor</a></h6>
-            <time class="font-xs block btmspace-10" datetime="2045-04-05">Thursday, 5<sup>th</sup> April 2045</time>
-            <p class="nospace">Pellentesque pulvinar vestibulum bibendum blandit lectus pretium</p>
-          </article>
-        </li>
-      </ul>
-    </div>
-    ################################################################################################
-  </footer>
-</div> -->
-<!-- ################################################################################################ -->
-<!-- ################################################################################################ -->
-<!-- ################################################################################################ -->
-<!-- <div class="hoc clear wrapper row5">
-  <div id="copyright" class=""> 
-    ################################################################################################
-    <p class="fl_left">Copyright &copy; 2018 - All Rights Reserved - <a href="#">Domain Name</a></p>
-    <p class="fl_right">Template by <a target="_blank" href="https://www.os-templates.com/" title="Free Website Templates">OS Templates</a></p>
-    ################################################################################################
-  </div>
-</div> -->
-<!-- ################################################################################################ -->
-<!-- ################################################################################################ -->
-<!-- ################################################################################################ -->
+
 <a id="backtotop" href="#top"><i class="fas fa-chevron-up"></i></a>
 <!-- JAVASCRIPTS -->
+<<<<<<< HEAD
 <!-- <script src="/resources/layout/scripts/jquery.min.js"></script> -->
 <script src="/resources/layout/scripts/jquery.backtotop.js"></script>
 <!-- <script src="/resources/layout/scripts/jquery.mobilemenu.js"></script> -->
+=======
+<script src="../layout/scripts/jquery.backtotop.js"></script>
+>>>>>>> branch 'master' of https://github.com/ccd485/AirTnT.git
 </body>
 
 </html>

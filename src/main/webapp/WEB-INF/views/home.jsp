@@ -20,9 +20,7 @@
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<script src="/resources/script/check.js"></script>
 	
-	<!-- 실시간 추전 주소 검색어를 띄워주는 파일 -->
-	<script src="/resources/script/address-control.js"></script>
-	
+	<script src="/resources/script/search-control.js"></script>
 	<!-- JAVASCRIPTS -->
 	<!-- <script src="layout/scripts/jquery.min.js"></script>
 	<script src="layout/scripts/jquery.backtotop.js"></script>
@@ -32,7 +30,7 @@
 	<c:set var="isLogin" value="false"/>
 	<c:if test="${not empty member_id && not empty member_name}"><c:set var="isLogin" value="true"/></c:if>
 	
-<div class="hoc bgded overlay padtop" style="background-image:url('<c:url value='/resources/img/main3.jpg'/>');">
+<div class="bgded overlay padtop" style="background-image:url('<c:url value='/resources/img/main3.jpg'/>');">
   <!-- ################################################################################################ -->
   <!-- ################################################################################################ -->
   <!-- ################################################################################################ -->
@@ -96,7 +94,7 @@
 		    <form class="d-flex" action="/property/search" method="get">
 		      <input type="hidden" name="pageNum" value="1">
               <input id="search" name="addressKey" class="form-control me-2" type="search" 
-              placeholder="어디로 여행하실건가요?" value=""
+              placeholder="위치" value="${param.addressKey}"
               aria-label="Search" style="height: 50px; width: 300px; font-size: 20px">
               
               <input type="hidden" id="temp-search" name="tempAddressKey">
@@ -129,45 +127,24 @@
       </div>
       <ul class="nospace group grid-3">
         <li class="one_third">
-          <article><a href="#"><i class="fas fa-spray-can"></i></a>
-            <h6 class="heading">Vehicula</h6>
-            <p>Nulla cursus metus non tortor erat turpis sed semper risus nisi id nunc ut congue cursus tortor aliquam.</p>
-            <footer><a href="#">More Details &raquo;</a></footer>
+          <article><a href="/property/search"><i class="fas fa-bicycle"></i>
+            <p class="bold fs-2">서울</p>
+            <img style="width:300px; height:150px; object-fit:cover;" src="/resources/files/home/seoul.jpg" class="img-thumbnail" alt="...">
+            </a>
           </article>
         </li>
         <li class="one_third">
-          <article><a href="#"><i class="fas fa-user-secret"></i></a>
-            <h6 class="heading">Porttitor</h6>
-            <p>Vehicula nisl ac porta blandit velit risus lobortis turpis sit amet lobortis sapien dui id neque suspendisse.</p>
-            <footer><a href="#">More Details &raquo;</a></footer>
+          <article><a href="/property/search"><i class="fas fa-bus"></i>
+            <p class="bold fs-2">부산</p>
+            <img style="width:300px; height:150px; object-fit:cover;" src="/resources/files/home/busan.jpg" class="img-thumbnail" alt="...">
+          	</a>
           </article>
         </li>
         <li class="one_third">
-          <article><a href="#"><i class="fas fa-couch"></i></a>
-            <h6 class="heading">Pulvinar</h6>
-            <p>Vel justo mattis magna vestibulum molestie quisque sagittis in a enim in metus ultrices tristique nam semper.</p>
-            <footer><a href="#">More Details &raquo;</a></footer>
-          </article>
-        </li>
-        <li class="one_third">
-          <article><a href="#"><i class="fas fa-crow"></i></a>
-            <h6 class="heading">Ultricies</h6>
-            <p>Tincidunt metus nunc ornare mi at nibh ut ante est imperdiet dignissim eleifend sit amet lacinia tempor justo.</p>
-            <footer><a href="#">More Details &raquo;</a></footer>
-          </article>
-        </li>
-        <li class="one_third">
-          <article><a href="#"><i class="fas fa-dolly-flatbed"></i></a>
-            <h6 class="heading">Vestibulum</h6>
-            <p>Pellentesque malesuada sed et nulla sit amet nisi scelerisque consectetuer vivamus odio donec metus libero semper.</p>
-            <footer><a href="#">More Details &raquo;</a></footer>
-          </article>
-        </li>
-        <li class="one_third">
-          <article><a href="#"><i class="fas fa-road"></i></a>
-            <h6 class="heading">Lobortis</h6>
-            <p>Quis suscipit ut aliquam a metus ut interdum risus id luctus consectetuer velit neque ornare quam at ornare.</p>
-            <footer><a href="#">More Details &raquo;</a></footer>
+          <article><a href="/property/search"><i class="fas fa-car"></i>
+            <p class="bold fs-2">대구</p>
+            <img style="width:300px; height:150px; object-fit:cover;" src="/resources/files/home/daegu.jpg" class="img-thumbnail" alt="...">
+          	</a>
           </article>
         </li>
       </ul>
@@ -177,15 +154,12 @@
     <div class="clear"></div>
   </main>
 </div>
-
-<c:import url="/WEB-INF/views/bottom.jsp"/>
-
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
-<!-- <div class="wrapper row1">
+<div class="wrapper row1">
   <section id="ctdetails" class="hoc clear"> 
-    ################################################################################################
+    <!-- ################################################################################################ -->
     <ul class="nospace clear">
       <li class="one_quarter first">
         <div class="block clear"><a href="#"><i class="fas fa-phone"></i></a> <span><strong>Give us a call:</strong> +00 (123) 456 7890</span></div>
@@ -200,9 +174,9 @@
         <div class="block clear"><a href="#"><i class="fas fa-map-marker-alt"></i></a> <span><strong>Come visit us:</strong> Directions to <a href="#">our location</a></span></div>
       </li>
     </ul>
-    ################################################################################################
+    <!-- ################################################################################################ -->
   </section>
-</div> -->
+</div>
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->

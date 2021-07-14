@@ -20,17 +20,18 @@ public class BookingMapper {
 	// 승훈
 	public List<BookingDTO> getPlanedBooking(String member_id) {
 		List<BookingDTO> list = sqlSession.selectList("getPlanedBooking", member_id);
-		
 		return list;
 	}
 	public List<BookingDTO> getPreBooking(String member_id) {
 		List<BookingDTO> list = sqlSession.selectList("getPreBooking", member_id);
-		
 		return list;
 	}
 	public List<BookingDTO> getToWriteBooking(String member_id) {
 		List<BookingDTO> list = sqlSession.selectList("getToWriteBooking", member_id);
-		
+		return list;
+	}
+	public List<BookingDTO> getMorePreBooking(Map<String, String> params) {
+		List<BookingDTO> list = sqlSession.selectList("getMorePreBooking", params);
 		return list;
 	}
 	
@@ -75,5 +76,6 @@ public class BookingMapper {
 	public TransactionDTO selectTransaction(int transactionId) {
 		return sqlSession.selectOne("selectTransaction", transactionId);
 	}
+
 	
 }

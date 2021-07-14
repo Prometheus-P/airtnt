@@ -12,9 +12,6 @@
 		<h1 class="h2">Dashboard</h1>
 		<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
         </div>
-        <div style="width:55%;">
-	 		<canvas id="canvas2"></canvas>
-		</div>
 		<div style="width:100%;">
 	 		<canvas id="canvas"></canvas>
 		</div>
@@ -70,32 +67,6 @@
 	        title: {
 	            display: true,
 	            text: '월별 체크인 카운트'
-	        },
-	        tooltips: {
-	            mode: 'index',
-	            intersect: false,
-	        },
-	        hover: {
-	            mode: 'nearest',
-	            intersect: true
-	        }
-	    }
-	});
-	
-	new Chart(document.getElementById("canvas2"), {
-	    type: 'pie',
-	    data: {
-	       lavels : ["서울","강원도","충청남도","충청북도"],
-	       datasets : [{
-	    	   backgroundColor : ["#264653","#2a9d8f","#e9c46a","#f4a261"],
-	    	   data : [10, 5, 9, 2]
-	       }]
-	    },
-	    options: {
-	        responsive: true,
-	        title: {
-	            display: true,
-	            text: '올해 지역별 예약건수 비중'
 	        },
 	        tooltips: {
 	            mode: 'index',

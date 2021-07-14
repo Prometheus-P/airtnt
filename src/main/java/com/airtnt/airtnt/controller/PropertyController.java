@@ -83,7 +83,7 @@ public class PropertyController {
 		if(tempAddressKey == null || tempAddressKey.trim().equals("")) {
 			if(addressKey == null || addressKey.trim().equals("")) {
 				addressKey = "서울";
-				// 서울 시청 좌표
+				// 서울 시청
 				latitude = "37.566826004661";
 				longitude = "126.978652258309";
 			} /*else {
@@ -92,14 +92,6 @@ public class PropertyController {
 		} else {
 			// 자동완성으로 검색하지 않아도 맨 상단에 있던 주소로 세팅
 			addressKey = tempAddressKey;
-		}
-		
-		// 좌표가 없어도 서울시청이 기본값
-		if(latitude == null || longitude == null ) {
-			addressKey = "서울";
-			// 서울 시청 좌표
-			latitude = "37.566826004661";
-			longitude = "126.978652258309";
 		}
 		
 		// 페이지
@@ -419,6 +411,7 @@ public class PropertyController {
 			
 			// 숙소 목록의 시작과 끝 인덱스
 			// 인덱스 == rownum - 1
+			// 0 ~ 4, 5 ~ 9, 10 ~ 14, ...
 			greaterEqualIndex = numPerPage * (pageNum - 1);	// 이상
 			lessThanIndex = numPerPage * pageNum;	// 미만
 			
@@ -459,8 +452,8 @@ public class PropertyController {
 	}
 	
 	public void setFilter(List<? extends AbstractTypeDTO> types, Integer[] paramArray, Integer[] subParamArray) {
-		outer: for(AbstractTypeDTO type : types) {
-			if(paramArray != null) {
+		if(paramArray != null && types != null) {
+			outer: for(AbstractTypeDTO type : types) {
 				for(int i = 0; i < paramArray.length; i++) {
 					if(type.getId() == paramArray[i]) {
 						type.putTagAttributeMapValue(TagAttribute.CHECKED);
@@ -476,12 +469,13 @@ public class PropertyController {
 						continue outer;
 					}
 				}
-			}
-			// 현재 유형이 체크된 유형 파라미터값이 아니면 여기로 넘어옴
-			if(type instanceof PropertyTypeDTO) {
-				PropertyTypeDTO propertyType = (PropertyTypeDTO)type;
-				List<SubPropertyTypeDTO> subPropertyTypes = propertyType.getSubPropertyTypes();
-				setFilter(subPropertyTypes, subParamArray);
+				// 현재 유형이 체크된 유형 파라미터값이 아니면 여기로 넘어옴
+				if(type instanceof PropertyTypeDTO) {
+					PropertyTypeDTO propertyType = (PropertyTypeDTO)type;
+					List<SubPropertyTypeDTO> subPropertyTypes = propertyType.getSubPropertyTypes();
+					setFilter(subPropertyTypes, subParamArray);
+				}
+				
 			}
 		}
 	}
@@ -659,17 +653,30 @@ public class PropertyController {
 					System.out.println(decodedCookieString);
 				}
 				
+<<<<<<< HEAD
 				LinkedList<Integer> recentPropertyIdsQueue =
 						new LinkedList<>(Numeric.toIntegerList(decodedCookieString.split("%")));
+=======
+				List<String> recentPropertyIdStrings =
+						new ArrayList<>(Arrays.asList(decodedCookieString.split("%")));
+				int[] recentPropertyIdArray =
+						Numeric.toIntArray(recentPropertyIdStrings);
+>>>>>>> branch 'master' of https://github.com/ccd485/AirTnT.git
 				if(debug) {
 					System.out.print("최근목록 숙소 id :");
+<<<<<<< HEAD
 					for(Integer recentPropertyId : recentPropertyIdsQueue) {
 						System.out.print(" " + recentPropertyId);
+=======
+					for(String recentPropertyIdString : recentPropertyIdStrings) {
+						System.out.print(" " + recentPropertyIdString);
+>>>>>>> branch 'master' of https://github.com/ccd485/AirTnT.git
 					}
 					System.out.println();
 				}
 				
 				// 최근목록 변화 로직
+<<<<<<< HEAD
 				// 큐를 쓰면 중간의 값을 버려도 인덱스에 구애받지 않고
 				// 항상 그다음 최근값을 가져올 수 있음
 				
@@ -682,7 +689,19 @@ public class PropertyController {
 					if(recentPropertyId != propertyId) {
 						// 현재 보고있는 숙소와 같지 않은것만 저장함
 						decodedCookieString += "%" + recentPropertyId.toString();
+=======
+				// 이전의 최근목록에 같은 숙소가 존재하고 있었다면 삭제함
+				for(int i = 0; i < recentPropertyIdArray.length; i++) {
+					if(recentPropertyIdArray[i] == propertyId) {
+						recentPropertyIdStrings.remove(i);
+						break;
+>>>>>>> branch 'master' of https://github.com/ccd485/AirTnT.git
 					}
+				}
+				// 방금 본 목록을 쿠키 맨 앞에 추가함
+				decodedCookieString = propertyId.toString();
+				for(String recentPropertyIdString : recentPropertyIdStrings) {
+					decodedCookieString += "%" + recentPropertyIdString;
 				}
 				
 				// 브라우저에 저장될 문자열로 인코딩
@@ -719,6 +738,7 @@ public class PropertyController {
 				
 			} else {
 				// 인코딩 오류가 있었으면 사용자 브라우저에서 쿠키 삭제
+				cookie.setValue(null);
 				cookie.setMaxAge(0);
 				resp.addCookie(cookie);
 			}
@@ -726,4 +746,5 @@ public class PropertyController {
 		
 		return false;
 	}
+
 }
