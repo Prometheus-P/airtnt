@@ -25,7 +25,20 @@
 		) and is_main='Y' or (is_admin ='Y' and property_id is null)
 	</select>
 	<select id="getWishRoom" resultType="WishList_PropertyDTO" parameterType="String"> 
-		select * from wishlist_room_view where wish_id=#{wish_id}
+		select *
+		from 
+			(select rownum num, w.* from wishlist_room_view w)
+		where 
+			wish_id=#{wish_id}
+			and num BETWEEN 1 and 10
+	</select>
+	<select id="getMoreWishRoom" resultType="WishList_PropertyDTO" parameterType="java.util.Map"> 
+		select *
+		from 
+			(select rownum num, w.* from wishlist_room_view w)
+		where 
+			wish_id=#{wish_id}
+			and num BETWEEN #{startNum} and #{lastNum}
 	</select>
 	<update id="updateWish" parameterType="java.util.Map">
 		update wishlist set name=#{wish_name} where id =#{wish_id}

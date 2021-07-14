@@ -21,6 +21,9 @@ File: Layout CSS
 .row4, .row4 a{}
 .row5, .row5 a{}
 
+/* btn
+--------------------------------------------------------------------------------------------------------------- */
+.test_btn3{border-top-left-radius: 20px; border-bottom-left-radius: 20px; border-top-right-radius: 20px; border-bottom-right-radius: 20px; margin-right:0px; border: 1px solid #000000; background-color: rgba(0,0,0,0); color: #000000; padding: 5px;}
 
 /* Header
 --------------------------------------------------------------------------------------------------------------- */
@@ -285,7 +288,7 @@ input:focus, textarea:focus, *:required:focus{border-color:#0AC6FC !important;}
 .overlay.light{color:#474747;}
 .overlay.light::after{background-color:rgba(255,255,255,.7);}
 
-.btn, .btn.inverse:hover{color:#FFFFFF; background-color:#0AC6FC; border-color:#0AC6FC;}
+.btn, .btn.inverse:hover{border-top-left-radius: 20px; border-bottom-left-radius: 20px; border-top-right-radius: 20px; border-bottom-right-radius: 20px; margin-right:0px; border: 1px solid #000000; background-color: rgba(0,0,0,0); color: #000000; padding: 5px;}
 .btn:hover, .btn.inverse{color:inherit; background-color:transparent; border-color:inherit;}
 
 .imgover:hover::before{background-color:rgba(10,198,252,.3);/* #0AC6FC */}
@@ -491,7 +494,7 @@ input[name="tab_item"] {
 .tab_content {
   display: none;
   padding: 40px 40px 0;
-  height: 600px;
+  height: auto;
   clear: both;
   overflow: hidden;
 }

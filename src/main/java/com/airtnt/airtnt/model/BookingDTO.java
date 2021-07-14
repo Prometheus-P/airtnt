@@ -33,6 +33,7 @@ public class BookingDTO {
 	private String room_type_name;
 	private String path;
 	private String is_main;
+	private String num;
 	
 	//host_mode페이지에서 사용한답니다 *^^*
 	private String memberId;
@@ -221,4 +222,11 @@ public class BookingDTO {
 	public void setGuestName(String guestName) {
 		this.guestName = guestName;
 	}
+	public String getNum() {
+		return num;
+	}
+	public void setNum(String num) {
+		this.num = num;
+	}
+	
 }

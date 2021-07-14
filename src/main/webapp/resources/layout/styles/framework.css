@@ -41,7 +41,7 @@ button.btn{cursor:pointer;}
 .clear::before, .clear::after, .group::before, .group::after{display:table; content:"";}
 .clear, .clear::after, .group, .group::after{clear:both;}
 
-a{outline:none; text-decoration:none;}
+a{outline:none; text-decoration:none; color:black;}
 
 .fl_left, .imgl{float:left;}
 .fl_right, .imgr{float:right;}
