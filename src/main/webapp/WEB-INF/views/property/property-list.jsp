@@ -16,11 +16,6 @@ Licence URI: https://www.os-templates.com/template-terms
 <title>AirTnT/숙소검색(키워드:${addressKey})</title>
 <meta charset="utf-8">
 
-<!-- map 커스텀 정보창 css -->
-<style>
-	.wrap {position: absolute;left: 0;bottom: 40px;width: 300px;height: 330px;margin-left: -144px;text-align: left;overflow: hidden;font-size: 12px;font-family: 'Malgun Gothic', dotum, '돋움', sans-serif;line-height: 1.5;}
-</style>
-
 <!-- drop down, popup, ... -->
 <!-- <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
 integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
@@ -45,11 +40,6 @@ crossorigin="anonymous"></script> -->
 
 <!-- 검색필터 이벤트 처리와 초기화를 제어하는 커스텀 파일 -->
 <script src="/resources/script/search-control.js"></script>
-
-<script type="text/javascript">
-console.log("${latitude}");
-console.log("${longitude}");
-</script>
 
 <form id="search-form" action="<c:url value='/property/search'/>" method="get" onsubmit="setParametersOnSubmit()">
 <input type="hidden" id="page-num" name="pageNum" value="1">
@@ -464,17 +454,15 @@ console.log("${longitude}");
 	      	$(document).ready(function(){
 	      		var mapContainer = document.getElementById('map'), // 지도를 표시할 div
 	      		 mapOption = { 
-			        center: new kakao.maps.LatLng(37.65634637629008, 127.07345281096936), // 지도의 중심좌표
-			        level: 5 // 지도의 확대 레벨
+			        center: new kakao.maps.LatLng("${latitude}", "${longitude}"), // 지도의 중심좌표
+			        //level: 7 // 지도의 확대 레벨
+			        //draggable : false
 			    };
 	      		
 		      	var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
 		      	var bounds = new kakao.maps.LatLngBounds(); // 지도를 재설정할 범위정보를 가지고 있을 LatLngBounds 객체
 		      	
-		      	var box = map.getNode().getBoundingClientRect();
-		      	var map_width = box.width;
-		      	var map_height = box.height;
-		      	
+		      	map.setLevel(7);
 		      	
 		     	// 마커 객체 배열 생성(positions)
 		      	var positions = []; 
@@ -527,24 +515,24 @@ console.log("${longitude}");
 		      	 	marker.setMap(map); //마커 표시
 		      	 	bounds.extend(positions[i].latlng); //최종단계에서 맵 중앙 재조정할때 사용
 		      	 	
-		      	 	//오버레이 생성
+					///////////////////////////////오버레이////////////////////////////////////////
+					//오버레이 생성
 		      	    var overlay = new kakao.maps.CustomOverlay({
-		      	        yAnchor: 1,
+		      	        //yAnchor: 0,
 		      	      	clickable: true, //지도 클릭 이벤트 막음
-		      	      	position : map.getCenter()
+		      	      	position : data.latlng
 		      	    });
-		      	    
-		      		//오버레이 내용 구성
+		      	
+		      	 	//오버레이 내용 구성
 		      	    var content = document.createElement('div');
 		      	  	content.className = 'wrap';
-		      	    content.style.cssText = 'background: white; border-radius: 10px;border-bottom: 2px solid #ccc;border-right: 1px solid #ccc; box-shadow: 0px 0px 20px #000;';
+		      	    content.style.cssText = 'background: white; border-radius: 10px;border-bottom: 2px solid #ccc;border-right: 1px solid #ccc; box-shadow: 0px 0px 20px #000; height:330px;';
 		      	    
-		      	  	
 		      	  	//오버레이 안의 이미지 구현
 		      	    var imageArea = document.createElement('div');
 		      	  	imageArea.id = 'carouselControls-img'+data.id;
 		      	  	imageArea.className = 'carousel slide';
-		      	  	imageArea.style.cssText = '{position: relative;width: 300px;height: 220px;overflow: hidden;}';
+		      	  	imageArea.style.cssText = 'width: 300px;height: 200px;overflow: hidden; padding:0.5px; border-radius: 10px;' ;
 		      	  	content.appendChild(imageArea);
 		      	  	
 		      		//마커객체에 담아놓았던 이미지 경로 split 하여 경로 배열(arr)에 넣음
@@ -573,21 +561,21 @@ console.log("${longitude}");
 		      	  	//첫번째 img
 		      	  	var image = document.createElement('div');
 		      	  	image.className = 'carousel-item active';
-		      	  	image.innerHTML = '<img src="'+ arr[0] +'" style="object-fit: cover;">';
+		      	  	image.innerHTML = '<img src="'+ arr[0] +'" >';
 		      	  	carousel.appendChild(image);
 		      	  	
 		      	  	//else img
 		      	  	for(let i=1; i<size-1; i++){
 			      	  	var imageElse = document.createElement('div');
 			      	  	imageElse.className = 'carousel-item';
-			      	  	imageElse.innerHTML = '<img src="'+ arr[i] +'" style="object-fit: cover;">';
+			      	  	imageElse.innerHTML = '<img src="'+ arr[i] +'" >';
 			      	  	carousel.appendChild(imageElse);
 		      	  	}
 		      	  	
 		      	  	//숙소 설명 및 링크 설정
 		      	  	var desc = document.createElement('div');
 		      	  	desc.className = "desc";
-		      	  	desc.style.cssText = "position: relative;height: 90px; width:300px; padding:15px;font-size:18px;";
+		      	  	desc.style.cssText = "position: relative;height: 70px; width:300px; padding:15px;font-size:17px;";
 		      	  	desc.innerHTML =  '<img src="/resources/property_img/starIcon.PNG" style="width:18px; height:18px; margin-bottom:5px;">4.84<br>'
 		      	  					  + '<a href="/property/detail?propertyId='+ data.id + '" target="_blank">'
 		      	  					  + data.propertyType + '<br>'+ data.title + '<br>' + '</a>';
@@ -599,11 +587,10 @@ console.log("${longitude}");
 		      	    //마커 클릭 이벤트
 		      	    kakao.maps.event.addListener(marker, 'click', function() {
 		      	    	
-		      	    	
 		      	    	//클릭되어있는 기존 마커 over 처리
 		      	    	//지금 선택한 마커가 클릭되어있는 기존 마커가 아니고, null 이 아니면
 		      	    	if(selectedMarker !== marker && selectedMarker != null){
-		      	    		overlay.setMap(null);
+		      	    		//overlay.setMap(null);
 		      	    		selectedMarker.setImage(overMarkerImage);
 		      	    	}
 		      	    	
@@ -617,8 +604,8 @@ console.log("${longitude}");
 		      	        
 		      	    	//맵에 오버레이 세팅
 		      	    	overlay.setMap(map);
-		      	    	var overlayTxt = overlay.getContent();
-		      	    	alert(overlayTxt.width);
+		      	    	//오버레이 위치 맞춰서 맵 이동
+		      	    	map.setCenter(overlay.getPosition());
 		      	    });
 		      	    
 		      	    //맵 클릭 이벤트
@@ -630,17 +617,14 @@ console.log("${longitude}");
 		      	  		//오버레이 맵에서 제거
 		      	        overlay.setMap(null);
 		      	    });
-		      		
+		      	    
 		      	}
 		      	
-		      	kakao.maps.event.addListener(map, 'center_changed', function() {
-		      		//overlay.setPosition(map.getCenter()); 
-	      		});
-		      	
-		     	//마커 범위 재설정
-		      	map.setBounds(bounds, 100, 100, 100, 100);
+		      	//마커 범위 재설정
+		      	map.setBounds(bounds);
 		     	//재설정한 지도 기준으로 오버레이가 맵 중앙에 표시되도록 위치 재설정
-		      	overlay.setPosition(map.getCenter()); 
+		      	//overlay.setPosition(map.getCenter()); 
+		     	
 	        })
 	        
           </script>
