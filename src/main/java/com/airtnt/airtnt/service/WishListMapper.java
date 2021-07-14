@@ -41,6 +41,10 @@ public class WishListMapper {
 		List<WishList_PropertyDTO> list = sqlSession.selectList("getWishRoom", wish_id);
 		return list;
 	}
+	public List<WishList_PropertyDTO> getMoreWishRoom(Map<String, String> params) {
+		List<WishList_PropertyDTO> list = sqlSession.selectList("getMoreWishRoom", params);
+		return list;
+	}
 	public int updateWish(Map<String, String> params) {
 		int res = sqlSession.update("updateWish",params);
 		return res;

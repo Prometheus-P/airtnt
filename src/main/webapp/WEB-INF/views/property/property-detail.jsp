@@ -193,79 +193,19 @@ function setTotalPrice(){
 	priceDispArea.innerHTML = totalPriceStr;
 }
 
+function checkParametersOnSubmit(){
+	if(checkInDateInput.value == ""
+			|| checkOutDateInput.value == ""
+			|| parseInt(dayCountInput.value) < 1){
+		alert("예약정보를 모두 입력해주세요.");
+		return false;
+	}
+	return true;
+}
 </script>
-
-
-<!-- ################################################################################################ -->
-<!-- ################################################################################################ -->
-<!-- ################################################################################################ -->
-<!-- Top Background Image Wrapper -->
-<!-- <div class="bgded overlay padtop" style="background-image:url('../images/demo/backgrounds/01.png');"> 
-  ################################################################################################
-  ################################################################################################
-  ################################################################################################
-  <header id="header" class="hoc clear">
-    <div id="logo" class="fl_left"> 
-      ################################################################################################
-      <h1><a href="/">Nekmit</a></h1>
-      ################################################################################################
-    </div>
-    <nav id="mainav" class="fl_right"> 
-      ################################################################################################
-      <ul class="clear">
-        <li><a href="../index.html">Home</a></li>
-        <li class="active"><a class="drop" href="#">Pages</a>
-          <ul>
-            <li><a href="gallery.html">Gallery</a></li>
-            <li class="active"><a href="full-width.html">Full Width</a></li>
-            <li><a href="sidebar-left.html">Sidebar Left</a></li>
-            <li><a href="sidebar-right.html">Sidebar Right</a></li>
-            <li><a href="basic-grid.html">Basic Grid</a></li>
-            <li><a href="font-icons.html">Font Icons</a></li>
-          </ul>
-        </li>
-        <li><a class="drop" href="#">Dropdown</a>
-          <ul>
-            <li><a href="#">Level 2</a></li>
-            <li><a class="drop" href="#">Level 2 + Drop</a>
-              <ul>
-                <li><a href="#">Level 3</a></li>
-                <li><a href="#">Level 3</a></li>
-                <li><a href="#">Level 3</a></li>
-              </ul>
-            </li>
-            <li><a href="#">Level 2</a></li>
-          </ul>
-        </li>
-        <li><a href="#">Link Text</a></li>
-        <li><a href="#">Link Text</a></li>
-        <li><a href="#">Link Text</a></li>
-      </ul>
-      ################################################################################################
-    </nav>
-  </header>
-  ################################################################################################
-  ################################################################################################
-  ################################################################################################
-  <div id="breadcrumb" class="hoc clear"> 
-    ################################################################################################
-    <ul>
-      <li><a href="#">Home</a></li>
-      <li><a href="#">Lorem</a></li>
-      <li><a href="#">Ipsum</a></li>
-      <li><a href="#">Dolor</a></li>
-    </ul>
-    ################################################################################################
-  </div>
-  ################################################################################################
-</div> -->
-<!-- End Top Background Image Wrapper -->
-<!-- ################################################################################################ -->
-<!-- ################################################################################################ -->
-<!-- ################################################################################################ -->
-<div class="wrapper row3" style="height: 8rem">
+<div class="wrapper row3 hoc clear">
   <div class="container position-relative">
-    <div class="position-absolute end-0 bottom-0" >
+    <div class="position-absolute end-0 top-0" >
       <!-- Button trigger modal -->
       <a href="" class="trigger-btn wish-button" id="wishProperty-${property.id}"
       data-toggle="modal" style="font-size: 20px">
@@ -278,61 +218,58 @@ function setTotalPrice(){
       	initWish("${property.id}", "${property.wishListId}", "${property.wished}");
       </script>
     </div>
+      
+    <h1 style="font-size: 6rem">${property.name}</h1>
+    
+    <!-- 숙소 이미지 -->
+    <div class="one_half first">
+      <img class="imgl borderedbox inspace-5"
+        <c:if test='${not empty property.images}'>
+          src="${property.images.get(0).path}"
+        </c:if>
+       alt="" style="height: 41rem;">
+    </div>
+    <div class="one_half">
+      <c:forEach var="image" items="${property.images}" begin="1" end="4" varStatus="status">
+        <div class="one_half <c:if test="${status.count % 2 == 1}">first</c:if>">
+          <img class="imgl borderedbox inspace-5 "
+          src="${image.path}" alt="" style="height: 20rem;">
+        </div>
+      </c:forEach>
+    </div>
+    <c:if test="${not empty property.images}">
+    <div class="position-absolute end-0 bottom-0" style="margin-right: 3rem">
+      <a href="#image-modal" class="trigger-btn btn btn-default" data-toggle="modal" style="font-size: 15px;">
+        <img src="https://img.icons8.com/fluent/50/000000/thumbnails.png" 
+        style="height: 20px; width: 20px"/>더보기
+      </a>
+    </div>
+    </c:if>
   </div>
 </div>
-<!-- ################################################################################################ -->
-<!-- ################################################################################################ -->
-<!-- ################################################################################################ -->
-<div class="wrapper row3" >
-  
-  <main class="hoc clear"> 
-    <!-- main body -->
-    <!-- ################################################################################################ -->
-    <div class="container" style="padding-top: 0">
-      
-      
-      <!-- 숙소 이미지 -->
-      <div class="one_half first">
-        <img class="imgl borderedbox inspace-5"
-          <c:if test='${not empty property.images}'>
-            src="${property.images.get(0).path}"
-          </c:if>
-         alt="" style="height: 41rem;">
-      </div>
-      <div class="one_half">
-        <c:forEach var="image" items="${property.images}" begin="1" end="4" varStatus="status">
-          <c:choose>
-            <c:when test="${status.count % 2 == 1}">
-              <div class="one_half first">
-                <img class="imgl borderedbox inspace-5 " src="${image.path}" alt=""
-                style="height: 20rem;">
-              </div>
-            </c:when>
-            <c:otherwise>
-              <div class="one_half">
-                <img class="imgl borderedbox inspace-5" src="${image.path}" alt=""
-                style="height: 20rem;">
-              </div>
-            </c:otherwise>
-          </c:choose>
-        </c:forEach>
-      </div>
-    
-      
+
+<div class="wrapper row3 hoc clear">
+  <div class="container" style="padding-top: 0">
       <!-- 숙소 상세정보 나열 구역 -->
 	  <div class="two_third first">
-	        <div>
-	          <h1>숙소 유형</h1>
+	        <div class="position-relative">
+	          <h2>숙소 유형</h2>
 	          <p style="font-size: 20px">
 	            ${property.propertyType.name}/${property.subPropertyType.name}<br>
 	            ${property.roomType.name}
 	          </p>
+	          <div class="position-absolute top-0 end-0">
+	            <p style="font-size: 30px">
+	              가격<br>
+	              <fmt:formatNumber type="currency" value="${property.price}"/>
+	            </p>
+	          </div>
 	        </div>
 	        
 	        <hr>
 	        
 	        <div>
-	          <h1>상세 설명</h1>
+	          <h2>상세 설명</h2>
 	          <p style="font-size: 20px">
 	            ${property.propertyDesc}
 	          </p>
@@ -341,20 +278,32 @@ function setTotalPrice(){
 	        <hr>
 	        
 	        <div>
-	          <h1>편의 시설</h1><br>
-	          <c:forEach var="amenityType" items="${property.amenityTypes}">
-	            <ul style="font-size: 20px">
-	              <li>
-	                ${amenityType.name}
-	              </li>
-	            </ul>
-	          </c:forEach>
+	          <h2>편의 시설</h2><br>
+	            <div class="one_half first">
+	              <ul style="font-size: 20px">
+	                <c:forEach var="amenityType" items="${property.amenityTypes}" begin="0" step="2">
+	                <li>
+	                  ${amenityType.name}
+	                </li>
+	                </c:forEach>
+	              </ul>
+	            </div>
+	            <div class="one_half">
+	              <ul style="font-size: 20px">
+	                <c:forEach var="amenityType" items="${property.amenityTypes}" begin="1" step="2">
+	                <li>
+	                  ${amenityType.name}
+	                </li>
+	                </c:forEach>
+	              </ul>
+	            </div>
+	            
 	        </div>
 	        
 	        <hr>
 	        
 	       <div>
-	        <h1>대앳그을</h1>
+	        <h2>대앳그을</h2>
 	        <ul>
 	          <li>
 	            <article>
@@ -412,7 +361,8 @@ function setTotalPrice(){
 	       host id, guest id, day count, guest count, total price,
 	       checkin date, checkout date
 	      -->
-	     <form action="<c:url value='/property/booking'/>" method="post" onsubmit="return loginCheck()">
+	     <form action="<c:url value='/property/booking'/>" method="post"
+	     onsubmit="return loginCheck() && checkParametersOnSubmit()">
 	       <input type="hidden" name="propertyId" value="${property.id}">
 	       <input type="hidden" name="hostId" value="${property.hostId}">
 	       <input type="hidden" name="guestId" value="${sessionScope.member_id}">
@@ -451,127 +401,20 @@ function setTotalPrice(){
 	       </ul>
 	     </form>
 	   </div>
-	   
-      
-      <!-- <div class="scrollable">
-        <table>
-          <thead>
-            <tr>
-              <th>Header 1</th>
-              <th>Header 2</th>
-              <th>Header 3</th>
-              <th>Header 4</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><a href="#">Value 1</a></td>
-              <td>Value 2</td>
-              <td>Value 3</td>
-              <td>Value 4</td>
-            </tr>
-            <tr>
-              <td>Value 5</td>
-              <td>Value 6</td>
-              <td>Value 7</td>
-              <td><a href="#">Value 8</a></td>
-            </tr>
-            <tr>
-              <td>Value 9</td>
-              <td>Value 10</td>
-              <td>Value 11</td>
-              <td>Value 12</td>
-            </tr>
-            <tr>
-              <td>Value 13</td>
-              <td><a href="#">Value 14</a></td>
-              <td>Value 15</td>
-              <td>Value 16</td>
-            </tr>
-          </tbody>
-        </table>
-      </div> -->
-<!--       <div id="comments">
-        <h2>Comments</h2>
-        <ul>
-          <li>
-            <article>
-              <header>
-                <figure class="avatar"><img src="../images/demo/avatar.png" alt=""></figure>
-                <address>
-                By <a href="#">A Name</a>
-                </address>
-                <time datetime="2045-04-06T08:15+00:00">Friday, 6<sup>th</sup> April 2045 @08:15:00</time>
-              </header>
-              <div class="comcont">
-                <p>This is an example of a comment made on a post. You can either edit the comment, delete the comment or reply to the comment. Use this as a place to respond to the post or to share what you are thinking.</p>
-              </div>
-            </article>
-          </li>
-          <li>
-            <article>
-              <header>
-                <figure class="avatar"><img src="../images/demo/avatar.png" alt=""></figure>
-                <address>
-                By <a href="#">A Name</a>
-                </address>
-                <time datetime="2045-04-06T08:15+00:00">Friday, 6<sup>th</sup> April 2045 @08:15:00</time>
-              </header>
-              <div class="comcont">
-                <p>This is an example of a comment made on a post. You can either edit the comment, delete the comment or reply to the comment. Use this as a place to respond to the post or to share what you are thinking.</p>
-              </div>
-            </article>
-          </li>
-          <li>
-            <article>
-              <header>
-                <figure class="avatar"><img src="../images/demo/avatar.png" alt=""></figure>
-                <address>
-                By <a href="#">A Name</a>
-                </address>
-                <time datetime="2045-04-06T08:15+00:00">Friday, 6<sup>th</sup> April 2045 @08:15:00</time>
-              </header>
-              <div class="comcont">
-                <p>This is an example of a comment made on a post. You can either edit the comment, delete the comment or reply to the comment. Use this as a place to respond to the post or to share what you are thinking.</p>
-              </div>
-            </article>
-          </li>
-        </ul>
-        <h2>Write A Comment</h2>
-        <form action="#" method="post">
-          <div class="one_third first">
-            <label for="name">Name <span>*</span></label>
-            <input type="text" name="name" id="name" value="" size="22" required>
-          </div>
-          <div class="one_third">
-            <label for="email">Mail <span>*</span></label>
-            <input type="email" name="email" id="email" value="" size="22" required>
-          </div>
-          <div class="one_third">
-            <label for="url">Website</label>
-            <input type="url" name="url" id="url" value="" size="22">
-          </div>
-          <div class="block clear">
-            <label for="comment">Your Comment</label>
-            <textarea name="comment" id="comment" cols="25" rows="10"></textarea>
-          </div>
-          <div>
-            <input type="submit" name="submit" value="Submit Form">
-            &nbsp;
-            <input type="reset" name="reset" value="Reset Form">
-          </div>
-        </form>
-      </div> -->
-      <!-- ################################################################################################ -->
+
     </div>
-    <!-- ################################################################################################ -->
-    <!-- / main body -->
-    <div class="clear"></div>
-  </main>
 </div>
+<<<<<<< HEAD
 
 <c:import url="/WEB-INF/views/bottom.jsp"/>
 
+=======
+<<<<<<< HEAD
+
+<c:import url="/WEB-INF/views/bottom.jsp"/>
+
+=======
+>>>>>>> branch 'master' of https://github.com/ccd485/airtnt.git
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
@@ -647,10 +490,37 @@ function setTotalPrice(){
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
+>>>>>>> branch 'master' of https://github.com/ccd485/AirTnT.git
 <a id="backtotop" href="#top"><i class="fas fa-chevron-up"></i></a>
 <!-- JAVASCRIPTS -->
-<!-- <script src="/resources/layout/scripts/jquery.min.js"></script>
+<!-- <script src="/resources/layout/scripts/jquery.min.js"></script> -->
 <script src="/resources/layout/scripts/jquery.backtotop.js"></script>
-<script src="/resources/layout/scripts/jquery.mobilemenu.js"></script> -->
+<!-- <script src="/resources/layout/scripts/jquery.mobilemenu.js"></script> -->
+<!-- wish list modal -->
+<c:if test="${not empty property.images}">
+<div id="image-modal" class="modal fade">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+    <div class="modal-content">
+      <div class="modal-header position-relative">
+        <h2 class="modal-title">사진 더보기</h2>
+        <div class="position-absolute end-0" style="padding-right: 20px;">
+          <button type="button" class="close" id="image-close-button"
+          data-dismiss="modal" aria-hidden="true" style="font-size: 30px">×</button>
+        </div>
+      </div>
+      <div class="modal-body content" style="font-size: 20px">
+        <c:forEach var="image" items="${property.images}" varStatus="status">
+          <div class="one_half <c:if test='${status.count % 2 == 1}'>first</c:if>">
+            <img alt="" src="${image.path}" style="object-fit: cover; width:420px;height: 280px">
+          </div>
+        </c:forEach>
+      </div>
+      <div class="modal-footer">
+        AirTnT CopyRight ⓒ TeamBit corp. All Rights Reserved.
+      </div>
+    </div>
+  </div>
+</div>
+</c:if>
 </body>
 </html>

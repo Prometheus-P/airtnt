@@ -20,6 +20,7 @@ public class WishList_PropertyDTO {
 	private String type_name;
 	private String sub_type_name;
 	private String room_type_name;
+	private String num;
 	
 	public String getName() {
 		return name;
@@ -110,6 +111,12 @@ public class WishList_PropertyDTO {
 	}
 	public void setRoom_type_name(String room_type_name) {
 		this.room_type_name = room_type_name;
+	}
+	public String getNum() {
+		return num;
+	}
+	public void setNum(String num) {
+		this.num = num;
 	}
 	
 }
