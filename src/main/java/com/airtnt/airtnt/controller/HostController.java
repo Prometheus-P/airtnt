@@ -319,7 +319,7 @@ public class HostController implements HostControllerInterface {
 		}
 		
 		int propertyId = hostMapper.getPropertyId(hostId); // 2. propertyId 가져오기
-		int amenityOk = hostMapper.insertListAmenity(listAmenity);
+		//int amenityOk = hostMapper.insertListAmenity(listAmenity);
 		for (ImageDTO dto : listImgUrl) {
 			dto.setPropertyId(propertyId);
 		}
