@@ -167,7 +167,6 @@ public class AdminController extends UserController {
 	 */
 	@RequestMapping(value="reports", method = RequestMethod.GET)
 	public String selectReportsData(HttpServletRequest req) {
-		System.out.println("test");
 		String startDate = strToday;
 		String endDate = strToday;
 		List<BookingDTO> bookingList = adminMapper.selectBookingList(startDate, endDate);
@@ -181,14 +180,13 @@ public class AdminController extends UserController {
 	/*
 	 * [reports] : 날짜 조회조건 변경해서 요청한 리포트 데이터만 조회해온다
 	 */
-	@RequestMapping(value = "reports", method = RequestMethod.POST)
+	@RequestMapping(value = "reports/search", method = RequestMethod.POST)
 	@ResponseBody
 	public List<?> selectSelectedReportData(HttpServletRequest req, 
 									@RequestParam String startDate, 
 									@RequestParam String endDate,
 									@RequestParam String mode
-									) {
-		System.out.println("mode : " + mode);
+									)  throws Exception {
 		if(mode.equals("booking")) {
 			List<BookingDTO> list = adminMapper.selectBookingList(startDate, endDate);
 			return list;
@@ -200,6 +198,7 @@ public class AdminController extends UserController {
 	
 	/*
 	 * [filter] : 필터 화면 첫 조회시 전체 데이터 불러온다
+	
 	 */
 	@RequestMapping(value = "filter", method = RequestMethod.GET)
 	public String selectFilterTables(HttpServletRequest req) throws Exception {
@@ -268,6 +267,29 @@ public class AdminController extends UserController {
 			}
 		}else {
 			return 0;
+		}
+		return res;	
+	}
+	
+	/*
+	 * [filter] : sub 분류 데이터 추가 및 변경
+	 */
+	@RequestMapping(value="filter/update/sub", method = RequestMethod.POST)
+	@ResponseBody
+	public int updateFilterSubList(HttpServletRequest req, @RequestParam String type, @RequestParam String data) {
+		int res = 0;
+		List<Map<String, String>> datalist 
+			= new Gson().fromJson(String.valueOf(data), new TypeToken<List<Map<String, String>>>(){}.getType());
+		System.out.println(data); 
+		
+		for (Map<String, String> obj : datalist) {
+			if(obj.get("id").equals("") || obj.get("id") == null) { //신규건
+				SubPropertyTypeDTO dto = new SubPropertyTypeDTO(obj.get("name"), obj.get("isUse"), obj.get("propertyTypeId"));
+				res += adminMapper.updateSubPropertyTypeDTO("I", dto); //insert
+			}else {													 //변경건
+				SubPropertyTypeDTO dto = new SubPropertyTypeDTO(obj.get("id"), obj.get("name"), obj.get("isUse"), obj.get("propertyTypeId"));
+				res += adminMapper.updateSubPropertyTypeDTO("U", dto); //update
+			}
 		}
 		return res;	
 	}

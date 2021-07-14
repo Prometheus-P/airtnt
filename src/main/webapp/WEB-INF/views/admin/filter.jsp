@@ -1,11 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8" import="java.util.*"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>   
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@include file= "admin_nav.jsp"%> 
 <html>
 <head>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-	<style>
+	<style> 
 		#propertyList th {
 		    position: sticky;
 		    top: 0px;
@@ -15,6 +16,7 @@
 </head>
 <body>
 	<script>
+	
     $(document).ready(function(){
     	//ajax 공통 필요 변수
     	var token = $("input[name='_csrf']").val();
@@ -27,6 +29,7 @@
             selectedPropName = tr.find("td:eq(2)").children().val();
             getSubPropertyType(selectedPropCode);
 	    });
+		
 		
 		//[저장] json 세팅 메소드
 		function setJsonObj(checkbox, mode, jsonArray){
@@ -46,15 +49,17 @@
 					jsonObj.name = td.eq(2).children().val();
 					//(3) 대분류 사용여부  : checkbox 체크 여부 확인
 					if(td.eq(3).children().is(":checked") == true) jsonObj.isUse = "Y";
-					else jsonObj.isUse = "Y";
+					else jsonObj.isUse = "N";
 					
 				}else{
+					//(1) 대분류id
 					jsonObj.propertyTypeId = td.eq(1).text();
+					//(2) 중분류id
 					jsonObj.id = td.eq(3).text();
+					//(3) 중분류명
 					jsonObj.name = td.eq(4).children().val();
 					if(td.eq(5).children().is(":checked") == true) jsonObj.isUse = "Y";
-					
-					else jsonObj.isUse = "Y";
+					else jsonObj.isUse = "N";
 				}
 				console.log(jsonObj);	
 				jsonObj = JSON.stringify(jsonObj);
@@ -64,7 +69,7 @@
 		}
 		
 	 // [공통] 저장
-	   	$("#saveRoomTypeBtn, #saveAmenityTypeBtn, #savePropertyTypeBtn").click(function(){
+	   	$("#saveRoomTypeBtn, #saveAmenityTypeBtn, #savePropertyTypeBtn, #saveSubPropertyTypeBtn").click(function(){
 	   		//저장 대상으로 선택된 테이블 분류
 	   		var selectedId = $(this).attr("id");
 	   		var url = "filter/update/master";
@@ -115,13 +120,13 @@
 	  		});
 	   		
 	   	});
-		
+	 
 	  	//[공통] 마스터 테이블 추가 버튼 실행시
    		$("#addRoomTypeBtn, #addAmenityTypeBtn, #addPropertyTypeBtn").click(function() {
    			var row = null;
 				row = "<tr>";
 				row += "<td><input type='checkbox' name='chk' checked></td>";
-				row += '<td><input type="button" id="rowDelete" value="del"></input></td>';
+				row += '<td><input type="button" value="del" onclick="javascript:rowDel(this);"></td>';
 				row += "<td><input type='text' class='form-control' style='text-align:center; height:23px; font-size:13px' value=''/></td>";
 				row += "<td><input type='checkbox' checked></td>";
 				row += "</tr>";
@@ -136,6 +141,7 @@
 			
 	   	});
 	  	
+	  	
    		//[SUB PROPERTY TYPE] 테이블 추가 버튼 실행시
    		$("#addSubPropertyTypeBtn").click(function() {
    			var row = "<tr>";
@@ -149,7 +155,7 @@
 			$("#subPropertyTypeTable").append(row);
 	 	});
    		
-	  	
+   		
 		//[PROPERTY TYPE] 선택한 row에 대한 sub property list를 가져온다.
    	 	function getSubPropertyType(selectedId) {
   		    $.ajax({
@@ -175,11 +181,16 @@
 	   									 '<td>' + this.propertyTypeName + '</td>' +
 	   									 '<td>' + this.id + '</td>' +
 	   									 '<td><input type="text" class="form-control" value="' + this.name + '" style="text-align:center; height:23px; font-size:13px;"/></td>' +
-	   									 '<td><input type="checkbox" id="isUseSubProp"></td>' +
+	   									 '<td><input type="checkbox" name="subUseYn'+ this.id +'"></td>' +
 	   									 '<td></td>' +
 	   								 '</tr>'
 	   								);
 	   						$('#subPropertyTypeTable').append(html);
+	   						
+	   		        		if(this.isUse=='Y'){ //db값에 따른 체크박스 체크 분기처리
+	   		        			$('input:checkbox[name="subUseYn'+ this.id +'"]').attr("checked", true);
+	   		        		}
+	   		        		
 	   					});
 	   		        	
   		        	}
@@ -191,6 +202,20 @@
   		    
    		}
     })
+    
+    //[공통] 추가 행 삭제
+	 function rowDel(obj){
+	    var tr = obj.parentNode.parentNode;
+	    tr.parentNode.removeChild(tr);
+	 }
+    
+    function changeContent(obj) {
+    	//lert(obj);
+    	// document.getElementByName('propName1').checked = true;
+    	//$('input:checkbox[name="propName1"]').attr("checked", true);
+    	//alert(obj.checked);
+    }
+    
   </script>
 	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 	<main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
@@ -206,7 +231,7 @@
             </div>
          </div>
 		
-        <div style="overflow:auto; height:25%;">
+        <div style="overflow:auto; height:18%;">
 			<table class="table table-striped table-sm" id="roomTypeTable" style="text-align:center;">
 				<tr class = "thead-dark" style='position:relative;top:expression(this.offsetParent.scrollTop);'>
 					<th colspan="2">룸타입코드</th>
@@ -219,16 +244,19 @@
 					</tr>		 
 				</c:if>
 				<c:forEach var="dto" items="${roomTypeList}">
-				<script>
-					var checkYn = "${dto.isUse}";
-					if(checkYn=="Y") $("#isUseYnRoomType").prop("checked",true);
-				</script>
 					<tr>
 						<td><input type="checkbox" name="chk"></td>
+						
 						<td>${dto.id}</td>
-						<td><input type="text" class="form-control" name = "propName" onclick="event.cancelBubble=true"
-										value="${dto.name}" style="text-align:center; height:23px; font-size:13px"></td> <!-- 해당 td 이벤트 제외 -->
-						<td colspan="2"><input type="checkbox" id="isUseYnRoomType"></td>
+						<td><input type="text" class="form-control" name = "propName" onclick="event.cancelBubble=true" 
+								onchange="changeContent(this.name)" id = "propName" value="${dto.name}" 
+								style="text-align:center; height:23px; font-size:13px"></td> <!-- event.cancelBubble=true : 해당 td는 클릭이벤트 제외 -->
+						<c:set var = "chk" value="${dto.isUse}"></c:set>
+						<c:set var='propertyTypeId' value="propertyTypeId"></c:set>
+						<td colspan="2">
+							<!-- isUse 값에 따른 체크박스 체크값 분기 처리 -->
+							<input type="checkbox" name="isUseYnRoomType" <c:if test="${fn:contains(chk, 'Y')}"> checked</c:if>>
+						</td>
 					</tr>			
 				</c:forEach>
 			</table>
@@ -260,16 +288,16 @@
 					</tr>		 
 				</c:if>
 				<c:forEach var="dto" items="${amenityTypeList}">
-				<script>
-					var checkYn = "${dto.isUse}";
-					if(checkYn=="Y") $("#isUseYnAmenityType").prop("checked",true);
-				</script>
 					<tr>
 						<td><input type="checkbox" name="chk"></td>
 						<td>${dto.id}</td>
 						<td><input type="text" class="form-control" name = "propName" onclick="event.cancelBubble=true"
 										value="${dto.name}" style="text-align:center; height:23px; font-size:13px"></td> <!-- 해당 td 이벤트 제외 -->
-						<td colspan="2"><input type="checkbox" id="isUseYnAmenityType"></td>
+						<c:set var = "chk" value="${dto.isUse}"></c:set>
+						<td colspan="2">
+							<!-- isUse 값에 따른 체크박스 체크값 분기 처리 -->
+							<input type="checkbox" name="isUseYnAmenityType" <c:if test="${fn:contains(chk, 'Y')}"> checked</c:if>>
+						</td>
 					</tr>			
 				</c:forEach>
 			</table>
@@ -302,16 +330,16 @@
 						</tr>		 
 					</c:if>
 					<c:forEach var="dto" items="${propertyTypeList}">
-					<script>
-						var checkYn = "${dto.isUse}";
-						if(checkYn=="Y") $("#isUseYnPropertyType").prop("checked",true);
-					</script>
 						<tr>
 							<td><input type="checkbox" name="chk"></td>
 							<td>${dto.id}</td>
 							<td><input type="text" class="form-control" name = "propName" onclick="event.cancelBubble=true"
 											value="${dto.name}" style="text-align:center; height:23px; font-size:13px"></td> <!-- 해당 td 이벤트 제외 -->
-							<td colspan="2"><input type="checkbox" id="isUseYnPropertyType"></td>
+							<c:set var = "chk" value="${dto.isUse}"></c:set>
+							<td colspan="2">
+								<!-- isUse 값에 따른 체크박스 체크값 분기 처리 -->
+								<input type="checkbox" name="isUseYnPropertyType" <c:if test="${fn:contains(chk, 'Y')}"> checked</c:if>>
+							</td>
 						</tr>			
 					</c:forEach>
 				</table>
@@ -343,10 +371,6 @@
 						</tr>		 
 					</c:if>
 					<c:forEach var="dto" items="${subPropertyTypeList}">
-					<script>
-						var checkYn = "${dto.isUse}";
-						if(checkYn=="Y") $("#isUseYnPropertyType").prop("checked",true);
-					</script>
 						<tr>
 							<td><input type="checkbox" name="chk"></td>
 							<td>${dto.propertyTypeId}</td>
@@ -354,7 +378,11 @@
 							<td>${dto.id}</td>
 							<td><input type="text" class="form-control" name = "propName" onclick="event.cancelBubble=true"
 											value="${dto.name}" style="text-align:center; height:23px; font-size:13px"></td> <!-- 해당 td 이벤트 제외 -->
-							<td colspan="2"><input type="checkbox" id="isUseYnPropertyType"></td>
+							<c:set var = "chk" value="${dto.isUse}"></c:set>
+							<td colspan="2">
+								<!-- isUse 값에 따른 체크박스 체크값 분기 처리 -->
+								<input type="checkbox" name="isUseYnSubPropertyType" <c:if test="${fn:contains(chk, 'Y')}"> checked</c:if>>
+							</td>
 						</tr>			
 					</c:forEach>
 				</table>

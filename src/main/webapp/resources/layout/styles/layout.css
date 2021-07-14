@@ -32,7 +32,7 @@ File: Layout CSS
 #header{padding:0 30px;}
 
 #header #logo{margin:22px 0 0 0;}
-#header #logo h1{margin:0; padding:0; font-size:2rem; font-variant:small-caps;}
+#header #logo h1{margin:0; padding:0; font-size:2rem; font-variant:large-caps;}
 
 
 /* Page Intro
@@ -305,8 +305,8 @@ input:focus, textarea:focus, *:required:focus{border-color:#0AC6FC !important;}
 
 
 /* Header */
-#header{color:#FFFFFF; background-color:#01546B;}
-#header #logo a{color:inherit;}
+#header{color:#FFFFFF; background-color:#FFFFFF; box-shadow: 0px 0px 10px #000;}
+#header #logo a{color:#01546B;}
 
 
 /* Contact Details */

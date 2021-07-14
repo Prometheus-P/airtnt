@@ -22,9 +22,6 @@
       <label for="inputPassword" class="sr-only">Password</label>
       <input type="password" id="passwd" name="passwd" class="form-control" placeholder="Password" required>
       <div class="checkbox mb-3">
-        <label>
-          <input type="checkbox" id="saveId"> Remember me
-        </label>
       </div>
       <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
       <p class="mt-5 mb-3 text-muted">&copy; 2021-07</p>

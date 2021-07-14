@@ -1,6 +1,170 @@
 /**
  * property list 페이지에 스크립트가 너무 많아져서 따로 옮김
  */
+
+
+// 카카오 주소 검색
+var locationArray = new Array();
+
+var autoCompleteArea;
+
+var searchInput, tempSeacrhInput;
+var searchDropButton;
+
+var latitudeInput, longitudeInput;
+
+var mouseEnteredTag;
+
+$(function(){
+	autoCompleteArea = document.querySelector("ul#auto-complete-area");
+	
+	searchInput = document.querySelector("input#search");
+	tempSearchInput = document.querySelector("input#temp-search");
+	searchDropButton = document.querySelector("button#search-drop-button");
+	
+	latitudeInput = document.querySelector("input#latitude");
+	longitudeInput = document.querySelector("input#longitude");
+	
+	$("input#search").on("input", function(){
+		var keyword = this.value;
+		if(keyword == ""){
+			return;
+		}
+		$.ajax("https://dapi.kakao.com/v2/local/search/address.json", {
+			type : "get",
+			contentType : "text/plain",
+			headers : {
+				Authorization : "KakaoAK 1910e41ac4fcc8d62b6132a0758dab1c"
+			},
+			data : {
+				query : keyword
+			}
+		})
+		.done(function(response){
+			
+			autoCompleteArea.innerHTML = "";
+			//console.log(response);
+			var meta = response.meta;
+			//console.log(meta);
+			locationArray = response.documents;
+			if(locationArray.length == 0){
+				$(autoCompleteArea).removeClass("show");
+			} else {
+				$(autoCompleteArea).addClass("show");
+				
+				var si, gu, dong;
+				var addressName;
+				var latitude, longitude;
+				console.log("--------------검색값---------------");
+				for(var i = 0; i < locationArray.length; i++){
+					var location = locationArray[i];
+					
+					addressName = getAddressName(location);
+					
+					latitude = location.address.y; // 위도가 y
+					longitude = location.address.x; // 경도가 x
+					
+					if(i == 0){
+						// 자동완성 주소를 클릭하지 않아도 전체 주소명이 넘어갈 수 있는 hidden input
+						tempSearchInput.value = addressName;
+						// 자동완성 주소를 클릭하지 않아도 첫번째 주소의 좌표값은 저장함
+						latitudeInput.value = latitude;
+						longitudeInput.value = longitude;
+					}
+					
+					var liTag = document.createElement("li");
+					liTag.setAttribute("class", "list-group-item");
+					var aTag = document.createElement("a");
+					aTag.setAttribute("href", "#");
+					aTag.setAttribute("class", "dropdown-item");
+					aTag.setAttribute("id", "address-" + i);
+					
+					// 생겼다 없어졌다 하는 태그이므로 생성될 때 바로 이벤트를 부여해야 함
+					// blur 이벤트가 클릭 이벤트보다 빠르므로
+					// 마우스가 올라갔을때 태그 자기 자신을 저장하는 이벤트가 필요
+					$(aTag).click(function(){
+						setAddress(this);
+					}).on("mouseenter", function(){
+						mouseEnteredTag = this;
+					}).on("mouseleave", function(){
+						mouseEnteredTag = null
+					});
+					
+					aTag.innerHTML = addressName;
+					liTag.append(aTag);
+					autoCompleteArea.append(liTag);
+					
+					console.log(addressName);
+					console.log("(" + latitude + "," + longitude + ")");
+				}
+				console.log("-----------------------------------");
+			} // end of if-else
+		})
+		.fail(function(){
+			console.log("외않되..");
+		});
+		
+		// end of oninput function
+		
+	}).on("focus", function(){
+		// input 태그 클릭시 커서 생기면 드롭다운 보이기
+		if(locationArray != null && locationArray.length > 0){
+			$(autoCompleteArea).addClass("show");
+		}
+	}).on("blur", function(){
+		// input 태그 밖의 이벤트 발생 시
+		// 마우스가 있었던 태그가 드롭다운이면 클릭부터 실행
+		if(mouseEnteredTag != null){
+			mouseEnteredTag.click();
+		}
+		$(autoCompleteArea).removeClass("show");
+	});
+});
+
+function setAddress(addressTag){
+	var index = addressTag.id.split('-')[1];
+	var location = locationArray[index];
+	var si, gu, dong;
+	var addressName;
+	var latitude, longitude;
+	
+	addressName = getAddressName(location);
+	
+	latitude = location.address.y; // 위도가 y
+	longitude = location.address.x; // 경도가 x
+	
+	searchInput.value = addressName;
+	tempSearchInput.value = "";
+	
+	latitudeInput.value = latitude;
+	longitudeInput.value = longitude;
+	
+	$(autoCompleteArea).removeClass("show");
+	
+	console.log(addressName);
+	console.log("(" + latitude + "," + longitude + ")");
+}
+
+function getAddressName(location){
+	var si = location.address.region_1depth_name; // 시
+	var gu = location.address.region_2depth_name; // 군/구
+	var dong = location.address.region_3depth_name; // 동/읍/리
+	if(dong == ""){
+		dong = location.address.region_3depth_h_name; // 행정동명
+	}
+	
+	addressName = si;
+	if(gu != ""){
+		addressName += " " + gu;
+	}
+	if(dong != ""){
+		addressName += " " + dong;
+	}
+	
+	return addressName;
+}
+
+// 폼 파라미터들 검사
 function setParametersOnSubmit(){
 	var numberArray = [
 		document.querySelector("input#guest-count"),
@@ -18,6 +182,7 @@ function setParametersOnSubmit(){
 	}
 }
 
+// 페이지 처리
 function movePage(pageButton){
 	var pageNum = pageButton.id.split('-')[1];
 	document.querySelector("input#page-num").value = pageNum;
@@ -25,6 +190,7 @@ function movePage(pageButton){
 	document.querySelector("form#search-form").submit();
 }
 
+// 이하 필터 처리부분
 function modSubPropertyTypes(propertyTypeTag){
 	var subPropertyTypeTagArray = document.getElementsByName("subPropertyTypeId");
 	for(var i = 0; i < subPropertyTypeTagArray.length; i++){
