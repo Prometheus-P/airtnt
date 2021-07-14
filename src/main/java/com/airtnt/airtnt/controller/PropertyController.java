@@ -83,7 +83,7 @@ public class PropertyController {
 		if(tempAddressKey == null || tempAddressKey.trim().equals("")) {
 			if(addressKey == null || addressKey.trim().equals("")) {
 				addressKey = "서울";
-				// 서울 시청
+				// 서울 시청 좌표
 				latitude = "37.566826004661";
 				longitude = "126.978652258309";
 			} /*else {
@@ -92,6 +92,14 @@ public class PropertyController {
 		} else {
 			// 자동완성으로 검색하지 않아도 맨 상단에 있던 주소로 세팅
 			addressKey = tempAddressKey;
+		}
+		
+		// 좌표가 없어도 서울시청이 기본값
+		if(latitude == null || longitude == null ) {
+			addressKey = "서울";
+			// 서울 시청 좌표
+			latitude = "37.566826004661";
+			longitude = "126.978652258309";
 		}
 		
 		// 페이지
@@ -148,6 +156,22 @@ public class PropertyController {
 		setFilter(propertyTypes, propertyTypeIdKeyArray, subPropertyTypeIdKeyArray);
 		setFilter(roomTypes, roomTypeIdKeyArray);
 		setFilter(amenityTypes, amenityTypeIdKeyArray);
+		
+		for(PropertyTypeDTO propertyType : propertyTypes) {
+			if(propertyType.getTagAttributes() != null) {
+				for(String tagAttribute : propertyType.getTagAttributes()) {
+					System.out.println(propertyType.getTagAttributeMapValue(tagAttribute));
+				}
+			}
+			for(SubPropertyTypeDTO subPropertyType : propertyType.getSubPropertyTypes()) {
+				if(subPropertyType.getTagAttributes() != null) {
+					for(String tagAttribute : subPropertyType.getTagAttributes()) {
+						System.out.println(subPropertyType.getTagAttributeMapValue(tagAttribute));
+					}
+				}
+				
+			}
+		}
 		
 		// 숙소 wished, unwished 여부 설정
 		setWish(properties, wishLists);
@@ -359,7 +383,6 @@ public class PropertyController {
 			
 			// 숙소 목록의 시작과 끝 인덱스
 			// 인덱스 == rownum - 1
-			// 0 ~ 4, 5 ~ 9, 10 ~ 14, ...
 			greaterEqualIndex = numPerPage * (pageNum - 1);	// 이상
 			lessThanIndex = numPerPage * pageNum;	// 미만
 			
@@ -376,8 +399,8 @@ public class PropertyController {
 	}
 	
 	public void setFilter(List<? extends AbstractTypeDTO> types, Integer[] paramArray, Integer[] subParamArray) {
-		if(paramArray != null && types != null) {
-			outer: for(AbstractTypeDTO type : types) {
+		outer: for(AbstractTypeDTO type : types) {
+			if(paramArray != null) {
 				for(int i = 0; i < paramArray.length; i++) {
 					if(type.getId() == paramArray[i]) {
 						type.putTagAttributeMapValue(TagAttribute.CHECKED);
@@ -393,13 +416,12 @@ public class PropertyController {
 						continue outer;
 					}
 				}
-				// 현재 유형이 체크된 유형 파라미터값이 아니면 여기로 넘어옴
-				if(type instanceof PropertyTypeDTO) {
-					PropertyTypeDTO propertyType = (PropertyTypeDTO)type;
-					List<SubPropertyTypeDTO> subPropertyTypes = propertyType.getSubPropertyTypes();
-					setFilter(subPropertyTypes, subParamArray);
-				}
-				
+			}
+			// 현재 유형이 체크된 유형 파라미터값이 아니면 여기로 넘어옴
+			if(type instanceof PropertyTypeDTO) {
+				PropertyTypeDTO propertyType = (PropertyTypeDTO)type;
+				List<SubPropertyTypeDTO> subPropertyTypes = propertyType.getSubPropertyTypes();
+				setFilter(subPropertyTypes, subParamArray);
 			}
 		}
 	}
@@ -578,30 +600,30 @@ public class PropertyController {
 					System.out.println(decodedCookieString);
 				}
 				
-				List<String> recentPropertyIdStrings =
-						new ArrayList<>(Arrays.asList(decodedCookieString.split("%")));
-				int[] recentPropertyIdArray =
-						Numeric.toIntArray(recentPropertyIdStrings);
+				LinkedList<String> recentPropertyIdStringsQueue =
+						new LinkedList<>(Arrays.asList(decodedCookieString.split("%")));
 				if(debug) {
 					System.out.print("최근목록 숙소 id :");
-					for(String recentPropertyIdString : recentPropertyIdStrings) {
+					for(String recentPropertyIdString : recentPropertyIdStringsQueue) {
 						System.out.print(" " + recentPropertyIdString);
 					}
 					System.out.println();
 				}
 				
 				// 최근목록 변화 로직
-				// 이전의 최근목록에 같은 숙소가 존재하고 있었다면 삭제함
-				for(int i = 0; i < recentPropertyIdArray.length; i++) {
-					if(recentPropertyIdArray[i] == propertyId) {
-						recentPropertyIdStrings.remove(i);
-						break;
-					}
-				}
-				// 방금 본 목록을 쿠키 맨 앞에 추가함
+				// 큐를 쓰면 중간의 값을 버려도 인덱스에 구애받지 않고
+				// 항상 그다음 최근값을 가져올 수 있음
+				
+				// 방금 본 목록을 새로운 쿠키 맨 앞에 추가함
 				decodedCookieString = propertyId.toString();
-				for(String recentPropertyIdString : recentPropertyIdStrings) {
-					decodedCookieString += "%" + recentPropertyIdString;
+				// 최근목록 갯수는 최대 12개 제한
+				int i = 0;
+				while(i < 12 && recentPropertyIdStringsQueue.peek() != null) {
+					String recentPropertyIdString = recentPropertyIdStringsQueue.poll();
+					if(Integer.parseInt(recentPropertyIdString) != propertyId) {
+						// 현재 보고있는 숙소와 같지 않은것만 저장함
+						decodedCookieString += "%" + recentPropertyIdString;
+					}
 				}
 				
 				// 브라우저에 저장될 문자열로 인코딩
@@ -638,7 +660,6 @@ public class PropertyController {
 				
 			} else {
 				// 인코딩 오류가 있었으면 사용자 브라우저에서 쿠키 삭제
-				cookie.setValue(null);
 				cookie.setMaxAge(0);
 				resp.addCookie(cookie);
 			}
@@ -646,5 +667,4 @@ public class PropertyController {
 		
 		return false;
 	}
-
 }
