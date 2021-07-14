@@ -42,7 +42,7 @@
 			</div>
 			<nav id="mainav" class="fl_right">
 				<!-- ################################################################################################ -->
-				<a class="btn" href="<c:url value='/host/property_type_0'/>">시작하기</a>
+				<a class="btn" href="<c:url value='/host/property_insert'/>">시작하기</a>
 				<ul class="clear">
 					<c:if test="${!isLogin}">
 						<li><a class="drop" href="#">로그인 하기</a>
@@ -85,7 +85,7 @@
 				<footer>
 					<ul class="nospace inline pushright">
 						<li><a class="btn"
-							href="<c:url value='/host/property_type_0'/>">시작하기</a></li>
+							href="<c:url value='/host/property_insert'/>">시작하기</a></li>
 					</ul>
 				</footer>
 			</article>

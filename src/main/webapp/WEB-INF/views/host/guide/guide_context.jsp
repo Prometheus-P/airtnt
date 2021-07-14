@@ -44,7 +44,7 @@
 						</c:forEach>
 							<ul class="actions">
 								<li align="center">
-								<a href="<c:url value='/host/property_type_0'/>" class="button special big">
+								<a href="<c:url value='/host/property_insert'/>" class="button special big">
 								시작하기
 								</a>
 								</li>

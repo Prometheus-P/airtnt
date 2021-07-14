@@ -15,6 +15,7 @@ import com.airtnt.airtnt.model.AmenityTypeDTO;
 import com.airtnt.airtnt.model.BookingDTO;
 import com.airtnt.airtnt.model.GuideContextDTO;
 import com.airtnt.airtnt.model.GuideDTO;
+import com.airtnt.airtnt.model.ImageDTO;
 import com.airtnt.airtnt.model.MemberDTO;
 import com.airtnt.airtnt.model.PropertyDTO;
 import com.airtnt.airtnt.model.PropertyTypeDTO;
@@ -145,8 +146,7 @@ public class HostMapper implements HostMapperInterface {
 
 	@Override
 	public int insertPropertyAmenity(AmenityDTO dto) {
-		int res = sqlSession.insert("insertPropertyAmenity", dto);
-		return res;
+		return 0;
 	}
 
 	public int updateMemberMode(String memberId) {
@@ -183,6 +183,15 @@ public class HostMapper implements HostMapperInterface {
 		int res = sqlSession.update("transactionRefund", bookingId);
 		return res;
 	}
+	
+	public int imageInsert(List<ImageDTO> list) {
+		int res = sqlSession.insert("imageInsert", list);
+		return res;
+	}
 
+	public int insertListAmenity(List<AmenityDTO> list) {
+		int res = sqlSession.insert("insertAmenities", list);
+		return res;
+	}
 
 }

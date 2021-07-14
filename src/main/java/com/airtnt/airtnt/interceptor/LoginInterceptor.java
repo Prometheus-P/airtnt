@@ -1,6 +1,8 @@
 package com.airtnt.airtnt.interceptor;
 
 
+import java.util.Enumeration;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -15,20 +17,18 @@ public class LoginInterceptor implements HandlerInterceptor {
 			throws Exception { //컨트롤러로 들어가기 전
 		HttpSession session = request.getSession();
 		if (session.getAttribute("member_id") == null && session.getAttribute("member_name") == null) {
-			System.out.println("==============로그인 중이 아님!=============");
+			System.out.println("======로그인 중이 아님!======");
 			response.sendRedirect(request.getContextPath() + "/message_login"); 
 			return false;
 		}
-		System.out.println("=============로그인 확인!=============");
+		System.out.println("======로그인 확인!======");
+		Enumeration<String> enu = request.getParameterNames();
+		while(enu.hasMoreElements()) {
+			String key = enu.nextElement();
+			String value= request.getParameter(key);
+			System.out.println("파라미터 >> " + key + ": " + value);
+		}
 		return true;
-		/* return HandlerInterceptor.super.preHandle(request, response, handler); */
-	}
-
-	@Override
-	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
-			ModelAndView modelAndView) throws Exception { //컨트롤러를 나오면서
-		// TODO Auto-generated method stub
-
 	}
 
 }

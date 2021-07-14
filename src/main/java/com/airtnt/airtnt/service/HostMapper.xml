@@ -220,12 +220,6 @@
 		where ROWNUM = 1
 	</select>
 
-	<select resultType="int" id="insertPropertyAmenity"
-		parameterType="AmenityDTO">
-		insert into amenity(property_id, amenity_type_id)
-		values(#{propertyId},#{amenityTypeId})
-	</select>
-
 	<select id="updateMemberMode" resultType="int"
 		parameterType="String">
 		update member set member_mode= '2' where id=#{hostId}
@@ -312,6 +306,24 @@
 		is_refund = 'Y'
 		WHERE booking_id = #{bookingId}
 	</update>
+	
+	<insert id="imageInsert" parameterType="java.util.List">
+		INSERT 
+		INTO image(property_id, is_main, path, file_size)
+		VALUES
+		<foreach item="dto" collection="list">
+			(#{dto.propertyId}, #{dto.isMain, jdbcType=VARCHAR}, #{dto.path}, #{dto.fileSize})
+		</foreach>
+	</insert>
+	
+	<insert id="insertAmenities" parameterType="java.util.List">
+		INSERT
+		INTO amenity()
+		VALUES
+		<foreach item="dto" collection="list">
+		
+		</foreach>
+	</insert>
 	<!-- <update id="payExptDateConfirm" parameterType="java.sql.Date" >
 		UPDATE transaction 
 		SET confirm_date = sysdate 

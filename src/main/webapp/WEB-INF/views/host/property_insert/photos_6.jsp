@@ -15,6 +15,7 @@
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
 <body>
+<%@include file="../../top.jsp"%>
 	<div class="container">
 
 		<form name="dataForm" id="dataForm" onsubmit="return registerAction()">
@@ -34,14 +35,15 @@
 					</div> -->
 					<div class="col-sm-4">
 						<div id="articlefileChange" style="font-family: fantasy;"></div>
-					</div>
+					
+				</div>
 					<div class="col-sm-4">
 						<button id="btn-upload" type="button"
 							class="btn btn-sm btn-primary" style="font-size: 17px">
 							사진 추가 하기</button>
 						<!-- onchange="setImg(event)" -->
 						<input id="input_file" multiple="multiple" type="file"
-							style="display: none;" onchange="setImg(event)"> <br>
+							style="display: none;"> <br>
 						<span style="font-size: 10px; color: gray;"> ※숙소 사진은 최대
 							10개까지 등록이 가능합니다.<br> ※파일명 클릭 시 삭제 됩니다.
 						</span>
@@ -96,7 +98,7 @@ function fileCheck(e) {
     
     // 파일 개수 확인 및 제한
     if (fileCount + filesArr.length > totalCount) {
-      $.alert('파일은 최대 '+totalCount+'개까지 업로드 할 수 있습니다.');
+      alert('파일은 최대 '+totalCount+'개까지 업로드 할 수 있습니다.');
       return;
     } else {
     	 fileCount = fileCount + filesArr.length;
@@ -157,9 +159,11 @@ function fileDelete(fileNum){
 			success : function(data) {
 				if (JSON.parse(data)['result'] == "OK") {
 					alert("사진업로드 성공");
+					window.location.href="/host/name_description_7";
+					return true;
 				} else if (JSON.parse(data)['result'] == "NO_IMAGE") {
-					alert("한장 이상의 사진을 등록해주세요!");
-			} else if (JSON.parse(data)['result'] == "UNACCEPTED_EXTENSION") {
+					alert("최소 한장의 사진을 등록해주세요!");
+				} else if (JSON.parse(data)['result'] == "UNACCEPTED_EXTENSION") {
 					alert("사진의 확장자는 JPG, PNG, GIF, BMP만 가능합니다!");
 				} else if (JSON.parse(data)['result'] == "EXCEED_SIZE") {
 					alert("사진의 크기가 너무 큽니다!(최대 500MB)");
@@ -174,7 +178,7 @@ function fileDelete(fileNum){
    	    });
    	    return false;
 	}
-	var count =0;
+	/* var count =0;
 	function setImg(event) {
 			for (var file of event.target.files) {
 			var reader = new FileReader();
@@ -196,7 +200,7 @@ function fileDelete(fileNum){
 	         console.log(file);
 	         reader.readAsDataURL(file);
 	      }
-	   }
+	   } */
 
 </script>
 </body>

@@ -56,7 +56,7 @@
 							<li>
 							<a href="<c:url value='/host/total_earning'/>">총 수입</a></li>
 							<li>
-							<a href="<c:url value='/host/property_type_0'/>">새 숙소 생성</a></li>
+							<a href="<c:url value='/host/property_insert'/>">새 숙소 생성</a></li>
 							<li class="divider"></li>
 							<li>
 							<a href="<c:url value='/logout'/>">로그아웃</a>

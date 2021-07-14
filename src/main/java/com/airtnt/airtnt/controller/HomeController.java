@@ -61,7 +61,7 @@ public class HomeController {
 	
 	@RequestMapping("message_login")
 	public String message_login(HttpServletRequest req) {
-		req.setAttribute("msg", "로그인 해주세요!");
+		req.setAttribute("msg", "로그인 후 이용 가능한 페이지입니다!");
 		req.setAttribute("url", "stay");
 		return "message";
 	}
