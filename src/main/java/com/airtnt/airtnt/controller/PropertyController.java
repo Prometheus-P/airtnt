@@ -653,30 +653,17 @@ public class PropertyController {
 					System.out.println(decodedCookieString);
 				}
 				
-<<<<<<< HEAD
 				LinkedList<Integer> recentPropertyIdsQueue =
 						new LinkedList<>(Numeric.toIntegerList(decodedCookieString.split("%")));
-=======
-				List<String> recentPropertyIdStrings =
-						new ArrayList<>(Arrays.asList(decodedCookieString.split("%")));
-				int[] recentPropertyIdArray =
-						Numeric.toIntArray(recentPropertyIdStrings);
->>>>>>> branch 'master' of https://github.com/ccd485/AirTnT.git
 				if(debug) {
 					System.out.print("최근목록 숙소 id :");
-<<<<<<< HEAD
 					for(Integer recentPropertyId : recentPropertyIdsQueue) {
 						System.out.print(" " + recentPropertyId);
-=======
-					for(String recentPropertyIdString : recentPropertyIdStrings) {
-						System.out.print(" " + recentPropertyIdString);
->>>>>>> branch 'master' of https://github.com/ccd485/AirTnT.git
 					}
 					System.out.println();
 				}
 				
 				// 최근목록 변화 로직
-<<<<<<< HEAD
 				// 큐를 쓰면 중간의 값을 버려도 인덱스에 구애받지 않고
 				// 항상 그다음 최근값을 가져올 수 있음
 				
@@ -689,19 +676,7 @@ public class PropertyController {
 					if(recentPropertyId != propertyId) {
 						// 현재 보고있는 숙소와 같지 않은것만 저장함
 						decodedCookieString += "%" + recentPropertyId.toString();
-=======
-				// 이전의 최근목록에 같은 숙소가 존재하고 있었다면 삭제함
-				for(int i = 0; i < recentPropertyIdArray.length; i++) {
-					if(recentPropertyIdArray[i] == propertyId) {
-						recentPropertyIdStrings.remove(i);
-						break;
->>>>>>> branch 'master' of https://github.com/ccd485/AirTnT.git
 					}
-				}
-				// 방금 본 목록을 쿠키 맨 앞에 추가함
-				decodedCookieString = propertyId.toString();
-				for(String recentPropertyIdString : recentPropertyIdStrings) {
-					decodedCookieString += "%" + recentPropertyIdString;
 				}
 				
 				// 브라우저에 저장될 문자열로 인코딩
