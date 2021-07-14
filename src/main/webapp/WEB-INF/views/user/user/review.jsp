@@ -8,6 +8,9 @@
 	
 	}
 	function transferDataForUpdate(id,rating,content){
+		console.log(id);
+		console.log(rating);
+		console.log(content);
 		$('#review_id').val(id)
 		$('#update_rating').val(rating)
 		$('#update_content').html(content)
@@ -69,17 +72,19 @@
 							                '<p>'+this.property_address+'   /   '+this.price+'원   /   '+new Date(this.check_in_date).toISOString().substring(0,10)+' | '+new Date(this.check_out_date).toISOString().substring(0,10)+'</p>' +
 							              '</div>' +
 							              '<div class="one_third fl_right">' +
-							              
-									                'type="button" class="close">&times;</button>' +
+							              //여기 수정해야함
+							              		//'<button onclick="sure('정말 삭제하시겠습니까?','/myPage/deleteReview?id='+this.id+')" ' +
+									                //'type="button" class="close">&times;</button>' +
 							              '</div>' +
 							              '<hr style="color: #00000061;">' +
 							              '<div class="two_third first text-left">' +
-								             '<p id="stars'+data.length+'"></p>' +
+								             '<p id="stars'+dataCnt+'"></p>' +
 							              	'<p>'+this.content+'</p>' +
 							              '</div>' +
 							              '<div class="one_third fl_right">' +
-								              '<button data-target="#updateReviewModal" onclick="transferDataForUpdate('+this.id+','+this.rating+','+this.content+')" ' + 
-								              		'data-toggle="modal" style="font-size:12px;" type="button" class="btn">수정하기</button>' +
+							              //여기 수정 해야함 
+								              //'<button data-target="#updateReviewModal" onclick="transferDataForUpdate('+this.id+','+this.rating+','+this.content+')" ' + 
+								              		//'data-toggle="modal" style="font-size:12px;" type="button" class="btn">수정하기</button>' +
 							              '</div><br>' +
 							            '</li>' +
 						           '<hr>'
@@ -88,7 +93,7 @@
 		        		
 		        		for(var i=0; i<starCnt; i++){
 		                       html = '<span><img src="/resources/images/star-on.png" alt=""></span>';
-		                       $('#stars'+i+'').append(html);
+		                       $('#stars'+dataCnt+'').append(html);
 		                    }
 	        				
 		           	});
