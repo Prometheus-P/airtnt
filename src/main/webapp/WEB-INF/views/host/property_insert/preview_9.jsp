@@ -96,7 +96,7 @@ footer {
 			success : function(data) {
 						if (JSON.parse(data)['result'] == "OK"){
 							alert("숙소가 저장 되었습니다! 호스트 메인 페이지로 이동합니다!")
-							location.href="/host/host_mode/host_mode";
+							location.href="/host/host_mode";
 						}else{
 							alert("숙소 저장 중 문제 발생! 관리자에게 연락바랍니다!");
 						}

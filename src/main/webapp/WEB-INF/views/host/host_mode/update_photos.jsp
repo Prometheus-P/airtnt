@@ -21,11 +21,12 @@
 		<form name="dataForm" id="dataForm" onsubmit="return registerAction()">
 			<div class="page-header"
 				style="font-style: italic; font-family: fantasy;">
-				<h1 style="font-weight: bold;">이제 숙소 사진을 올릴 차례입니다</h1>
+				<h1 style="font-weight: bold;">추가로 등록할 사진이 있으신가요?ㄴ</h1>
+				<button type="submit" class="btn btn-lg btn-success">전송</button>
 			</div>
 			<div class="data_file_txt" id="data_file_txt" style="margin: 40px;">
 				<div class="row">
-					<h3>사진 추가</h3>
+					<h3>첨부 파일</h3>
 					<!-- <div class="col-sm-4">
 						<div id="image_container"></div>
 						<div class="grid-item grid-item--width2">...</div>
@@ -49,23 +50,7 @@
 					</div>
 				</div>
 			</div>
-		
-		<footer style="font-size: 30px; font-weight: bold;">
-					<div style="float: left; padding-left: 80px; padding-top: 20px">
-						<button type="button" class="btn btn-lg btn-default"
-							onclick="previous()" style="font-size: 30px; font-weight: bold;">
-							<i class="bi bi-arrow-left-square-fill"></i> 
-							이전 페이지
-						</button>
-					</div>
-					<div id="next" style="float: right; padding-right: 80px; padding-top: 20px; display:none;">
-						<button  type="submit" class="btn btn-lg btn-default"
-						 style="font-size: 30px; font-weight: bold;">
-							사진 저장 <i class="bi bi-arrow-right-square-fill"></i>
-						</button>
-					</div>
-				</footer>
-				</form>
+		</form>
 	</div>
 
 
@@ -165,7 +150,7 @@ function fileDelete(fileNum){
 			success : function(data) {
 				if (JSON.parse(data)['result'] == "OK") {
 					alert("사진업로드 성공");
-					window.location.href="/host/name_description_7";
+					window.location.href="/host/host_properties_list";
 					return true;
 				} else if (JSON.parse(data)['result'] == "NO_IMAGE") {
 					alert("최소 한장의 사진을 등록해주세요!");
@@ -184,33 +169,6 @@ function fileDelete(fileNum){
    	    });
    	    return false;
 	}
-	function previous(){
-		windo.history.back();
-	}
-	/* var count =0;
-	function setImg(event) {
-			for (var file of event.target.files) {
-			var reader = new FileReader();
-	         reader.onload = function(event) {
-	            var filesystemName = file.name.split(".");
-	            if(filesystemName.length > 1) {
-	               var extension = filesystemName[filesystemName.length - 1];
-	              // document.querySelector("div#image_container").innerHTML = "";  // 앞서 선택한 이미지 삭제
-	               if(extension == "jpg" || extension == "png" || extention == "gif" || extension == "bmp") {
-	                  var img = document.createElement("img");
-	                  img.setAttribute("src", event.target.result);
-	                  img.setAttribute("class", "img-thumbnail");
-	                  img.setAttribute("id", count);
-	                  document.querySelector("div#image_container").appendChild(img);  //새로 선택한 이미지 div에 출력
-	                  count++;
-	               }
-	            }
-	         }
-	         console.log(file);
-	         reader.readAsDataURL(file);
-	      }
-	   } */
-
 </script>
 </body>
 </html>

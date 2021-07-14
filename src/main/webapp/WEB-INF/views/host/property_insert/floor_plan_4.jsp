@@ -75,6 +75,9 @@ footer{
 		</div>
 		<br><br><br><br><br><br><br><br>
 		<script>
+		function previous(){
+			windo.history.back();
+		}
 			$('#increase-bed').click(function(){
 				document.getElementById('next').style.display="block";
 			});

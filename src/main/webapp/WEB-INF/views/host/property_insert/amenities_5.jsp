@@ -73,6 +73,9 @@ footer{
 		}
 		return true;
 	}
+	function previous(){
+		windo.history.back();
+	}
 	</script>
 </body>
 </html>

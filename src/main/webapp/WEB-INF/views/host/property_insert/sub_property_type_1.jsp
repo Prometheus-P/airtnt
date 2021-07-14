@@ -90,6 +90,9 @@ footer{
 			alert("숙소 유형을 선택해주세요!");
 			return false;
 		}
+		function previous(){
+			windo.history.back();
+		}
 	</script>
 </body>
 </html>

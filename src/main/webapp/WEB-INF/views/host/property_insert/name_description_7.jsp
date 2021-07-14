@@ -82,7 +82,7 @@ footer{
 				return true;
 			}
 			function previous(){
-				alert("뒤로가기 했다 쳐!");
+				windo.history.back();
 			}
 		</script>
 </body>

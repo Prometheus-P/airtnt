@@ -77,9 +77,9 @@ footer{
 			src="//dapi.kakao.com/v2/maps/sdk.js?appkey=62b11c585fb341eec39dbc28ac9bad71&libraries=services"></script>
 
 		<script>
-			/* $('#search').click(function (){
-				document.getElementById('detail').style.display="block";
-			}); */
+		function previous(){
+			windo.history.back();
+		}
 			function load(){
 				document.getElementById('detail').style.display="block";
 				document.getElementById('next').style.display="block";

@@ -91,6 +91,9 @@ footer{
 			alert("숙소 유형을 선택해주세요!");
 			return false;
 		}
+		function previous(){
+			windo.history.back();
+		}
 		/* 	$(window).bind("pageshow", function (event){
 				if(event.originalEvent.persisted){
 					alert("히스토리백!!!!"); //뒤로가기로 입장 했을 시

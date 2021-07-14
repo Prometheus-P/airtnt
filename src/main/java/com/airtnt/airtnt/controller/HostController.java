@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -429,16 +430,69 @@ public class HostController implements HostControllerInterface {
 	public ModelAndView host_properties_list(HttpSession session) {
 		String hostId = (String) session.getAttribute("member_id");
 		List<PropertyDTO> listProperty = hostMapper.getPropertyList(hostId);
-		ModelAndView mav = new ModelAndView("/host/host_mode/host_properties_list", "listProperty", listProperty);
+		for(PropertyDTO dto : listProperty) {
+			List<ImageDTO> listImage = hostMapper.getPropertyImage(dto.getId());
+			List<AmenityTypeDTO> listAmenity = hostMapper.getAmenityList(dto.getId());
+			dto.setImages(listImage);
+			dto.setAmenityTypes(listAmenity);
+		}
+		
+		ModelAndView mav = new ModelAndView("/host/host_mode/host_properties_list");
+		mav.addObject("listProperty", listProperty);
 		return mav;
 	}
-
-	@Override
-	@RequestMapping(value = "host/properties_update", method = RequestMethod.GET)
-	public ModelAndView host_getProperty(int propertyId) {
-		PropertyDTO dto = hostMapper.getProperty(propertyId);
-		ModelAndView mav = new ModelAndView("/host/host_mode/properties_update", "propertyDTO", dto);
+	
+	@RequestMapping("host/host_properties_list_update")
+	public ModelAndView host_properties_list_update(@RequestParam Map<String, Object> param) {
+		PropertyDTO dtoPro = new PropertyDTO();
+		dtoPro.setRoomTypeId((Integer)param.get("roomTypeId"));
+		List<Integer> list= (List<Integer>)param.get("listAmenity");
+		List<AmenityTypeDTO> listAmenity = hostMapper.getAmenityTypeList();
+		listAmenity.removeIf(dto -> {
+			boolean isRemove = true;
+			for (int id : list) {
+				if (dto.getId() == id) {
+					isRemove = false;
+					break;
+				}	
+			}
+			return isRemove;
+		});
+		dtoPro.setMaxGuest((Integer)param.get("maxGuest"));
+		dtoPro.setBedCount((Integer)param.get("bedCount"));
+		dtoPro.setPropertyDesc((String)param.get("description"));
+		dtoPro.setPrice((Integer)param.get("price"));
+		int propertyOk = hostMapper.insertProperty(dtoPro);
+		int amenityOk = hostMapper.insertListAmenity(listAmenity);
+		ModelAndView mav = new ModelAndView("/host/host_mode/host_properties_list");
 		return mav;
+	}
+	@Override
+	@RequestMapping(value = "host/property_update", method = RequestMethod.GET)
+	public ModelAndView host_getProperty(int propertyId) {
+		PropertyDTO propertyDTO = hostMapper.getProperty(propertyId);
+		List<ImageDTO> listImage = hostMapper.getPropertyImage(propertyId);
+		List<AmenityTypeDTO> listAmenity = hostMapper.getAmenityList(propertyId);
+		propertyDTO.setImages(listImage);
+		propertyDTO.setAmenityTypes(listAmenity);
+		List<Integer> listAmenityId = new ArrayList<>();
+		for(AmenityTypeDTO dto : listAmenity) {
+			listAmenityId.add(dto.getAmenityId());
+		}
+		
+		List<RoomTypeDTO> listRoomType = hostMapper.getRoomType();
+		List<AmenityTypeDTO> listAmenityType = hostMapper.getAmenityTypeList();
+		
+		ModelAndView mav = new ModelAndView("/host/host_mode/properties_update");
+		mav.addObject("propertyDTO", propertyDTO);
+		mav.addObject("listRoomType", listRoomType);
+		mav.addObject("listAmenityType", listAmenityType);
+		mav.addObject("listAmenityId", listAmenityId);
+		return mav;
+	}
+	@RequestMapping("host/update_photos")
+	public String update_photos() {
+		return "/host/host_mode/update_photos";
 	}
 
 	@Override

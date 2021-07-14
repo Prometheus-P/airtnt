@@ -121,10 +121,9 @@
 		roomTypeName,
 		p.sub_property_type_id as subPropertyTypeId,
 		s.id,
-		s.name
-		as subPropertyTypeName
-		from property p, sub_property_type s, room_type
-		r
+		s.name as subPropertyTypeName,
+		i.path
+		from property p, sub_property_type s, room_type	r, image i
 		where host_id = #{hostId}
 		and r.id = p.room_type_id
 		and
@@ -191,10 +190,8 @@
 		roomTypeName,
 		p.sub_property_type_id as subPropertyTypeId,
 		s.id,
-		s.name
-		as subPropertyTypeName
-		from property p, sub_property_type s, room_type
-		r
+		s.name as subPropertyTypeName
+		from property p, sub_property_type s, room_type r
 		where p.id = #{propertyId}
 		and r.id = p.room_type_id
 		and
@@ -206,8 +203,7 @@
 	<select id="listAmenityType" resultType="AmenityTypeDTO">
 		select
 		id, name,
-		is_use as
-		isUse
+		is_use as isUse
 		from amenity_type
 	</select>
 	<select resultType="int" id="getPropertyId" parameterType="String">
@@ -307,21 +303,45 @@
 	</update>
 	
 	<insert id="imageInsert" parameterType="java.util.List">
-		INSERT 
-		INTO image(property_id, is_main, path, file_size)
-		VALUES
-		<foreach item="item" collection="list" separator=",">
-			(#{item.propertyId}, #{item.isMain, jdbcType=VARCHAR}, #{item.path}, #{item.fileSize})
+		<foreach item="item" collection="list"  open="INSERT ALL" close="SELECT * FROM DUAL" separator=" ">
+			INTO image(id, property_id, is_main, path, file_size)
+			VALUES(#{item.id}, #{item.propertyId}, #{item.isMain, jdbcType=VARCHAR}, #{item.path}, #{item.fileSize})
 		</foreach>
 	</insert>
 	
-	<insert id="insertListAmenity" parameterType="java.util.List">
-		INSERT
-		INTO amenity(property_id, amenity_type_id)
-		VALUES
-		<foreach item="item" collection="list" open="(" separator="," close=")">
-			(#{item.propertyId}, #{item.id})	
+	<update id="insertListAmenity" parameterType="java.util.List">
+		<foreach item="item" collection="list"  open="INSERT ALL" close="SELECT * FROM DUAL" separator=" " >
+			INTO AMENITY(id, amenity_type_id, property_id) VALUES(#{item.amenityId}, #{item.id}, #{item.propertyId})	
 		</foreach>
-	</insert>
+	</update>
+	
+	<select id="getAmenitySequence" resultType="int">
+		SELECT seq_amenity.nextval FROM dual
+	</select>
 
+	<select id="getImageSequence" resultType="int">
+		SELECT seq_image.nextval FROM dual
+	</select>
+	
+	<select id="getPropertyImage" parameterType="int" resultType="imageDTO">
+		SELECT 
+			property_id as propertyId,
+			is_main as isMain,
+			path
+		FROM image 
+		WHERE property_id = #{propertyId}
+	</select>
+	
+	<select id="getAmenityList" parameterType="int" resultType="amenityTypeDTO">
+		SELECT 
+			am.property_id as propertyId,
+			am.amenity_type_id as amenityTypeId,
+			at.id as a_id,
+			at.name,
+			at.is_use as isUse
+		FROM amenity am, amenity_type at 
+		WHERE property_id = #{propertyId}
+		AND at.id = am.amenity_type_id
+	</select>
+	
 </mapper>

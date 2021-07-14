@@ -69,7 +69,9 @@ footer{
 				}
 				return true;
 			}
-		
+			function previous(){
+				windo.history.back();
+			}
 			function changePrice(button) {
 				var idValueArray = button.id.split('-');
 				var operation = idValueArray[0]; // decrease, increase

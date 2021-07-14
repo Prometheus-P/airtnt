@@ -4,6 +4,7 @@ public class AmenityTypeDTO extends AbstractTypeDTO{
 
 	private static final long serialVersionUID = 1L;
 	private Integer propertyId;
+	private Integer amenityId;
 	
 	public AmenityTypeDTO() {}
 	public AmenityTypeDTO(String name, String isUse) {
@@ -17,5 +18,11 @@ public class AmenityTypeDTO extends AbstractTypeDTO{
 	}
 	public void setPropertyId(Integer propertyId) {
 		this.propertyId = propertyId;
+	}
+	public Integer getAmenityId() {
+		return amenityId;
+	}
+	public void setAmenityId(Integer amenityId) {
+		this.amenityId = amenityId;
 	}
 }
