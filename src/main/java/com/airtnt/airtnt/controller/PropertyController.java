@@ -75,10 +75,11 @@ public class PropertyController {
 			@RequestParam(value = "bedCount", required = false) Integer bedCountKey,
 			@RequestParam(value = "minPrice", required = false) Integer minPriceKey,
 			@RequestParam(value = "maxPrice", required = false) Integer maxPriceKey) {
-		System.out.println(pageNum + "페이지");
 		// 로그인 후 돌아갈 url
 		String currentURI = Util.getCurrentURI(req);
 		req.setAttribute("currentURI", currentURI);
+		
+		// 1. 예외를 일으킬 수 있는 파라미터값 보정
 		
 		if(tempAddressKey == null || tempAddressKey.trim().equals("")) {
 			if(addressKey == null || addressKey.trim().equals("")) {
@@ -94,12 +95,23 @@ public class PropertyController {
 			addressKey = tempAddressKey;
 		}
 		
+		if(latitude == null || latitude.trim().equals("") ||
+				longitude == null || longitude.trim().equals("")) {
+			addressKey = "서울";
+			// 서울 시청
+			latitude = "37.566826004661";
+			longitude = "126.978652258309";
+		}
+		
 		// 페이지
 		if(pageNum == null || pageNum < 1) {
 			pageNum = 1;
 		}
 		
-		// sql 조건문 맵
+		
+		// 2. 숙소목록 선택
+		
+		// 숙소 목록 선택 sql 조건문 맵
 		Map<String, Object> searchKeyMap = new Hashtable<>();
 		searchKeyMap.put("addressKey", addressKey);
 		Object[][] paramMatrix = new Object[][] {
@@ -128,14 +140,25 @@ public class PropertyController {
 			// 로딩된 숙소가 없으면 1페이지로 유지
 			totalPagesNum = 1;
 		}
-		// 화면에 보여질 숙소 목록
+		// 현재 페이지 화면에 보여질 숙소 목록
 		List<PropertyDTO> properties = getPageProperties(tempProperties, pageNum);
 		setMainImage(properties);
+		
+		
+		// 3. 검색시 체크했던 필터 다시 셋팅
 		
 		// 검색 필터 목록
 		List<PropertyTypeDTO> propertyTypes = propertyMapper.selectTypes(PropertyTypeDTO.class);
 		List<RoomTypeDTO> roomTypes = propertyMapper.selectTypes(RoomTypeDTO.class);
 		List<AmenityTypeDTO> amenityTypes = propertyMapper.selectTypes(AmenityTypeDTO.class);
+		
+		// 검색필터 checked, disabled 값 설정
+		setFilter(propertyTypes, propertyTypeIdKeyArray, subPropertyTypeIdKeyArray);
+		setFilter(roomTypes, roomTypeIdKeyArray);
+		setFilter(amenityTypes, amenityTypeIdKeyArray);
+		
+		
+		// 4. 숙소 목록 중 위시리스트 등록여부 체크
 		
 		// 위시리스트
 		Map<String, Object> wishMap = new Hashtable<>();
@@ -145,15 +168,12 @@ public class PropertyController {
 		}
 		List<WishListDTO> wishLists = wishListMapper.selectWishLists(wishMap);
 		
-		// 검색필터 checked, disabled 값 설정
-		setFilter(propertyTypes, propertyTypeIdKeyArray, subPropertyTypeIdKeyArray);
-		setFilter(roomTypes, roomTypeIdKeyArray);
-		setFilter(amenityTypes, amenityTypeIdKeyArray);
-		
 		// 숙소 wished, unwished 여부 설정
 		setWish(properties, wishLists);
 		
-		// 최근목록 조회
+		
+		// 5. 최근목록 조회
+		
 		// 최근목록 리스트는 LinkedList로 메모리를 배정하였으므로
 		// ArrayList로 캐스팅하지 말것
 		List<PropertyDTO> recentProperties = loadRecentProperties(req, resp);
@@ -173,6 +193,7 @@ public class PropertyController {
 			System.out.println("max price : " + maxPriceKey);
 			System.out.println("-----------------");
 			
+			System.out.println(pageNum + "페이지");
 			
 			System.out.println("전체 페이지 수 : " + totalPagesNum);
 			for(PropertyDTO property : properties) {

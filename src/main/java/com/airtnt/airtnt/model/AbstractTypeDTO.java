@@ -6,8 +6,6 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
 
-import com.airtnt.airtnt.util.TagAttribute;
-
 public abstract class AbstractTypeDTO {
 	
 	// basic
@@ -16,6 +14,17 @@ public abstract class AbstractTypeDTO {
 	private char isUse;
 	private Date regDate;
 	private Date modDate;
+	
+	AbstractTypeDTO() {}
+	AbstractTypeDTO(String name, String isUse) {
+		this.name = name;
+		this.isUse = isUse.charAt(0);
+	}
+	AbstractTypeDTO(String id, String name, String isUse) {
+		this.id = Integer.parseInt(id);
+		this.name = name;
+		this.isUse = isUse.charAt(0);
+	}
 	
 	// 검색 필터 input 태그 내에 속성을 설정하기 위한 필드. db랑 상관없음
 	// 태그 속성값 하나만 넣을 때 사용
