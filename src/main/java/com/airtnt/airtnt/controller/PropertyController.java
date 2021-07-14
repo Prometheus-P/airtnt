@@ -154,6 +154,8 @@ public class PropertyController {
 		setWish(properties, wishLists);
 		
 		// 최근목록 조회
+		// 최근목록 리스트는 LinkedList로 메모리를 배정하였으므로
+		// ArrayList로 캐스팅하지 말것
 		List<PropertyDTO> recentProperties = loadRecentProperties(req, resp);
 		setMainImage(recentProperties);
 		
@@ -258,6 +260,8 @@ public class PropertyController {
 		Cookie cookie = Util.getCookie(req, RECENT_COOKIE_PREFIX + cookieUser);
 		
 		// 최근목록 조회 및 쿠키에 저장
+		// 최근목록 리스트는 LinkedList로 메모리를 배정하였으므로
+		// ArrayList로 캐스팅하지 말것
 		List<PropertyDTO> recentProperties = loadRecentProperties(cookie, resp);
 		setMainImage(recentProperties);
 		// 현재 보고있는 숙소는 현재 화면의 최근목록에 띄우지 않음
@@ -452,8 +456,8 @@ public class PropertyController {
 	}
 	
 	public void setFilter(List<? extends AbstractTypeDTO> types, Integer[] paramArray, Integer[] subParamArray) {
-		if(paramArray != null && types != null) {
-			outer: for(AbstractTypeDTO type : types) {
+		outer: for(AbstractTypeDTO type : types) {
+			if(paramArray != null) {
 				for(int i = 0; i < paramArray.length; i++) {
 					if(type.getId() == paramArray[i]) {
 						type.putTagAttributeMapValue(TagAttribute.CHECKED);
@@ -468,14 +472,13 @@ public class PropertyController {
 						}
 						continue outer;
 					}
-				}
-				// 현재 유형이 체크된 유형 파라미터값이 아니면 여기로 넘어옴
-				if(type instanceof PropertyTypeDTO) {
-					PropertyTypeDTO propertyType = (PropertyTypeDTO)type;
-					List<SubPropertyTypeDTO> subPropertyTypes = propertyType.getSubPropertyTypes();
-					setFilter(subPropertyTypes, subParamArray);
-				}
-				
+				} // end of for문 of paramArray
+			}
+			// 현재 유형이 체크된 유형 파라미터값이 아니면 여기로 넘어옴
+			if(type instanceof PropertyTypeDTO) {
+				PropertyTypeDTO propertyType = (PropertyTypeDTO)type;
+				List<SubPropertyTypeDTO> subPropertyTypes = propertyType.getSubPropertyTypes();
+				setFilter(subPropertyTypes, subParamArray);
 			}
 		}
 	}
@@ -541,7 +544,7 @@ public class PropertyController {
 	public List<PropertyDTO> loadRecentProperties(
 			Cookie cookie, HttpServletResponse resp) {
 		// 최근목록 조회
-		List<PropertyDTO> recentProperties = null;
+		LinkedList<PropertyDTO> recentProperties = null;
 		
 		if(cookie != null) {
 			String encodedCookieString = cookie.getValue();
@@ -557,19 +560,18 @@ public class PropertyController {
 					System.out.println(decodedCookieString);
 				}
 				
-				LinkedList<Integer> recentPropertyIdsQueue =
-						new LinkedList<>(Numeric.toIntegerList(decodedCookieString.split("%")));
-				recentProperties = propertyMapper.selectProperties(recentPropertyIdsQueue);
+				int[] recentPropertyIdArray =
+						Numeric.toIntArray(decodedCookieString.split("%"));
+				recentProperties = new LinkedList<>(propertyMapper.selectProperties(recentPropertyIdArray));
 				
 				// 쿠키에 등록되어있던 순서대로 정렬함(선택정렬)
 				// 쿠키에 등록되어있던 값을 순서대로 읽으면서
 				// id가 같은 숙소를 맨 뒤로 이동시키기를 반복하면
 				// 쿠키에 등록되어있던 순서와 똑같이 정렬됨
-				outer: while(!recentPropertyIdsQueue.isEmpty()) {
-					Integer recentPropertyId = recentPropertyIdsQueue.poll();
-					for(int i = 0; i < recentProperties.size(); i++) {
-						if(recentProperties.get(i).getId() == recentPropertyId) {
-							recentProperties.add(recentProperties.remove(i));
+				outer: for(int i = 0; i < recentPropertyIdArray.length; i++) {
+					for(int j = 0; j < recentProperties.size(); i++) {
+						if(recentProperties.get(j).getId() == recentPropertyIdArray[i]) {
+							recentProperties.add(recentProperties.remove(j));
 							continue outer;
 						}
 					}
