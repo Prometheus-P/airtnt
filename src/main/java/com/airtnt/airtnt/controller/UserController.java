@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.fileupload.ParameterParser;
 import org.apache.commons.mail.HtmlEmail;
 import org.apache.ibatis.session.SqlSession;
 import org.slf4j.Logger;
@@ -299,7 +300,6 @@ public class UserController {
 	@RequestMapping(value = ("myPage/editPassword"), method = RequestMethod.POST)
 	public String editPassword(HttpServletRequest req, @RequestParam Map<String, String> params) {
 		LoginOKBean memberData = LoginOKBean.getInstance();
-		System.out.println(memberData.getPasswd());
 		if(!params.get("passwd").equals(memberData.getPasswd())) {
 			req.setAttribute("msg", "현재 비밀번호가 틀렸습니다, 확인해주세요");
 			req.setAttribute("url", "/myPage/editPassword");
@@ -333,46 +333,61 @@ public class UserController {
 		}
 		
 	//[마이페이지 - 리뷰]
-	@RequestMapping("myPage/review")
+	@RequestMapping(value="myPage/review", method=RequestMethod.GET)
 	public String review(HttpServletRequest req) {
 		String member_id = (String) req.getSession().getAttribute("member_id");
 		
 		List<BookingDTO> toWriteReviews = bookingMapper.getToWriteBooking(member_id);
+		List<ReviewDTO> myReviews = reviewMapper.getReview(member_id);
+		
 		req.setAttribute("toWriteReviews", toWriteReviews);
+		req.setAttribute("myReviews", myReviews);
 		
 		return "user/user/review";
 	}
+	
+	@RequestMapping(value="myPage/review", method=RequestMethod.POST)
+	  @ResponseBody
+	public List<ReviewDTO> moerReview(HttpServletRequest req, @RequestParam Map<String, String> params) {
+		params.put("member_id",(String) req.getSession().getAttribute("member_id"));
+		//more값 변환 
+		int startNum = Integer.parseInt(params.get("more"))+1;
+		int lastNum = startNum+9;
+		params.put("startNum",String.valueOf(startNum));
+		params.put("lastNum",String.valueOf(lastNum));
+		
+		List<ReviewDTO> list = reviewMapper.getMoreReview(params);
+		return list;
+	}
+	
 	@RequestMapping("myPage/writeReview")
 	public String writeReview(HttpServletRequest req, @ModelAttribute ReviewDTO dto) {
 		String member_id = (String) req.getSession().getAttribute("member_id");
-		System.out.println("zz");
-		System.out.println(dto.getProperty_id());
+		dto.setWriter_id(member_id);
 		int res = reviewMapper.writeReview(dto);
 		
 		if(res>0) {
 			req.setAttribute("msg", "리뷰가 등록되었습니다");
 			req.setAttribute("url", "/myPage/review");
+		}else {
+			req.setAttribute("msg", "DB문제발생 관리자 문의");
+			req.setAttribute("url", "/myPage/review");
 		}
-		req.setAttribute("msg", "DB문제발생 관리자 문의");
-		req.setAttribute("url", "/myPage/review");
-	
 		return "message";
 	}
 	
 	@RequestMapping("myPage/deleteReview")
-	public String deleteReview(HttpServletRequest req) {
-		String member_id = (String) req.getSession().getAttribute("member_id");
-		
-		return "user/user/review";
+	public String deleteReview(HttpServletRequest req, @RequestParam("id") String id) {
+		int res = reviewMapper.deleteReview(id);
+		return "redirect:/myPage/review";
 	}
 	
-
-	@RequestMapping("myPage/payment")
-	public String payment(HttpServletRequest req) {
-
-		return "user/user/payment";
+	@RequestMapping("myPage/updateReview")
+	public String updateReview(HttpServletRequest req, @RequestParam Map<String, String> params) {
+		int res = reviewMapper.updateReview(params);
+		return "redirect:/myPage/review";
 	}
-
+	
 	// 위시리스트
 	@RequestMapping("wishList")
 	public String wishList(HttpServletRequest req) {
@@ -383,6 +398,7 @@ public class UserController {
 			req.setAttribute("admin_wishList", adminList);
 		} else {
 			req.setAttribute("user_wishList", list);
+			req.setAttribute("listSize", list.size());
 		}
 
 		return "user/wish/wishList";
@@ -399,7 +415,7 @@ public class UserController {
 		return "redirect:/wishList";
 	}
 
-	@RequestMapping("inWishList")
+	@RequestMapping(value="inWishList", method=RequestMethod.GET)
 	public String inWishList(HttpServletRequest req, @RequestParam Map<String, String> params) {
 		List<WishList_PropertyDTO> list = wishListMapper.getWishRoom(params.get("wish_id"));
 		req.setAttribute("wish_name", params.get("wish_name"));
@@ -407,6 +423,18 @@ public class UserController {
 
 		req.setAttribute("properties", list);
 		return "user/wish/inWishList";
+	}
+	
+	  @RequestMapping(value="inWishList", method=RequestMethod.POST)
+	  @ResponseBody
+	public List<WishList_PropertyDTO> moreInWishList(HttpServletRequest req, @RequestParam Map<String, String> params) {
+		//more값 변환 
+		int startNum = Integer.parseInt(params.get("more"))+1;
+		int lastNum = startNum+9;
+		params.put("startNum",String.valueOf(startNum));
+		params.put("lastNum",String.valueOf(lastNum));
+		List<WishList_PropertyDTO> list = wishListMapper.getMoreWishRoom(params);
+		return list;
 	}
 
 	@RequestMapping("updateWish")
@@ -440,7 +468,7 @@ public class UserController {
 	}
 
 	// 여행
-	@RequestMapping("tour")
+	@RequestMapping(value="tour", method=RequestMethod.GET)
 	public String tour(HttpServletRequest req) {
 		String member_id = (String) req.getSession().getAttribute("member_id");
 		List<BookingDTO> planed = bookingMapper.getPlanedBooking(member_id);
@@ -449,6 +477,33 @@ public class UserController {
 		req.setAttribute("planedBookinglist", planed);
 		req.setAttribute("preBookinglist", pre);
 		return "user/tour/tour";
+	}
+	
+	@RequestMapping(value="tour", method=RequestMethod.POST)
+	  @ResponseBody
+	public List<BookingDTO> moreTour(HttpServletRequest req, @RequestParam Map<String, String> params) {
+		params.put("member_id",(String) req.getSession().getAttribute("member_id"));
+		//more값 변환 
+		int startNum = Integer.parseInt(params.get("more"))+1;
+		int lastNum = startNum+9;
+		params.put("startNum",String.valueOf(startNum));
+		params.put("lastNum",String.valueOf(lastNum));
+		List<BookingDTO> list = bookingMapper.getMorePreBooking(params);
+		return list;
+	}
+	
+	//[미구현 페이지]
+	@RequestMapping("myPage/payment")
+	public String payment(HttpServletRequest req) {
+		req.setAttribute("msg", "준비중입니다~");
+		req.setAttribute("url", "goback");
+		return "message";
+	}
+	@RequestMapping("help")
+	public String help(HttpServletRequest req) {
+		req.setAttribute("msg", "준비중입니다~");
+		req.setAttribute("url", "goback");
+		return "message";
 	}
 	
 	

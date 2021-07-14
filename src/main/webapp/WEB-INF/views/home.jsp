@@ -127,45 +127,24 @@
       </div>
       <ul class="nospace group grid-3">
         <li class="one_third">
-          <article><a href="#"><i class="fas fa-spray-can"></i></a>
-            <h6 class="heading">Vehicula</h6>
-            <p>Nulla cursus metus non tortor erat turpis sed semper risus nisi id nunc ut congue cursus tortor aliquam.</p>
-            <footer><a href="#">More Details &raquo;</a></footer>
+          <article><a href="/property/search"><i class="fas fa-bicycle"></i>
+            <p class="bold fs-2">서울</p>
+            <img style="width:300px; height:150px; object-fit:cover;" src="/resources/files/home/seoul.jpg" class="img-thumbnail" alt="...">
+            </a>
           </article>
         </li>
         <li class="one_third">
-          <article><a href="#"><i class="fas fa-user-secret"></i></a>
-            <h6 class="heading">Porttitor</h6>
-            <p>Vehicula nisl ac porta blandit velit risus lobortis turpis sit amet lobortis sapien dui id neque suspendisse.</p>
-            <footer><a href="#">More Details &raquo;</a></footer>
+          <article><a href="/property/search"><i class="fas fa-bus"></i>
+            <p class="bold fs-2">부산</p>
+            <img style="width:300px; height:150px; object-fit:cover;" src="/resources/files/home/busan.jpg" class="img-thumbnail" alt="...">
+          	</a>
           </article>
         </li>
         <li class="one_third">
-          <article><a href="#"><i class="fas fa-couch"></i></a>
-            <h6 class="heading">Pulvinar</h6>
-            <p>Vel justo mattis magna vestibulum molestie quisque sagittis in a enim in metus ultrices tristique nam semper.</p>
-            <footer><a href="#">More Details &raquo;</a></footer>
-          </article>
-        </li>
-        <li class="one_third">
-          <article><a href="#"><i class="fas fa-crow"></i></a>
-            <h6 class="heading">Ultricies</h6>
-            <p>Tincidunt metus nunc ornare mi at nibh ut ante est imperdiet dignissim eleifend sit amet lacinia tempor justo.</p>
-            <footer><a href="#">More Details &raquo;</a></footer>
-          </article>
-        </li>
-        <li class="one_third">
-          <article><a href="#"><i class="fas fa-dolly-flatbed"></i></a>
-            <h6 class="heading">Vestibulum</h6>
-            <p>Pellentesque malesuada sed et nulla sit amet nisi scelerisque consectetuer vivamus odio donec metus libero semper.</p>
-            <footer><a href="#">More Details &raquo;</a></footer>
-          </article>
-        </li>
-        <li class="one_third">
-          <article><a href="#"><i class="fas fa-road"></i></a>
-            <h6 class="heading">Lobortis</h6>
-            <p>Quis suscipit ut aliquam a metus ut interdum risus id luctus consectetuer velit neque ornare quam at ornare.</p>
-            <footer><a href="#">More Details &raquo;</a></footer>
+          <article><a href="/property/search"><i class="fas fa-car"></i>
+            <p class="bold fs-2">대구</p>
+            <img style="width:300px; height:150px; object-fit:cover;" src="/resources/files/home/daegu.jpg" class="img-thumbnail" alt="...">
+          	</a>
           </article>
         </li>
       </ul>

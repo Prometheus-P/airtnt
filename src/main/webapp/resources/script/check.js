@@ -200,7 +200,7 @@ function PcheckEmail(eamil) {
 }
 //수정돼야 submit으로 바뀌게
 function checkChange() {
-	profileEdit.sButton.type="submit"
+	this.sButton.type="submit"
 }
 
 //[아이디 비밀번호 찾기 유효성 검사]
@@ -236,13 +236,51 @@ function FindIdCheck(){
 	return true;
 }
 
-//[회원탈퇴 컨펌]
-function sure(){
-	var input = confirm('정말로 탈퇴하시겠습니까?');
+//[컨펌]
+function sure(text,url){
+	var input = confirm(text);
 
     if(input) {
-    	window.location.href='/myPage/deleteMember';
+    	window.location.href=url;
     } else {
     	return
     }
+}
+
+//[리뷰작성 유효성]
+function writeReviewCheck(){
+	if (writeReview.review_rating.value==""){
+		alert("별점을 입력하세요");
+		writeReview.review_rating.focus();
+		return false;
+	}
+	if (writeReview.review_content.value==""){
+		alert("내용을 입력하세요");
+		writeReview.review_content.focus();
+		return false;
+	}
+    if (writeReview.review_content.value.length<10) {
+        alert("내용을 10자이상써주세요!");
+        writeReview.review_content.focus();
+        return false;
+    }
+	return true;
+}
+function updateReviewCheck(){
+	if (updateReview.update_rating.value==""){
+		alert("별점을 입력하세요");
+		updateReview.update_rating.focus();
+		return false;
+	}
+	if (updateReview.update_content.value==""){
+		alert("내용을 입력하세요");
+		updateReview.update_content.focus();
+		return false;
+	}
+    if (updateReview.update_content.value.length<10) {
+        alert("내용을 10자이상써주세요!");
+        updateReview.update_content.focus();
+        return false;
+    }
+	return true;
 }

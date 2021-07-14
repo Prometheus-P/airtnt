@@ -16,12 +16,13 @@ public class ReviewDTO {
 	private Date mod_date;
 	
 	//view에서 담을 데이터
-	private String name;
-	private String address;
+	private String property_name;
+	private String property_address;
 	private int price;
 	private Date check_in_date;
 	private Date check_out_date;
 	private String path;
+	private String num;
 	
 	public int getId() {
 		return id;
@@ -83,17 +84,17 @@ public class ReviewDTO {
 	public void setMod_date(Date mod_date) {
 		this.mod_date = mod_date;
 	}
-	public String getName() {
-		return name;
+	public String getProperty_name() {
+		return property_name;
 	}
-	public void setName(String name) {
-		this.name = name;
+	public void setProperty_name(String property_name) {
+		this.property_name =property_name;
 	}
-	public String getAddress() {
-		return address;
+	public String getProperty_address() {
+		return property_address;
 	}
-	public void setAddress(String address) {
-		this.address = address;
+	public void setProperty_address(String property_address) {
+		this.property_address = property_address;
 	}
 	public int getPrice() {
 		return price;
@@ -118,6 +119,12 @@ public class ReviewDTO {
 	}
 	public void setPath(String path) {
 		this.path = path;
+	}
+	public String getNum() {
+		return num;
+	}
+	public void setNum(String num) {
+		this.num = num;
 	}
 	
 }

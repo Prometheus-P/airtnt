@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <!--
 Template Name: Nekmit
@@ -294,6 +295,7 @@ console.log("(${latitude}, ${longitude})");
                 <c:forEach var="property" items="${properties}">
                 
                 <li style="height: 150px;">
+                  
                     <div class="one_third first" >
                       
                       <!-- 사진 넘기기 -->
@@ -320,23 +322,38 @@ console.log("(${latitude}, ${longitude})");
                           </button>
                         </c:if>
                       </div>
-
                     </div>
                     
-                    <div class="two_third">
+                    
+                    
+                    <div class="two_third position-relative">
+                      
                       <h2><a href="<c:url value='/property/detail?propertyId=${property.id}'/>">${property.name}</a></h2>
                       <h4>${property.propertyType.name}/${property.subPropertyType.name}</h4>
                       <h4>${property.roomType.name}</h4>
                       <h4>${property.address}</h4>
+                      <c:if test="${not empty property.amenityTypes}">
+                        <h5>
+                          편의시설 :
+                          <c:forEach var="amenityType" items="${property.amenityTypes}" varStatus="status">
+                            ${amenityType.name}<c:if test="${not status.last}">,</c:if>
+                          </c:forEach>
+                        </h5>
+                      </c:if>
+                      <div class="position-absolute end-0 bottom-0">
+                        <h3 style="color: blue">
+                          <fmt:formatNumber type="currency" value="${property.price}"/>
+                        </h3>
+                      </div>
                     </div>
                 </li>
                 
                 <!-- 위시 버튼 -->
                 <div class="position-relative">
                   <div class="position-absolute end-0 bottom-50">
-                    <!-- Button trigger modal -->
+                  <!-- Button trigger modal -->
                     <a href="" class="trigger-btn wish-button" id="wishProperty-${property.id}"
-                    data-toggle="modal">
+                   data-toggle="modal">
                       <!-- 빈 하트 -->
                       <img class="heart" src="" style="width: 3rem; height: 3rem">
                     </a>
@@ -346,6 +363,7 @@ console.log("(${latitude}, ${longitude})");
                     </script>
                   </div>
                 </div>
+                
                 <hr>
                 </c:forEach>
                 
