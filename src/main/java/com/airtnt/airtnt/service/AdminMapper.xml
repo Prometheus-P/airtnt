@@ -83,7 +83,7 @@
     			check_in_date as checkInDate,
    				check_out_date as checkOutDate,
     			confirm_date as confirmDate,
-    			reg_date as regDate
+    			reg_Date as regDate
 		from 	booking
 		where 1=1
 		<!-- 예약일자 -->
@@ -192,6 +192,17 @@
 	
 	<update id = "updatePropertyTypeDTO" parameterType="propertyTypeDTO">
 		update property_type 
+		set name = #{name},
+			is_use = #{isUse}
+		where id = #{id}
+	</update>
+	
+	<insert id = "insertSubPropertyTypeDTO" parameterType="subPropertyTypeDTO">
+		insert into sub_property_type values ((select nvl(max(id),0)+1 from sub_property_type), #{propertyTypeId}, #{name}, #{isUse}, sysdate, sysdate)
+	</insert>
+	
+	<update id = "updateSubPropertyTypeDTO" parameterType="subPropertyTypeDTO">
+		update sub_property_type 
 		set name = #{name},
 			is_use = #{isUse}
 		where id = #{id}

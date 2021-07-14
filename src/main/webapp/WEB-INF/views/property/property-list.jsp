@@ -47,8 +47,7 @@ crossorigin="anonymous"></script> -->
 <script src="/resources/script/search-control.js"></script>
 
 <script type="text/javascript">
-console.log("${latitude}");
-console.log("${longitude}");
+console.log("(${latitude}, ${longitude})");
 </script>
 
 <form id="search-form" action="<c:url value='/property/search'/>" method="get" onsubmit="setParametersOnSubmit()">
