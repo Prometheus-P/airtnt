@@ -50,6 +50,42 @@
 	
 	<!-- 정석 -->
 	
+	<!-- booking -->
+	<!-- 내일보다 늦게 체크아웃 하는 예약을 불러옴 -->
+	<select id="selectFutureBookings" parameterType="int" resultMap="bookingMap">
+		select * from booking
+		where
+			property_id=#{propertyId}
+			and check_out_date <![CDATA[ > ]]> sysdate+1
+		order by check_out_date
+	</select>
+	
+	<select id="selectBookingId" resultType="int">
+		select booking_id_seq.nextval from dual
+	</select>
+	
+	<select id="selectOverlapBookings" parameterType="java.util.Map" resultMap="bookingMap">
+		select * from booking
+		where
+			property_id=#{propertyId}
+			and
+				not(
+					<!-- 1. 날짜가 겹치지 않는 이전 예약 -->
+					(
+						check_in_date <![CDATA[ < ]]> #{checkInDate}
+						and
+						check_out_date <![CDATA[ <= ]]> #{checkInDate}
+					)
+					or
+					<!-- 2. 날짜가 겹치지 않는 이후 예약 -->
+					(
+						check_in_date <![CDATA[ >= ]]> #{checkOutDate}
+						and
+						check_out_date <![CDATA[ > ]]> #{checkOutDate}
+					)
+				)
+	</select>
+	
 	<insert id="insertBooking" parameterType="bookingDTO">
 		insert into booking(
 			id,property_id,guest_id,host_id,
@@ -58,31 +94,24 @@
 			check_in_date,check_out_date
 		)
 		values(
-			booking_id_seq.nextval,#{propertyId},#{guestId},#{hostId},
+			#{id},#{propertyId},#{guestId},#{hostId},
 			#{guestCount},#{dayCount},#{totalPrice},
 			#{bookingNumber} || booking_number_seq.nextval,
 			#{checkInDate},#{checkOutDate}
 		)
 	</insert>
 	
-	<select id="selectSameBooking" parameterType="bookingDTO" resultMap="bookingMap">
-		select * from booking
-		where
-			property_id=#{propertyId}
-			and guest_id=#{guestId}
-			and host_id=#{hostId}
-			and substr(booking_number,0,length(booking_number) - 1)=#{bookingNumber}
-			and to_date(check_in_date)=to_date(#{checkInDate})
-			and to_date(check_out_date)=to_date(#{checkOutDate})
+	<select id="selectBooking" parameterType="int" resultMap="bookingMap">
+		select * from booking where id=#{bookingId}
 	</select>
 	
-	<!-- 내일보다 늦게 체크아웃 하는 예약을 불러옴 -->
-	<select id="selectFutureBookings" parameterType="int" resultMap="bookingMap">
-		select * from booking
-		where
-			property_id=#{propertyId}
-			and to_date(check_out_date) <![CDATA[ > ]]> to_date(sysdate)+1
-		order by check_out_date
+	<delete id="deleteBooking" parameterType="int">
+		delete from booking where id=#{bookingId}
+	</delete>
+	
+	<!-- transaction -->
+	<select id="selectTransactionId" resultType="int">
+		select transaction_id_seq.nextval from dual
 	</select>
 	
 	<insert id="insertTransaction" parameterType="transactionDTO">
@@ -90,12 +119,11 @@
 			id,booking_id,site_fee
 		)
 		values(
-			transaction_id_seq.nextval,#{bookingId},#{siteFee}
+			#{id},#{bookingId},#{siteFee}
 		)
 	</insert>
 	
-	<select id="selectSameTransaction" parameterType="transactionDTO" resultMap="transactionMap">
-		select * from transaction
-		where booking_id=#{bookingId}
+	<select id="selectTransaction" parameterType="int" resultMap="transactionMap">
+		select * from transaction where id=#{transactionId}
 	</select>
  </mapper>

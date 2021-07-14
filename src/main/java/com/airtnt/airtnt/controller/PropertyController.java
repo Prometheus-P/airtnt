@@ -137,7 +137,8 @@ public class PropertyController {
 			totalPagesNum = 1;
 		}
 		// 화면에 보여질 숙소 목록
-		List<PropertyDTO> properties = setPageProperties(tempProperties, pageNum);
+		List<PropertyDTO> properties = getPageProperties(tempProperties, pageNum);
+		setMainImage(properties);
 		
 		// 검색 필터 목록
 		List<PropertyTypeDTO> propertyTypes = propertyMapper.selectTypes(PropertyTypeDTO.class);
@@ -157,27 +158,12 @@ public class PropertyController {
 		setFilter(roomTypes, roomTypeIdKeyArray);
 		setFilter(amenityTypes, amenityTypeIdKeyArray);
 		
-		for(PropertyTypeDTO propertyType : propertyTypes) {
-			if(propertyType.getTagAttributes() != null) {
-				for(String tagAttribute : propertyType.getTagAttributes()) {
-					System.out.println(propertyType.getTagAttributeMapValue(tagAttribute));
-				}
-			}
-			for(SubPropertyTypeDTO subPropertyType : propertyType.getSubPropertyTypes()) {
-				if(subPropertyType.getTagAttributes() != null) {
-					for(String tagAttribute : subPropertyType.getTagAttributes()) {
-						System.out.println(subPropertyType.getTagAttributeMapValue(tagAttribute));
-					}
-				}
-				
-			}
-		}
-		
 		// 숙소 wished, unwished 여부 설정
 		setWish(properties, wishLists);
 		
 		// 최근목록 조회
 		List<PropertyDTO> recentProperties = loadRecentProperties(req, resp);
+		setMainImage(recentProperties);
 		
 		if(debug) {
 			System.out.println("현재 URI : " + currentURI);
@@ -251,11 +237,12 @@ public class PropertyController {
 		}
 		
 		PropertyDTO property = propertyMapper.selectProperty(propertyId);
+		setMainImage(property);
 		
 		// 달력에 비활성화를 하는 기준값
 		List<BookingDTO> bookings = bookingMapper.selectFutureBookings(propertyId);
 		// 체크인 날짜부터 체크아웃 전날까지 비활성화
-		List<String> invalidDates = setInvalidDates(bookings);
+		List<String> invalidDates = getInvalidDates(bookings);
 		
 		// 위시리스트
 		Map<String, Object> wishMap = new Hashtable<>();
@@ -280,6 +267,7 @@ public class PropertyController {
 		
 		// 최근목록 조회 및 쿠키에 저장
 		List<PropertyDTO> recentProperties = loadRecentProperties(cookie, resp);
+		setMainImage(recentProperties);
 		// 현재 보고있는 숙소는 현재 화면의 최근목록에 띄우지 않음
 		saveRecentProperties(cookie, cookieUser, resp, propertyId);
 		
@@ -302,6 +290,28 @@ public class PropertyController {
 		// propertyId, hostId, guestId, dayCount, guestCount, totalPrice,
 		// checkInDate, checkOutDate
 		PropertyDTO property = propertyMapper.selectProperty(booking.getPropertyId());
+		setMainImage(property);
+		
+		// 동시에 예약이 들어올 시 중복예약을 검사
+		List<BookingDTO> overlapBookings =
+				bookingMapper.selectOverlapBookings(booking);
+		if(debug) {
+			System.out.println("겹치는 예약 수 : " + overlapBookings.size());
+		}
+		if(overlapBookings.size() > 0) {
+			if(debug) {
+				System.out.println("겹치는 예약 :");
+				for(int i = 0; i < overlapBookings.size(); i++) {
+					BookingDTO overlapBooking = overlapBookings.get(i);
+					System.out.println(i + "번");
+					System.out.println("체크인 : " + overlapBooking.getCheckInDate());
+					System.out.println("체크아웃 : " + overlapBooking.getCheckOutDate());
+				}
+			}
+			req.setAttribute("msg", "이미 예약된 날짜가 존재합니다.");
+			req.setAttribute("url", "/property/detail?" + booking.getPropertyId());
+			return "message";
+		}
 		
 		ra.addFlashAttribute("booking", booking);
 		ra.addFlashAttribute("property", property);
@@ -330,29 +340,55 @@ public class PropertyController {
 			System.out.println(booking);
 		}
 		
+		// 동시에 예약이 들어올 시 중복예약을 검사
+		List<BookingDTO> overlapBookings =
+				bookingMapper.selectOverlapBookings(booking);
+		if(debug) {
+			System.out.println("겹치는 예약 수 : " + overlapBookings.size());
+		}
+		if(overlapBookings.size() > 0) {
+			if(debug) {
+				System.out.println("겹치는 예약 :");
+				for(int i = 0; i < overlapBookings.size(); i++) {
+					BookingDTO overlapBooking = overlapBookings.get(i);
+					System.out.println(i + "번");
+					System.out.println("체크인 : " + overlapBooking.getCheckInDate());
+					System.out.println("체크아웃 : " + overlapBooking.getCheckOutDate());
+				}
+			}
+			req.setAttribute("msg", "이미 예약된 날짜가 존재합니다.");
+			req.setAttribute("url", "/property/detail?" + booking.getPropertyId());
+			return "message";
+		}
+		
+		int bookingId = bookingMapper.selectBookingId();
 		String bookingNumber = Util.getCurrentTimeStamp();
 		// 타임스탬프 뒤에 0~9의 난수를 붙이고 그 뒤에 db에서 0~9의 시퀀스 사이클을 붙일 것임
 		bookingNumber += String.valueOf((int)(Math.random() * 10));
+		booking.setId(bookingId);
 		booking.setBookingNumber(bookingNumber);
 		if(bookingMapper.insertBooking(booking) < 1) {
 			req.setAttribute("msg", "예약 실패(DB 오류)");
 			req.setAttribute("url", "/property/detail?propertyId=" + booking.getPropertyId());
 			return "message";
 		}
-		booking = bookingMapper.selectSameBooking(booking);
+		booking = bookingMapper.selectBooking(bookingId);
 		if(debug) {
 			System.out.println(booking);
 		}
 		
+		int transactionId = bookingMapper.selectTransactionId();
 		TransactionDTO transaction = new TransactionDTO();
+		transaction.setId(transactionId);
 		transaction.setBookingId(booking.getId());
 		transaction.setSiteFee(0.05);
 		if(bookingMapper.insertTransaction(transaction) < 1) {
+			bookingMapper.deleteBooking(booking.getId());
 			req.setAttribute("msg", "결제 실패(DB 오류)");
 			req.setAttribute("url", "/property/detail?propertyId=" + booking.getPropertyId());
 			return "message";
 		}
-		transaction = bookingMapper.selectSameTransaction(transaction);
+		transaction = bookingMapper.selectTransaction(transactionId);
 		
 		ra.addFlashAttribute("booking", booking);
 		ra.addFlashAttribute("transaction", transaction);
@@ -372,7 +408,7 @@ public class PropertyController {
 		return "property/booking-complete";
 	}
 	
-	public List<PropertyDTO> setPageProperties(List<PropertyDTO> tempProperties, int pageNum){
+	public List<PropertyDTO> getPageProperties(List<PropertyDTO> tempProperties, int pageNum){
 		List<PropertyDTO> properties = new ArrayList<>();
 		int maxRownum = tempProperties.size();
 		if(maxRownum > 0) {
@@ -392,6 +428,30 @@ public class PropertyController {
 			}
 		}
 		return properties;
+	}
+	
+	public void setMainImage(PropertyDTO property) {
+		List<PropertyDTO> properties = new ArrayList<>();
+		properties.add(property);
+		setMainImage(properties);
+	}
+	
+	public void setMainImage(List<PropertyDTO> properties) {
+		if(properties == null) {
+			return;
+		}
+		for(PropertyDTO property : properties) {
+			List<ImageDTO> images = property.getImages();
+			if(images != null) {
+				for(int i = 0; i < images.size(); i++) {
+					ImageDTO image = images.get(i);
+					if(image.getIsMain() == 'Y' || image.getIsMain() == 'y') {
+						images.add(0, images.remove(i));
+						break;
+					}
+				}
+			}
+		}
 	}
 	
 	public void setFilter(List<? extends AbstractTypeDTO> types, Integer[] paramArray) {
@@ -447,7 +507,7 @@ public class PropertyController {
 		}
 	}
 	
-	public List<String> setInvalidDates(List<BookingDTO> bookings) {
+	public List<String> getInvalidDates(List<BookingDTO> bookings) {
 		List<String> invalidDates = new ArrayList<>();
 		if(bookings.size() != 0) {
 			long todayToTime = new java.util.Date().getTime();
@@ -502,21 +562,20 @@ public class PropertyController {
 					System.out.println("최근목록 로딩 : 디코딩 후");
 					System.out.println(decodedCookieString);
 				}
-
-				int[] recentPropertyIdArray =
-						Numeric.toIntArray(decodedCookieString.split("%"));
-				recentProperties = propertyMapper.selectProperties(recentPropertyIdArray);
-
+				
+				LinkedList<Integer> recentPropertyIdsQueue =
+						new LinkedList<>(Numeric.toIntegerList(decodedCookieString.split("%")));
+				recentProperties = propertyMapper.selectProperties(recentPropertyIdsQueue);
+				
 				// 쿠키에 등록되어있던 순서대로 정렬함(선택정렬)
-				// 쿠키에 등록되어있던 값을 앞에서부터 읽으면서
+				// 쿠키에 등록되어있던 값을 순서대로 읽으면서
 				// id가 같은 숙소를 맨 뒤로 이동시키기를 반복하면
 				// 쿠키에 등록되어있던 순서와 똑같이 정렬됨
-				outer: for(int i = 0; i < recentPropertyIdArray.length; i++) {
-					for(int j = 0; j < recentProperties.size(); j++) {
-						PropertyDTO recentProperty = recentProperties.get(j);
-						if(recentProperty.getId() == recentPropertyIdArray[i]) {
-							recentProperties.remove(j);
-							recentProperties.add(recentProperty);
+				outer: while(!recentPropertyIdsQueue.isEmpty()) {
+					Integer recentPropertyId = recentPropertyIdsQueue.poll();
+					for(int i = 0; i < recentProperties.size(); i++) {
+						if(recentProperties.get(i).getId() == recentPropertyId) {
+							recentProperties.add(recentProperties.remove(i));
 							continue outer;
 						}
 					}
@@ -600,12 +659,12 @@ public class PropertyController {
 					System.out.println(decodedCookieString);
 				}
 				
-				LinkedList<String> recentPropertyIdStringsQueue =
-						new LinkedList<>(Arrays.asList(decodedCookieString.split("%")));
+				LinkedList<Integer> recentPropertyIdsQueue =
+						new LinkedList<>(Numeric.toIntegerList(decodedCookieString.split("%")));
 				if(debug) {
 					System.out.print("최근목록 숙소 id :");
-					for(String recentPropertyIdString : recentPropertyIdStringsQueue) {
-						System.out.print(" " + recentPropertyIdString);
+					for(Integer recentPropertyId : recentPropertyIdsQueue) {
+						System.out.print(" " + recentPropertyId);
 					}
 					System.out.println();
 				}
@@ -618,11 +677,11 @@ public class PropertyController {
 				decodedCookieString = propertyId.toString();
 				// 최근목록 갯수는 최대 12개 제한
 				int i = 0;
-				while(i < 12 && recentPropertyIdStringsQueue.peek() != null) {
-					String recentPropertyIdString = recentPropertyIdStringsQueue.poll();
-					if(Integer.parseInt(recentPropertyIdString) != propertyId) {
+				while(i < 12 && !recentPropertyIdsQueue.isEmpty()) {
+					Integer recentPropertyId = recentPropertyIdsQueue.poll();
+					if(recentPropertyId != propertyId) {
 						// 현재 보고있는 숙소와 같지 않은것만 저장함
-						decodedCookieString += "%" + recentPropertyIdString;
+						decodedCookieString += "%" + recentPropertyId.toString();
 					}
 				}
 				
