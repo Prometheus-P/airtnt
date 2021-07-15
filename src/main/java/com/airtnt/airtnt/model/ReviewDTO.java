@@ -4,11 +4,11 @@ package com.airtnt.airtnt.model;
 import java.sql.Date;
 
 public class ReviewDTO {
-	private int id;
-	private int property_id;
-	private int booking_id;
+	private Integer id;
+	private Integer property_id;
+	private Integer booking_id;
 	private String writer_id;
-	private int rating;
+	private Integer rating;
 	private String content;
 	private String content_host;
 	private Date content_host_date;
@@ -18,28 +18,31 @@ public class ReviewDTO {
 	//view에서 담을 데이터
 	private String property_name;
 	private String property_address;
-	private int price;
+	private Integer price;
 	private Date check_in_date;
 	private Date check_out_date;
 	private String path;
 	private String num;
 	
-	public int getId() {
+	// mybatis result map 쓸거
+	private MemberDTO member;
+	
+	public Integer getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
-	public int getProperty_id() {
+	public Integer getProperty_id() {
 		return property_id;
 	}
-	public void setProperty_id(int property_id) {
+	public void setProperty_id(Integer property_id) {
 		this.property_id = property_id;
 	}
-	public int getBooking_id() {
+	public Integer getBooking_id() {
 		return booking_id;
 	}
-	public void setBooking_id(int booking_id) {
+	public void setBooking_id(Integer booking_id) {
 		this.booking_id = booking_id;
 	}
 	public String getWriter_id() {
@@ -48,10 +51,10 @@ public class ReviewDTO {
 	public void setWriter_id(String writer_id) {
 		this.writer_id = writer_id;
 	}
-	public int getRating() {
+	public Integer getRating() {
 		return rating;
 	}
-	public void setRating(int rating) {
+	public void setRating(Integer rating) {
 		this.rating = rating;
 	}
 	public String getContent() {
@@ -96,10 +99,10 @@ public class ReviewDTO {
 	public void setProperty_address(String property_address) {
 		this.property_address = property_address;
 	}
-	public int getPrice() {
+	public Integer getPrice() {
 		return price;
 	}
-	public void setPrice(int price) {
+	public void setPrice(Integer price) {
 		this.price = price;
 	}
 	public Date getCheck_in_date() {
@@ -127,4 +130,10 @@ public class ReviewDTO {
 		this.num = num;
 	}
 	
+	public MemberDTO getMember() {
+		return member;
+	}
+	public void setMember(MemberDTO member) {
+		this.member = member;
+	}
 }

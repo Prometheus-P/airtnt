@@ -47,6 +47,9 @@ crossorigin="anonymous"></script> -->
 <!-- 검색필터 이벤트 처리와 초기화를 제어하는 커스텀 파일 -->
 <script src="/resources/script/search-control.js"></script>
 
+<!-- 카카오 주소검색을 불러오는 커스텀 파일 -->
+<script src="/resources/script/address-control.js"></script>
+
 <script type="text/javascript">
 console.log("(${latitude}, ${longitude})");
 </script>

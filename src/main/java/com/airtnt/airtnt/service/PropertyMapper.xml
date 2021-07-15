@@ -34,7 +34,11 @@
 		<collection property="images" ofType="imageDTO"
 			columnPrefix="image_" resultMap="imageMap"/>
 		
+		<collection property="reviews" ofType="reviewDTO"
+			columnPrefix="review_" resultMap="reviewMap"/>
+		
 	</resultMap>
+
 	
 	<resultMap type="propertyTypeDTO" id="propertyTypeMap">
 		<id property="id" column="id"/>
@@ -81,6 +85,25 @@
 		<result property="regDate" column="reg_date"/>
 		<result property="modDate" column="mod_date"/>
 	</resultMap>
+	
+	<resultMap type="reviewDTO" id="reviewMap">
+		<id property="id" column="id"/>
+		<result property="property_id" column="property_id"/>
+		<result property="booking_id" column="booking_id"/>
+		<result property="rating" column="rating"/>
+		<result property="content" column="content"/>
+		<result property="content_host" column="content_host"/>
+		<result property="content_host_date" column="content_host_date"/>
+		<result property="reg_date" column="reg_date"/>
+		<result property="mod_date" column="mod_date"/>
+		
+		<association property="member" column="review_writer_id"
+		columnPrefix="writer_" javaType="memberDTO">
+			<id property="id" column="id"/>
+			<result property="name" column="name"/>
+		</association>
+	</resultMap>
+	
 	
 	<!-- 중복되는 sql 구문들을 따로 빼둠 -->
 	
@@ -141,7 +164,18 @@
 		i.path image_path,
 		i.file_size image_file_size,
 		i.reg_date image_reg_date,
-		i.mod_date image_mod_date
+		i.mod_date image_mod_date,
+		
+		r.id review_id,
+		r.rating review_rating,
+		r.content review_content,
+		r.content_host review_content_host,
+		r.content_host_date review_content_host_date,
+		r.reg_date review_reg_date,
+		r.mod_date review_mod_date,
+		
+		m.id review_writer_id,
+		m.name review_writer_name
 	</sql>
 	
 	<!-- select property에서 1:N 관계인 테이블의 join문 -->
@@ -149,12 +183,14 @@
 		left join amenity a on p.id=a.property_id
 		left join amenity_type at on at.id=a.amenity_type_id
 		left join image i on p.id=i.property_id
+		left join review r on p.id=r.property_id
+		left join member m on m.id=r.writer_id
 	</sql>
 	
 	<!-- 검색페이지의 숙소목록 로딩에 사용 -->
 	<!--
 		select
-			filtered properties, amenity types, images
+			filtered properties, amenity types, images, reviews
 		from
 		(
 			select
@@ -166,7 +202,7 @@
 				property address like '%주소%'
 				and (filter, rownum 처리 구문)
 		) as filtered properties
-		left join amenity, amenity type, image
+		left join amenity, amenity type, image, review
 		의 구조임
 		
 		1:1 관계인 select문은 필터처리의 효율을 위해 안의 select문에 배치하고
@@ -191,6 +227,8 @@
 				<property name="bedCountKey" value="bedCountKey"/>
 				<property name="minPriceKey" value="minPriceKey"/>
 				<property name="maxPriceKey" value="maxPriceKey"/>
+				<property name="latitude" value="latitude"/>
+				<property name="longitude" value="longitude"/>
 			</include>
 		) p	<!-- p : filtered properties + rownum -->
 		<include refid="oneToNJoinProperty"/>
@@ -282,16 +320,22 @@
 		<if test="maxPriceKey != null">
 			and p.price <![CDATA[ <= ]]> #{maxPriceKey}
 		</if>
+		<!-- 거리의 제곱의 오름차순 정렬 -->
+		<if test="latitude != null and longitude != null">
+			order by
+			power(to_number(p.latitude) - to_number(#{latitude}), 2)
+			+ power(to_number(p.longitude) - to_number(#{longitude}), 2)
+		</if>
 	</sql>
 	
 	<!-- 쿠키의 최근목록 로딩과 상세페이지 로딩에 사용 -->
 	<!-- select문은 한번만 실행 -->
 	<!--
 		select
-			property, property type, sub-property type, room type, amenity types, images
+			property, property type, sub-property type, room type, amenity types, images, reviews
 		from
 			property
-			left join property type, sub-property type, room type, amenity, amenity type, image
+			left join property type, sub-property type, room type, amenity, amenity type, image, review
 		의 구조임
 		
 		전체 select문 실행횟수를 최소화하기위해

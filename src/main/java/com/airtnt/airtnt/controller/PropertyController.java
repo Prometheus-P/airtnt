@@ -3,6 +3,7 @@ package com.airtnt.airtnt.controller;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.text.DecimalFormat;
 import java.util.*;
 
 import javax.servlet.http.Cookie;
@@ -122,7 +123,9 @@ public class PropertyController {
 				{"guestCountKey", guestCountKey},
 				{"bedCountKey", bedCountKey},
 				{"minPriceKey", minPriceKey},
-				{"maxPriceKey", maxPriceKey}
+				{"maxPriceKey", maxPriceKey},
+				{"latitude", latitude},
+				{"longitude", longitude}
 		};
 		for(int i = 0; i < paramMatrix.length; i++) {
 			if(paramMatrix[i][1] != null) {
@@ -143,6 +146,7 @@ public class PropertyController {
 		// 현재 페이지 화면에 보여질 숙소 목록
 		List<PropertyDTO> properties = getPageProperties(tempProperties, pageNum);
 		setMainImage(properties);
+		setRating(properties);
 		
 		
 		// 3. 검색시 체크했던 필터 다시 셋팅
@@ -178,6 +182,7 @@ public class PropertyController {
 		// ArrayList로 캐스팅하지 말것
 		List<PropertyDTO> recentProperties = loadRecentProperties(req, resp);
 		setMainImage(recentProperties);
+		setRating(recentProperties);
 		
 		if(debug) {
 			System.out.println("현재 URI : " + currentURI);
@@ -213,6 +218,23 @@ public class PropertyController {
 			System.out.println("----- 숙소별 위시리스트 등록 여부 -----");
 			for(PropertyDTO property : properties) {
 				System.out.println("숙소" + property.getName() + " : " + property.isWished());
+			}
+			System.out.println("---------------------------------------");
+			
+			System.out.println("----- 후기 목록 -----");
+			for(PropertyDTO property : properties) {
+				System.out.println("숙소" + property.getId() + " 별점 : " + property.getRating());
+				System.out.println("숙소" + property.getId() + "의 후기");
+				List<ReviewDTO> reviews = property.getReviews();
+				if(reviews != null) {
+					for(ReviewDTO review : reviews) {
+						System.out.println("이름 : " + review.getMember().getName());
+						System.out.println("내용 : " + review.getContent());
+						if(review.getContent_host() != null) {
+							System.out.println("호스트 답글 : " + review.getContent_host());
+						}
+					}
+				}
 			}
 			System.out.println("---------------------------------------");
 		}
@@ -285,7 +307,9 @@ public class PropertyController {
 		// ArrayList로 캐스팅하지 말것
 		List<PropertyDTO> recentProperties = loadRecentProperties(cookie, resp);
 		setMainImage(recentProperties);
-		// 현재 보고있는 숙소는 현재 화면의 최근목록에 띄우지 않음
+		setRating(property);
+		
+		// 현재 보고있는 숙소는 현재 화면의 최근목록에 적용시키지 않음
 		saveRecentProperties(cookie, cookieUser, resp, propertyId);
 		
 		req.setAttribute("tomorrow", Util.getTomorrowString());
@@ -449,6 +473,9 @@ public class PropertyController {
 	}
 	
 	public void setMainImage(PropertyDTO property) {
+		if(property == null) {
+			return;
+		}
 		List<PropertyDTO> properties = new ArrayList<>();
 		properties.add(property);
 		setMainImage(properties);
@@ -515,7 +542,6 @@ public class PropertyController {
 			for(WishListDTO wishList : wishLists) {
 				for(PropertyDTO wishProperty : wishList.getProperties()) {
 					if(property.getId() == wishProperty.getId()) {
-						System.out.println(wishList.getId());
 						property.setWished(true);
 						property.setWishListId(wishList.getId());
 						continue outer;
@@ -530,8 +556,6 @@ public class PropertyController {
 		if(bookings.size() != 0) {
 			long todayToTime = new java.util.Date().getTime();
 			for(BookingDTO booking : bookings) {
-				System.out.println(booking.getCheckInDate());
-				System.out.println(booking.getCheckOutDate());
 				long checkInDateToTime = booking.getCheckInDate().getTime();
 				long checkOutDateToTime = booking.getCheckOutDate().getTime();
 				// 체크인 날짜부터 체크아웃 날짜 하루 전까지 돌리며 invalid 날짜 추가
@@ -545,6 +569,36 @@ public class PropertyController {
 			}
 		}
 		return invalidDates;
+	}
+	
+	public void setRating(PropertyDTO property) {
+		if(property == null) {
+			return;
+		}
+		
+		List<PropertyDTO> properties = new ArrayList<>();
+		properties.add(property);
+		setRating(properties);
+	}
+	
+	public void setRating(List<PropertyDTO> properties) {
+		if(properties == null) {
+			return;
+		}
+		
+		for(PropertyDTO property : properties) {
+			String ratingStr = "0.00";
+			List<ReviewDTO> reviews = property.getReviews();
+			if(reviews != null && reviews.size() > 0) {
+				double rating = 0.0;
+				for(ReviewDTO review : reviews) {
+					rating += review.getRating();
+					System.out.println(rating);
+				}
+				ratingStr = String.format("%.2f", rating);
+			}
+			property.setRating(ratingStr);
+		}
 	}
 	
 	public List<PropertyDTO> loadRecentProperties(
