@@ -5,89 +5,311 @@
 	
 <mapper namespace="com.airtnt.airtnt.service.AdminMapper">
 
-	<select id="listDashboard" resultType="dashboardDTO">
-		        SELECT  C.CAL as transactionDate,
-                NVL(A.TOT_SITE_FEE, 0) as thisTotSiteFee,
-                NVL(B.TOT_SITE_FEE, 0)  as lastTotSiteFee
-        FROM (
-                    SELECT TO_CHAR(TRANSACTION_DATE, 'YYYYMMDD') AS transaction_date
-                         , NVL(SUM(SITE_FEES),0) AS tot_site_fee 
-                    FROM TRANSACTIONS
-                    WHERE TRANSACTION_DATE BETWEEN SYSDATE-7 AND SYSDATE
-                    GROUP BY TO_CHAR(TRANSACTION_DATE, 'YYYYMMDD')
-                    ORDER BY TRANSACTION_DATE
-            ) A, --올해
-            (
-                    SELECT TO_CHAR(TRANSACTION_DATE+365, 'YYYYMMDD') AS transaction_date
-                         , NVL(SUM(SITE_FEES),0) AS tot_site_fee 
-                    FROM TRANSACTIONS
-                    WHERE TRANSACTION_DATE BETWEEN SYSDATE-7-365 AND SYSDATE-365
-                    GROUP BY TO_CHAR(TRANSACTION_DATE+365, 'YYYYMMDD')
-                    ORDER BY TRANSACTION_DATE
-            ) B, --작년
-            (   SELECT TO_CHAR(SYSDATE-6,'YYYYMMDD') + LEVEL - 1 AS CAL
-                FROM dual 
-                CONNECT BY LEVEL <![CDATA[ <= ]]> TO_CHAR(SYSDATE,'YYYYMMDD') - TO_CHAR(SYSDATE-7,'YYYYMMDD')
-            ) C --날짜대상
-        WHERE A.TRANSACTION_DATE = B.TRANSACTION_DATE(+) 
-        AND C.CAL = A.TRANSACTION_DATE(+)
-        ORDER BY C.CAL
+	<select id="listCheckInDateCntGroupByMonth" resultType="dashboardDTO">
+		--체크인 날짜 기준 월별 카운트(올해, 작년)
+		select c.months as checkInMonth,
+			   nvl(a.cnt,0) as thisYearCheckInMonthCnt,
+			   nvl(b.cnt,0) as lastYearCheckInMonthCnt
+		from (
+		        select to_char(check_in_date, 'yyyymm') as checkInDate,
+		               count(*) as cnt
+		        from booking
+		        where check_in_date between to_char(sysdate,'yyyy')||'0101' and to_char(sysdate,'yyyy')||'1231'
+		        group by to_char(check_in_date, 'yyyymm')       
+		    ) a, -- 올해
+		    (
+		        select to_char(add_months(check_in_date,+12), 'yyyymm') as checkInDate,
+		               count(*) as cnt
+		        from booking
+		        where check_in_date between to_char(add_months(sysdate,-12),'yyyy')||'0101' and to_char(add_months(sysdate,-12),'yyyy')||'1231'
+		        group by to_char(add_months(check_in_date,+12), 'yyyymm')
+		        order by to_char(add_months(check_in_date,+12), 'yyyymm')
+		    ) b, -- 작년
+		    (
+		        SELECT TO_CHAR(ADD_MONTHS(TO_DATE((select to_char(sysdate,'yyyy') from dual)||'01', 'yyyymm') , LEVEL - 1 ),'yyyymm') AS MONTHS
+		        FROM DUAL
+		        CONNECT BY LEVEL <![CDATA[ <= ]]> MONTHS_BETWEEN( TO_DATE((select to_char(sysdate,'yyyy') from dual)||'12','yyyymm'), 
+		                                            TO_DATE((select to_char(sysdate,'yyyy') from dual)||'01', 'yyyymm')) + 1      
+		    ) C --날짜대상
+		where c.months = a.checkInDate(+)
+		and  c.months = b.checkInDate(+)
+		order by c.months
 	</select>
 	
-	<select id="listProperty" resultType="filterPropDTO">
+	<!-- [member] -->
+	<select id= "selectMemberList" resultType="memberDTO" parameterType="java.util.Map">
 		select *
-		from property
-		order by id
+		from (select rownum rn, a.*
+		      from ( select (case when member_mode = '1' then 'GUEST'
+		                         when member_mode = '2' then 'HOST'
+		                         when member_mode = '3' THEN 'ADMIN'
+		                     end) as member_mode
+		                   , id
+		                   , name
+		                   , REGEXP_REPLACE(tel, '(.{3})(.+)(.{4})', '\1-\2-\3') as tel
+		                   , (case when gender = '1' THEN '남성'
+		                           when gender = '2' THEN '여성'
+		                      end) as gender
+		                   , to_char(reg_date,'YYYY-MM-DD') as reg_date
+		             from member
+		             where 1=1
+		             <if test="member_mode != 0">
+						and member_mode = #{member_mode}
+					 </if>
+		             order by reg_date desc
+		            ) a
+		    )
+		where rn between #{startRow} and #{endRow}
+		
 	</select>
 	
-	<select id="listSubProperty" resultType="filterSubPropDTO">
-		select property_type_id as propertyTypeId,
-			   (select b.name from property b where id = a.property_type_id) as propertyTypeName,
-			   id,
-			   name,
-			   is_use as isUse
-		from sub_property a
+	<select id ="selectMemberCount" resultType="Integer" parameterType="java.util.Map">
+		select count(*) 
+		from member 
 		where 1=1
-		and property_type_id = (select min(id) from property)
-		order by id
+		<if test="member_mode != 0">
+			and member_mode = #{member_mode}
+		</if>
 	</select>
 	
-	<select id="getSubProperty" resultType="filterSubPropDTO" parameterType="String">
-		select property_type_id as propertyTypeId,
-			   (select name from property where id = #{propertyTypeId} ) as propertyTypeName,
-			   id,
-			   name,
-			   is_use as isUse
-		from sub_property
+	<!-- [reports] -->
+	<select id = "selectBookingList" resultType="bookingDTO" parameterType="java.util.Map">
+		select	id,
+				property_id as propertyId,
+				guest_id as guestId,
+    			host_id as hostId,
+   				total_price as totalPrice,
+   				booking_number as bookingNumber,
+    			check_in_date as checkInDate,
+   				check_out_date as checkOutDate,
+    			confirm_date as confirmDate,
+    			reg_Date as regDate
+		from 	booking
 		where 1=1
-		and property_type_id = #{propertyTypeId}
+		<!-- 예약일자 -->
+		<![CDATA[
+	        and reg_date >= to_date(#{startDate},'YYYY-MM-DD') and reg_date < to_date(#{endDate},'YYYY-MM-DD')+1
+	    ]]>
+	</select>
+	
+	<select id = "selectTransactionList" resultType="transactionDTO" parameterType="java.util.Map">
+		select  id,
+            booking_id as bookingId,
+            is_refund as isRefund,
+            site_fee as siteFee,
+            pay_expt_date as payExptDate,
+            reg_date as regDate,
+            (select book.total_price
+             from booking book
+             where book.id = tran.booking_id
+            ) as totalPrice
+    	from transaction tran
+    	where 1=1
+    	<!-- 결제일자 -->
+		<![CDATA[
+	        and reg_date >= to_date(#{startDate},'YYYY-MM-DD') and reg_date < to_date(#{endDate},'YYYY-MM-DD')+1
+	    ]]>
+	</select>
+	
+	<select id ="getTransactionDataByID" resultType="transactionDTO" parameterType="java.util.Map">
+		select  id,
+            booking_id as bookingId,
+            is_refund as isRefund,
+            site_fee as siteFee,
+            pay_expt_date as payExptDate,
+            reg_date as regDate,
+            (select book.total_price
+             from booking book
+             where book.id = tran.booking_id
+            ) as totalPrice
+    	from transaction tran
+    	where 1=1
+    	and booking_id = #{bookingId}
+	</select>
+	
+	
+	<select id = "selectRoomTypeList" resultType="roomTypeDTO">
+		select 	id,
+				name,
+			   	is_use as isUse
+		from room_type
 		order by id
 	</select>
 	
-	<insert id="insertProperty" parameterType="filterPropDTO">
-		insert into property values((select max(id)+1 from property), #{name}, #{isUse})
+	<select id = "selectPropertyTypeList" resultType="propertyTypeDTO">
+		select 	id,
+				name,
+			   	is_use as isUse
+		from property_type
+		order by id
+	</select>
+	
+	<select id = "getSubPropertyType" resultType="subPropertyTypeDTO" parameterType="String">
+		select 	id,
+		        name,
+		        property_type_id as propertyTypeId,
+		        (select a.name 
+		         from property_type a
+		         where a.id = b.property_type_id
+		        ) as propertyTypeName,
+		        is_use as isUse
+		from sub_property_type b
+		where property_type_id = #{propertyTypeId}
+		order by id
+	</select>
+	
+	<select id = "selectSubPropertyTypeList" resultType="subPropertyTypeDTO" parameterType="String">
+		select 	id,
+		        name,
+		        property_type_id as propertyTypeId,
+		        (select a.name 
+		         from property_type a
+		         where a.id = b.property_type_id
+		        ) as propertyTypeName,
+		        is_use as isUse
+		from sub_property_type b
+		where property_type_id = (select min(id) from property_type)
+		order by id
+	</select>
+	
+	<select id = "selectAmenityTypeList" resultType="amenityTypeDTO">
+		select	id,
+				name,
+				is_use as isUse
+		from amenity_type
+		order by id
+	</select>
+	
+	<insert id = "insertRoomTypeDTO" parameterType="roomTypeDTO">
+		insert into room_type values ((select nvl(max(id),0)+1 from room_type), #{name}, #{isUse}, sysdate, sysdate)
 	</insert>
 	
-	<update id="updateProperty" parameterType="filterPropDTO">
-		update property 
+	<update id = "updateRoomTypeDTO" parameterType="roomTypeDTO">
+		update room_type 
 		set name = #{name},
 			is_use = #{isUse}
-		where id = #{id} 
+		where id = #{id}
 	</update>
 	
-	<insert id="insertSubProperty" parameterType="filterSubPropDTO">
-		insert into sub_property 
-		values(	(select max(id)+1 from sub_property), 
-				#{propertyTypeId},
-				#{name}, 
-				#{isUse}
-				)
+	<insert id = "insertAmenityTypeDTO" parameterType="amenityTypeDTO">
+		insert into amenity_type values ((select nvl(max(id),0)+1 from amenity_type), #{name}, #{isUse}, sysdate, sysdate)
 	</insert>
 	
-	<update id="updateSubProperty" parameterType="filterSubPropDTO">
-		update sub_property 
+	<update id = "updateAmenityTypeDTO" parameterType="amenityTypeDTO">
+		update amenity_type 
 		set name = #{name},
 			is_use = #{isUse}
+		where id = #{id}
+	</update>
+	
+	<insert id = "insertPropertyTypeDTO" parameterType="propertyTypeDTO">
+		insert into property_type values ((select nvl(max(id),0)+1 from property_type), #{name}, #{isUse}, sysdate, sysdate)
+	</insert>
+	
+	<update id = "updatePropertyTypeDTO" parameterType="propertyTypeDTO">
+		update property_type 
+		set name = #{name},
+			is_use = #{isUse}
+		where id = #{id}
+	</update>
+	
+	<insert id = "insertSubPropertyTypeDTO" parameterType="subPropertyTypeDTO">
+		insert into sub_property_type values ((select nvl(max(id),0)+1 from sub_property_type), #{propertyTypeId}, #{name}, #{isUse}, sysdate, sysdate)
+	</insert>
+	
+	<update id = "updateSubPropertyTypeDTO" parameterType="subPropertyTypeDTO">
+		update sub_property_type 
+		set name = #{name},
+			is_use = #{isUse}
+		where id = #{id}
+	</update>
+	
+	<select id ="selectIdSeq" resultType="Integer">
+		select guide_context_seq.nextval as id from dual
+	</select>
+	
+	<insert id = "insertBoard" parameterType="guideDTO">
+		insert into guide 
+		values(
+			#{id},
+			#{subject},
+			#{explanation},
+			sysdate,
+			sysdate
+		)
+	</insert>
+	
+	<insert id = "insertBoardContext" parameterType="guideContextDTO">
+		insert into guide_context 
+		values ( 
+	 			guide_context_seq.nextval,
+			 	#{id}, 
+			 	#{context},
+			 	sysdate,
+			 	sysdate
+	 		 ) 
+	</insert>
+	
+	<!-- <update id="insertBoardContext" parameterType="java.util.Map">
+		<foreach item="item" index="index" collection="list" separator=" " open="INSERT ALL " close="SELECT * FROM DUAL">
+		into guide_context( id , guide_id , context , reg_date, mod_date )
+		values ( 
+	 			guide_context_seq.nextval,
+			 	#{item.id}, 
+			 	#{item.context},
+			 	sysdate,
+			 	sysdate
+	 		 ) 
+		</foreach>
+	</update> -->
+
+	
+	<select id = "selectBoardCount" resultType="Integer">
+		select count(*) from guide
+	</select>
+	
+	<select id = "selectBoardList" resultType="guideDTO" parameterType="java.util.Map">
+		select rn,
+		       id,
+		       subject,
+		       reg_date as regDate
+		from (select rownum rn, a.*
+		      from guide a
+		      order by id desc)
+		where rn between #{startRow} and #{endRow}     
+		order by rn desc
+	</select>
+	
+	<select id = "getSelectedBoard" resultType="guideContextDTO" parameterType="String">
+		select a.id as guideId, 			
+               a.subject,
+               a.explanation,
+               b.context,
+               b.id			
+        from guide a, guide_context b
+        where a.id = b.guide_id
+        and a.id = #{id}
+        order by b.id
+	</select>
+	
+	<delete id = "deleteBoard" parameterType="String">
+		delete from guide where id = #{id}
+	</delete>
+	
+	<delete id = "deleteGuideContext" parameterType="String">
+		delete from guide_context where id = #{id}
+	</delete>
+	
+	<update id = "updateSelectedBoard" parameterType="guideDTO">
+		update guide
+		set subject = #{subject},
+			explanation = #{explanation}
+		where id = #{id}
+	</update>
+	
+	<update id = "updateSelectedContext" parameterType="guideContextDTO">
+		update guide_context
+		set context = #{context}
 		where id = #{id}
 	</update>
 	
