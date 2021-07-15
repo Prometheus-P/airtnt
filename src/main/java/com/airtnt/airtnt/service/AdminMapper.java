@@ -180,16 +180,20 @@ public class AdminMapper {
 	}
 	
 	//[guide] : 게시글 수정(마스터)
-	public int updateSelectedBoard(String subject, String explanation) {
+	public int updateSelectedBoard( int id, String subject, String explanation) {
 		Map<String, Object> selectKeyMap = new Hashtable<>();
 		selectKeyMap.put("subject", subject);
 		selectKeyMap.put("explanation", explanation);
+		selectKeyMap.put("id", id);
 		int res = sqlSession.update("updateSelectedBoard", selectKeyMap);
 		return res;
 	}
 	
-	public int updateSelectedContext(GuideContextDTO dto) {
-		int res = sqlSession.update("updateSelectedContext", dto);
+	public int updateSelectedContext(int id, String context) {
+		Map<String, Object> selectKeyMap = new Hashtable<>();
+		selectKeyMap.put("context", context);
+		selectKeyMap.put("id", id);
+		int res = sqlSession.update("updateSelectedContext", selectKeyMap);
 		return res;
 	}
 	
