@@ -83,13 +83,16 @@
 							              '</div>' +
 							              '<div class="one_third fl_right">' +
 							              //여기 수정 해야함 
-								              //'<button data-target="#updateReviewModal" onclick="transferDataForUpdate('+this.id+','+this.rating+','+this.content+')" ' + 
-								              		//'data-toggle="modal" style="font-size:12px;" type="button" class="btn">수정하기</button>' +
+								              '<button data-target="#updateReviewModal" onclick="transferDataForUpdate('+this.id+','+this.rating+','+this.content+')" ' + 
+								              		'data-toggle="modal" style="font-size:12px;" type="button" class="btn">수정하기</button>' +
 							              '</div><br>' +
 							            '</li>' +
 						           '<hr>'
 								);
 		        		$('#myReviews').append(html);
+		        		
+		        		var updateBtn = document.createElement('div');
+		        		
 		        		
 		        		for(var i=0; i<starCnt; i++){
 		                       html = '<span><img src="/resources/images/star-on.png" alt=""></span>';

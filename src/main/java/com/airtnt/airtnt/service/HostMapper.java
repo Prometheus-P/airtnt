@@ -1,9 +1,11 @@
 package com.airtnt.airtnt.service;
 
 import java.sql.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,10 +13,13 @@ import org.springframework.stereotype.Service;
 import com.airtnt.airtnt.model.AmenityDTO;
 import com.airtnt.airtnt.model.AmenityTypeDTO;
 import com.airtnt.airtnt.model.BookingDTO;
+import com.airtnt.airtnt.model.GuideContextDTO;
 import com.airtnt.airtnt.model.GuideDTO;
+import com.airtnt.airtnt.model.ImageDTO;
 import com.airtnt.airtnt.model.MemberDTO;
 import com.airtnt.airtnt.model.PropertyDTO;
 import com.airtnt.airtnt.model.PropertyTypeDTO;
+import com.airtnt.airtnt.model.ReviewDTO;
 import com.airtnt.airtnt.model.RoomTypeDTO;
 import com.airtnt.airtnt.model.SubPropertyTypeDTO;
 import com.airtnt.airtnt.model.TransactionDTO;
@@ -39,6 +44,11 @@ public class HostMapper implements HostMapperInterface {
 		return guideDTO;
 	}
 
+	public List<GuideContextDTO> getGuideContext(int guideId) {
+		List<GuideContextDTO> list = sqlSession.selectList("getGuideContext", guideId);
+		return list;
+	}
+
 	@Override
 	public int insertProperty(PropertyDTO dto) {
 		int res = sqlSession.insert("insertProperty", dto);
@@ -46,8 +56,8 @@ public class HostMapper implements HostMapperInterface {
 	}
 
 	@Override
-	public int deleteProperty() {
-		int res = sqlSession.delete("deleteProperty");
+	public int deleteProperty(Integer propertyId) {
+		int res = sqlSession.delete("deleteProperty",propertyId);
 		return res;
 	}
 
@@ -74,9 +84,9 @@ public class HostMapper implements HostMapperInterface {
 	}
 
 	@Override
-	public int updateProperty() {
-		// TODO Auto-generated method stub
-		return 0;
+	public int updateProperty(PropertyDTO dto) {
+		int res = sqlSession.update("updateProperty", dto);
+		return res;
 	}
 
 	@Override
@@ -136,8 +146,67 @@ public class HostMapper implements HostMapperInterface {
 
 	@Override
 	public int insertPropertyAmenity(AmenityDTO dto) {
-		int res = sqlSession.insert("insertPropertyAmenity", dto);
+		return 0;
+	}
+
+	public int updateMemberMode(String memberId) {
+		int res = sqlSession.update("updateMemberMode", memberId);
 		return res;
 	}
 
+	public List<ReviewDTO> getReviewList(int propertyId) {
+		List<ReviewDTO> list = sqlSession.selectList("getReviewList", propertyId);
+		return list;
+	}
+
+	public List<Map<String, Integer>> getReviewWritingRate(Integer propertyId) {
+		List<Map<String, Integer>> listMap = sqlSession.selectList("getReviewWritingRate", propertyId);
+		return listMap;
+	}
+
+	public int bookConfirm(int bookingId) {
+		int res = sqlSession.update("bookConfirm", bookingId);
+		return res;
+	}
+	
+	public int payExptDateConfirm(int bookingId, java.sql.Date checkOutDate) {
+		int res = sqlSession.update("payExptDateConfirm", checkOutDate);
+		return res;
+	}
+
+	public int bookReject(int bookingId) {
+		int res = sqlSession.update("bookReject", bookingId);
+		return res;
+	}
+
+	public int transactionRefund(int bookingId) {
+		int res = sqlSession.update("transactionRefund", bookingId);
+		return res;
+	}
+	
+	public int imageInsert(List<ImageDTO> listImage) {
+		for(int i=0; i<listImage.size(); i++) {
+			listImage.get(i).setId(sqlSession.selectOne("getImageSequence"));
+		}
+		int res = sqlSession.insert("imageInsert", listImage);
+		return res;
+	}
+
+	public int insertListAmenity(List<AmenityTypeDTO> listAmenity) {
+		for(int i=0; i<listAmenity.size(); i++) {
+			listAmenity.get(i).setAmenityId(sqlSession.selectOne("getAmenitySequence"));
+		}
+		int res = sqlSession.update("insertListAmenity", listAmenity);
+		return res;
+	}
+	
+	public List<ImageDTO> getPropertyImage(int propertyId){
+		List<ImageDTO> list = sqlSession.selectList("getPropertyImage", propertyId);
+		return list;
+	}
+	
+	public List<AmenityTypeDTO> getAmenityList(int propertyId){
+		List<AmenityTypeDTO> list = sqlSession.selectList("getAmenityList", propertyId);
+		return list;
+	}
 }

@@ -29,6 +29,16 @@
 	<script src="layout/scripts/jquery.min.js"></script>
 	<script src="layout/scripts/jquery.backtotop.js"></script>
 	<script src="layout/scripts/jquery.mobilemenu.js"></script> -->
+	<style>
+footer{ 
+	position:fixed; 
+	left:0px; 
+	bottom:0px; 
+	height:20%; 
+	width:100%; 
+	background: #01546b ; 
+	color: white; }
+</style>
 </head>
 <body>
 	<c:set var="isLogin" value="false"/>

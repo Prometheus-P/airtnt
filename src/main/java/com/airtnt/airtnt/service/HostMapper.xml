@@ -5,39 +5,148 @@
 
 <mapper namespace="com.airtnt.airtnt.service.HostMapper">
 
+	<resultMap type="propertyDTO" id="propertyMap">
+		<id property="id" column="id"/>
+		<result property="name" column="name"/>
+		<result property="hostId" column="host_id"/>
+		<result property="propertyDesc" column="property_desc"/>
+		<result property="address" column="address"/>
+		<result property="price" column="price"/>
+		<result property="bedCount" column="bed_count"/>
+		<result property="maxGuest" column="max_guest"/>
+		<result property="regDate" column="reg_date"/>
+		<result property="modDate" column="mod_date"/>
+		
+		<association property="propertyType" column="property_type_id"
+			columnPrefix="property_type_" resultMap="propertyTypeMap"/>
+		
+		<association property="subPropertyType" column="sub_property_type_id"
+			columnPrefix="sub_property_type_" resultMap="subPropertyTypeMap"/>
+		
+		<association property="roomType" column="room_type_id"
+			columnPrefix="room_type_" resultMap="roomTypeMap"/>
+		
+		<collection property="amenityTypes" ofType="amenityTypeDTO"
+			columnPrefix="amenity_type_" resultMap="amenityTypeMap" />
+		
+		<collection property="images" ofType="imageDTO"
+			columnPrefix="image_" resultMap="imageMap"/>
+		
+	</resultMap>
+	
+	<resultMap type="propertyTypeDTO" id="propertyTypeMap">
+		<id property="id" column="id"/>
+		<result property="name" column="name"/>
+		<result property="isUse" column="is_use"/>
+		<result property="regDate" column="reg_date"/>
+		<result property="modDate" column="mod_date"/>
+		
+		<collection property="subPropertyTypes" ofType="subPropertyTypeDTO"
+		columnPrefix="sub_property_type_" resultMap="subPropertyTypeMap"/>
+	</resultMap>
+	
+	<resultMap type="subPropertyTypeDTO" id="subPropertyTypeMap">
+		<id property="id" column="id"/>
+		<result property="propertyTypeId" column="property_type_id"/>
+		<result property="name" column="name"/>
+		<result property="isUse" column="is_use"/>
+		<result property="regDate" column="reg_date"/>
+		<result property="modDate" column="mod_date"/>
+	</resultMap>
+	
+	<resultMap type="roomTypeDTO" id="roomTypeMap">
+		<id property="id" column="id"/>
+		<result property="name" column="name"/>
+		<result property="isUse" column="is_use"/>
+		<result property="regDate" column="reg_date"/>
+		<result property="modDate" column="mod_date"/>
+	</resultMap>
+	
+	<resultMap type="amenityTypeDTO" id="amenityTypeMap">
+		<id property="id" column="id"/>
+		<result property="name" column="name"/>
+		<result property="isUse" column="is_use"/>
+		<result property="regDate" column="reg_date"/>
+		<result property="modDate" column="mod_date"/>
+	</resultMap>
+	
+	<resultMap type="imageDTO" id="imageMap">
+		<id property="id" column="id"/>
+		<result property="propertyId" column="property_id"/>
+		<result property="isMain" column="is_main"/>
+		<result property="path" column="path"/>
+		<result property="fileSize" column="file_size"/>
+		<result property="regDate" column="reg_date"/>
+		<result property="modDate" column="mod_date"/>
+	</resultMap>
+	
+	<resultMap type="map" id="selectMapList">
+		<result column="reviewCount" property="reviewCount" />
+		<result column="bookingCount" property="bookingCount" />
+	</resultMap>
+
 	<select id="listGuide" resultType="GuideDTO">
-		select
+		SELECT
 		id, subject,
-		reg_date as regDate,
-		mod_date as modDate,
-		explanation, content1, content2, content3 from guide
+		reg_date AS regDate,
+		mod_date AS modDate,
+		explanation FROM guide
 	</select>
 
 	<select id="getGuide" parameterType="int" resultType="guideDTO">
-		select
+		SELECT
 		id, subject,
-		reg_date as regDate,
-		mod_date as modDate,
-		explanation, content1, content2, content3
-		from guide where id = #{id}
+		reg_date AS regDate,
+		mod_date AS modDate,
+		explanation
+		FROM guide
+		WHERE id = #{id}
 	</select>
 
 	<insert id="insertProperty" parameterType="propertyDTO">
-		insert into property(name, host_id, property_desc, property_type_id,
-		sub_property_type_id,
-		room_type_id, address, price, bed_count, max_guest)
-		values(#{name}, #{hostId}, #{propertyDesc}, #{propertyTypeId}, #{subPropertyTypeId},
+		insert into property
+		(id, name, host_id, property_desc, property_type_id,
+		sub_property_type_id, room_type_id, address, price, bed_count, max_guest)
+		values(seq_property.nextval,#{name}, #{hostId}, #{propertyDesc},
+		#{propertyTypeId}, #{subPropertyTypeId},
 		#{roomTypeId},
-		#{address}, #{price}, #{bedCount}, #{maxGuest})<!-- modeDate==null -->
+		#{address},
+		#{price}, #{bedCount}, #{maxGuest})<!-- modeDate==null -->
 	</insert>
+	
+	<update id="updateProperty" parameterType="PropertyDTO">
+		UPDATE property p RIGHT JOIN amenity a
+		ON (p.id = a.property_id)
+		SET 
+		p.max_guest =#{maxGuest}, p.bed_count = #{bedCount}, 
+		p.property_desc = #{propertyDesc}, p.price = #{price}
+		
+	</update>
+		<!-- UPDATE A T1 RIGHT JOIN B T2 
+		ON (T2.a = T1.a) 
+		SET T1.c = '값1', T2.d = '값2' 
+		WHERE A.e = '조건 값' -->
 
 	<delete id="deleteProperty" parameterType="int">
+		{	
+			CALL
+        	DECLARE
+        	BEGIN
+         	   DELETE FROM property WHERE id = #{propertyId};
+         	   DELETE FROM amenity WHERE property_id = #{propertyId};
+         	   DELETE FROM image WHERE property_id = #{propertyId};
+         	   DELETE FROM wishlist_property WHERE property_id = #{propertyId};
+         	   DELETE FROM review WHERE property_id = #{propertyId};
+         	   DELETE FROM booking WHERE property_id = #{propertyId};
+      	  	END
+    	}
 	</delete>
 
 	<select id="propertyType" resultType="propertyTypeDTO">
 		select
 		id, name,
-		is_use as isUse,
+		is_use as
+		isUse,
 		reg_date as regDate,
 		mod_date as modDate
 		from property_type order by id
@@ -48,9 +157,11 @@
 		select
 		id, name,
 		property_type_id as propertyTypeId,
-		is_use as isUse,
+		is_use as
+		isUse,
 		reg_date as regDate,
-		mod_date as modDate from sub_property_type where property_type_id =
+		mod_date as modDate from sub_property_type
+		where property_type_id =
 		#{propertyTypeId}
 	</select>
 
@@ -63,9 +174,8 @@
 		from room_type
 	</select>
 
-	<select id="listBooking" parameterType="String"
-		resultType="BookingDTO">
-		select
+	<select id="listBooking" parameterType="String" resultType="BookingDTO">
+		SELECT
 		b.id,
 		b.property_id as propertyId,
 		b.guest_id as guestId,
@@ -75,15 +185,19 @@
 		b.total_price as totalPrice,
 		b.booking_number as bookingNumber,
 		b.check_in_date as checkInDate,
-		b.check_out_date as checkOutDate,
+		b.check_out_date as
+		checkOutDate,
 		b.confirm_date as confirmDate,
 		b.reg_date as regDate,
 		b.mod_date as modDate,
 		m.name as guestName,
-		m.id as memberId
-		from booking b, member m
-		where b.guest_id = m.id
-		and b.host_id = #{hostId}
+		m.id as memberId,
+		p.id as p_id,
+		p.name as propertyName
+		FROM booking b, member m, property p
+		WHERE b.guest_id = m.id
+		AND b.host_id = #{hostId}
+		AND b.property_id = p.id
 	</select>
 
 	<select id="getMemberDTO" parameterType="String"
@@ -104,17 +218,19 @@
 		p.mod_date as modDate,
 		p.room_type_id as roomTypeId,
 		r.id,
-		r.name as roomTypeName,
+		r.name as
+		roomTypeName,
 		p.sub_property_type_id as subPropertyTypeId,
 		s.id,
-		s.name as subPropertyTypeName
-		from property p, sub_property_type s, room_type
-		r
+		s.name as subPropertyTypeName,
+		i.path as image_path
+		from property p, sub_property_type s, room_type	r, image i
 		where host_id = #{hostId}
 		and r.id = p.room_type_id
 		and
 		p.sub_property_type_id = s.id
 	</select>
+	
 
 	<select id="listTransaction" parameterType="String"
 		resultType="TransactionDTO">
@@ -130,13 +246,16 @@
 		t.booking_id as bookingId,
 		t.is_refund as isReFund,
 		t.site_fee as siteFee,
-		t.pay_expt_date as payExptDate,
+		t.pay_expt_date as
+		payExptDate,
 		t.reg_date as regDate,
 		t.mod_date as modDate,
-		p.name as propertyName,
+		p.name as
+		propertyName,
 		p.id
 		from transaction t, booking b, property p
-		where b.id = t.booking_id
+		where b.id =
+		t.booking_id
 		and b.host_id = #{hostId}
 		and p.id = b.property_id
 	</select>
@@ -148,10 +267,12 @@
 		t.site_fee as siteFee,
 		t.is_refund as isRefund,
 		t.pay_expt_date as payExptDate
-		from booking b, transaction t
+		from booking b,
+		transaction t
 		where b.id = t.id
 		and sysdate > t.pay_expt_date
-		and host_id = #{hostId}
+		and host_id
+		= #{hostId}
 	</select>
 
 	<select id="getProperty" parameterType="int"
@@ -167,12 +288,12 @@
 		p.mod_date as modDate,
 		p.room_type_id as roomTypeId,
 		r.id,
-		r.name as roomTypeName,
+		r.name as
+		roomTypeName,
 		p.sub_property_type_id as subPropertyTypeId,
 		s.id,
 		s.name as subPropertyTypeName
-		from property p, sub_property_type s, room_type
-		r
+		from property p, sub_property_type s, room_type r
 		where p.id = #{propertyId}
 		and r.id = p.room_type_id
 		and
@@ -187,20 +308,135 @@
 		is_use as isUse
 		from amenity_type
 	</select>
-	<select resultType="int" id="getPropertyId"	parameterType="String">
-		select id from 
-		(select * from property 
-		where host_id=#{hostId}
+	<select resultType="int" id="getPropertyId" parameterType="String">
+		select id from
+		(select * from property
+		where
+		host_id=#{hostId}
 		order by reg_date desc)
 		where ROWNUM = 1
 	</select>
 
-	<select resultType="int" id="insertPropertyAmenity"	parameterType="AmenityDTO">
-		insert into amenity(property_id, amenity_type_id)
-		values(#{propertyId},#{amenityTypeId}) 
+	<select id="updateMemberMode" resultType="int"
+		parameterType="String">
+		update member set member_mode= '2' where id=#{hostId}
+	</select>
+
+	<select id="getGuideContext" resultType="GuideContextDTO"
+		parameterType="int">
+		select
+		id,
+		guide_id as guideId,
+		context,
+		reg_date as
+		regDate,
+		mod_date as modeDate
+		from guide_context
+		where
+		guide_id=#{guideId}
+	</select>
+
+	<select id="getReviewList" resultType="ReviewDTO"
+		parameterType="int">
+		SELECT
+		r.*,
+		b.id as b_id,
+		b.check_in_date,
+		b.check_out_date,
+		b.total_price as price,
+		p.id as p_id,
+		p.name
+		FROM review
+		r, booking b, property p
+		WHERE r.property_id = #{propertyId}
+		AND
+		r.booking_id = b.id
+		AND r.property_id = p.id
+	</select>
+
+	<select id="getReviewWritingRate" resultMap="selectMapList" parameterType="int">
+		SELECT
+		r.reviewCount,
+		b.bookingCount
+		FROM
+		(select count(*)
+		as reviewCount
+		FROM review
+		WHERE property_id = #{propertyId}
+		AND sysdate > reg_date) r,
+		(select count(*)
+		as bookingCount
+		FROM booking
+		WHERE property_id = #{propertyId}
+		AND sysdate > reg_date) b
 	</select>
 	
-	<!-- <insert id="saveImage" parameterType="java.util.Map">     I insert 
-		into img_table VALUES #{img}    </insert> -->
-	<!--<delete> </delete> <update> </update> -->
+	
+	
+	<update id="bookConfirm" parameterType="int">
+		UPDATE booking SET confirm_date = sysdate WHERE id = #{bookingId}
+	</update>
+	
+	<update id="payExptDateConfirm" parameterType="java.util.Map">
+		UPDATE transaction 
+		SET pay_expt_date = TO_DATE('#{payExptDate}', 'YYYY-MM-DD') 
+		WHERE booking_id = #{bookingId}
+	</update>
+	
+	<update id="bookReject" parameterType="int">
+		UPDATE booking
+		SET 
+		booking_number = -1
+		WHERE id = #{bookingId}
+	</update>
+	
+	<update id="transactionRefund" parameterType="int">
+		UPDATE transaction 
+		SET 
+		is_refund = 'Y'
+		WHERE booking_id = #{bookingId}
+	</update>
+	
+	<update id="imageInsert" parameterType="java.util.List">
+		<foreach item="item" collection="list"  open="INSERT ALL" close="SELECT * FROM DUAL" separator=" ">
+			INTO image(id, property_id, is_main, path, file_size)
+			VALUES(#{item.id}, #{item.propertyId}, #{item.isMain, jdbcType=VARCHAR}, #{item.path}, #{item.fileSize})
+		</foreach>
+	</update>
+	
+	<update id="insertListAmenity" parameterType="java.util.List">
+		<foreach item="item" collection="list"  open="INSERT ALL" close="SELECT * FROM DUAL" separator=" " >
+			INTO AMENITY(id, amenity_type_id, property_id) VALUES(#{item.amenityId}, #{item.id}, #{item.propertyId})	
+		</foreach>
+	</update>
+	
+	<select id="getAmenitySequence" resultType="int">
+		SELECT seq_amenity.nextval FROM dual
+	</select>
+
+	<select id="getImageSequence" resultType="int">
+		SELECT seq_image.nextval FROM dual
+	</select>
+	
+	<select id="getPropertyImage" parameterType="int" resultType="imageDTO">
+		SELECT 
+			property_id as propertyId,
+			is_main as isMain,
+			path
+		FROM image 
+		WHERE property_id = #{propertyId}
+	</select>
+	
+	<select id="getAmenityList" parameterType="int" resultType="amenityTypeDTO">
+		SELECT 
+			am.property_id as propertyId,
+			am.amenity_type_id as amenityTypeId,
+			at.id as a_id,
+			at.name,
+			at.is_use as isUse
+		FROM amenity am, amenity_type at 
+		WHERE property_id = #{propertyId}
+		AND at.id = am.amenity_type_id
+	</select>
+	
 </mapper>

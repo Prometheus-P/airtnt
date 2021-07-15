@@ -24,7 +24,6 @@ public class ReviewDTO {
 	private String path;
 	private String num;
 	
-	
 	public int getId() {
 		return id;
 	}

@@ -19,7 +19,7 @@
 	<!-- Handles HTTP GET requests for /resources/** by efficiently serving 
 		up static resources in the ${webappRoot}/resources directory -->
 	<resources mapping="/resources/**" location="/resources/" />
-
+	<resources mapping="/resources_host/**" location="/resources_host/" />
 	<!-- Resolves views selected for rendering by @Controllers to .jsp resources 
 		in the /WEB-INF/views directory -->
 	<beans:bean
@@ -50,7 +50,14 @@
 			<beans:ref bean="loginInterceptor" />
 		</interceptor>
 		<interceptor>
-			<mapping path="/host/**"/>
+			<mapping path="/host/host_mode"/>
+			<mapping path="/host/host_properties_list"/>
+			<mapping path="/host/properties_update"/>
+			<mapping path="/host/properties_update"/>
+			<mapping path="/host/transaction_list"/>
+			<mapping path="/host/host_review_list"/>
+			<mapping path="/host/total_earning"/>
+			<mapping path="/host/host_support"/>
 			<beans:ref bean="hostInterceptor" />
 		</interceptor>
 	</interceptors>
