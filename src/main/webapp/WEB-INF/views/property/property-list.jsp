@@ -129,6 +129,7 @@
 										<c:forEach var='tagAttribute' items='${roomType.tagAttributes}'>
 		                     				${tagAttribute}="${roomType.getTagAttributeMapValue(tagAttribute)}"
 		                    			</c:forEach>>
+		                    		<label class="form-check-label">${roomType.name}</label>	
 		                    	</div>
 							</li>
 						</c:forEach>
@@ -236,9 +237,7 @@
 					</div>
 	
 					<div class="two_third position-relative">
-						<h2>
-							<a href="<c:url value='/property/detail?propertyId=${property.id}'/>">${property.name}</a>
-						</h2>
+						<a href="<c:url value='/property/detail?propertyId=${property.id}'/>" style="color:#383434; font-size:22px;">${property.name}</a>
 						<h4>${property.propertyType.name}/${property.subPropertyType.name}</h4>
 						<h4>${property.roomType.name}</h4>
 						<h4>${property.address}</h4>
@@ -250,6 +249,7 @@
 								</c:forEach>
 							</h5>
 						</c:if>
+						<h4><img src="/resources/property_img/starIcon.PNG" style="width:18px; height:18px; margin-bottom:5px;">${property.rating}</h4>
 						<div class="position-absolute end-0 bottom-0">
 							<h3 style="color: blue">
 								<fmt:formatNumber type="currency" value="${property.price}" />
@@ -380,6 +380,7 @@
 							var name = $('tr:eq(' + i + ')>td:eq(3)').html(); //숙소명
 							var propertyType = $('tr:eq(' + i + ')>td:eq(4)').html(); //숙소타입
 							var image = $('tr:eq(' + i + ')>td:eq(5)').html(); //이미지
+							var rating = $('tr:eq(' + i + ')>td:eq(6)').html(); //평점
 	
 							if (name.length > 16) name = name.substring(0, 16) + '...'; //숙소명 긴 경우
 	
@@ -389,7 +390,8 @@
 								latlng : new kakao.maps.LatLng(latitude, longitude),
 								id : id,
 								propertyType : propertyType,
-								image : image
+								image : image,
+								rating : rating
 							});
 						}
 	
@@ -408,7 +410,7 @@
 	
 							// 마커 이미지 생성    
 							var markerImage = new kakao.maps.MarkerImage("/resources/property_img/marker.png", imageSize);
-							var overMarkerImage = new kakao.maps.MarkerImage("/resources/property_img/marker2.png", imageSize);
+							var overMarkerImage = new kakao.maps.MarkerImage("/resources/property_img/marker1.png", imageSize);
 							var selectedMarkerImage = new kakao.maps.MarkerImage("/resources/property_img/marker1.png", imageSize);
 	
 							var marker = new kakao.maps.Marker(
@@ -425,8 +427,7 @@
 							//오버레이 생성
 							var overlay = new kakao.maps.CustomOverlay(
 									{
-										//yAnchor: 0,
-										clickable : true, //지도 클릭 이벤트 막음
+										clickable : true , //지도 클릭 이벤트 막음
 										position : data.latlng
 									});
 	
@@ -481,8 +482,9 @@
 							var desc = document.createElement('div');
 							desc.className = "desc";
 							desc.style.cssText = "position: relative;height: 90px; width:300px; padding:15px;font-size:18px;";
-							desc.innerHTML = '<img src="/resources/property_img/starIcon.PNG" style="width:18px; height:18px; margin-bottom:5px;">4.84<br>'
-											+ '<a href="/property/detail?propertyId='+ data.id + '" target="_blank">'
+							desc.innerHTML = '<img src="/resources/property_img/starIcon.PNG" style="width:18px; height:18px; margin-bottom:5px;">'
+											+ data.rating + '<br>'
+											+ '<a href="/property/detail?propertyId='+ data.id + '" target="_blank" style="color:#383434;">'
 											+ data.propertyType
 											+ '<br>'
 											+ data.title + '<br>'
@@ -551,6 +553,7 @@
 						<td><c:forEach var="image" items="${property.images}">
 	                              ${image.path}:
 	                        </c:forEach></td>
+	                    <td>${property.rating}</td>   
 					</tr>
 				</c:forEach>
 			</table>
