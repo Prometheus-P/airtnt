@@ -462,8 +462,10 @@ public class HostController implements HostControllerInterface {
 		dtoPro.setBedCount((Integer)param.get("bedCount"));
 		dtoPro.setPropertyDesc((String)param.get("description"));
 		dtoPro.setPrice((Integer)param.get("price"));
-		int propertyOk = hostMapper.insertProperty(dtoPro);
-		int amenityOk = hostMapper.insertListAmenity(listAmenity);
+		dtoPro.setAmenityTypes(listAmenity);
+		//int propertyOk = hostMapper.insertProperty(dtoPro);
+		int propertyUpdate = hostMapper.updateProperty(dtoPro);
+		//int amenityOk = hostMapper.insertListAmenity(listAmenity);
 		ModelAndView mav = new ModelAndView("/host/host_mode/host_properties_list");
 		return mav;
 	}
@@ -493,6 +495,12 @@ public class HostController implements HostControllerInterface {
 	@RequestMapping("host/update_photos")
 	public String update_photos() {
 		return "/host/host_mode/update_photos";
+	}
+	@ResponseBody
+	@RequestMapping("host/property_delete")
+	public String delete(@RequestParam("propertyId") Integer propertyId) {
+		int res = hostMapper.deleteProperty(propertyId);
+		return "/host/host_mode/host_properties_list";
 	}
 
 	@Override

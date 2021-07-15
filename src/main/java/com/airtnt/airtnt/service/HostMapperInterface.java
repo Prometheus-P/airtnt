@@ -19,8 +19,8 @@ public interface HostMapperInterface {
 	public List<GuideDTO> getGuideList();
 	public GuideDTO getGuide(int id) ;
 	public int insertProperty(PropertyDTO dto);
-	public int deleteProperty();
-	public int updateProperty();
+	public int deleteProperty(Integer propertyId);
+	public int updateProperty(PropertyDTO dto);
 	public int getPropertyId(String hostId);
 	public int insertPropertyAmenity(AmenityDTO dto);
 	public List<PropertyDTO> getPropertyList(String hostId);

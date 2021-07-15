@@ -137,7 +137,7 @@
 												<button onclick="location.href='<c:url value="/host/property_update"/>?propertyId=${dto.id}'" 
 												type="button" class="btn btn-warning"  formmethod="get" >
 												수정하기</button>
-												<button onclick="location.href='<c:url value="/host/property_delete"/>?propertyId=${dto.id}'" 
+												<button onclick="deletePro(${dto.id})" 
 												type="button" class="btn btn-danger"  formmethod="get" >
 												삭제하기</button>
 												</p>
@@ -157,9 +157,32 @@
 			
 			<div class="calendar"></div>
 		</div>
-
-	
 	<%@ include file="../../bottom.jsp"%>
+	<script>
+		function deletePro(id){
+			boolean check = window.confirm("정말 삭제하시겠습니까?")
+			if(check){
+				var propertyId = id
+				$.ajax({
+					url : "/host/property_delete",
+					type : "post",
+					data : {'propertyId': propertyId},
+					success : function(data) {
+								if (JSON.parse(data)['result'] == "OK"){
+									alert("숙소가 삭제 되었습니다!")
+									location.href="/host/host_properties_list";
+								}else{
+									alert("숙소 삭제 중 문제 발생! 관리자에게 연락바랍니다!");
+								}
+							},
+					error: function (xhr, status, error) {
+						   	   alert("서버오류로 지연되고있습니다. 잠시 후 다시 시도해주시기 바랍니다.");
+						   	    }
+					});
+			}
+			return;
+		}
+	</script>
 </body>
 </html>
 

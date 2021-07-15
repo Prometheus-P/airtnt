@@ -56,8 +56,8 @@ public class HostMapper implements HostMapperInterface {
 	}
 
 	@Override
-	public int deleteProperty() {
-		int res = sqlSession.delete("deleteProperty");
+	public int deleteProperty(Integer propertyId) {
+		int res = sqlSession.delete("deleteProperty",propertyId);
 		return res;
 	}
 
@@ -84,9 +84,9 @@ public class HostMapper implements HostMapperInterface {
 	}
 
 	@Override
-	public int updateProperty() {
-		// TODO Auto-generated method stub
-		return 0;
+	public int updateProperty(PropertyDTO dto) {
+		int res = sqlSession.update("updateProperty", dto);
+		return res;
 	}
 
 	@Override
