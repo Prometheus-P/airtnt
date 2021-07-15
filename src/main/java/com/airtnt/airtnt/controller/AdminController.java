@@ -31,15 +31,18 @@ import com.airtnt.airtnt.model.RoomTypeDTO;
 import com.airtnt.airtnt.model.SubPropertyTypeDTO;
 import com.airtnt.airtnt.model.TransactionDTO;
 import com.airtnt.airtnt.service.AdminMapper;
+import com.airtnt.airtnt.service.MemberMapper;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 @Controller
 @RequestMapping("admin")
-public class AdminController extends UserController {
+public class AdminController{
 
 	@Autowired
 	AdminMapper adminMapper;
+	@Autowired
+	MemberMapper memberMapper;
 	
 	//reports 화면 내 초기 날짜 파라미터로 사용(오늘 날짜)
 	Date dateToday = new Date(System.currentTimeMillis());
@@ -52,7 +55,13 @@ public class AdminController extends UserController {
 	 */
 	@RequestMapping(value = "", method = {RequestMethod.GET, RequestMethod.POST})
 	public String goMainView() {
-		return "admin/main";
+		 LoginOKBean login = LoginOKBean.getInstance();
+		 System.out.println("login chk : " + login.getId());
+		 if(login.getId()!=null) { 
+			 return "redirect:admin/dashboard"; 
+		 }else {
+			 return "admin/main";
+		 }
 	}
 	
 	/*
@@ -98,12 +107,12 @@ public class AdminController extends UserController {
 	/*
 	 * [공통] : logout
 	 */
-	//@RequestMapping("logout")
-	//public String logout(HttpServletRequest req) {
-	//	HttpSession session = req.getSession();
-	//	session.invalidate();
-	//	return "redirect:/admin";
-	//}
+	@RequestMapping("logout")
+	public String logout(HttpServletRequest req) {
+		HttpSession session = req.getSession();
+		session.invalidate();
+		return "redirect:/admin";
+	}
 
 	/*
 	 * [dashboard] : 대시보드 필요 데이터 조회 및 넘긴다
@@ -380,8 +389,9 @@ public class AdminController extends UserController {
 	
 	@RequestMapping(value = "guideUpdate", method = RequestMethod.POST)
 	public String updateSelectedBoard(GuideContextDTO dto) throws Exception {
-		int res1 = adminMapper.updateSelectedBoard(dto); //master
-		int res2 = adminMapper.updateSelectedContext(dto); //sub
+		int res1 = adminMapper.updateSelectedBoard(dto.getSubject(), dto.getExplanation()); //master
+		System.out.println(dto.getId()+ " :" + dto.getContext());
+		//int res2 = adminMapper.updateSelectedContext(dto); //sub
 		return "redirect:guidelist";
 	}
 
