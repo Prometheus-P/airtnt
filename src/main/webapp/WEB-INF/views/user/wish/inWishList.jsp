@@ -8,9 +8,10 @@ const EMPTY_HEART = "https://img.icons8.com/fluent-systems-regular/48/000000/lik
 var wishButton;
 var imgTag;
 var wishPropertyId;
-
+var count = 0;
 $(function(){
 	
+	//[위시 등록 하트기능!]
 	$(".wish-button").click(function(){
 		wishButton = this;
 		imgTag = this.querySelector("img.heart");
@@ -70,6 +71,56 @@ $(function(){
 			});
 		}
 	});
+	
+	//[more 버튼 누를때마다 리스트작성]
+	$('#moreBtn').on('click', function(){
+		
+		count += 10;
+	    var form = {
+	            more: count,
+	            wish_id: "${wish_id}"
+	    }
+	    console.log(form.more);
+	    $.ajax({
+	        url: "/inWishList",
+	        type: "POST",
+	        data: form,
+	        success: function(data){
+	           	console.log(data);
+	           	if(data.length<10){
+	           		$('#moreBtn').remove();
+	           	}
+	           	$(data).each(function(){
+	           		html = $('<li style="height: 150px;">' +
+							 '<div class="one_third first">' +
+				                '<a href="/property/detail?propertyId='+this.property_id+'"><img src="'+this.path+'" alt="" style="object-fit:contain; width:200px; height:150px;"></a>' +
+				              '</div>' +
+				              '<div class="one_third">' +
+				                '<h2><a href="/property/detail?propertyId='+this.property_id+'">'+this.property_name+'</a></h2>' +
+				                '<h4>'+this.type_name+'/'+this.sub_type_name+' '+this.room_type_name+'</h4>' +
+				                '<h4>'+this.property_address+'</h4>' +
+				              '</div>' +
+				              '<div class="one_third fl_right position-relative">' +
+				                '<div class="position-absolute top-0 end-0">' +
+	                               '<a href="#" class="wish-button unwish" id="wishProperty-'+this.property_id+'"' +
+	                               'style="font-size: 20px">' +
+	                                 '<img class="heart" src="https://img.icons8.com/fluent/48/000000/like.png"' +
+	                                 'style="width: 3rem; height: 3rem">' +
+	                               '</a>' +
+				                '</div>' +
+				              '</div>' +
+							 '</li>' +
+							 '<hr>'
+							);
+	        		$('#properties').append(html);
+	           	});
+	        },
+	        error: function(){
+	            alert("simpleWithObject err");
+	        }
+	    });
+	});
+	
 });
 </script>
 	<style>
@@ -79,8 +130,8 @@ $(function(){
 	 #btn_group button{ border: 1px solid #a4dcf3; background-color: rgba(0,0,0,0); color: #a4dcf3; padding: 5px; }
 	 #btn_group button:hover{ color:white; background-color: skyblue; } 
 	 </style>
-	<div class="hoc clear">
-		<div class="one_half first" style="margin-top:7px; margin-left:10px; width:60%">
+	<div class="hoc clear " style="margin-left: 0px;">
+		<div class="one_half" style="margin-top: 100px;">
 			<div class="container-sm">
 				<div id="btn_group" class="fl_left"> 
 					<a href="javascript:history.back()">
@@ -93,16 +144,16 @@ $(function(){
 					</a>
 			    </div>
 			</div>
-			<div class="container-sm fl_left" style="margin-top: 30px;">
-				<div class="bold" style="font-size: 7vh; margin-bottom:2vh;">${wish_name}</div>
-			    <div  id="btn_group" class="btn-group" role="group" aria-label="Basic outlined example">
-					<a href="#Date" data-toggle="modal">
-						<button id="test_btn2" style="font-size:20px; padding-left:15px; padding-right:15px;" type="button" class="btn btn-outline-primary">날짜</button>
-					</a>
-					<a href="#Guest" data-toggle="modal">
-						<button id="test_btn2" style="font-size:20px; padding-left:15px; padding-right:15px;" type="button" class="btn btn-outline-primary">인원</button>
-					</a>
-				</div>
+				<div class="container-sm fl_left" style="margin-top: 30px;">
+					<div class="bold" style="font-size: 3vh; margin-bottom:2vh;">${wish_name}</div>
+				    <div  id="btn_group" class="btn-group" role="group" aria-label="Basic outlined example">
+						<a href="#Date" data-toggle="modal">
+							<button id="test_btn2" style="font-size:20px; padding-left:15px; padding-right:15px;" type="button" class="btn btn-outline-primary">날짜</button>
+						</a>
+						<a href="#Guest" data-toggle="modal">
+							<button id="test_btn2" style="font-size:20px; padding-left:15px; padding-right:15px;" type="button" class="btn btn-outline-primary">인원</button>
+						</a>
+					</div>
 			<!-- 숙소리스트 부분 -->
 				<!-- 위시리스트에 숙소가 없다면  -->
 				<c:if test="${empty properties}">
@@ -116,14 +167,11 @@ $(function(){
 				</c:if>
 				<!-- 위시리스트에 숙소가 있다면  -->
 				<c:if test="${not empty properties}">
-					<ul class="nospace clear " style="margin-top: 50px;">
+					<ul id="properties" class="nospace clear " style="margin-top: 50px;">
 			            <c:forEach var="dto" items="${properties}">
-			            <li style="height: 180px;">
-			              <div class="one_third first" style="width:300x; height:200px;">
-			                <a href="/property/detail?propertyId=${dto.property_id}">
-			                	<img src="${dto.path}" alt="" 
-			                	 style="border-radius:10px; object-fit:fit; margin-bottom:10px;">
-			              	</a>
+			            <li style="height: 150px;">
+			              <div class="one_third first" >
+			                <a href="/property/detail?propertyId=${dto.property_id}"><img src="${dto.path}" alt="" style="object-fit:contain; width:200px; height:150px;"></a>
 			              </div>
 			              <div class="one_third">
 			                <h2><a href="/property/detail?propertyId=${dto.property_id}">${dto.property_name}</a></h2>
@@ -144,9 +192,13 @@ $(function(){
 			            </li>
 			            <hr>
 			            </c:forEach>
+			            <!--more list 그려질곳-->
 			          </ul>
+			            <div class="text-center">
+			            	<button id="moreBtn" style="font-size:13px; margin-top:10px; padding-left:8px; padding-right:8px;" type="button" class="btn">더보기</button>
+			            </div>
 			    </c:if>
-			</div>
+			    </div>
 	    </div>
 	
 		<!-- 카카오맵 -->
