@@ -11,7 +11,7 @@ var wishPropertyId;
 var count = 0;
 $(function(){
 	
-	//[위시 등록 하트기능]
+	//[위시 등록 하트기능!]
 	$(".wish-button").click(function(){
 		wishButton = this;
 		imgTag = this.querySelector("img.heart");
