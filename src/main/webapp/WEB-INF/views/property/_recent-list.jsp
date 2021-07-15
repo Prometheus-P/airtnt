@@ -10,7 +10,7 @@
 <body>
 <h2>최근 본 숙소</h2>
 <div id="carouselControls-recent" class="carousel slide" data-bs-interval="false">
-  <div class="carousel-inner" style="margin-left: 10%; width: 80%">
+  <div class="carousel-inner" style=" width: 80%">
     <c:forEach var="recentProperty" items="${recentProperties}" varStatus="status">
       <c:if test="${status.count % 3 == 1}">
       <div class="carousel-item <c:if test='${status.count == 1}'>active</c:if>">

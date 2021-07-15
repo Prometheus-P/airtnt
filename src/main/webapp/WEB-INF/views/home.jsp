@@ -20,7 +20,7 @@
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<script src="/resources/script/check.js"></script>
 	
-	<script src="/resources/script/search-control.js"></script>
+	<script src="/resources/script/address-control.js"></script>
 	<!-- JAVASCRIPTS -->
 	<!-- <script src="layout/scripts/jquery.min.js"></script>
 	<script src="layout/scripts/jquery.backtotop.js"></script>

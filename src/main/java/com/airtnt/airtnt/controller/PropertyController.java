@@ -590,14 +590,14 @@ public class PropertyController {
 				// id가 같은 숙소를 맨 뒤로 이동시키기를 반복하면
 				// 쿠키에 등록되어있던 순서와 똑같이 정렬됨
 				outer: for(int i = 0; i < recentPropertyIdArray.length; i++) {
-					for(int j = 0; j < recentProperties.size(); i++) {
+					for(int j = 0; j < recentProperties.size(); j++) {
 						if(recentProperties.get(j).getId() == recentPropertyIdArray[i]) {
 							recentProperties.add(recentProperties.remove(j));
 							continue outer;
 						}
 					}
 				}
-
+				
 			} catch(UnsupportedEncodingException e) {
 				e.printStackTrace();
 				System.out.println("최근목록 로딩 : 디코딩 문제 발생");
