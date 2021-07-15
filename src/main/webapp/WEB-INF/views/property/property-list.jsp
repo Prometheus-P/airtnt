@@ -67,13 +67,8 @@ console.log("(${latitude}, ${longitude})");
 </div>
 
 <!-- 검색 필터 -->
-<<<<<<< HEAD
-<div style="height: 50px">
-  <div class="container clear position-relative" >
-=======
 <div class="wrapper row1" style="height: 50px">
   <div class="hoc container clear position-relative" >
->>>>>>> branch 'master' of https://github.com/ccd485/airtnt.git
     <div class="position-absolute top-0 start-0">
       <input type="button" class="btn btn-secondary"
       value="전체 초기화" onclick="resetTags('all')">
@@ -247,13 +242,8 @@ console.log("(${latitude}, ${longitude})");
 </form>
 
 <!-- 메인 화면 -->
-<<<<<<< HEAD
-<div class="hoc clear wrapper row3" style="margin:20px;">
-=======
 <div class="wrapper row3">
   <div class="hoc clear" style="margin-left: 50px; margin-right: 50px">
-
->>>>>>> branch 'master' of https://github.com/ccd485/airtnt.git
     <!-- main body -->
     <!-- ################################################################################################ -->
     <div class="content"> 
