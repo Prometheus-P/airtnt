@@ -2,8 +2,8 @@ package com.airtnt.airtnt.controller;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,12 +23,13 @@ import com.airtnt.airtnt.guest.LoginOKBean;
 import com.airtnt.airtnt.model.AmenityTypeDTO;
 import com.airtnt.airtnt.model.BookingDTO;
 import com.airtnt.airtnt.model.DashBoardDTO;
+import com.airtnt.airtnt.model.GuideContextDTO;
+import com.airtnt.airtnt.model.GuideDTO;
 import com.airtnt.airtnt.model.MemberDTO;
 import com.airtnt.airtnt.model.PropertyTypeDTO;
 import com.airtnt.airtnt.model.RoomTypeDTO;
 import com.airtnt.airtnt.model.SubPropertyTypeDTO;
 import com.airtnt.airtnt.model.TransactionDTO;
-import com.airtnt.airtnt.model.GuideDTO;
 import com.airtnt.airtnt.service.AdminMapper;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -295,16 +296,39 @@ public class AdminController extends UserController {
 	}
 
 	/*
-	 * [Guide]
+	 * [Guide] : 글작성 페이지 이동
 	 */
 	@RequestMapping(value = "guideWrite", method = RequestMethod.GET)
 	public String goWriteForm(HttpServletRequest req) throws Exception {
 		return "admin/guide_write";
 	}
 	
+	/*
+	 * [Guide] : 글작성
+	 */
 	@RequestMapping(value = "guideWrite", method = RequestMethod.POST)
-	public String insertBoard(GuideDTO dto) throws Exception {
-		int res = adminMapper.insertBoard(dto);
+	public String insertBoard(GuideDTO guideDto,
+							@RequestParam(value = "contextArr", required = false) String[] contextArr) throws Exception {
+		
+		//마스터 테이블 pk id 조회
+		int id = adminMapper.selectIdSeq();
+		
+		//마스터 테이블 id 세팅
+		guideDto.setId(id);
+		System.out.println("DTO ID : " + guideDto.getId());
+		int res1 = adminMapper.insertBoard(guideDto);
+		
+		//sub 테이블 세팅
+		//ArrayList<GuideContextDTO> subArr = new ArrayList<>();
+		
+		if(res1 > 0) {
+			for(int i=0; i<contextArr.length; i++) {
+				GuideContextDTO context = new GuideContextDTO();
+				context.setId(id);
+				context.setContext(contextArr[i]);
+				int res2 = adminMapper.insertBoardContext(context);
+			}
+		}
 		return "redirect:guidelist";
 	}
 	
@@ -343,7 +367,7 @@ public class AdminController extends UserController {
 	
 	@RequestMapping(value = "guideDelete", method = RequestMethod.GET)
 	public String deleteBoardList(HttpServletRequest req, @RequestParam String id) throws Exception {
-		int res = adminMapper.deleteBoard(id);
+		int res = adminMapper.deleteBoard(id); //마스터랑 sub 모두 삭제
 		return "redirect:guidelist";
 	}
 	
@@ -355,8 +379,9 @@ public class AdminController extends UserController {
 	}
 	
 	@RequestMapping(value = "guideUpdate", method = RequestMethod.POST)
-	public String updateSelectedBoard(GuideDTO dto) throws Exception {
-		int res = adminMapper.updateSelectedBoard(dto);
+	public String updateSelectedBoard(GuideContextDTO dto) throws Exception {
+		int res1 = adminMapper.updateSelectedBoard(dto); //master
+		int res2 = adminMapper.updateSelectedContext(dto); //sub
 		return "redirect:guidelist";
 	}
 

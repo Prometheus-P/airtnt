@@ -19,12 +19,6 @@ Licence URI: https://www.os-templates.com/template-terms
 		location.href = "index";
 	</script>
 </c:if>
-<c:if test="${empty sessionScope.member_id}">
-	<script type="text/javascript">
-		alert("로그인 후 이용해주세요.");
-		history.back();
-	</script>
-</c:if>
 <!-- To declare your language - read more here: https://www.w3.org/International/questions/qa-html-language-declarations -->
 <head>
 <title>숙소/상세보기(숙소명:${property.name})</title>
@@ -340,12 +334,15 @@ function setTotalPrice(){
     <div class="clear"></div>
   </main>
 </div>
+
+<c:import url="/WEB-INF/views/bottom.jsp"/>
+
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
-<div class="wrapper row4">
+<!-- <div class="wrapper row4">
   <footer id="footer" class="hoc clear"> 
-    <!-- ################################################################################################ -->
+    ################################################################################################
     <div class="one_quarter first">
       <h6 class="heading">Praesent id aliquam</h6>
       <p>Non tellus nec sapien lobortis lobortis mauris egestas massa ac cursus pellentesque leo risus convallis nulla et fringilla sapien magna sit amet magna aliquam tempus praesent sit amet neque sed lobortis nulla facilisi [<a href="#">&hellip;</a>]</p>
@@ -398,27 +395,27 @@ function setTotalPrice(){
         </li>
       </ul>
     </div>
-    <!-- ################################################################################################ -->
+    ################################################################################################
   </footer>
-</div>
+</div> -->
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
-<div class="wrapper row5">
+<!-- <div class="wrapper row5">
   <div id="copyright" class="hoc clear"> 
-    <!-- ################################################################################################ -->
+    ################################################################################################
     <p class="fl_left">Copyright &copy; 2018 - All Rights Reserved - <a href="#">Domain Name</a></p>
     <p class="fl_right">Template by <a target="_blank" href="https://www.os-templates.com/" title="Free Website Templates">OS Templates</a></p>
-    <!-- ################################################################################################ -->
+    ################################################################################################
   </div>
-</div>
+</div> -->
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
 <a id="backtotop" href="#top"><i class="fas fa-chevron-up"></i></a>
 <!-- JAVASCRIPTS -->
-<script src="/resources/layout/scripts/jquery.min.js"></script>
+<!-- <script src="/resources/layout/scripts/jquery.min.js"></script> -->
 <script src="/resources/layout/scripts/jquery.backtotop.js"></script>
-<script src="/resources/layout/scripts/jquery.mobilemenu.js"></script>
+<!-- <script src="/resources/layout/scripts/jquery.mobilemenu.js"></script> -->
 </body>
 </html>

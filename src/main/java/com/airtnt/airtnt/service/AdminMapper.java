@@ -1,9 +1,12 @@
 package com.airtnt.airtnt.service;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,6 +14,7 @@ import org.springframework.stereotype.Service;
 import com.airtnt.airtnt.model.AmenityTypeDTO;
 import com.airtnt.airtnt.model.BookingDTO;
 import com.airtnt.airtnt.model.DashBoardDTO;
+import com.airtnt.airtnt.model.GuideContextDTO;
 import com.airtnt.airtnt.model.GuideDTO;
 import com.airtnt.airtnt.model.MemberDTO;
 import com.airtnt.airtnt.model.PropertyTypeDTO;
@@ -136,6 +140,24 @@ public class AdminMapper {
 		return res;
 	}
 	
+	//[guide] : 게시글 상세글 배열 등록
+	/*
+	 * public int insertBoardContext(ArrayList<GuideContextDTO> paramArr) {
+	 * Map<String, Object> selectKeyMap = new Hashtable<>();
+	 * selectKeyMap.put("paramArr", paramArr); int res =
+	 * sqlSession.update("insertBoardContext", selectKeyMap); return res; }
+	 */
+	public int insertBoardContext(GuideContextDTO dto) {
+		int res = sqlSession.update("insertBoardContext", dto); 
+		return res;
+	}
+	
+	
+	public int selectIdSeq() {
+		int id = sqlSession.selectOne("selectIdSeq");
+		return id;
+	}
+	
 	//[guide] : 게시글 목록 전체 조회
 	public List<GuideDTO> selectBoardList(int startRow, int endRow){
 		Map<String, Object> selectKeyMap = new Hashtable<>();
@@ -147,6 +169,7 @@ public class AdminMapper {
 	//[guide] : 게시글 삭제
 	public int deleteBoard(String id) {
 		int res = sqlSession.delete("deleteBoard", id);
+		int res2 = sqlSession.delete("deleteGuideContext", id);
 		return res;
 	}
 	
@@ -156,9 +179,14 @@ public class AdminMapper {
 		return list;
 	}
 	
-	//[guide] : 게시글 수정
+	//[guide] : 게시글 수정(마스터)
 	public int updateSelectedBoard(GuideDTO dto) {
 		int res = sqlSession.update("updateSelectedBoard", dto);
+		return res;
+	}
+	
+	public int updateSelectedContext(GuideContextDTO dto) {
+		int res = sqlSession.update("updateSelectedContext", dto);
 		return res;
 	}
 	
