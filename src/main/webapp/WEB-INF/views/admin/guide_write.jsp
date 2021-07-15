@@ -1,5 +1,5 @@
-<%@ page language="java" contextType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8" import="java.util.*"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
 <%@include file= "admin_nav.jsp"%>    
 <html>
@@ -18,7 +18,7 @@
 		    	
 		        var txt = '<div class="form-group">'
 		        		+ 	'<label for="exampleFormControlTextarea">context'+contextCnt+'</label>'
-		        	    + 	'<textarea class="form-control" id="context"'+contextCnt+'" rows="3" name="context"'+contextCnt+'"></textarea>'
+		        	    + 	'<textarea class="form-control" id="context"'+contextCnt+'" rows="3" name="contextArr"></textarea>'
 		        	    + '</div>';
 		        $('#contextDiv').append(txt);
 		        
@@ -43,7 +43,7 @@
 			 <div id = "contextDiv">
 			 	<div class="form-group">
 			   		<label for="exampleFormControlTextarea1">context1</label>
-			   		<textarea class="form-control" id="context1" rows="3" name="context1"></textarea>
+			   		<textarea class="form-control" id="context1" rows="3" name="contextArr"></textarea>
 			 	</div>
 			 </div>
 			 <div align="center">

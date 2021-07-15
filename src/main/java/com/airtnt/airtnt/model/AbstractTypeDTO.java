@@ -7,6 +7,8 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
 
+import com.airtnt.airtnt.util.TagAttribute;
+
 public abstract class AbstractTypeDTO implements Serializable{
 
 	private static final long serialVersionUID = 1L;
@@ -17,6 +19,8 @@ public abstract class AbstractTypeDTO implements Serializable{
 	private Date regDate;
 	private Date modDate;
 	
+	// default 접근자로 선언한 생성자는
+	// 다른 패키지에서 접근할 수 없기 때문에 안전함
 	AbstractTypeDTO() {}
 	AbstractTypeDTO(String name, String isUse) {
 		this.name = name;

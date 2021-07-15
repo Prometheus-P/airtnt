@@ -32,7 +32,7 @@
         			<div><a href="/myPage/editPassword" style="color:black">비밀번호변경</a></div>
         	</div>
         	<div class="border rounded vw-3 center" style="padding-top:2vh;padding-bottom:2vh">
-        		<div><a href="#" style="color:black" onclick="sure('정말 탈퇴하시겠습니까?','/myPage/deleteMember')">회원탈퇴</a></div>
+        		<div><a href="#" style="color:black" onclick="sure()">회원탈퇴</a></div>
         	</div>
 		</div>
 		<div class="col-sm-9 bg-light p-3 border">

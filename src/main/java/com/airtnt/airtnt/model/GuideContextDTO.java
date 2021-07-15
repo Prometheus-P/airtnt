@@ -1,6 +1,6 @@
 package com.airtnt.airtnt.model;
 
-public class GuideContextDTO {
+public class GuideContextDTO extends GuideDTO{
 	private int id;
 	private int guideId;
 	private String context;

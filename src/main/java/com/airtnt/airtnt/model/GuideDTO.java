@@ -31,7 +31,7 @@ public class GuideDTO {
 		this.regDate = regDate;
 	}
 
-	String getModDate() {
+	public String getModDate() {
 		return modDate;
 	}
 

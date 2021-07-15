@@ -208,20 +208,47 @@
 		where id = #{id}
 	</update>
 	
-	<insert id ="insertBoard" parameterType="guideDTO">
-		insert into guide values(
-			seq_content_id.nextval,
+	<select id ="selectIdSeq" resultType="Integer">
+		select guide_context_seq.nextval as id from dual
+	</select>
+	
+	<insert id = "insertBoard" parameterType="guideDTO">
+		insert into guide 
+		values(
+			#{id},
 			#{subject},
 			#{explanation},
-			#{content1},
-			#{content2},
-			#{content3},
 			sysdate,
 			sysdate
 		)
 	</insert>
 	
-	<select id ="selectBoardCount" resultType="Integer">
+	<insert id = "insertBoardContext" parameterType="guideContextDTO">
+		insert into guide_context 
+		values ( 
+	 			guide_context_seq.nextval,
+			 	#{id}, 
+			 	#{context},
+			 	sysdate,
+			 	sysdate
+	 		 ) 
+	</insert>
+	
+	<!-- <update id="insertBoardContext" parameterType="java.util.Map">
+		<foreach item="item" index="index" collection="list" separator=" " open="INSERT ALL " close="SELECT * FROM DUAL">
+		into guide_context( id , guide_id , context , reg_date, mod_date )
+		values ( 
+	 			guide_context_seq.nextval,
+			 	#{item.id}, 
+			 	#{item.context},
+			 	sysdate,
+			 	sysdate
+	 		 ) 
+		</foreach>
+	</update> -->
+
+	
+	<select id = "selectBoardCount" resultType="Integer">
 		select count(*) from guide
 	</select>
 	
@@ -237,29 +264,36 @@
 		order by rn desc
 	</select>
 	
-	<select id = "getSelectedBoard" resultType="guideDTO" parameterType="String">
-		select id,
-			   subject,
-			   explanation,
-			   content1,
-			   content2,
-			   content3
-		from guide
-		where id = #{id}
+	<select id = "getSelectedBoard" resultType="guideContextDTO" parameterType="String">
+		select a.id as guideId, 			
+               a.subject,
+               a.explanation,
+               b.context,
+               b.id			
+        from guide a, guide_context b
+        where a.id = b.guide_id
+        and a.id = #{id}
+        order by b.id
 	</select>
 	
 	<delete id = "deleteBoard" parameterType="String">
 		delete from guide where id = #{id}
 	</delete>
 	
+	<delete id = "deleteGuideContext" parameterType="String">
+		delete from guide_context where id = #{id}
+	</delete>
+	
 	<update id = "updateSelectedBoard" parameterType="guideDTO">
 		update guide
 		set subject = #{subject},
-			explanation = #{explanation},
-			content1 = #{content1},
-			content2 = #{content2},
-			content3 = #{content3},
-			mod_date = sysdate
+			explanation = #{explanation}
+		where id = #{id}
+	</update>
+	
+	<update id = "updateSelectedContext" parameterType="guideContextDTO">
+		update guide_context
+		set context = #{context}
 		where id = #{id}
 	</update>
 	

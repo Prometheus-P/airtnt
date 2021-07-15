@@ -386,7 +386,7 @@ function checkParametersOnSubmit(){
 	           </div>
 	           <div class="two_third">
 	             <input id="guest-count" type="number" name="guestCount"
-	             min="1" max="${property.maxGuest}" value="1" >
+	             min="1" max="${property.maxGuest}" value="1" onchange="setTotalPrice()">
 	           </div>
 	         </li>
 	         <li class="list-group-item" style="font-size: 30px;color: blue">
@@ -409,12 +409,18 @@ function checkParametersOnSubmit(){
 <c:import url="/WEB-INF/views/bottom.jsp"/>
 
 =======
+<<<<<<< HEAD
+
+<c:import url="/WEB-INF/views/bottom.jsp"/>
+
+=======
+>>>>>>> branch 'master' of https://github.com/ccd485/airtnt.git
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
-<div class="wrapper row4">
+<!-- <div class="wrapper row4">
   <footer id="footer" class="hoc clear"> 
-    <!-- ################################################################################################ -->
+    ################################################################################################
     <div class="one_quarter first">
       <h6 class="heading">Praesent id aliquam</h6>
       <p>Non tellus nec sapien lobortis lobortis mauris egestas massa ac cursus pellentesque leo risus convallis nulla et fringilla sapien magna sit amet magna aliquam tempus praesent sit amet neque sed lobortis nulla facilisi [<a href="#">&hellip;</a>]</p>
@@ -467,20 +473,20 @@ function checkParametersOnSubmit(){
         </li>
       </ul>
     </div>
-    <!-- ################################################################################################ -->
+    ################################################################################################
   </footer>
-</div>
+</div> -->
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
-<div class="wrapper row5">
+<!-- <div class="wrapper row5">
   <div id="copyright" class="hoc clear"> 
-    <!-- ################################################################################################ -->
+    ################################################################################################
     <p class="fl_left">Copyright &copy; 2018 - All Rights Reserved - <a href="#">Domain Name</a></p>
     <p class="fl_right">Template by <a target="_blank" href="https://www.os-templates.com/" title="Free Website Templates">OS Templates</a></p>
-    <!-- ################################################################################################ -->
+    ################################################################################################
   </div>
-</div>
+</div> -->
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->

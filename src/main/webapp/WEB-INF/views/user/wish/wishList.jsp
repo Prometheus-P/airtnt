@@ -1,21 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/top.jsp"%>
-<script>
-	var listSize = "<c:out value='${listSize}'/>"
-	function newWish(){
-		if(listSize>8){
-			alert("최대 9개의 위시리스트만 가질수있습니다.");
-			document.getElementById("newWish").href="";
-		}else{
-			document.getElementById("newWish").href="#NewWish";
-		}
-	}
-</script>
-<div class="hoc container clear">
+
+<div class="hoc container clear ">
 	<div>
-		<span class="bold fl_left" style="font-size: 4vh; margin-right:50vh;">위시리스트</span>
-		<span><a id="newWish" class="btn btn-outline-primary fl_right" onclick="newWish()" href="" role="button" data-toggle="modal">새로운 위시리스트 만들기</a></span>
+		<span class="bold fl_left" style="font-size: 3vh; margin-right:50vh;">위시리스트</span>
+		<span><a class="btn btn-outline-primary fl_right" href="#NewWish" role="button" data-toggle="modal">새로운 위시리스트 만들기</a></span>
 	</div>
   <main> 
     <!-- main body -->

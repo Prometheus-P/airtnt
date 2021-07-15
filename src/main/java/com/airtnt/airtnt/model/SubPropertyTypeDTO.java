@@ -9,12 +9,15 @@ public class SubPropertyTypeDTO extends AbstractTypeDTO {
 	
 	public SubPropertyTypeDTO() {}
 	public SubPropertyTypeDTO(String name, String isUse, String propertyTypeId) {
-		super(name, isUse);
-		this.propertyTypeId = Integer.parseInt(propertyTypeId);
+		setName(name);
+		setIsUse(isUse.charAt(0));
+		setPropertyTypeId(Integer.parseInt(propertyTypeId));
 	}
 	public SubPropertyTypeDTO(String id, String name, String isUse, String propertyTypeId) {
-		super(id, name, isUse);
-		this.propertyTypeId = Integer.parseInt(propertyTypeId);
+		setId(Integer.parseInt(id));
+		setName(name);
+		setIsUse(isUse.charAt(0));
+		setPropertyTypeId(Integer.parseInt(propertyTypeId));
 	}
 	
 	public Integer getPropertyTypeId() {

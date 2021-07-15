@@ -8,6 +8,9 @@
 	
 	}
 	function transferDataForUpdate(id,rating,content){
+		console.log(id);
+		console.log(rating);
+		console.log(content);
 		$('#review_id').val(id)
 		$('#update_rating').val(rating)
 		$('#update_content').html(content)
@@ -69,17 +72,19 @@
 							                '<p>'+this.property_address+'   /   '+this.price+'원   /   '+new Date(this.check_in_date).toISOString().substring(0,10)+' | '+new Date(this.check_out_date).toISOString().substring(0,10)+'</p>' +
 							              '</div>' +
 							              '<div class="one_third fl_right">' +
-							              
-									                'type="button" class="close">&times;</button>' +
+							              //여기 수정해야함
+							              		//'<button onclick="sure('정말 삭제하시겠습니까?','/myPage/deleteReview?id='+this.id+')" ' +
+									                //'type="button" class="close">&times;</button>' +
 							              '</div>' +
 							              '<hr style="color: #00000061;">' +
 							              '<div class="two_third first text-left">' +
-								             '<p id="stars'+data.length+'"></p>' +
+								             '<p id="stars'+dataCnt+'"></p>' +
 							              	'<p>'+this.content+'</p>' +
 							              '</div>' +
 							              '<div class="one_third fl_right">' +
-								              '<button data-target="#updateReviewModal" onclick="transferDataForUpdate('+this.id+','+this.rating+','+this.content+')" ' + 
-								              		'data-toggle="modal" style="font-size:12px;" type="button" class="btn">수정하기</button>' +
+							              //여기 수정 해야함 
+								              //'<button data-target="#updateReviewModal" onclick="transferDataForUpdate('+this.id+','+this.rating+','+this.content+')" ' + 
+								              		//'data-toggle="modal" style="font-size:12px;" type="button" class="btn">수정하기</button>' +
 							              '</div><br>' +
 							            '</li>' +
 						           '<hr>'
@@ -88,7 +93,7 @@
 		        		
 		        		for(var i=0; i<starCnt; i++){
 		                       html = '<span><img src="/resources/images/star-on.png" alt=""></span>';
-		                       $('#stars'+i+'').append(html);
+		                       $('#stars'+dataCnt+'').append(html);
 		                    }
 	        				
 		           	});
@@ -119,7 +124,7 @@
 	    <input id="design" type="radio" name="tab_item">
 	    <div class="tab_content" id="all_content">
 		    <c:if test="${empty toWriteReviews}">
-		       <h5>작성하실 리뷰가 없습니다</h5><br>
+		       <h5>1년간 여행한 숙소가 없습니다. 여행가실 때가 되셨군요.</h5><br>
 		        <h1 style="font-size: 300px">AirTnT</h1>
 		        <a href="/property/search?addressKey=">
 						<button id="test_btn3" style="font-size:40px; padding-left:15px; padding-right:15px;" type="button" class="btn btn-outline-primary">둘러보기</button>
@@ -128,18 +133,20 @@
 		    <c:if test="${not empty toWriteReviews}">
 		    	<ul class="nospace clear " style="margin-top: 50px;">
 			            <c:forEach var="dto" items="${toWriteReviews}">
-			            <li style="height:100px;">
+			            <li>
 			              <div class="one_third first text-center" style="width: 20%;">
 			                <a href="/property/detail?propertyId=${dto.property_id}">
-			                	<img src="${dto.path}" alt="" style="height:100px;"></a>
+			                	<img src="${dto.path}" alt="" style="height:150px;"></a>
 			              </div>
 			              <div class="one_third text-left">
-			                <p class="fs-2"><a style="color:black" href="/property/detail?propertyId=${dto.property_id}">${dto.property_name}</a></p>
+			                <p class="fs-2"><a style="color:black" href="/guest/property-detail?propertyId=${dto.property_id}">${dto.property_name}</a></p>
 			                <p>${dto.type_name}/${dto.sub_type_name} ${dto.room_type_name}</p>
-			                <p>${dto.property_address}   /   ${dto.total_price}원   /   ${dto.check_in_date} | ${dto.check_out_date}</p>
+			                <p>${dto.property_address}</p>
+			                <p>${dto.total_price}원</p>
+			                <p>${dto.check_in_date} | ${dto.check_out_date}</p>
 			              </div>
 			              <div class="one_third text-right">
-			              	<button data-target="#ReviewModal" onclick="transferData(${dto.property_id},${dto.id})" data-toggle="modal" id="test_btn3" style="font-size:20px;" type="button" class="btn btn-outline-primary">리뷰작성하기</button>
+			              	<button data-target="#ReviewModal" data-property_id="${dto.property_id}" data-toggle="modal" id="test_btn3" style="font-size:20px;" type="button" class="btn btn-outline-primary">리뷰작성하기</button>
 			              </div>
 			            </li>
 			            <hr>
@@ -153,40 +160,27 @@
 		        <h1 style="font-size: 400px">AirTnT</h1>
 		    </c:if>
 		    <c:if test="${not empty myReviews}">
-		    	<ul id="myReviews" class="nospace clear " style="margin-top: 50px;">
+		    	<ul class="nospace clear " style="margin-top: 50px;">
 			            <c:forEach var="dto" items="${myReviews}">
 			            <li>
-			              <hr>
 			              <div class="one_third first text-center" style="width: 10%;">
 			                <a href="/property/detail?propertyId=${dto.property_id}">
-			                	<img src="${dto.path}" alt="" style="height:70px; margin-bottom:5px"></a>
+			                	<img src="${dto.path}" alt="" style="height:70px;"></a>
 			              </div>
 			              <div class="one_third text-left">
-			                <p class="fs-2"><a style="color:black" href="/property/detail?propertyId=${dto.property_id}">${dto.property_name}</a></p>
-			                <p>${dto.property_address}   |   ${dto.price}원   |   ${dto.check_in_date} ~ ${dto.check_out_date}</p>
+			                <p class="fs-2"><a style="color:black" href="/guest/property-detail?propertyId=${dto.property_id}">${dto.property_name}</a></p>
+			                <p>${dto.type_name}/${dto.sub_type_name} ${dto.room_type_name}</p>
+			                <p>${dto.property_address}</p>
+			                <p>${dto.total_price}원</p>
+			                <p>${dto.check_in_date} | ${dto.check_out_date}</p>
 			              </div>
-			              <div class="one_third fl_right">
-			                <button onclick="sure('정말 삭제하시겠습니까?','/myPage/deleteReview?id=${dto.id}')" 
-			                type="button" class="close">&times;</button>
+			              <div class="one_third text-right">
+			              	<button data-target="#ReviewModal" data-toggle="modal" id="test_btn3" style="font-size:20px;" type="button" class="btn btn-outline-primary">리뷰작성하기</button>
 			              </div>
-			              <hr style="color: #00000061;">
-			              <div class="two_third first text-left">
-			              	<p><c:forEach begin="1" end="${dto.rating}">
-			              		<span><img src="/resources/images/star-on.png" alt=""></span>
-			              	</c:forEach></p>
-			              	<p>${dto.content}</p>
-			              </div>
-			              <div class="one_third fl_right">
-			              	<button data-target="#updateReviewModal" onclick="transferDataForUpdate('${dto.id}','${dto.rating}','${dto.content}')"
-											data-toggle="modal" style="font-size:12px;" type="button" class="btn">수정하기</button>
-			              </div><br>
 			            </li>
-			            </c:forEach>
 			            <hr>
+			            </c:forEach>
 			          </ul>
-			          <div class="text-center">
-			            	<button id="moreBtn2" style="font-size:13px; margin-top:10px; padding-left:8px; padding-right:8px;" type="button" class="btn">더보기</button>
-			          </div>
 		    </c:if>
 		</div>
 	</div>
@@ -201,48 +195,17 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 			</div>
 			<div class="modal-body">
-				<form name="writeReview" action="/myPage/writeReview" method="post" onsubmit="return writeReviewCheck()">
+				<form name="findId" action="/myPage/writeReview" method="post" onsubmit="return FindIdCheck()">
 					<input type="hidden" name="property_id" id="property_id" value=""/>
-					<input type="hidden" name="booking_id" id="booking_id" value=""/>
 					<div class="form-group mb-3 col-sm-lg">
-						    <label for="InputRating" class="form-label">별점</label>
-						    <div id="star"></div>
-						    <input type="hidden" name="rating" class="form-control" id="review_rating" value="5">
+						    <label for="InputPass" class="form-label">이름</label>
+						    <input type="text" name="name" class="form-control" id="FIname">
 					</div>
 					<div class="form-group mb-3 col-sm-lg">
-						    <label for="InputContent" class="form-label">내용</label>
-						    <textarea name="content" class="form-control" id="review_content" rows="10" cols="58"></textarea>
-					</div>
-					<div class="form-group">
-						<button type="submit" class="btn btn-primary btn-lg btn-block login-btn" style="font-size: 15px">전송</button>
-					</div>
-				</form>
-			</div>
-			<div class="modal-footer">
-				<p></p>
-			</div>
-		</div>
-	</div>
-</div>  
-<!-- updateReviewModal-->
-<div id="updateReviewModal" class="modal fade">
-	<div class="modal-dialog modal-login ">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h4 class="modal-title">리뷰 수정</h4>	
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-			</div>
-			<div class="modal-body">
-				<form name="updateReview" action="/myPage/updateReview" method="post" onsubmit="return updateReviewCheck()">
-					<input type="hidden" name="id" id="review_id" value=""/>
-					<div class="form-group mb-3 col-sm-lg">
-						    <label for="" class="form-label">별점</label>
-						    <div id="star2" data-score="0"></div>
-						    <input type="hidden" name="rating" class="form-control" id="update_rating" value="">
-					</div>
-					<div class="form-group mb-3 col-sm-lg">
-						    <label for="" class="form-label">내용</label>
-						    <textarea name="content" class="form-control" id="update_content" rows="10" cols="58" ></textarea>
+						    <label for="InputEmail" class="form-label"></label>
+						    <textarea rows="10" cols="58"></textarea>
+						    <input type="text" name="email" class="form-control" id="FIemail" aria-describedby="EmailHelp">
+						    <div id="EmailHelp" class="form-text">가입 시 입력한 이메일주소</div>
 					</div>
 					<div class="form-group">
 						<button type="submit" class="btn btn-primary btn-lg btn-block login-btn" style="font-size: 15px">전송</button>

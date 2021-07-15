@@ -18,7 +18,7 @@
 					<div class="mb-3 col-lg">
 						    <label for="CurrentPass" class="form-label">현재 비밀번호</label>
 						    <input type="password" name="passwd" class="form-control" id="CurrentPass" aria-describedby="passHelp" >
-						    <div id="passHelp" class="form-text"><a href="#FindPassModal" data-toggle="modal" data-dismiss="modal" aria-hidden="true">비밀번호를 잊으셨나요?</a></div>
+						    <div id="passHelp" class="form-text"><a href="#" style="color:#01546B">비밀번호 잊으셨나요?</a></div>
 					 </div>
 					 <div class="mb-3 col-lg">
 						    <label for="NewPass" class="form-label">새 비밀번호</label>
