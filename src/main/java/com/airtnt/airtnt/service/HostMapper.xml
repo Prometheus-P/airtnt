@@ -119,7 +119,7 @@
 		ON (p.id = a.property_id)
 		SET 
 		p.max_guest =#{maxGuest}, p.bed_count = #{bedCount}, 
-		p.property_desc = #{propertyDesc}, p.price = #{price},
+		p.property_desc = #{propertyDesc}, p.price = #{price}
 		
 	</update>
 		<!-- UPDATE A T1 RIGHT JOIN B T2 
