@@ -180,8 +180,11 @@ public class AdminMapper {
 	}
 	
 	//[guide] : 게시글 수정(마스터)
-	public int updateSelectedBoard(GuideDTO dto) {
-		int res = sqlSession.update("updateSelectedBoard", dto);
+	public int updateSelectedBoard(String subject, String explanation) {
+		Map<String, Object> selectKeyMap = new Hashtable<>();
+		selectKeyMap.put("subject", subject);
+		selectKeyMap.put("explanation", explanation);
+		int res = sqlSession.update("updateSelectedBoard", selectKeyMap);
 		return res;
 	}
 	

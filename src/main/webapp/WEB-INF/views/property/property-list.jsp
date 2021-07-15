@@ -3,16 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
-<!--
-Template Name: Nekmit
-Author: <a href="https://www.os-templates.com/">OS Templates</a>
-Author URI: https://www.os-templates.com/
-Copyright: OS-Templates.com
-Licence: Free to use under our free template licence terms
-Licence URI: https://www.os-templates.com/template-terms
--->
 <html lang="">
-<!-- To declare your language - read more here: https://www.w3.org/International/questions/qa-html-language-declarations -->
 <head>
 <title>AirTnT/숙소검색(키워드:${addressKey})</title>
 <meta charset="utf-8">
@@ -31,10 +22,6 @@ integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0Ec
 crossorigin="anonymous"></script> -->
 </head>
 <body>
-<!-- ################################################################################################ -->
-<!-- ################################################################################################ -->
-<!-- ################################################################################################ -->
-<!-- Top Background Image Wrapper -->
 
 <script src="/resources/script/json2.js"></script>
 
@@ -58,8 +45,6 @@ console.log("(${latitude}, ${longitude})");
 <input type="hidden" id="page-num" name="pageNum" value="1">
 
 <!-- 검색 네비게이션 바 -->
-<!-- <div id="pageintro" class="hoc clear justify-content-center" style="height: 10px"> -->
-    <!-- ################################################################################################ -->
 <div class="position-absolute top-0 start-50 translate-middle-x" style="z-index: 999">
   <nav id="mainnav" class="navbar navbar-light">
     <div class="container-fluid btn-group" >
@@ -80,11 +65,15 @@ console.log("(${latitude}, ${longitude})");
     </div>
   </nav>
 </div>
-<!-- </div> -->
 
 <!-- 검색 필터 -->
+<<<<<<< HEAD
+<div style="height: 50px">
+  <div class="container clear position-relative" >
+=======
 <div class="wrapper row1" style="height: 50px">
   <div class="hoc container clear position-relative" >
+>>>>>>> branch 'master' of https://github.com/ccd485/airtnt.git
     <div class="position-absolute top-0 start-0">
       <input type="button" class="btn btn-secondary"
       value="전체 초기화" onclick="resetTags('all')">
@@ -258,9 +247,13 @@ console.log("(${latitude}, ${longitude})");
 </form>
 
 <!-- 메인 화면 -->
+<<<<<<< HEAD
+<div class="hoc clear wrapper row3" style="margin:20px;">
+=======
 <div class="wrapper row3">
   <div class="hoc clear" style="margin-left: 50px; margin-right: 50px">
 
+>>>>>>> branch 'master' of https://github.com/ccd485/airtnt.git
     <!-- main body -->
     <!-- ################################################################################################ -->
     <div class="content"> 
@@ -269,7 +262,7 @@ console.log("(${latitude}, ${longitude})");
       <!-- ################################################################################################ -->
       <div class="group btmspace-50 demo">
         <!-- 숙소 리스트 -->
-        <div class="one_half first">
+        <div class="one_half first" style="width:55%;">
           <div class="content"> 
           
           <!-- ################################################################################################ -->
@@ -306,7 +299,8 @@ console.log("(${latitude}, ${longitude})");
                         <div class="carousel-inner">
                           <c:forEach var="image" items="${property.images}" varStatus="status">
                             <div class="carousel-item <c:if test='${status.count == 1}'>active</c:if>">
-                              <img src="${image.path}" class="d-block w-100" alt="" style="object-fit: cover; width:200px;height: 150px">
+                              <img src="${image.path}" class="d-block w-100" alt=""
+                              			style="object-fit: cover; border-radius:10px; width:200px;height: 150px">
                             </div>
                           </c:forEach>
                         </div>
@@ -314,14 +308,10 @@ console.log("(${latitude}, ${longitude})");
                           <button class="carousel-control-prev" type="button"
                           data-bs-target="#carouselControls-${property.id}" data-bs-slide="prev">
                             <img src="https://img.icons8.com/color/48/000000/back--v1.png"/>
-                            <!-- <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Previous</span> -->
                           </button>
                           <button class="carousel-control-next" type="button"
                           data-bs-target="#carouselControls-${property.id}" data-bs-slide="next">
                             <img src="https://img.icons8.com/color/48/000000/forward.png"/>
-                            <!-- <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Next</span> -->
                           </button>
                         </c:if>
                       </div>
@@ -476,7 +466,7 @@ console.log("(${latitude}, ${longitude})");
         </div>
         
         <!-- 카카오맵 -->
-        <div class="one_half">
+        <div class="one_half" style="width:40%;">
           <div id="map" style="width:600px;height:600px;"></div>
           <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=62b11c585fb341eec39dbc28ac9bad71"></script>
           <!-- <script type="text/javascript" src="/resources/map/kakao_map_test.js"></script> -->
@@ -529,9 +519,9 @@ console.log("(${latitude}, ${longitude})");
 		      	    var imageSize = new kakao.maps.Size(38, 40); 
 		      	    
 		      	    // 마커 이미지 생성    
-		      	    var markerImage = new kakao.maps.MarkerImage("/resources/property_img/marker5.png", imageSize); 
-		      	    var overMarkerImage = new kakao.maps.MarkerImage("/resources/property_img/marker4.png", imageSize); 
-		      	    var selectedMarkerImage = new kakao.maps.MarkerImage("/resources/property_img/marker7.png", imageSize); 
+		      	    var markerImage = new kakao.maps.MarkerImage("/resources/property_img/marker.png", imageSize); 
+		      	    var overMarkerImage = new kakao.maps.MarkerImage("/resources/property_img/marker2.png", imageSize); 
+		      	    var selectedMarkerImage = new kakao.maps.MarkerImage("/resources/property_img/marker1.png", imageSize); 
 		      	    
 		      	    var marker = new kakao.maps.Marker({
 		      	        map: map,

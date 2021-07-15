@@ -305,7 +305,7 @@ input:focus, textarea:focus, *:required:focus{border-color:#0AC6FC !important;}
 
 
 /* Header */
-#header{color:#FFFFFF; background-color:#FFFFFF; box-shadow: 0px 0px 10px #000;}
+#header{color:#FFFFFF; background-color:#FFFFFF; box-shadow: 0px 0px 15px #e0e0e0;}
 #header #logo a{color:#000000;}
 
 
