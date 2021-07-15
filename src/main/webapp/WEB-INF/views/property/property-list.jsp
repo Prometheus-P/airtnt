@@ -33,6 +33,10 @@
 		<!-- main body -->
 
 
+<!-- 카카오 주소검색을 불러오는 커스텀 파일 -->
+<script src="/resources/script/address-control.js"></script>
+
+
 		<!-- 숙소 리스트 -->
 		<div class="one_half first" style="width: 55%;padding-right: 10px;">
 			<form id="search-form" action="<c:url value='/property/search'/>" method="get" onsubmit="setParametersOnSubmit()">
