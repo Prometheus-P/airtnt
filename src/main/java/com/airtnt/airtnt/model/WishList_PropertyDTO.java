@@ -21,6 +21,8 @@ public class WishList_PropertyDTO {
 	private String sub_type_name;
 	private String room_type_name;
 	private String num;
+	private String latitude;
+	private String longitude;
 	
 	public String getName() {
 		return name;
@@ -118,5 +120,18 @@ public class WishList_PropertyDTO {
 	public void setNum(String num) {
 		this.num = num;
 	}
+	public String getLatitude() {
+		return latitude;
+	}
+	public String getLongitude() {
+		return longitude;
+	}
+	public void setLatitude(String latitude) {
+		this.latitude = latitude;
+	}
+	public void setLongitude(String longitude) {
+		this.longitude = longitude;
+	}
+	
 	
 }
