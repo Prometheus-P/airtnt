@@ -14,12 +14,15 @@
 		$('#review_id').val(id)
 		$('#update_rating').val(rating)
 		$('#update_content').html(content)
-		$('#star2').data('score', rating)
+		//$('#star2').data('score', rating)
+		$('#star2').attr('data-score', rating)
 		}
 	$(function() {
 		var count = 0;
 		var starCnt = 0;
 		var dataCnt =0;
+		var id ="";
+		var content ="";
 		
         $('div#star').raty({
             score: 5
@@ -58,7 +61,10 @@
 		           		$('#moreBtn2').remove();
 		           	}
 		           	$(data).each(function(){
-		           		starCnt = this.rating;
+		           		rating = this.rating;
+		           		id = this.id;
+		           		content = this.content
+		           		
 		           		dataCnt +=1;
 		           		console.log(data.length);
 		           		
@@ -73,8 +79,8 @@
 							              '</div>' +
 							              '<div class="one_third fl_right">' +
 							              //여기 수정해야함
-							              		//'<button onclick="sure('정말 삭제하시겠습니까?','/myPage/deleteReview?id='+this.id+')" ' +
-									                //'type="button" class="close">&times;</button>' +
+							              		'<button id="delete'+dataCnt+'" ' +
+									                'type="button" class="close">&times;</button>' +
 							              '</div>' +
 							              '<hr style="color: #00000061;">' +
 							              '<div class="two_third first text-left">' +
@@ -83,18 +89,37 @@
 							              '</div>' +
 							              '<div class="one_third fl_right">' +
 							              //여기 수정 해야함 
-								              //'<button data-target="#updateReviewModal" onclick="transferDataForUpdate('+this.id+','+this.rating+','+this.content+')" ' + 
-								              		//'data-toggle="modal" style="font-size:12px;" type="button" class="btn">수정하기</button>' +
+								              '<button id="update'+dataCnt+'" data-target="#updateReviewModal" ' + 
+								              		'data-toggle="modal" style="font-size:12px;" type="button" class="btn">수정하기</button>' +
 							              '</div><br>' +
 							            '</li>' +
 						           '<hr>'
 								);
 		        		$('#myReviews').append(html);
 		        		
-		        		for(var i=0; i<starCnt; i++){
+		        		$("button#delete"+dataCnt).on("click", function(){
+		        			sure('정말 삭제하시겠습니까?','/myPage/deleteReview?id='+id);
+		        		});
+		        		
+		        		$("button#update"+dataCnt).on("click", function(){
+		        			transferDataForUpdate(id, rating, content);
+		        		});
+		        		
+		        		/* var obj1 = document.createElement('button');
+		        		obj1.setAttribute('onclick',"'sure('정말 삭제하시겠습니까?','/myPage/deleteReview?id='+this.id+')'");
+		        		obj1.setAttribute('type','button');
+		        		obj1.setAttribute('class','close');
+		        		obj1.setAttribute('class','close');
+		        		obj1.setAttribute('class','close');
+		        		obj1.setAttribute('class','close');
+		        		$("#delete'+dataCnt+'").append(obj1); */
+		        		
+		        		for(var i=0; i<rating; i++){
 		                       html = '<span><img src="/resources/images/star-on.png" alt=""></span>';
 		                       $('#stars'+dataCnt+'').append(html);
 		                    }
+		        		
+		        		
 	        				
 		           	});
 		        },
@@ -242,7 +267,7 @@
 					<input type="hidden" name="id" id="review_id" value=""/>
 					<div class="form-group mb-3 col-sm-lg">
 						    <label for="" class="form-label">별점</label>
-						    <div id="star2" data-score="0"></div>
+						    <div id="star2" data-score=""></div>
 						    <input type="hidden" name="rating" class="form-control" id="update_rating" value="">
 					</div>
 					<div class="form-group mb-3 col-sm-lg">
