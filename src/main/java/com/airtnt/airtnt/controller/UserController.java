@@ -420,7 +420,13 @@ public class UserController {
 		List<WishList_PropertyDTO> list = wishListMapper.getWishRoom(params.get("wish_id"));
 		req.setAttribute("wish_name", params.get("wish_name"));
 		req.setAttribute("wish_id", params.get("wish_id"));
-
+		
+		//맵 마커 사용(등록한 property 정보가 없을땐 제외)
+		if(list.size() > 0) {
+			req.setAttribute("longitude", list.get(0).getLongitude()); //맵 마커 사용
+			req.setAttribute("latitude", list.get(0).getLatitude()); //맵 마커 사용
+		}
+		req.setAttribute("propertiesListSize", list.size());
 		req.setAttribute("properties", list);
 		return "user/wish/inWishList";
 	}

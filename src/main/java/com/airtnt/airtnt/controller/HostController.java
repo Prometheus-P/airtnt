@@ -212,7 +212,10 @@ public class HostController implements HostControllerInterface {
 					String originalFileName = file.getOriginalFilename(); // 오리지날 파일명
 					long time = System.currentTimeMillis();
 					String savedFileName = time + "-" + originalFileName; // 저장될 파일 명
-					String upPath = "C:\\Users\\Haseong\\git\\airtnt\\src\\main\\webapp\\resources\\files\\property\\property-";
+					//String upPath = "C:\\Users\\Haseong\\git\\airtnt\\src\\main\\webapp\\resources\\files\\property\\property-";
+					
+					// 정석
+					String upPath = "C:\\Spring\\EZEN\\workspace\\AirTnT\\src\\main\\webapp\\resources\\files\\property\\property-";
 					// HS >>
 					// D:\bigdata\study3\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\airtnt\resources\files\property
 

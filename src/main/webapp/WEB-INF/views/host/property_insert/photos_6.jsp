@@ -58,7 +58,7 @@
 							이전 페이지
 						</button>
 					</div>
-					<div id="next" style="float: right; padding-right: 80px; padding-top: 20px; display:none;">
+					<div id="next" style="float: right; padding-right: 80px; padding-top: 20px;">
 						<button  type="submit" class="btn btn-lg btn-default"
 						 style="font-size: 30px; font-weight: bold;">
 							사진 저장 <i class="bi bi-arrow-right-square-fill"></i>

@@ -47,10 +47,15 @@ public class PropertyDTO {
 
 	private List<AmenityTypeDTO> amenityTypes;
 	private List<ImageDTO> images;
+	private List<ReviewDTO> reviews;
 	
+	
+	// 자바에서 셋팅하는 값들
 	// 위시리스트에 있는지 판별하는 값
 	private boolean wished;
 	private Integer wishListId;
+	// 별점
+	private String rating;
 	
 	public Integer getId() {
 		return id;
@@ -194,7 +199,14 @@ public class PropertyDTO {
 	public void setImages(List<ImageDTO> images) {
 		this.images = images;
 	}
+	public List<ReviewDTO> getReviews() {
+		return reviews;
+	}
+	public void setReviews(List<ReviewDTO> reviews) {
+		this.reviews = reviews;
+	}
 	
+	// 자바로 가져와서 셋팅
 	// 위시리스트에 있는지 판별하는 값
 	public boolean isWished() {
 		return wished;
@@ -207,5 +219,12 @@ public class PropertyDTO {
 	}
 	public void setWishListId(Integer wishListId) {
 		this.wishListId = wishListId;
+	}
+	// 별점
+	public String getRating() {
+		return rating;
+	}
+	public void setRating(String rating) {
+		this.rating = rating;
 	}
 }
