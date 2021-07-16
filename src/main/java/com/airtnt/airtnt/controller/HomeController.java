@@ -53,6 +53,9 @@ public class HomeController {
 			}
 		}
 		
+		// 프로젝트 real path 지우지 말것
+		System.out.println(req.getServletContext().getRealPath("/"));
+		
 		return "home";
 	}
 	

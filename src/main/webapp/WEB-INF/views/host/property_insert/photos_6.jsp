@@ -13,6 +13,16 @@
 	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 <script
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+	<style>
+footer{ 
+	position:fixed; 
+	left:0px; 
+	bottom:0px; 
+	height:20%; 
+	width:100%; 
+	background: #01546b ; 
+	color: white; }
+</style>
 </head>
 <body>
 <%@include file="../../top.jsp"%>
