@@ -134,6 +134,9 @@
 												<p>숙소 설명 : ${dto.propertyDesc}</p>
 												<p>수정일 : ${dto.modDate}</p>
 												<p>
+												<button onclick="location.href='<c:url value="/property/detail"/>?propertyId=${dto.id}'"
+												type="button" class="btn btn-primary" formmethod="get">
+												게시된 숙소 확인</button>
 												<button onclick="location.href='<c:url value="/host/property_update"/>?propertyId=${dto.id}'" 
 												type="button" class="btn btn-warning"  formmethod="get" >
 												수정하기</button>
