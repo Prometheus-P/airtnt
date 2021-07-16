@@ -32,7 +32,7 @@ footer{
 		<div class="row">
 			<div class="col-sm-6">
 				<input type="text" id="address" name="address" placeholder="주소"
-					readonly="readonly" class="form-control"  required
+					readonly="readonly" class="form-control"  required onclick="javascript:getElementById('search').click()"
 					style="text-align: center; width: 500px; height: 50px;"
 					<c:if test="${not empty sessionScope.checkAddress}">
 						value = "${sessionScope.checkAddress}"
@@ -68,6 +68,7 @@ footer{
 						</button>
 					</div>
 				</footer>
+				<div id="location"></div>
 			</form>
 		</div>
 		<br> <br> <br> <br> <br> <br> <br>
@@ -77,6 +78,9 @@ footer{
 			src="//dapi.kakao.com/v2/maps/sdk.js?appkey=62b11c585fb341eec39dbc28ac9bad71&libraries=services"></script>
 
 		<script>
+		var latitude =null;
+		var longitude = null;
+		
 		function previous(){
 			window.history.back();
 		}
@@ -95,6 +99,18 @@ footer{
                 		return false;
                 	}
                 }
+                var obj1 = document.createElement('input');
+				obj1.setAttribute('type', 'hidden');
+				obj1.setAttribute('name', 'latitude');
+				obj1.setAttribute('value', latitude);
+				
+				var obj2 = document.createElement('input');
+				obj2.setAttribute('type', 'hidden');
+				obj2.setAttribute('name', 'longitude');
+				obj2.setAttribute('value', longitude);
+				
+				$('#location').append(obj1); // 좌표 hidden으로 적어주기
+				$('#location').append(obj2);
                 return true;
             }
 			 
@@ -121,7 +137,8 @@ footer{
 							oncomplete : function(data) {
 								var addr = data.jibunAddress; // 최종 주소 변수
 								if(addr == ""){
-									alert("지번주소로 입력 바랍니다.");
+									alert("해당 도로명 주소가 불명확합니다. 지번주소로 입력 바랍니다.");
+									$('#search').focus();
 									return;
 								}
 								// 주소 정보를 해당 필드에 넣는다.
@@ -134,11 +151,15 @@ footer{
 													if (status === daum.maps.services.Status.OK) {
 
 														var result = results[0]; //첫번째 결과의 값을 활용
-
+														
 														// 해당 주소에 대한 좌표를 받아서
 														var coords = new daum.maps.LatLng(
 																result.y,
 																result.x);
+														
+														latitude = coords.getLat();
+														longitude = coords.getLng();
+														
 														// 지도를 보여준다.
 														document.getElementById('field').style.display = "block";
 														map.relayout();

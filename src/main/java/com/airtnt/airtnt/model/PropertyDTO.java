@@ -19,7 +19,7 @@ public class PropertyDTO {
 	private String hostId;
 	private String propertyDesc;
 	private String address;
-	private String latitude;
+	private String latitude; //y
 	private String longitude;
 	private Integer price;
 	private Integer bedCount;

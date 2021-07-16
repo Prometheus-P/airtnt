@@ -155,13 +155,16 @@ public class HostController implements HostControllerInterface {
 
 	@Override
 	@RequestMapping("host/floor_plan_4")
-	public String floor_plan_4(HttpSession session, @RequestParam(value = "address") String address,
-			@RequestParam(value = "addressDetail") String addressDetail) {
-		session.setAttribute("checkAddress", address);
-		session.setAttribute("address", address + " " + addressDetail);
-
-		System.out.println(address);
-		System.out.println("상세: " + addressDetail);
+	public String floor_plan_4(HttpSession session, @RequestParam Map<String, String> param) {
+		session.setAttribute("checkAddress", param.get("address"));
+		session.setAttribute("address",  param.get("address") + " " +  param.get("addressDetail"));
+		session.setAttribute("latitude", param.get("latitude"));
+		session.setAttribute("logitude", param.get("longitude"));
+		
+		System.out.println("위도: " + param.get("latitude"));
+		System.out.println("경도: " + param.get("longitude"));
+		System.out.println( param.get("address"));
+		System.out.println("상세: " + param.get("addressDetail"));
 		return "host/property_insert/floor_plan_4";
 	}
 
@@ -311,6 +314,8 @@ public class HostController implements HostControllerInterface {
 		dtoPro.setName((String) session.getAttribute("name"));
 		dtoPro.setPropertyDesc((String) session.getAttribute("description"));
 		dtoPro.setPrice((int) session.getAttribute("price"));
+		dtoPro.setLatitude((String) session.getAttribute("latitude")); 
+		dtoPro.setLongitude((String) session.getAttribute("longitude"));
 
 		int propertyOk = hostMapper.insertProperty(dtoPro); // 1. property입력
 		
@@ -353,6 +358,8 @@ public class HostController implements HostControllerInterface {
 		session.removeAttribute("listAmenities");
 		session.removeAttribute("price");
 		session.removeAttribute("listImgUrl");
+		session.removeAttribute("latitude");
+		session.removeAttribute("longitude");
 		// 사진도 지우기
 		return "{ \"result\":\"OK\" }";
 	}
