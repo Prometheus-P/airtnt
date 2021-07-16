@@ -56,7 +56,7 @@ footer{
 	<br><br><br><br>
 	<script>
 	function previous(){
-		windo.history.back();
+		window.history.back();
 	}
 			var roomTypeId = null;
 			var roomTypeName = null;

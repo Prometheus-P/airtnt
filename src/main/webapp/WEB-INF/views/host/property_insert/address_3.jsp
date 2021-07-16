@@ -78,7 +78,7 @@ footer{
 
 		<script>
 		function previous(){
-			windo.history.back();
+			window.history.back();
 		}
 			function load(){
 				document.getElementById('detail').style.display="block";
@@ -119,8 +119,11 @@ footer{
 				new daum.Postcode(
 						{
 							oncomplete : function(data) {
-								var addr = data.address; // 최종 주소 변수
-
+								var addr = data.jibunAddress; // 최종 주소 변수
+								if(addr == ""){
+									alert("지번주소로 입력 바랍니다.");
+									return;
+								}
 								// 주소 정보를 해당 필드에 넣는다.
 								document.getElementById("address").value = addr;
 								// 주소로 상세 정보를 검색

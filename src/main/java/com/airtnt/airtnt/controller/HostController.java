@@ -464,6 +464,7 @@ public class HostController implements HostControllerInterface {
 		dtoPro.setPrice((Integer)param.get("price"));
 		dtoPro.setAmenityTypes(listAmenity);
 		//int propertyOk = hostMapper.insertProperty(dtoPro);
+		//int amenityDelete = hostMapper.deleteAmenity();
 		int propertyUpdate = hostMapper.updateProperty(dtoPro);
 		//int amenityOk = hostMapper.insertListAmenity(listAmenity);
 		ModelAndView mav = new ModelAndView("/host/host_mode/host_properties_list");
@@ -492,15 +493,37 @@ public class HostController implements HostControllerInterface {
 		mav.addObject("listAmenityId", listAmenityId);
 		return mav;
 	}
+	
 	@RequestMapping("host/update_photos")
-	public String update_photos() {
-		return "/host/host_mode/update_photos";
+	public ModelAndView update_photos(@RequestParam("propertyId") Integer propertyId) {
+		List<ImageDTO> listImage = hostMapper.getPropertyImage(propertyId);
+		return new ModelAndView("/host/host_mode/update_photos", "listImage", listImage);
 	}
+	
+	protected int imageDelete(Integer propertyId) {
+		List<ImageDTO> listPath = hostMapper.getPropertyImage(propertyId);
+		int count=0;
+		for(ImageDTO dto : listPath) {
+			System.out.println("저장 된 사진 경로: " + dto.getPath());
+			File file = new File(dto.getPath());
+			
+			if(file.exists()){
+				file.delete();
+				count++;
+			}
+		}
+		return count;
+	}
+	
 	@ResponseBody
 	@RequestMapping("host/property_delete")
 	public String delete(@RequestParam("propertyId") Integer propertyId) {
+		imageDelete(propertyId);
 		int res = hostMapper.deleteProperty(propertyId);
-		return "/host/host_mode/host_properties_list";
+		if(res>0) {
+			return "{ \"result\":\"OK\" }";
+		}
+		return "{ \"result\":\"FAIL\" }";
 	}
 
 	@Override
@@ -548,7 +571,7 @@ public class HostController implements HostControllerInterface {
 		double reviewCount = Double.parseDouble(String.valueOf(listMap.get(0).get("reviewCount")));// 무슨 에러 떠서 해결법 찾음
 		double bookingCount = Double.parseDouble(String.valueOf(listMap.get(0).get("bookingCount")));
 		double reviewRate = reviewCount / bookingCount * 100;
-		mav.addObject("reviewRate", reviewRate);
+		mav.addObject("reviewRate", Math.round(reviewRate));
 		mav.addObject("listReview", list);
 		return mav;
 	}
@@ -593,6 +616,10 @@ public class HostController implements HostControllerInterface {
 		}
 		mav.addObject("listTotal", listTotal);
 		return mav;
+	}
+	@RequestMapping("host/chat")
+	public String chat() {
+		return "/host/host_mode/ehco-ws";
 	}
 
 	@Override

@@ -26,6 +26,8 @@ public class PropertyDTO {
 	private Integer maxGuest;
 	private Date regDate;
 	private Date modDate;
+	//호스트가 사용하는 메인 이미지
+	private String mainImagePath;
 	
 	// 예전 방식
 	// property_type 테이블 참조값
@@ -207,5 +209,11 @@ public class PropertyDTO {
 	}
 	public void setWishListId(Integer wishListId) {
 		this.wishListId = wishListId;
+	}
+	public String getMainImagePath() {
+		return mainImagePath;
+	}
+	public void setMainImagePath(String mainImagePath) {
+		this.mainImagePath = mainImagePath;
 	}
 }

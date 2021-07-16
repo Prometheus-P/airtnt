@@ -21,7 +21,7 @@
 		<form name="dataForm" id="dataForm" onsubmit="return registerAction()">
 			<div class="page-header"
 				style="font-style: italic; font-family: fantasy;">
-				<h1 style="font-weight: bold;">추가로 등록할 사진이 있으신가요?ㄴ</h1>
+				<h1 style="font-weight: bold;">추가로 등록할 사진이 있으신가요?</h1>
 				<button type="submit" class="btn btn-lg btn-success">전송</button>
 			</div>
 			<div class="data_file_txt" id="data_file_txt" style="margin: 40px;">
