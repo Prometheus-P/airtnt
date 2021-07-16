@@ -8,7 +8,6 @@
 		<id property="id" column="id"/>
 		<result property="rowNum" column="rnum"/>
 		<result property="name" column="name"/>
-		<result property="hostId" column="host_id"/>
 		<result property="propertyDesc" column="property_desc"/>
 		<result property="address" column="address"/>
 		<result property="latitude" column="latitude"/>
@@ -19,26 +18,24 @@
 		<result property="regDate" column="reg_date"/>
 		<result property="modDate" column="mod_date"/>
 		
-		<association property="propertyType" column="property_type_id"
+		<association property="host" columnPrefix="host_" javaType="memberDTO">
+			<result property="id" column="id"/>
+			<result property="name" column="name"/>
+		</association>
+		<association property="propertyType"
 			columnPrefix="property_type_" resultMap="propertyTypeMap"/>
-		
-		<association property="subPropertyType" column="sub_property_type_id"
+		<association property="subPropertyType"
 			columnPrefix="sub_property_type_" resultMap="subPropertyTypeMap"/>
-		
-		<association property="roomType" column="room_type_id"
+		<association property="roomType"
 			columnPrefix="room_type_" resultMap="roomTypeMap"/>
 		
 		<collection property="amenityTypes" ofType="amenityTypeDTO"
 			columnPrefix="amenity_type_" resultMap="amenityTypeMap" />
-		
 		<collection property="images" ofType="imageDTO"
 			columnPrefix="image_" resultMap="imageMap"/>
-		
 		<collection property="reviews" ofType="reviewDTO"
 			columnPrefix="review_" resultMap="reviewMap"/>
-		
 	</resultMap>
-
 	
 	<resultMap type="propertyTypeDTO" id="propertyTypeMap">
 		<id property="id" column="id"/>
@@ -48,7 +45,7 @@
 		<result property="modDate" column="mod_date"/>
 		
 		<collection property="subPropertyTypes" ofType="subPropertyTypeDTO"
-		columnPrefix="sub_property_type_" resultMap="subPropertyTypeMap"/>
+			columnPrefix="sub_property_type_" resultMap="subPropertyTypeMap"/>
 	</resultMap>
 	
 	<resultMap type="subPropertyTypeDTO" id="subPropertyTypeMap">
@@ -97,8 +94,7 @@
 		<result property="reg_date" column="reg_date"/>
 		<result property="mod_date" column="mod_date"/>
 		
-		<association property="member" column="review_writer_id"
-		columnPrefix="writer_" javaType="memberDTO">
+		<association property="writer" columnPrefix="writer_" javaType="memberDTO">
 			<id property="id" column="id"/>
 			<result property="name" column="name"/>
 		</association>
@@ -111,7 +107,6 @@
 	<sql id="standardSelectProperty">
 		p.id,
 		p.name,
-		p.host_id,
 		p.property_desc,
 		p.address,
 		p.latitude,
@@ -125,6 +120,9 @@
 	
 	<!-- select property에서 property와 1:1 관계인 테이블의 select문 -->
 	<sql id="oneToOneSelectProperty">
+		h.id host_id,
+		h.name host_name,
+		
 		pt.id property_type_id,
 		pt.name property_type_name,
 		pt.is_use property_type_is_use,
@@ -146,6 +144,7 @@
 	
 	<!-- select property에서 1:1 관계인 테이블의 join문 -->
 	<sql id="oneToOneJoinProperty">
+		left join member h on p.host_id=h.id
 		left join property_type pt on p.property_type_id=pt.id
 		left join sub_property_type spt on p.sub_property_type_id=spt.id
 		left join room_type rt on p.room_type_id=rt.id
@@ -174,8 +173,8 @@
 		r.reg_date review_reg_date,
 		r.mod_date review_mod_date,
 		
-		m.id review_writer_id,
-		m.name review_writer_name
+		w.id review_writer_id,
+		w.name review_writer_name
 	</sql>
 	
 	<!-- select property에서 1:N 관계인 테이블의 join문 -->
@@ -184,7 +183,7 @@
 		left join amenity_type at on at.id=a.amenity_type_id
 		left join image i on p.id=i.property_id
 		left join review r on p.id=r.property_id
-		left join member m on m.id=r.writer_id
+		left join member w on w.id=r.writer_id
 	</sql>
 	
 	<!-- 검색페이지의 숙소목록 로딩에 사용 -->

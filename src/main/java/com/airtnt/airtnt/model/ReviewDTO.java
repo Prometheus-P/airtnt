@@ -25,7 +25,7 @@ public class ReviewDTO {
 	private String num;
 	
 	// mybatis result map 쓸거
-	private MemberDTO member;
+	private MemberDTO writer;
 	
 	public Integer getId() {
 		return id;
@@ -130,10 +130,10 @@ public class ReviewDTO {
 		this.num = num;
 	}
 	
-	public MemberDTO getMember() {
-		return member;
+	public MemberDTO getWriter() {
+		return writer;
 	}
-	public void setMember(MemberDTO member) {
-		this.member = member;
+	public void setMember(MemberDTO writer) {
+		this.writer = writer;
 	}
 }
