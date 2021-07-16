@@ -204,11 +204,11 @@ function checkParametersOnSubmit(){
 }
 </script>
 <div class="wrapper row3 hoc clear">
-  <div class="container position-relative">
-    <div class="position-absolute end-0 top-0" >
+  <div class="container position-relative" >
+    <div class="position-absolute end-0 top-0">
       <!-- Button trigger modal -->
       <a href="" class="trigger-btn wish-button" id="wishProperty-${property.id}"
-      data-toggle="modal" style="font-size: 20px">
+      data-toggle="modal" style="font-size: 15px; color:black; font-weight:bold;">
         <span class="wish-text"></span>
         <!-- 빈 하트 -->
         <img class="heart" src="" style="width: 3rem; height: 3rem">
@@ -218,12 +218,17 @@ function checkParametersOnSubmit(){
       	initWish("${property.id}", "${property.wishListId}", "${property.wished}");
       </script>
     </div>
-      
-    <h1 style="font-size: 6rem">${property.name}</h1>
+    
+    <div style="margin-bottom:10px;">
+    	<h2 style="font-weight: bold; color:black;">${property.name}</h2>
+    	<img src="/resources/property_img/starIcon.PNG" style="width:18px; height:18px; margin-bottom:5px;">
+    	<a href="#review-modal" style="font-size:15px; margin-left:10px; color:#544b4b; font-weight: bold;">후기 ${property.reviews.size()}개</a>
+    </div>
+    
     
     <!-- 숙소 이미지 -->
     <div class="one_half first">
-      <img class="imgl borderedbox inspace-5"
+      <img class="imgl borderedbox inspace-5" 
         <c:if test='${not empty property.images}'>
           src="${property.images.get(0).path}"
         </c:if>
@@ -249,18 +254,26 @@ function checkParametersOnSubmit(){
 </div>
 
 <div class="wrapper row3 hoc clear">
-  <div class="container" style="padding-top: 0">
+  <div class="container">
       <!-- 숙소 상세정보 나열 구역 -->
 	  <div class="two_third first">
 	        <div class="position-relative">
-	          <h2>숙소 유형</h2>
-	          <p style="font-size: 20px">
+	        
+	          <h3 style="font-weight: bold; color:black;">${property.host.name}님이 호스팅하는 숙소</h3>
+	          <h4> 최대 인원  ${property.maxGuest}명  · 침실 ${property.bedCount}개</h4>
+	          
+	       	  <hr>
+	        
+	          <p style="font-size: 20px; font-weight: bold; color:black;">
+	          	<img src="/resources/property_img/homeicon.png" style="width:25px; height:25px; margin-right:10px; margin-bottom:5px;">
+	          	숙소 유형
+	          </p>
+	          <p style="margin-left:40px; font-size: 18px">
 	            ${property.propertyType.name}/${property.subPropertyType.name}<br>
 	            ${property.roomType.name}
 	          </p>
 	          <div class="position-absolute top-0 end-0">
 	            <p style="font-size: 30px">
-	              가격<br>
 	              <fmt:formatNumber type="currency" value="${property.price}"/>
 	            </p>
 	          </div>
@@ -269,8 +282,11 @@ function checkParametersOnSubmit(){
 	        <hr>
 	        
 	        <div>
-	          <h2>상세 설명</h2>
-	          <p style="font-size: 20px">
+	          <p style="font-size: 20px; font-weight: bold; color:black;">
+	          	<img src="/resources/property_img/homeicon.png" style="width:25px; height:25px; margin-right:10px; margin-bottom:5px;">
+	          	상세 설명
+	          </p>
+	          <p style="margin-left:40px; font-size: 18px">
 	            ${property.propertyDesc}
 	          </p>
 	        </div>
@@ -278,9 +294,12 @@ function checkParametersOnSubmit(){
 	        <hr>
 	        
 	        <div>
-	          <h2>편의 시설</h2><br>
+	           <p style="font-size: 20px; font-weight: bold; color:black;">
+	           	<img src="/resources/property_img/homeicon.png" style="width:25px; height:25px; margin-right:10px; margin-bottom:5px;">
+	          	편의시설
+	           </p>
 	            <div class="one_half first">
-	              <ul style="font-size: 20px">
+	              <ul style="margin-left:40px; font-size: 18px">
 	                <c:forEach var="amenityType" items="${property.amenityTypes}" begin="0" step="2">
 	                <li>
 	                  ${amenityType.name}
@@ -289,7 +308,7 @@ function checkParametersOnSubmit(){
 	              </ul>
 	            </div>
 	            <div class="one_half">
-	              <ul style="font-size: 20px">
+	              <ul style="margin-left:40px; font-size: 18px">
 	                <c:forEach var="amenityType" items="${property.amenityTypes}" begin="1" step="2">
 	                <li>
 	                  ${amenityType.name}
@@ -302,23 +321,32 @@ function checkParametersOnSubmit(){
 	        
 	        <hr>
 	        
-	       <div class="position-relative">
-	        <h2>후기 ${property.reviews.size()}개</h2>
-	          <hr>
-	          <c:forEach var="review" items="${property.reviews}" end="2">
-	            <div>
-	              <h3>${review.writer.name}</h3>
-	              <span>${review.reg_date}</span>
-	              <p>
-	                ${review.content}
-	              </p>
-	            </div>
-	            <hr>
-	          </c:forEach>
+	        <div class="position-relative">
+	        	<h3 style="font-weight: bold; color:black;">
+	          		<img src="/resources/property_img/starIcon.PNG" style="width:28px; height:28px;">${property.rating} · 후기 ${property.reviews.size()}개
+	          	</h3>
+	          
+           		<div>
+            		<table class="table">
+            		<c:forEach var="review" items="${property.reviews}" end="2">
+            		<tr>
+            			<td rowspan="2" width=10%><img src="/resources/property_img/user.png" style="width:50px; height:50px;"></td>
+            			<td style="font-weight: bold; font-size:15px; color:black;">${review.writer.name}</td>
+            		</tr>
+            		<tr>
+            			<td>${review.reg_date}</td>
+            		</tr>
+            		<tr>
+            			<td colspan="2" style="font-size:15px; color:#544b4b;">${review.content}</td>
+            		</tr>
+            		</c:forEach>
+            	</table>
+            	<br>
+            </div>
+            <hr>
 	        <div class="position-absolute end-0 top-50">
-	          <a href="#review-modal" class="trigger-btn btn" data-toggle="modal" style="font-size: 20px">
-	            <img src="https://img.icons8.com/fluent/48/000000/list.png"
-	            style="height: 30px; width: 30px"/>후기 더보기
+	          <a href="#review-modal" class="trigger-btn btn" data-toggle="modal" style="font-size: 20px; border:1px solid black;">
+	                         후기 더보기
 	          </a>
 	        </div>
 	      </div>
@@ -345,7 +373,7 @@ function checkParametersOnSubmit(){
 	       <ul class="list-group" style="font-size: 20px">
 	         <li class="list-group-item">
 	           <div class="one_third first">
-	             기간
+	            	기간
 	           </div>
 	           <div class="two_third">
 	             <input type="text" id="date-range" value="" style="font-size: 16px"/>
@@ -353,8 +381,7 @@ function checkParametersOnSubmit(){
 	         </li>
 	         <li class="list-group-item">
 	           <div class="one_third first">
-	             인원수<br>
-	             (최대 ${property.maxGuest}명)
+	            	 인원수<br>(최대 ${property.maxGuest}명)
 	           </div>
 	           <div class="two_third">
 	             <input id="guest-count" type="number" name="guestCount"
@@ -362,7 +389,7 @@ function checkParametersOnSubmit(){
 	           </div>
 	         </li>
 	         <li class="list-group-item" style="font-size: 30px;color: blue">
-	           총액 <span id="price-disp"></span>
+	          	 총액 <span id="price-disp"></span>
 	         </li>
 	         <li class="list-group-item">
 	           <input class="btn btn-primary" type="submit"
@@ -413,26 +440,36 @@ function checkParametersOnSubmit(){
 </c:if>
 
 <!-- review 모달 -->
-<c:if test="${not empty property.reviews}">
+
 <div id="review-modal" class="modal fade">
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
     <div class="modal-content">
       <div class="modal-header position-relative">
-        <h2 class="modal-title">후기</h2>
+        <h2 class="modal-title" style="font-weight:bold;">
+        	<img src="/resources/property_img/starIcon.PNG" style="width:18px; height:18px; margin-bottom:5px;">
+			${property.rating} · 후기 ${property.reviews.size()}개
+        </h2>
         <div class="position-absolute end-0" style="padding-right: 20px;">
           <button type="button" class="close" id="image-close-button"
           data-dismiss="modal" aria-hidden="true" style="font-size: 30px">×</button>
         </div>
       </div>
       <div class="modal-body content" style="height: 400px">
+      <table>
         <c:forEach var="review" items="${property.reviews}">
-          <div>
-            <h3>${review.writer.name}</h3>
-            <span>${review.reg_date}</span>
-            <p>
-              ${review.content}
-            </p>
-          </div>
+        	<tr>
+        		<td rowspan="2" width=10%><img src="/resources/property_img/user.png" style="width:50px; height:50px;"></td>
+        		<td style="font-weight: bold; font-size:15px; color:black;">${review.writer.name}</td>
+        	</tr>
+        	<tr>
+        		<td>${review.reg_date}</td>
+        	</tr>
+        	<tr>
+        		<td colspan="2" style="font-size:15px; color:#544b4b;">${review.content}</td>
+        	</tr>
+       		<tr>
+        		<td style="color:white">${review.reg_date}</td>
+        	</tr>
           <c:if test="${not empty review.content_host}">
             <div class="position-relative">
               <div class="position-absolute end-0">
@@ -444,7 +481,9 @@ function checkParametersOnSubmit(){
               </div>
             </div>
           </c:if>
+          
         </c:forEach>
+        </table> 	
       </div>
       <div class="modal-footer">
         AirTnT CopyRight ⓒ TeamBit corp. All Rights Reserved.
@@ -452,6 +491,8 @@ function checkParametersOnSubmit(){
     </div>
   </div>
 </div>
-</c:if>
+
+
+
 </body>
 </html>
