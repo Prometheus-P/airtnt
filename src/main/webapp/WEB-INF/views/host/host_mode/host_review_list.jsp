@@ -27,12 +27,12 @@
 						<h4 class="list-group-item-heading">${dto.name}</h4>
 						<p class="list-group-item-text">유형: ${dto.subPropertyTypeName}
 						<br>등록일 : ${dto.regDate}</p>
-					</a>
+					</a><br><br>
 				</c:forEach>
 			</div>
 		</div>
 		<div class="col-md-6">
-		<br><br><br><br><br><br><br><br>
+		<br><br><br><br><br><br>
 			<div id="reviewDiv"></div>
 		</div>
 

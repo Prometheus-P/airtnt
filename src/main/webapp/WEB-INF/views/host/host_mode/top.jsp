@@ -12,6 +12,7 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<script src="/resources/files/sockjs.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
 </head>
 <body>
@@ -41,8 +42,9 @@
 					<li>
 					<ul class="nav nav-pills" role="tablist">
 						<li role="presentation">
-						<a href="#">채팅 <span class="badge">3</span></a>
+						<a href="javascript:chat()" >채팅 <span class="badge">3</span></a>
 						</li>
+							
 					</ul>
 					</li >
 					<li class="dropdown" style="font-size: 30px ;font:bold;">
@@ -71,12 +73,101 @@
 			<!--/.nav-collapse -->
 		</div>
 	</nav>
-
+	<div id="chatForm"  class="modal fade" role="dialog">
+	<form >
+		<div class="modal-dialog">
+        <div class="chat_start_main">
+            상담 CHAT
+        </div>
+        <div class="chat_main" style="display:none;">
+            <div class="modal-header" style="height:20%;">
+                상담 CHAT 
+            </div>
+            <div class="modal-body" id="chat" style="height:60%;">
+                
+            </div>
+            <div class="modal-footer">
+                <input type="text" id="message" class="form-control" style="height:20%;" placeholder="메세지를 입력하세요"/>    
+                <button type="button" class="btn btn-default"
+											data-dismiss="modal">닫기</button>
+            </div>
+            </div>
+        </div>
+         <%--  <div id="${dto.id}" class="modal fade" role="dialog">
+							<div class="modal-dialog">
+								<!-- Modal content-->
+								<div class="modal-content">
+									<div class="modal-header">
+										<button type="button" class="close" data-dismiss="modal">&times;</button>
+										<h4 class="modal-title">숙소 상세</h4>
+									</div>
+									<div class="modal-body">
+										
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-default"
+											data-dismiss="modal">닫기</button>
+									</div>
+								</div>
+							</div>
+						</div> --%>
+<!--         <button class="">send</button> -->
+    </form>
+    </div>
 	<script type="text/javascript">
 		$('li').click(function() {
 			$('li').removeClass('active'); 
 			$(this).addClass('active');
 		});
+		function chat(){
+			window.open('/host/chat', 'window팝업', 'width=400, height=600, menubar=no, status=no, toolbar=no');  
+		}
+		
+
+		/* //전역변수 선언-모든 홈페이지에서 사용 할 수 있게 index에 저장
+		var socket = null;
+		$(document).ready(function(){
+		    if(!isEmpty($("#session_id").val()))
+		            connectWS();
+		});
+		    $(".chat_start_main").click(function(){
+		        $(this).css("display","none");
+		        $(".chat_main").css("display","inline");
+		    })
+		    $(".chat_main .modal-header").click(function(){
+		        $(".chat_start_main").css("display","inline");
+		        $(".chat_main").css("display","none");
+		    });
+		 
+		    function connectWS(){
+		        var sock = new SockJS("/echo");
+		            socket =sock;
+		        sock.onopen = function() {
+		               console.log('info: connection opened.');
+		        };
+		        sock.onmessage = function(e){
+//		             console.log(e);
+//		             var strArray = e.data.split(":");
+//		             if(e.data.indexof(":") > -1){
+//		                 $(".chat_start_main").text(strArray[0]+"님이 메세지를 보냈습니다.");
+//		             }
+//		             else{
+//		             }
+		            $("#chat").append(e.data + "<br/>");
+		        }
+		        sock.onclose = function(){
+		            $("#chat").append("연결 종료");
+//		              setTimeout(function(){conntectWs();} , 10000); 
+		        }
+		        sock.onerror = function (err) {console.log('Errors : ' , err);};
+		 
+		        $("#chatForm").submit(function(event){
+		            event.preventDefault();
+		                sock.send($("#message").val());
+		                $("#message").val('').focus();    
+		        });
+		    } */
+
 	</script>
 
 </body>

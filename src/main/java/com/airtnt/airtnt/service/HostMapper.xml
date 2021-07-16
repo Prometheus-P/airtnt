@@ -106,22 +106,22 @@
 	<insert id="insertProperty" parameterType="propertyDTO">
 		insert into property
 		(id, name, host_id, property_desc, property_type_id,
-		sub_property_type_id, room_type_id, address, price, bed_count, max_guest)
+		sub_property_type_id, room_type_id, address, price, bed_count, max_guest, latitude, longitude)
 		values(seq_property.nextval,#{name}, #{hostId}, #{propertyDesc},
-		#{propertyTypeId}, #{subPropertyTypeId},
-		#{roomTypeId},
-		#{address},
-		#{price}, #{bedCount}, #{maxGuest})<!-- modeDate==null -->
+		#{propertyTypeId}, #{subPropertyTypeId}, #{roomTypeId}, #{address},
+		#{price}, #{bedCount}, #{maxGuest}, #{latitude}, #{longitude})<!-- modeDate==null -->
 	</insert>
 	
 	<update id="updateProperty" parameterType="PropertyDTO">
-		UPDATE property p RIGHT JOIN amenity a
-		ON (p.id = a.property_id)
+		UPDATE property
 		SET 
-		p.max_guest =#{maxGuest}, p.bed_count = #{bedCount}, 
-		p.property_desc = #{propertyDesc}, p.price = #{price}
-		
+		max_guest =#{maxGuest}, bed_count = #{bedCount}, 
+		property_desc = #{propertyDesc}, price = #{price}
+		WHERE id = #{id}
 	</update>
+	<delete id="deleteAmenity" parameterType="int">
+		DELETE FROM amenity WHERE property_id = #{propertyId}
+	</delete>
 		<!-- UPDATE A T1 RIGHT JOIN B T2 
 		ON (T2.a = T1.a) 
 		SET T1.c = '값1', T2.d = '값2' 
@@ -205,33 +205,28 @@
 		select * from member where id = #{memberId};
 	</select>
 
-	<select id="listProperty" parameterType="String"
-		resultType="PropertyDTO">
-		select
+	<select id="listProperty" parameterType="String" resultType="PropertyDTO">
+		SELECT
 		p.id, p.name,
-		p.host_id as hostId,
-		p.address,
-		p.price,
-		p.bed_count as bedCount,
-		p.max_guest as maxGuest,
-		p.reg_date as regDate,
-		p.mod_date as modDate,
-		p.room_type_id as roomTypeId,
-		r.id,
-		r.name as
-		roomTypeName,
-		p.sub_property_type_id as subPropertyTypeId,
-		s.id,
-		s.name as subPropertyTypeName,
-		i.path as image_path
-		from property p, sub_property_type s, room_type	r, image i
-		where host_id = #{hostId}
-		and r.id = p.room_type_id
-		and
-		p.sub_property_type_id = s.id
+		p.host_id AS hostId,
+		p.address, p.price,
+		p.bed_count AS bedCount,
+		p.max_guest AS maxGuest,
+		p.reg_date AS regDate,
+		p.mod_date AS modDate,
+		p.room_type_id AS roomTypeId,
+		r.name AS roomTypeName,
+		p.sub_property_type_id AS subPropertyTypeId,
+		s.name AS subPropertyTypeName,
+		i.path AS mainImagePath
+		FROM property p, sub_property_type s, room_type	r, image i
+		WHERE p.host_id = #{hostId}
+		AND p.room_type_id = r.id
+		AND p.sub_property_type_id = s.id
+		AND p.id = i.property_id
+		AND i.is_main = 'Y'
 	</select>
 	
-
 	<select id="listTransaction" parameterType="String"
 		resultType="TransactionDTO">
 		select

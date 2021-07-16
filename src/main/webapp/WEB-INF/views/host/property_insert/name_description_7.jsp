@@ -82,7 +82,7 @@ footer{
 				return true;
 			}
 			function previous(){
-				windo.history.back();
+				window.history.back();
 			}
 		</script>
 </body>

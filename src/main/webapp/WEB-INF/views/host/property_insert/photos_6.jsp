@@ -185,7 +185,7 @@ function fileDelete(fileNum){
    	    return false;
 	}
 	function previous(){
-		windo.history.back();
+		window.history.back();
 	}
 	/* var count =0;
 	function setImg(event) {

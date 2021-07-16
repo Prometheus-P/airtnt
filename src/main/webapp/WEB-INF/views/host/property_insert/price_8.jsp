@@ -70,7 +70,7 @@ footer{
 				return true;
 			}
 			function previous(){
-				windo.history.back();
+				window.history.back();
 			}
 			function changePrice(button) {
 				var idValueArray = button.id.split('-');

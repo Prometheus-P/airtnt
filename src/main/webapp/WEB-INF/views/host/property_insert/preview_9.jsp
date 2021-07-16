@@ -106,6 +106,9 @@ footer {
 				   	    }
 			});
 	});
+	function previous(){
+		window.history.back();
+	}
 </script>
 </html>
 

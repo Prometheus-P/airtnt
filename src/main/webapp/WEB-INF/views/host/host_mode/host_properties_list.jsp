@@ -160,20 +160,24 @@
 	<%@ include file="../../bottom.jsp"%>
 	<script>
 		function deletePro(id){
-			boolean check = window.confirm("정말 삭제하시겠습니까?")
+			var check = window.confirm("정말 삭제하시겠습니까?");
 			if(check){
 				var propertyId = id
 				$.ajax({
 					url : "/host/property_delete",
 					type : "post",
 					data : {'propertyId': propertyId},
+					dataType:'text',
 					success : function(data) {
-								if (JSON.parse(data)['result'] == "OK"){
-									alert("숙소가 삭제 되었습니다!")
-									location.href="/host/host_properties_list";
-								}else{
-									alert("숙소 삭제 중 문제 발생! 관리자에게 연락바랍니다!");
-								}
+						if (JSON.parse(data)['result'] == "OK") {
+							alert("숙소 삭제 성공!");
+							location.reload(true);
+							return;
+						}else{
+							alert("숙소 삭제 실패! 잠시 후 다시 시도해주세요.");
+							return;
+						}
+								
 							},
 					error: function (xhr, status, error) {
 						   	   alert("서버오류로 지연되고있습니다. 잠시 후 다시 시도해주시기 바랍니다.");

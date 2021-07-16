@@ -61,10 +61,6 @@ public class HostMapper implements HostMapperInterface {
 		return res;
 	}
 
-	/*
-	 * public void saveImage(Map<String, Object> hmap) { int res =
-	 * sqlSession.insert("saveImage", hmap); }
-	 */
 	@Override
 	public List<PropertyTypeDTO> getPropertyType() {
 		List<PropertyTypeDTO> propertyType = sqlSession.selectList("propertyType");
@@ -92,6 +88,9 @@ public class HostMapper implements HostMapperInterface {
 	@Override
 	public List<PropertyDTO> getPropertyList(String hostId) {
 		List<PropertyDTO> listProperty = sqlSession.selectList("listProperty", hostId);
+		for(PropertyDTO dto : listProperty) {
+			System.out.println("숙소 ID: " + dto.getId());
+		}
 		return listProperty;
 	}
 
@@ -209,4 +208,10 @@ public class HostMapper implements HostMapperInterface {
 		List<AmenityTypeDTO> list = sqlSession.selectList("getAmenityList", propertyId);
 		return list;
 	}
+	
+	public int deleteAmenity(int propertyId) {
+		int res = sqlSession.delete("deleteAmenity",propertyId);
+		return res;
+	}
+	
 }

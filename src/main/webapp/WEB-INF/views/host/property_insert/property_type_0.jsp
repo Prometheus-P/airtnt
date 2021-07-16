@@ -92,7 +92,7 @@ footer{
 			return false;
 		}
 		function previous(){
-			windo.history.back();
+			window.history.back();
 		}
 		/* 	$(window).bind("pageshow", function (event){
 				if(event.originalEvent.persisted){
