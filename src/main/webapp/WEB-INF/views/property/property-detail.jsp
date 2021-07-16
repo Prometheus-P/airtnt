@@ -364,7 +364,7 @@ function checkParametersOnSubmit(){
 	     <form action="<c:url value='/property/booking'/>" method="post"
 	     onsubmit="return loginCheck() && checkParametersOnSubmit()">
 	       <input type="hidden" name="propertyId" value="${property.id}">
-	       <input type="hidden" name="hostId" value="${property.hostId}">
+	       <input type="hidden" name="hostId" value="${property.host.id}">
 	       <input type="hidden" name="guestId" value="${sessionScope.member_id}">
 	       <input type="hidden" id="check-in-date" name="checkInDate" value=""/>
 	       <input type="hidden" id="check-out-date" name="checkOutDate" value=""/>

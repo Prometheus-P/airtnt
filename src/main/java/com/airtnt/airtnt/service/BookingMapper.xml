@@ -75,7 +75,7 @@
 	</select>
 	
 	<select id="selectBookingId" resultType="int">
-		select booking_id_seq.nextval from dual
+		select seq_booking_id.nextval from dual
 	</select>
 	
 	<select id="selectOverlapBookings" parameterType="java.util.Map" resultMap="bookingMap">
@@ -110,7 +110,7 @@
 		values(
 			#{id},#{propertyId},#{guestId},#{hostId},
 			#{guestCount},#{dayCount},#{totalPrice},
-			#{bookingNumber} || booking_number_seq.nextval,
+			#{bookingNumber} || seq_booking_number.nextval,
 			#{checkInDate},#{checkOutDate}
 		)
 	</insert>
@@ -125,7 +125,7 @@
 	
 	<!-- transaction -->
 	<select id="selectTransactionId" resultType="int">
-		select transaction_id_seq.nextval from dual
+		select seq_transaction_id.nextval from dual
 	</select>
 	
 	<insert id="insertTransaction" parameterType="transactionDTO">

@@ -201,7 +201,8 @@
 	</update>
 	
 	<insert id = "insertSubPropertyTypeDTO" parameterType="subPropertyTypeDTO">
-		insert into sub_property_type values ((select nvl(max(id),0)+1 from sub_property_type), #{propertyTypeId}, #{name}, #{isUse}, sysdate, sysdate)
+		insert into sub_property_type values ((select nvl(max(id),0)+1 from sub_property_type), #{name}, #{propertyTypeId}, #{isUse}, sysdate, sysdate)
+		
 	</insert>
 	
 	<update id = "updateSubPropertyTypeDTO" parameterType="subPropertyTypeDTO">
@@ -213,7 +214,7 @@
 	</update>
 	
 	<select id ="selectIdSeq" resultType="Integer">
-		select guide_context_seq.nextval as id from dual
+		select seq_guide_context_id.nextval as id from dual
 	</select>
 	
 	<insert id = "insertBoard" parameterType="guideDTO">
@@ -230,7 +231,7 @@
 	<insert id = "insertBoardContext" parameterType="guideContextDTO">
 		insert into guide_context 
 		values ( 
-	 			guide_context_seq.nextval,
+	 			seq_guide_context_id.nextval,
 			 	#{id}, 
 			 	#{context},
 			 	sysdate,
@@ -242,7 +243,7 @@
 		<foreach item="item" index="index" collection="list" separator=" " open="INSERT ALL " close="SELECT * FROM DUAL">
 		into guide_context( id , guide_id , context , reg_date, mod_date )
 		values ( 
-	 			guide_context_seq.nextval,
+	 			seq_guide_context_id.nextval,
 			 	#{item.id}, 
 			 	#{item.context},
 			 	sysdate,

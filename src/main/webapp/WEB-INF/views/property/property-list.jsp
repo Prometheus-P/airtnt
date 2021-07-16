@@ -289,9 +289,9 @@
 		</c:if>
 		
 		<!-- 페이지 버튼 -->
-		<div style="margin-left:170px">
+		<div>
 			<nav class="" aria-label="Page navigation">
-				<ul class="pagination">
+				<ul class="pagination justify-content-center">
 					<c:if test="${startPageNum > 1}">
 						<li class="page-item"><a href="#" id="page-1"
 							class="page-link" onclick="movePage(this)"
