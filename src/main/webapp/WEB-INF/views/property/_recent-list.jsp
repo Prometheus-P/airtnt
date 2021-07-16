@@ -8,22 +8,23 @@
 <title>Insert title here</title>
 </head>
 <body>
-<h2>최근 본 숙소</h2>
-<div id="carouselControls-recent" class="carousel slide" data-bs-interval="false">
-  <div class="carousel-inner" style=" width: 80%">
+<h3 style="font-weight: bold;">최근 조회 숙소</h3>
+현재 검색 결과와 일치하도록 날짜와 가격이 업데이트되었습니다.
+<div id="carouselControls-recent" class="carousel slide" data-bs-interval="false" style="margin-top:5px; height:180px;">
+  <div class="carousel-inner" style=" width: 100%">
     <c:forEach var="recentProperty" items="${recentProperties}" varStatus="status">
       <c:if test="${status.count % 3 == 1}">
       <div class="carousel-item <c:if test='${status.count == 1}'>active</c:if>">
       </c:if>
         <div class="one_third <c:if test='${status.count % 3 == 1}'>first</c:if>">
-          <a href="<c:url value='/property/detail?propertyId=${recentProperty.id}'/>">
+          <a href="<c:url value='/property/detail?propertyId=${recentProperty.id}'/>" style="color:black;">
             <img
               <c:if test='${recentProperty.images != null && recentProperty.images.size() > 0}'>
                 src="${recentProperty.images.get(0).path}"
               </c:if>
-            class="d-block w-100" alt="" style="object-fit: cover; width:200px; height: 150px">
-            <span style="font-size: 25px">${recentProperty.name}</span><br>
-            <span style="font-size: 20px">${recentProperty.address}</span>
+            class="d-block w-100" alt="" style="object-fit: cover; width:170px; height: 120px; margin-bottom:5px;">
+            <span style="font-size: 15px;">${recentProperty.name}</span><br>
+            <span style="font-size: 15px;">${recentProperty.address}</span>
           </a>
         </div>
       <c:if test="${status.count % 3 == 0 || status.last}">

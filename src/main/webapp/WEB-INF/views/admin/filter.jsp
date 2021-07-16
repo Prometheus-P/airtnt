@@ -210,10 +210,10 @@
 	 }
     
     function changeContent(obj) {
-    	//lert(obj);
+    	//alert(obj);
     	// document.getElementByName('propName1').checked = true;
     	//$('input:checkbox[name="propName1"]').attr("checked", true);
-    	//alert(obj.checked);
+    	alert(obj.checked);
     }
     
   </script>
@@ -243,13 +243,13 @@
 						<td colspan='4'>등록된 룸 타입 코드가 없습니다.</td>
 					</tr>		 
 				</c:if>
-				<c:forEach var="dto" items="${roomTypeList}">
+				<c:forEach var="dto" items="${roomTypeList}" varStatus="status">
 					<tr>
 						<td><input type="checkbox" name="chk"></td>
 						
 						<td>${dto.id}</td>
 						<td><input type="text" class="form-control" name = "propName" onclick="event.cancelBubble=true" 
-								onchange="changeContent(this.name)" id = "propName" value="${dto.name}" 
+								onchange="changeContent(this.name)" value="${dto.name}" 
 								style="text-align:center; height:23px; font-size:13px"></td> <!-- event.cancelBubble=true : 해당 td는 클릭이벤트 제외 -->
 						<c:set var = "chk" value="${dto.isUse}"></c:set>
 						<c:set var='propertyTypeId' value="propertyTypeId"></c:set>
