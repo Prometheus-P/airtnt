@@ -159,7 +159,7 @@ public class HostController implements HostControllerInterface {
 		session.setAttribute("checkAddress", param.get("address"));
 		session.setAttribute("address",  param.get("address") + " " +  param.get("addressDetail"));
 		session.setAttribute("latitude", param.get("latitude"));
-		session.setAttribute("logitude", param.get("longitude"));
+		session.setAttribute("longitude", param.get("longitude"));
 		
 		System.out.println("위도: " + param.get("latitude"));
 		System.out.println("경도: " + param.get("longitude"));
@@ -216,7 +216,10 @@ public class HostController implements HostControllerInterface {
 					long time = System.currentTimeMillis();
 					String savedFileName = time + "-" + originalFileName; // 저장될 파일 명
 					//String upPath = "C:\\Users\\Haseong\\git\\airtnt\\src\\main\\webapp\\resources\\files\\property\\property-";
-					String upPath = "C:\\Users\\woosuki\\git\\airtnt\\src\\main\\webapp\\resources\files\\property\\sproperty-";
+					//수연
+					//String upPath = "C:\\Users\\woosuki\\git\\airtnt\\src\\main\\webapp\\resources\files\\property\\property-";
+					//학원
+					String upPath = "D:\\study3(spring)\\airtnt\\src\\main\\webapp\\resources\\files\\property\\property-";
 					// 정석
 					//String upPath = "C:\\Spring\\EZEN\\workspace\\AirTnT\\src\\main\\webapp\\resources\\files\\property\\property-";
 					// HS >>
@@ -262,6 +265,7 @@ public class HostController implements HostControllerInterface {
 
 	private boolean isValidExtension(String originalName) {
 		String originalNameExtension = originalName.substring(originalName.lastIndexOf(".") + 1);
+		originalNameExtension = originalNameExtension.toLowerCase();
 		switch (originalNameExtension) {
 		case "jpg":
 		case "png":
@@ -299,6 +303,7 @@ public class HostController implements HostControllerInterface {
 	@RequestMapping("host/property_save")
 	public String property_save(HttpSession session) {
 		session.setAttribute("isMemberMode", true);
+		session.setAttribute("member_mode", "2");
 		List<AmenityTypeDTO> listAmenity = (List<AmenityTypeDTO>) session.getAttribute("listAmenity");
 		List<ImageDTO> listImgUrl = (List<ImageDTO>) session.getAttribute("listImgUrl");
 		String hostId = (String) session.getAttribute("member_id");
@@ -316,7 +321,8 @@ public class HostController implements HostControllerInterface {
 		dtoPro.setPrice((int) session.getAttribute("price"));
 		dtoPro.setLatitude((String) session.getAttribute("latitude")); 
 		dtoPro.setLongitude((String) session.getAttribute("longitude"));
-
+		System.out.println("경도"  + dtoPro.getLongitude());
+		System.out.println("위도"  + dtoPro.getLatitude());
 		int propertyOk = hostMapper.insertProperty(dtoPro); // 1. property입력
 		
 		int propertyId = hostMapper.getPropertyId(hostId); // 2. propertyId 가져오기

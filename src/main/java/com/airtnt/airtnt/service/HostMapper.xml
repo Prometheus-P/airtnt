@@ -133,11 +133,11 @@
         	DECLARE
         	BEGIN
          	   DELETE FROM property WHERE id = #{propertyId};
-         	   DELETE FROM amenity WHERE property_id = #{propertyId};
+         	 <!--   DELETE FROM amenity WHERE property_id = #{propertyId};
          	   DELETE FROM image WHERE property_id = #{propertyId};
          	   DELETE FROM wishlist_property WHERE property_id = #{propertyId};
          	   DELETE FROM review WHERE property_id = #{propertyId};
-         	   DELETE FROM booking WHERE property_id = #{propertyId};
+         	   DELETE FROM booking WHERE property_id = #{propertyId}; -->
       	  	END
     	}
 	</delete>

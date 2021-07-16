@@ -54,11 +54,12 @@ public class HostMapper implements HostMapperInterface {
 		int res = sqlSession.insert("insertProperty", dto);
 		return res;
 	}
-
+	
+	//성공해도 리턴값 -1
 	@Override
 	public int deleteProperty(Integer propertyId) {
 		int res = sqlSession.delete("deleteProperty",propertyId);
-		return res;
+		return res+2;
 	}
 
 	@Override

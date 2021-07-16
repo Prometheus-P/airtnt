@@ -169,7 +169,9 @@
 					data : {'propertyId': propertyId},
 					dataType:'text',
 					success : function(data) {
+						console.log(JSON.parse(data)['result']);
 						if (JSON.parse(data)['result'] == "OK") {
+							//JSON.parse(data)['result'] == "EXCEED_SIZE"
 							alert("숙소 삭제 성공!");
 							location.reload(true);
 							return;
