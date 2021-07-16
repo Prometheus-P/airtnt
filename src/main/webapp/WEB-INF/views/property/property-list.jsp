@@ -11,8 +11,8 @@
 	 #test_btn{ border-top-left-radius: 5px; border-bottom-left-radius: 5px; border-top-right-radius: 5px; border-bottom-right-radius: 5px; margin-right:-4px; } 
 	 #test_btn2{ border-top-left-radius: 20px; border-bottom-left-radius: 20px; border-top-right-radius: 20px; border-bottom-right-radius: 20px; margin-right:0px; } 
 	 #test_btn3{ border-top-left-radius: 20px; border-bottom-left-radius: 20px; border-top-right-radius: 20px; border-bottom-right-radius: 20px; margin-right:0px; border: 1px solid #000000; background-color: rgba(0,0,0,0); color: #000000; padding: 5px;} 
-	 #btn_group button{ border: 1.5px solid #b0aaaa; background-color: rgba(0,0,0,0); color: black; padding: 5px; }
-	 #btn_group button:hover{ color:white; background-color: black; } 
+	 #btn_group button{ border: 1px solid #b0aaaa; background-color: rgba(0,0,0,0); color: black; padding: 5px; margin:10px; }
+	 #btn_group button:hover{border: 1.5px solid #000000 } 
 </style>
 </head>
 <body>
@@ -55,16 +55,16 @@
 				
 				<input type="hidden" id="page-num" name="pageNum" value="1">
 						
-				<h2>${addressKey} 주변의 숙소 목록</h2>
+				<h2 style="font-weight: bold;"> ${addressKey} 주변의 숙소 목록</h2>
 	
-				<div class="filter" style="margin-top:15px; height: 60px">
+				<div class="filter" style="margin-top:15px; height: 60px;">
 	
 					<!-- 숙소 유형 검색 필터 -->
 					<div class="btn-group first">
 					
 						<div id="btn_group" class="btn-group">
 		
-							<button style="font-size:20px; padding-left:15px; padding-right:15px;" class="btn btn-secondary btn-lg dropdown-toggle"
+							<button style="font-size:15px; padding-left:10px; padding-right:10px;" class="btn btn-secondary btn-lg dropdown-toggle"
 									type="button" id="dropdownMenuClickableInside-1" data-bs-toggle="dropdown" data-bs-auto-close="outside"
 									aria-expanded="false">숙소 유형</button>
 		
@@ -119,7 +119,7 @@
 						<button class="btn btn-secondary btn-lg dropdown-toggle"
 							type="button" id="dropdownMenuClickableInside-2"
 							data-bs-toggle="dropdown" data-bs-auto-close="outside"
-							aria-expanded="false" style="font-size:20px; padding-left:15px; padding-right:15px;">방 유형</button>
+							aria-expanded="false" style="font-size:15px; padding-left:15px; padding-right:15px;">방 유형</button>
 		
 						<ul class="dropdown-menu list-group" aria-labelledby="dropdownMenuClickableInside-2">
 						<c:forEach var="roomType" items="${roomTypes}">
@@ -144,7 +144,7 @@
 					<div id="btn_group" class="btn-group">
 					
 						<button class="btn btn-secondary btn-lg dropdown-toggle" type="button" id="dropdownMenuClickableInside-3" data-bs-toggle="dropdown" 
-								data-bs-auto-close="outside" aria-expanded="false" style="font-size:20px; padding-left:15px; padding-right:15px;">편의시설</button>
+								data-bs-auto-close="outside" aria-expanded="false" style="font-size:15px; padding-left:15px; padding-right:15px;">편의시설</button>
 		
 						<div class="dropdown-menu" aria-labelledby="dropdownMenuClickableInside-3" style="font-size: 15px">
 						<c:forEach var="amenityType" items="${amenityTypes}">
@@ -167,7 +167,7 @@
 						<button class="btn btn-secondary btn-lg dropdown-toggle"
 								type="button" id="dropdownMenuClickableInside-4"
 								data-bs-toggle="dropdown" data-bs-auto-close="outside"
-								aria-expanded="false" style="font-size:20px; padding-left:15px; padding-right:15px;">기타사항</button>
+								aria-expanded="false" style="font-size:15px; padding-left:15px; padding-right:15px;">기타사항</button>
 		
 						<div class="dropdown-menu list-group" aria-labelledby="dropdownMenuClickableInside-4" style="width: 500px;">
 							<div class="btn-group list-group-item" style="padding-bottom: 50px; padding-left: 20px">
@@ -237,10 +237,10 @@
 					</div>
 	
 					<div class="two_third position-relative">
-						<a href="<c:url value='/property/detail?propertyId=${property.id}'/>" style="color:#383434; font-size:22px;">${property.name}</a>
-						<h4>${property.propertyType.name}/${property.subPropertyType.name}</h4>
-						<h4>${property.roomType.name}</h4>
-						<h4>${property.address}</h4>
+						<a href="<c:url value='/property/detail?propertyId=${property.id}'/>" style="color:#383434; font-size:20px;">${property.name}</a>
+						<h4 style="font-size:15px;">${property.propertyType.name}/${property.subPropertyType.name}</h4>
+						<h4 style="font-size:15px;">${property.roomType.name}</h4>
+						<h4 style="font-size:15px;">${property.address}</h4>
 						<c:if test="${not empty property.amenityTypes}">
 							<h5>
 								편의시설 :
@@ -249,11 +249,13 @@
 								</c:forEach>
 							</h5>
 						</c:if>
-						<h4><img src="/resources/property_img/starIcon.PNG" style="width:18px; height:18px; margin-bottom:5px;">${property.rating}</h4>
-						<div class="position-absolute end-0 bottom-0">
-							<h3 style="color: blue">
+						<h5 style="color:#8f8c8c; font-size:15px;"><img src="/resources/property_img/starIcon.PNG" style="width:18px; height:18px; margin-bottom:5px;">
+							${property.rating} (후기 ${property.reviews.size()} 개)
+						</h5>
+						<div class="position-absolute end-0 bottom-0" style="margin-right:20px;">
+							<h4 style="color: #0d6efd">
 								<fmt:formatNumber type="currency" value="${property.price}" />
-							</h3>
+							</h4>
 						</div>
 					</div>
 				</li>
@@ -285,28 +287,29 @@
 		<c:if test="${endPageNum > totalPagesNum}">
 			<c:set var="endPageNum" value="${totalPagesNum}" />
 		</c:if>
+		
 		<!-- 페이지 버튼 -->
-		<div class="position-relative" style="margin-left:170px">
+		<div style="margin-left:170px">
 			<nav class="" aria-label="Page navigation">
 				<ul class="pagination">
 					<c:if test="${startPageNum > 1}">
 						<li class="page-item"><a href="#" id="page-1"
 							class="page-link" onclick="movePage(this)"
-							style="width: 5rem; height: 5rem; font-size: 2rem"> 1 </a></li>
+							style="width: 3rem; height: 3rem; font-size: 2rem"> 1 </a></li>
 						<li class="page-item disabled"><span class="page-link"
-							style="width: 5rem; height: 5rem; font-size: 2rem"> ... </span></li>
+							style="width: 3rem; height: 3rem; font-size: 2rem"> ... </span></li>
 					</c:if>
 					<c:choose>
 						<c:when test="${startPageNum == 1}">
 							<li class="page-item disabled"><span class="page-link"
-								style="width: 5rem; height: 5rem; font-size: 2rem">
+								style="width: 3rem; height: 3rem; font-size: 2rem">
 									&laquo; </span></li>
 						</c:when>
 						<c:otherwise>
 							<li class="page-item"><a id="page-${pageNum - 4}"
 								class="page-link" href="#" onclick="movePage(this)"
 								aria-label="Previous"
-								style="width: 5rem; height: 5rem; font-size: 2rem"> &laquo; </a></li>
+								style="width: 3rem; height: 3rem; font-size: 2rem"> &laquo; </a></li>
 						</c:otherwise>
 					</c:choose>
 					<c:forEach var="pageNum" begin="${startPageNum}" end="${endPageNum}">
@@ -314,13 +317,13 @@
 							<c:when test="${pageNum == param.pageNum}">
 								<li class="page-item active" aria-current="page"><span
 									class="page-link"
-									style="width: 5rem; height: 5rem; font-size: 2rem">
+									style="width: 3rem; height: 3rem; font-size: 2rem">
 										${pageNum} </span></li>
 							</c:when>
 							<c:otherwise>
 								<li class="page-item"><a id="page-${pageNum}"
 									class="page-link" href="#" onclick="movePage(this)"
-									style="width: 5rem; height: 5rem; font-size: 2rem">
+									style="width: 3rem; height: 3rem; font-size: 2rem">
 										${pageNum} </a></li>
 							</c:otherwise>
 						</c:choose>
@@ -328,29 +331,31 @@
 					<c:choose>
 						<c:when test="${endPageNum == totalPagesNum}">
 							<li class="page-item disabled"><span class="page-link"
-								style="width: 5rem; height: 5rem; font-size: 2rem">
+								style="width: 3rem; height: 3rem; font-size: 2rem">
 									&raquo; </span></li>
 						</c:when>
 						<c:otherwise>
 							<li class="page-item"><a id="page-${pageNum + 4}"
 								class="page-link" href="#" onclick="movePage(this)"
 								aria-label="Next"
-								style="width: 5rem; height: 5rem; font-size: 2rem"> &raquo; </a></li>
+								style="width: 3rem; height: 3rem; font-size: 2rem"> &raquo; </a></li>
 						</c:otherwise>
 					</c:choose>
 					<c:if test="${endPageNum < totalPagesNum}">
 						<li class="page-item disabled"><span class="page-link"
-							style="width: 5rem; height: 5rem; font-size: 2rem"> ... </span></li>
+							style="width: 2rem; height: 2rem; font-size: 1rem"> ... </span></li>
 						<li class="page-item"><a href="#" id="page-${endPageNum}"
 							class="page-link" onclick="movePage(this)"
-							style="width: 5rem; height: 5rem; font-size: 2rem">
+							style="width: 3rem; height: 3rem; font-size: 2rem">
 								${totalPagesNum} </a></li>
 					</c:if>
 				</ul>
 			</nav>
 		</div>
+		
+		
 			<!-- 최근 목록 -->
-			<div style="background-color:#fcfafa; margin-left:15px; padding-top: 8rem">
+			<div style="background-color:#fcfafa; padding: 2rem">
 				<c:import url="/WEB-INF/views/property/_recent-list.jsp" />
 			</div>
 		</div>
