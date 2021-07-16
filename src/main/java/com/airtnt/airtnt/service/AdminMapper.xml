@@ -171,7 +171,8 @@
 	<update id = "updateRoomTypeDTO" parameterType="roomTypeDTO">
 		update room_type 
 		set name = #{name},
-			is_use = #{isUse}
+			is_use = #{isUse},
+			mod_date = sysdate
 		where id = #{id}
 	</update>
 	
@@ -182,7 +183,8 @@
 	<update id = "updateAmenityTypeDTO" parameterType="amenityTypeDTO">
 		update amenity_type 
 		set name = #{name},
-			is_use = #{isUse}
+			is_use = #{isUse},
+			mod_date = sysdate
 		where id = #{id}
 	</update>
 	
@@ -193,7 +195,8 @@
 	<update id = "updatePropertyTypeDTO" parameterType="propertyTypeDTO">
 		update property_type 
 		set name = #{name},
-			is_use = #{isUse}
+			is_use = #{isUse},
+			mod_date = sysdate
 		where id = #{id}
 	</update>
 	
@@ -204,7 +207,8 @@
 	<update id = "updateSubPropertyTypeDTO" parameterType="subPropertyTypeDTO">
 		update sub_property_type 
 		set name = #{name},
-			is_use = #{isUse}
+			is_use = #{isUse},
+			mod_date = sysdate
 		where id = #{id}
 	</update>
 	
@@ -287,13 +291,15 @@
 	<update id = "updateSelectedBoard" parameterType="guideDTO">
 		update guide
 		set subject = #{subject},
-			explanation = #{explanation}
+			explanation = #{explanation},
+			mod_date = sysdate
 		where id = #{id}
 	</update>
 	
 	<update id = "updateSelectedContext" parameterType="guideContextDTO">
 		update guide_context
-		set context = #{context}
+		set context = #{context},
+			mod_date = sysdate
 		where id = #{id}
 	</update>
 	

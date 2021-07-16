@@ -56,7 +56,6 @@ public class AdminController{
 	@RequestMapping(value = "", method = {RequestMethod.GET, RequestMethod.POST})
 	public String goMainView() {
 		 LoginOKBean login = LoginOKBean.getInstance();
-		 System.out.println("login chk : " + login.getId());
 		 if(login.getId()!=null) { 
 			 return "redirect:admin/dashboard"; 
 		 }else {
@@ -388,10 +387,13 @@ public class AdminController{
 	}
 	
 	@RequestMapping(value = "guideUpdate", method = RequestMethod.POST)
-	public String updateSelectedBoard(GuideContextDTO dto) throws Exception {
-		int res1 = adminMapper.updateSelectedBoard(dto.getSubject(), dto.getExplanation()); //master
-		System.out.println(dto.getId()+ " :" + dto.getContext());
-		//int res2 = adminMapper.updateSelectedContext(dto); //sub
+	public String updateSelectedBoard(GuideContextDTO dto,
+									  @RequestParam(value = "contextArr", required = false) String[] contextArr,
+									  @RequestParam(value = "idArr", required = false) int[] idArr ) throws Exception {
+		int res1 = adminMapper.updateSelectedBoard(dto.getGuideId(), dto.getSubject(), dto.getExplanation()); //master
+		for(int i=0; i<idArr.length; i++) {
+			int res2 = adminMapper.updateSelectedContext(idArr[i], contextArr[i]); //sub
+		}
 		return "redirect:guidelist";
 	}
 

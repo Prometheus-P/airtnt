@@ -651,7 +651,7 @@ public class PropertyController {
 						}
 					}
 				}
-
+				
 			} catch(UnsupportedEncodingException e) {
 				e.printStackTrace();
 				System.out.println("최근목록 로딩 : 디코딩 문제 발생");
