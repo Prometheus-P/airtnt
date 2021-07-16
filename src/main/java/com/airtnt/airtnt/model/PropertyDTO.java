@@ -20,13 +20,15 @@ public class PropertyDTO {
 	private String name;
 	private String propertyDesc;
 	private String address;
-	private String latitude;
+	private String latitude; //y
 	private String longitude;
 	private Integer price;
 	private Integer bedCount;
 	private Integer maxGuest;
 	private Date regDate;
 	private Date modDate;
+	//호스트가 사용하는 메인 이미지
+	private String mainImagePath;
 	
 	// 예전 방식
 	private String hostId;
@@ -51,7 +53,7 @@ public class PropertyDTO {
 
 	private List<AmenityTypeDTO> amenityTypes;
 	private List<ImageDTO> images;
-	private List<ReviewDTO> reviews;
+    private List<ReviewDTO> reviews;
 	
 	
 	// 자바에서 셋팅하는 값들
@@ -209,6 +211,7 @@ public class PropertyDTO {
 	public void setImages(List<ImageDTO> images) {
 		this.images = images;
 	}
+	
 	public List<ReviewDTO> getReviews() {
 		return reviews;
 	}
@@ -236,5 +239,12 @@ public class PropertyDTO {
 	}
 	public void setRating(String rating) {
 		this.rating = rating;
+	}
+	//main이미지의 경로만
+	public String getMainImagePath() {
+		return mainImagePath;
+	}
+	public void setMainImagePath(String mainImagePath) {
+		this.mainImagePath = mainImagePath;
 	}
 }

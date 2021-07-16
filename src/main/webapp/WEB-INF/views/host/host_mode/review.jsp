@@ -101,7 +101,7 @@
 									<br>
 									<p>작성자 : ${dto.writer_id}님</p>
 									<p>예약번호 : ${dto.booking_id}</p>
-									<p>숙소 : ${dto.name}</p>
+									<p>숙소 : ${dto.property_name}</p>
 									<p>숙박 기간 : ${dto.check_in_date} ~ ${dto.check_out_date}</p>
 									<p>지불 금액 : ₩${dto.price}</p>
 								</div>

@@ -91,7 +91,7 @@ footer{
 			return false;
 		}
 		function previous(){
-			windo.history.back();
+			window.history.back();
 		}
 	</script>
 </body>

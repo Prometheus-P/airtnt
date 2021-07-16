@@ -302,53 +302,25 @@ function checkParametersOnSubmit(){
 	        
 	        <hr>
 	        
-	       <div>
-	        <h2>대앳그을</h2>
-	        <ul>
-	          <li>
-	            <article>
-	              <header>
-	                <figure class="avatar"><img src="/resources/images/demo/avatar.png" alt=""></figure>
-	                <address>
-	                By <a href="#">A Name</a>
-	                </address>
-	                <time datetime="2045-04-06T08:15+00:00">Friday, 6<sup>th</sup> April 2045 @08:15:00</time>
-	              </header>
-	              <div class="comcont">
-	                <p>This is an example of a comment made on a post. You can either edit the comment, delete the comment or reply to the comment. Use this as a place to respond to the post or to share what you are thinking.</p>
-	              </div>
-	            </article>
-	          </li>
-	          <li>
-	            <article>
-	              <header>
-	                <figure class="avatar"><img src="/resources/images/demo/avatar.png" alt=""></figure>
-	                <address>
-	                By <a href="#">A Name</a>
-	                </address>
-	                <time datetime="2045-04-06T08:15+00:00">Friday, 6<sup>th</sup> April 2045 @08:15:00</time>
-	              </header>
-	              <div class="comcont">
-	                <p>This is an example of a comment made on a post. You can either edit the comment, delete the comment or reply to the comment. Use this as a place to respond to the post or to share what you are thinking.</p>
-	              </div>
-	            </article>
-	          </li>
-	          <li>
-	            <article>
-	              <header>
-	                <figure class="avatar"><img src="/resources/images/demo/avatar.png" alt=""></figure>
-	                <address>
-	                By <a href="#">A Name</a>
-	                </address>
-	                <time datetime="2045-04-06T08:15+00:00">Friday, 6<sup>th</sup> April 2045 @08:15:00</time>
-	              </header>
-	              <div class="comcont">
-	                <p>This is an example of a comment made on a post. You can either edit the comment, delete the comment or reply to the comment. Use this as a place to respond to the post or to share what you are thinking.</p>
-	              </div>
-	            </article>
-	          </li>
-	        </ul>
-	        
+	       <div class="position-relative">
+	        <h2>후기 ${property.reviews.size()}개</h2>
+	          <hr>
+	          <c:forEach var="review" items="${property.reviews}" end="2">
+	            <div>
+	              <h3>${review.writer.name}</h3>
+	              <span>${review.reg_date}</span>
+	              <p>
+	                ${review.content}
+	              </p>
+	            </div>
+	            <hr>
+	          </c:forEach>
+	        <div class="position-absolute end-0 top-50">
+	          <a href="#review-modal" class="trigger-btn btn" data-toggle="modal" style="font-size: 20px">
+	            <img src="https://img.icons8.com/fluent/48/000000/list.png"
+	            style="height: 30px; width: 30px"/>후기 더보기
+	          </a>
+	        </div>
 	      </div>
 	      
           <!-- 최근 목록 -->
@@ -412,7 +384,8 @@ function checkParametersOnSubmit(){
 <!-- <script src="/resources/layout/scripts/jquery.min.js"></script> -->
 <script src="/resources/layout/scripts/jquery.backtotop.js"></script>
 <!-- <script src="/resources/layout/scripts/jquery.mobilemenu.js"></script> -->
-<!-- wish list modal -->
+
+<!-- image modal -->
 <c:if test="${not empty property.images}">
 <div id="image-modal" class="modal fade">
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
@@ -429,6 +402,48 @@ function checkParametersOnSubmit(){
           <div class="one_half <c:if test='${status.count % 2 == 1}'>first</c:if>">
             <img alt="" src="${image.path}" style="object-fit: cover; width:420px;height: 280px">
           </div>
+        </c:forEach>
+      </div>
+      <div class="modal-footer">
+        AirTnT CopyRight ⓒ TeamBit corp. All Rights Reserved.
+      </div>
+    </div>
+  </div>
+</div>
+</c:if>
+
+<!-- review 모달 -->
+<c:if test="${not empty property.reviews}">
+<div id="review-modal" class="modal fade">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+    <div class="modal-content">
+      <div class="modal-header position-relative">
+        <h2 class="modal-title">후기</h2>
+        <div class="position-absolute end-0" style="padding-right: 20px;">
+          <button type="button" class="close" id="image-close-button"
+          data-dismiss="modal" aria-hidden="true" style="font-size: 30px">×</button>
+        </div>
+      </div>
+      <div class="modal-body content" style="height: 400px">
+        <c:forEach var="review" items="${property.reviews}">
+          <div>
+            <h3>${review.writer.name}</h3>
+            <span>${review.reg_date}</span>
+            <p>
+              ${review.content}
+            </p>
+          </div>
+          <c:if test="${not empty review.content_host}">
+            <div class="position-relative">
+              <div class="position-absolute end-0">
+                <h3>호스트 답글</h3>
+                <span>${review.content_host_date}</span>
+                <p>
+                  ${review.content_host}
+                </p>
+              </div>
+            </div>
+          </c:if>
         </c:forEach>
       </div>
       <div class="modal-footer">
