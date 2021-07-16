@@ -90,6 +90,7 @@ public class AdminController{
 			session.setAttribute("member_id", dto.getId());
 			session.setAttribute("member_name", dto.getName());
 			session.setAttribute("member_ip", req.getRemoteAddr());
+			session.setAttribute("member_mode", "3");
 			
 			//아이디저장하기 버튼 클릭시 아이디 쿠키에 저장
 			Cookie ck = new Cookie("saveId", dto.getId());

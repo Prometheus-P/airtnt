@@ -107,7 +107,7 @@
 		insert into property
 		(id, name, host_id, property_desc, property_type_id,
 		sub_property_type_id, room_type_id, address, price, bed_count, max_guest, latitude, longitude)
-		values(seq_property.nextval,#{name}, #{hostId}, #{propertyDesc},
+		values(seq_property_id.nextval,#{name}, #{hostId}, #{propertyDesc},
 		#{propertyTypeId}, #{subPropertyTypeId}, #{roomTypeId}, #{address},
 		#{price}, #{bedCount}, #{maxGuest}, #{latitude}, #{longitude})<!-- modeDate==null -->
 	</insert>
@@ -406,11 +406,11 @@
 	</update>
 	
 	<select id="getAmenitySequence" resultType="int">
-		SELECT seq_amenity.nextval FROM dual
+		SELECT seq_amenity_id.nextval FROM dual
 	</select>
 
 	<select id="getImageSequence" resultType="int">
-		SELECT seq_image.nextval FROM dual
+		SELECT seq_image_id.nextval FROM dual
 	</select>
 	
 	<select id="getPropertyImage" parameterType="int" resultType="imageDTO">

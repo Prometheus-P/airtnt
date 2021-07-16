@@ -129,6 +129,7 @@ public class AdminMapper {
 	//[filter] : subPropertyTypeList > insert/update
 		public int updateSubPropertyTypeDTO(String mode, SubPropertyTypeDTO dto){
 			int res = 0;
+			System.out.println(dto.getPropertyTypeId());
 			if(mode.equals("I")) res = sqlSession.insert("insertSubPropertyTypeDTO", dto);
 			else res = sqlSession.update("updateSubPropertyTypeDTO", dto);
 			return res;
