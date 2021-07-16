@@ -50,7 +50,7 @@ public class PropertyController {
 	private final String encoding = Encoding.UTF_8;
 	private final int cookieMaxAge = 10*MINUTE;
 	
-	private final Integer numPerPage = 3;
+	private final Integer numPerPage = 8;
 	
 	@Autowired
 	private PropertyMapper propertyMapper;

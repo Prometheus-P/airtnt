@@ -402,13 +402,17 @@ public class HostController implements HostControllerInterface {
 	@RequestMapping(value = "host/bookConfirm", method = RequestMethod.POST)
 	public String bookConfirm(@RequestParam Map<String, Object> param) {
 		int bookingId = Integer.valueOf((String) param.get("bookingId"));
-		java.text.DateFormat format = new SimpleDateFormat("yyyyMMdd");
+		java.text.DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 		java.sql.Date payExptDate = null;
 		try {
 			Calendar c = Calendar.getInstance();
 			System.out.println((String) param.get("checkOutDate"));
+			System.out.println((String) param.get("checkOutDate"));
+			
 			Date date = format.parse((String) param.get("checkOutDate"));
-			System.out.println(date);
+			/*
+			 * format. System.out.println(date);
+			 */
 			c.setTime(date);
 			c.add(Calendar.DATE, 3); // 3일 추가하기
 			date = c.getTime();
@@ -421,7 +425,10 @@ public class HostController implements HostControllerInterface {
 		}
 
 		int res1 = hostMapper.bookConfirm(bookingId);
-		int res2 = hostMapper.payExptDateConfirm(bookingId, payExptDate);
+		Map<String, Object> payExptDateConfirm = new Hashtable<>();
+		payExptDateConfirm.put("bookingId", bookingId);
+		payExptDateConfirm.put("payExptDate", payExptDate);
+		int res2 = hostMapper.payExptDateConfirm(payExptDateConfirm);
 		System.out.print("결과: " + res1 + "그리고" + res2);
 		if (res1 > 0 && res2 > 0)
 			return "예약이 승인 되었습니다!";

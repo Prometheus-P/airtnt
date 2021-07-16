@@ -374,7 +374,7 @@
 	
 	<update id="payExptDateConfirm" parameterType="java.util.Map">
 		UPDATE transaction 
-		SET pay_expt_date = TO_DATE('#{payExptDate}', 'YYYY-MM-DD') 
+		SET pay_expt_date = TO_DATE(#{payExptDate}, 'YYYY-MM-DD') 
 		WHERE booking_id = #{bookingId}
 	</update>
 	
