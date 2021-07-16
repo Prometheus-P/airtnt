@@ -3,6 +3,8 @@ package com.airtnt.airtnt.model;
 import java.sql.Date;
 import java.util.List;
 
+import org.springframework.lang.Nullable;
+
 public class PropertyDTO {
 	
 	// 디버깅용
@@ -16,7 +18,6 @@ public class PropertyDTO {
 	
 	private Integer id; // pk
 	private String name;
-	private String hostId;
 	private String propertyDesc;
 	private String address;
 	private String latitude;
@@ -28,6 +29,8 @@ public class PropertyDTO {
 	private Date modDate;
 	
 	// 예전 방식
+	private String hostId;
+	
 	// property_type 테이블 참조값
 	private Integer propertyTypeId; // fk
 	private String propertyTypeName;
@@ -41,6 +44,7 @@ public class PropertyDTO {
 	private String roomTypeName;
 	
 	// 요즘 방식
+	private MemberDTO host;
 	private PropertyTypeDTO propertyType;
 	private SubPropertyTypeDTO subPropertyType;
 	private RoomTypeDTO roomType;
@@ -169,6 +173,12 @@ public class PropertyDTO {
 	}
 	
 	// 요즘 방식
+	public MemberDTO getHost() {
+		return host;
+	}
+	public void setHost(MemberDTO host) {
+		this.host = host;
+	}
 	public PropertyTypeDTO getPropertyType() {
 		return propertyType;
 	}

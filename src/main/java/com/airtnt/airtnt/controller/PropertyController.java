@@ -223,12 +223,15 @@ public class PropertyController {
 			
 			System.out.println("----- 후기 목록 -----");
 			for(PropertyDTO property : properties) {
+				if(property.getHost() != null) {
+					System.out.println("호스트 : " +  property.getHost().getName());
+				}
 				System.out.println("숙소" + property.getId() + " 별점 : " + property.getRating());
 				System.out.println("숙소" + property.getId() + "의 후기");
 				List<ReviewDTO> reviews = property.getReviews();
 				if(reviews != null) {
 					for(ReviewDTO review : reviews) {
-						System.out.println("이름 : " + review.getMember().getName());
+						System.out.println("이름 : " + review.getWriter().getName());
 						System.out.println("내용 : " + review.getContent());
 						if(review.getContent_host() != null) {
 							System.out.println("호스트 답글 : " + review.getContent_host());
