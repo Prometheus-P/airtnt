@@ -128,7 +128,7 @@
 			
 							<ul class="dropdown-menu list-group" aria-labelledby="dropdownMenuClickableInside-2">
 							<c:forEach var="roomType" items="${roomTypes}">
-								<li class="list-group-item" style="font-size: 20px">
+								<li class="list-group-item" style="font-size: 15px">
 									<div class="form-check form-check-inline">
 										<input type="checkbox" class="form-check-input" name="roomTypeId" value="${roomType.id}"
 											<c:forEach var='tagAttribute' items='${roomType.tagAttributes}'>
@@ -151,7 +151,7 @@
 							<button class="btn btn-secondary btn-lg dropdown-toggle" type="button" id="dropdownMenuClickableInside-3" data-bs-toggle="dropdown" 
 									data-bs-auto-close="outside" aria-expanded="false" style="font-size:15px; padding-left:15px; padding-right:15px;">편의시설</button>
 			
-							<div class="dropdown-menu" aria-labelledby="dropdownMenuClickableInside-3" style="font-size: 15px">
+							<div class="dropdown-menu" aria-labelledby="dropdownMenuClickableInside-3" style="font-size: 15px; padding-left:15px;">
 							<c:forEach var="amenityType" items="${amenityTypes}">
 								<div class="form-check form-check-inline">
 									<input type="checkbox" class="form-check-input" name="amenityTypeId" value="${amenityType.id}"
@@ -294,64 +294,54 @@
 			</c:if>
 			
 			<!-- 페이지 버튼 -->
-			<div>
-				<nav class="" aria-label="Page navigation">
+			<div style="margin-left:380px;">
+				<nav aria-label="Page navigation">
 					<ul class="pagination justify-content-center">
 						<c:if test="${startPageNum > 1}">
 							<li class="page-item"><a href="#" id="page-1"
-								class="page-link" onclick="movePage(this)"
-								style="width: 3rem; height: 3rem; font-size: 2rem"> 1 </a></li>
-							<li class="page-item disabled"><span class="page-link"
-								style="width: 3rem; height: 3rem; font-size: 2rem"> ... </span></li>
+								class="page-link" onclick="movePage(this)"> 1 </a></li>
+							<li class="page-item disabled"><span class="page-link"> ... </span></li>
 						</c:if>
 						<c:choose>
 							<c:when test="${startPageNum == 1}">
-								<li class="page-item disabled"><span class="page-link"
-									style="width: 3rem; height: 3rem; font-size: 2rem">
+								<li class="page-item disabled"><span class="page-link">
 										&laquo; </span></li>
 							</c:when>
 							<c:otherwise>
 								<li class="page-item"><a id="page-${pageNum - 4}"
 									class="page-link" href="#" onclick="movePage(this)"
-									aria-label="Previous"
-									style="width: 3rem; height: 3rem; font-size: 2rem"> &laquo; </a></li>
+									aria-label="Previous"> &laquo; </a></li>
 							</c:otherwise>
 						</c:choose>
 						<c:forEach var="pageNum" begin="${startPageNum}" end="${endPageNum}">
 							<c:choose>
 								<c:when test="${pageNum == param.pageNum}">
 									<li class="page-item active" aria-current="page"><span
-										class="page-link"
-										style="width: 3rem; height: 3rem; font-size: 2rem">
+										class="page-link">
 											${pageNum} </span></li>
 								</c:when>
 								<c:otherwise>
 									<li class="page-item"><a id="page-${pageNum}"
-										class="page-link" href="#" onclick="movePage(this)"
-										style="width: 3rem; height: 3rem; font-size: 2rem">
+										class="page-link" href="#" onclick="movePage(this)">
 											${pageNum} </a></li>
 								</c:otherwise>
 							</c:choose>
 						</c:forEach>
 						<c:choose>
 							<c:when test="${endPageNum == totalPagesNum}">
-								<li class="page-item disabled"><span class="page-link"
-									style="width: 3rem; height: 3rem; font-size: 2rem">
+								<li class="page-item disabled"><span class="page-link">
 										&raquo; </span></li>
 							</c:when>
 							<c:otherwise>
 								<li class="page-item"><a id="page-${pageNum + 4}"
 									class="page-link" href="#" onclick="movePage(this)"
-									aria-label="Next"
-									style="width: 3rem; height: 3rem; font-size: 2rem"> &raquo; </a></li>
+									aria-label="Next"> &raquo; </a></li>
 							</c:otherwise>
 						</c:choose>
 						<c:if test="${endPageNum < totalPagesNum}">
-							<li class="page-item disabled"><span class="page-link"
-								style="width: 2rem; height: 2rem; font-size: 1rem"> ... </span></li>
+							<li class="page-item disabled"><span class="page-link"> ... </span></li>
 							<li class="page-item"><a href="#" id="page-${endPageNum}"
-								class="page-link" onclick="movePage(this)"
-								style="width: 3rem; height: 3rem; font-size: 2rem">
+								class="page-link" onclick="movePage(this)">
 									${totalPagesNum} </a></li>
 						</c:if>
 					</ul>
