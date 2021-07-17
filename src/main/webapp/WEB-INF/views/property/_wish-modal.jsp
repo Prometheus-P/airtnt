@@ -24,11 +24,18 @@
         <c:forEach var="wishList" items="${wishLists}">
           <div class="one_half <c:if test='${i % 2 == 1}'>first</c:if>" align="center">
             <a class="wishList-button" id="wishList-${wishList.id}" role="button">
-              <img src="
-                <c:if test="${not empty wishList.properties && 
-                not empty wishList.properties.get(0).images}">
-                  ${wishList.properties.get(0).images.get(0).path}
-                </c:if>" style="width: 20rem;height: 15rem"><br>
+              <c:choose>
+                  <c:when test="${not empty wishList.properties && not empty wishList.properties.get(0).images}">
+                     <img src="${wishList.properties.get(0).images.get(0).path}" style="width: 20rem;height: 15rem">
+                  </c:when>
+                  <c:otherwise>
+                     <svg xmlns="http://www.w3.org/2000/svg" width="200" height="150" fill="currentColor" class="bi bi-house" viewBox="0 0 16 16">
+                       <path fill-rule="evenodd" d="M2 13.5V7h1v6.5a.5.5 0 0 0 .5.5h9a.5.5 0 0 0 .5-.5V7h1v6.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 13.5zm11-11V6l-2-2V2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5z"/>
+                       <path fill-rule="evenodd" d="M7.293 1.5a1 1 0 0 1 1.414 0l6.647 6.646a.5.5 0 0 1-.708.708L8 2.207 1.354 8.854a.5.5 0 1 1-.708-.708L7.293 1.5z"/>
+                     </svg>
+                  </c:otherwise>
+                </c:choose>
+              <br>
               ${wishList.name}
             </a>
           </div>

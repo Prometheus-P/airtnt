@@ -59,6 +59,7 @@
 												<h3 class="media-heading" style="font-style: italic;">평점${dto.rating}점</h3>
 												<br>
 												<p>작성자 : ${dto.writer_id}님</p>
+												<p><textarea></textarea></p>
 											</div>
 										</div>
 									</div>

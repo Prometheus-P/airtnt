@@ -169,8 +169,8 @@ public class HostMapper implements HostMapperInterface {
 		return res;
 	}
 	
-	public int payExptDateConfirm(int bookingId, java.sql.Date checkOutDate) {
-		int res = sqlSession.update("payExptDateConfirm", checkOutDate);
+	public int payExptDateConfirm(Map<String, Object> payExptDateConfirm) {
+		int res = sqlSession.update("payExptDateConfirm", payExptDateConfirm);
 		return res;
 	}
 
