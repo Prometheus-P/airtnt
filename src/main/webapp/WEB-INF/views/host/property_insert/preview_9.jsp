@@ -9,16 +9,6 @@
 input[type=checkbox] {
 	zoom: 2.0;
 }
-
-footer {
-	position: fixed;
-	left: 0px;
-	bottom: 0px;
-	height: 10%;
-	width: 100%;
-	background: #01546b;
-	color: white;
-}
 </style>
 </head>
 <body>
@@ -48,7 +38,8 @@ footer {
 					</h4>
 					<p>
 						<c:forEach var='amenity' items='${sessionScope.listAmenity}'>
-							<i class="bi bi-check">${amenity.name}</i><br>
+							<i class="bi bi-check">${amenity.name}</i>
+							<br>
 						</c:forEach>
 					</p>
 
@@ -74,13 +65,13 @@ footer {
 	<br>
 	<br>
 	<footer style="font-size: 30px; font-weight: bold;">
-		<div style="float: left; padding-left: 80px; padding-top: 20px">
+		<div style="float: left; padding-left: 250px; padding-top: 20px">
 			<button type="button" class="btn btn-lg btn-default"
 				onclick="previous()" style="font-size: 30px; font-weight: bold;">
 				<i class="bi bi-arrow-left-square-fill"></i> 이전 페이지
 			</button>
 		</div>
-		<div style="float: right; padding-right: 80px; padding-top: 20px;">
+		<div style="float: right; padding-right: 250px; padding-top: 20px;">
 			<button id="save" type="button" class="btn btn-lg btn-default"
 				style="font-size: 30px; font-weight: bold;">
 				숙소 저장 <i class="bi bi-arrow-right-square-fill"></i>
@@ -89,24 +80,31 @@ footer {
 	</footer>
 </body>
 <script>
-	$('#save').click(function() {
+	$(document).ready(function() {
+		$('#save').bind('click', function() {
+			doSomething();
+		});
+	});
+
+	var doSomething = function() {
+		$('#save').unbind('click');
 		$.ajax({
 			url : "/host/property_save",
 			type : "post",
 			success : function(data) {
-						if (JSON.parse(data)['result'] == "OK"){
-							alert("숙소가 저장 되었습니다! 호스트 메인 페이지로 이동합니다!")
-							location.href="/host/host_mode";
-						}else{
-							alert("숙소 저장 중 문제 발생! 관리자에게 연락바랍니다!");
-						}
-					},
-			error: function (xhr, status, error) {
-				   	   alert("서버오류로 지연되고있습니다. 잠시 후 다시 시도해주시기 바랍니다.");
-				   	    }
-			});
-	});
-	function previous(){
+				if (JSON.parse(data)['result'] == "OK") {
+					alert("숙소가 저장 되었습니다! 호스트 메인 페이지로 이동합니다!")
+					location.href = "/host/host_mode";
+				} else {
+					alert("숙소 저장 중 문제 발생! 관리자에게 연락바랍니다!");
+				}
+			},
+			error : function(xhr, status, error) {
+				alert("서버오류로 지연되고있습니다. 잠시 후 다시 시도해주시기 바랍니다.");
+			}
+		});
+	}
+	function previous() {
 		window.history.back();
 	}
 </script>

@@ -30,29 +30,31 @@
 		<div class="jumbotron">
 			<h1>투데이</h1>
 			<p>
-				오늘은 어떤 계획이 있으신가요?<br> 우선 예약 목록을 확인해 볼까요?
+				오늘은 어떤 계획이 있으신가요?<br> 
+				우선 예약 목록을 확인해 볼까요?
+				
 			</p>
 		</div>
 	</div>
 	<div class="container theme-showcase" role="main">
-		<div class="col-md-6" style="width: 80%">
+		<div class="col-md-6" style="width: 90%">
 			<table class="table table-striped">
 				<thead>
 					<tr>
-						<th width="12%">상태</th>
+						<th width="15%">상태</th>
 						<th width="12%">예약번호</th>
-						<th width="12%">숙소명</th>
-						<th width="12%">게스트</th>
-						<th width="25%">숙박 기간</th>
+						<th width="10%">숙소명</th>
+						<th width="13%">게스트</th>
+						<th width="22%">숙박 기간</th>
 						<th width="15%">예약 접수 날짜</th>
-						<th rowspan="2" width="15%">대금</th>
+						<th width="13%">대금</th>
 					</tr>
 				</thead>
 				<tbody>
 					<c:forEach var="dto" items="${listBooking}">
-						<c:if test="${dto.checkOutDate.after(today)}">
+						<c:if test="${dto.checkOutDate.after(today) && Character.compare(dto.isRefund, 'N') == 0}"><!-- checkOutDate가 넘어가면 이 페이지에서 사라짐. -->
 							<tr>
-								<td><c:if test="${dto.confirmDate == null}">
+								<td><c:if test="${dto.confirmDate == null && dto.payExptDate == null}">
 										<button type="button" class="btn btn-sm btn-link"
 											data-toggle="modal" data-target="#modal${dto.id}"
 											title="예약을 확인해주세요!" data-placement="right" style="color: orange ">승인대기</button>
@@ -115,7 +117,7 @@
 																</h3>
 																<br>
 																<p>
-																<textarea class="form-control col-sm-5" rows="3"
+																<textarea name="refuseMessage" class="form-control col-sm-5" rows="3"
 													 placeholder="ex. 제가 휴가를 갑니다. 양해 바랍니다."></textarea>
 																</p>
 																<p>
@@ -134,11 +136,11 @@
 												</div>
 											</div>
 										</div>
+									</c:if> <!-- 예약확정일, 체크아웃일 모두 있고, 체크아웃일 전  -->
+									<c:if test="${not empty dto.confirmDate && not empty dto.payExptDate && today.before(dto.checkInDate)}">
+										<font color="blue" ><b>확정</b></font><br><br>게스트 E-Mail: ${dto.guestEmail}
 									</c:if> 
-									<c:if test="${dto.confirmDate != null && today.before(dto.checkInDate)}">
-										<font color="blue"><b>확정</b></font>
-									</c:if> 
-									<c:if test="${dto.checkInDate.before(today) && today.before(dto.checkOutDate)}">
+									<c:if test="${not empty dto.confirmDate && not empty dto.payExptDate && dto.checkInDate.before(today) && today.before(dto.checkOutDate)}">
 										<font color="green"><b>이용중</b></font>
 									</c:if>
 								</td>
@@ -149,7 +151,6 @@
 								<td>${dto.regDate}</td>
 								<td>₩${dto.totalPrice}</td>
 							</tr>
-
 						</c:if>
 					</c:forEach>
 				</tbody>
@@ -159,15 +160,22 @@
 	<!-- /container -->
 	<script>
 		function confirm(id, checkOut){
-			//var checkOutDate = new Date(checkOut);
+			var bookingId = id;
+			var checkOutDate = checkOut;
 			 $.ajax({
 	                type : "POST",
 	                url : "/host/bookConfirm",
-	                data : {'bookingId' : id, 'checkOutDate' : checkOut},
+	                data : {'bookingId' : bookingId, 'checkOutDate' : checkOutDate},
 	                success : function(text){
-	                    alert(text);
-	                    $('#close').click();
-	                    location.reload(true);
+	                    if (JSON.parse(data)['result'] == "OK") {
+							alert("예약을 승인했습니다! 게스트와 email로 연락해보세요!");
+							$('#close').click();
+			                location.reload(true);
+							return;
+						}else{
+							alert("예약 승인 중 서버 문제 발생! 잠시 후 다시 시도해주세요.");
+							return;
+						}
 	                },
 	                error : function(XMLHttpRequest, textStatus, errorThrown){
 	                    alert("서버 문제 발생! 다시 시도해 주세요.");
@@ -180,11 +188,17 @@
 	                type : "POST",
 	                url : "/host/bookReject",
 	                data : {'bookingId' : id},
-	                success : function(text){ 
-	                    alert(text);
-	                    $('#close_cancel').click();
-	                    $('#close').click();
-	                    location.reload(true);
+	                success : function(data){ 
+	                    if (JSON.parse(data)['result'] == "OK") {
+							alert("예약을 취소했습니다!");
+							  $('#close_cancel').click();
+			                  $('#close').click();
+			                  location.reload(true);
+							return;
+						}else{
+							alert("예약 취소 중 서버 문제 발생! 잠시 후 다시 시도해주세요.");
+							return;
+						}
 	                },
 	                error : function(XMLHttpRequest, textStatus, errorThrown){
 	                    alert("서버 문제 발생! 다시 시도해 주세요.");

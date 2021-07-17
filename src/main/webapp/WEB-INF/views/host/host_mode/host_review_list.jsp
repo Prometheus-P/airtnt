@@ -22,12 +22,12 @@
 			</div>
 			<div class="list-group">
 				<c:forEach var="dto" items="${listProperty}">
-					<a type="button" class="list-group-item"
+					<button type="button" class="list-group-item"
 						id="btn" onclick="list(${dto.id})" >
 						<h4 class="list-group-item-heading">${dto.name}</h4>
 						<p class="list-group-item-text">유형: ${dto.subPropertyTypeName}
 						<br>등록일 : ${dto.regDate}</p>
-					</a><br><br>
+					</button><br><br>
 				</c:forEach>
 			</div>
 		</div>

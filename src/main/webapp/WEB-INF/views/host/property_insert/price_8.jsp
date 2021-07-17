@@ -6,14 +6,6 @@
 <meta charset="UTF-8">
 <title>숙소등록</title>
 <style>
-footer{ 
-	position:fixed; 
-	left:0px; 
-	bottom:0px; 
-	height:20%; 
-	width:100%; 
-	background: #01546b ; 
-	color: white; }
 </style>
 </head>
 <body>
@@ -40,14 +32,14 @@ footer{
 					onclick="changePrice(this)" style="font-size: 50px;">
 			</div>
 				<footer style="font-size: 30px; font-weight: bold;">
-					<div style="float: left; padding-left: 80px; padding-top: 20px">
+					<div style="float: left; padding-left: 250px; padding-top: 20px">
 						<button type="button" class="btn btn-lg btn-default"
 							onclick="previous()" style="font-size: 30px; font-weight: bold;">
 							<i class="bi bi-arrow-left-square-fill"></i> 
 							이전 페이지
 						</button>
 					</div>
-					<div style="float: right; padding-right: 80px; padding-top: 20px;">
+					<div style="float: right; padding-right: 250px; padding-top: 20px;">
 						<button  id="next" type="submit" class="btn btn-lg btn-default"
 						 style="font-size: 30px; font-weight: bold;">
 							다음 페이지 <i class="bi bi-arrow-right-square-fill"></i>

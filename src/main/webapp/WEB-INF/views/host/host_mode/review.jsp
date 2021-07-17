@@ -59,14 +59,10 @@
 												<h3 class="media-heading" style="font-style: italic;">평점${dto.rating}점</h3>
 												<br>
 												<p>작성자 : ${dto.writer_id}님</p>
-<<<<<<< HEAD
 												<p>답글<br>
 												<p>
-												<textarea name="answer" class="form-control col-sm-5" rows="3"
+												<textarea id="answer" class="form-control col-sm-5" rows="3"
 												 placeholder="ex. 감사합니다!"></textarea></p>
-=======
-												<p><textarea></textarea></p>
->>>>>>> branch 'master' of https://github.com/ccd485/airtnt.git
 											</div>
 										</div>
 									</div>

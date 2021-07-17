@@ -24,10 +24,19 @@ footer{
 	position:fixed; 
 	left:0px; 
 	bottom:0px; 
-	height:20%; 
+	height:15%; 
 	width:100%; 
-	background: #01546b ; 
+	background: #b4c4cd ; 
 	color: white; }
+/* body{
+	background-color: #D1E6E5;
+} */
+.list-group{
+	border-radius: 70px;
+}
+.button{
+	border-radius: 70px;
+}
 </style>
 </head>
 <body>
