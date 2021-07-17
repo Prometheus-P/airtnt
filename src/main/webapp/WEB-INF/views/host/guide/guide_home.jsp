@@ -113,12 +113,12 @@
 				<c:forEach var="dto" items="${listGuide}">
 					<li class="one_third">
 						<article>
-							<a href="<c:url value='/guide_context'/>?id=${dto.id}"><i
+							<a href="<c:url value='/guide_context?id=${dto.id}'/>"><i
 								class="fas fa-spray-can"></i></a>
 							<h6 class="heading">${dto.subject}</h6>
 							<p>${dto.explanation}.</p>
 							<footer>
-								<a href="<c:url value='/guide_context'/>?id=${dto.id}">더보기
+								<a href="<c:url value='/guide_context?id=${dto.id}'/>">더보기
 									&raquo;</a>
 							</footer>
 						</article>

@@ -15,7 +15,7 @@ Licence URI: https://www.os-templates.com/template-terms
 <c:if test="${empty booking}">
 	<script type="text/javascript">
 		alert("요청이 만료되었습니다.");
-		location.href = "index";
+		location.href = "/";
 	</script>
 </c:if>
 <!-- To declare your language - read more here: https://www.w3.org/International/questions/qa-html-language-declarations -->

@@ -157,9 +157,9 @@ public class HostController implements HostControllerInterface {
 	@RequestMapping("host/floor_plan_4")
 	public String floor_plan_4(HttpSession session, @RequestParam Map<String, String> param) {
 		session.setAttribute("checkAddress", param.get("address"));
-		session.setAttribute("address", param.get("address") + " " + param.get("addressDetail"));
+		session.setAttribute("address",  param.get("address") + " " +  param.get("addressDetail"));
 		session.setAttribute("latitude", param.get("latitude"));
-		session.setAttribute("logitude", param.get("longitude"));
+		session.setAttribute("longitude", param.get("longitude"));
 
 		System.out.println("위도: " + param.get("latitude"));
 		System.out.println("경도: " + param.get("longitude"));
@@ -214,12 +214,13 @@ public class HostController implements HostControllerInterface {
 					String originalFileName = file.getOriginalFilename(); // 오리지날 파일명
 					long time = System.currentTimeMillis();
 					String savedFileName = time + "-" + originalFileName; // 저장될 파일 명
-					// String upPath =
-					// "C:\\Users\\Haseong\\git\\airtnt\\src\\main\\webapp\\resources\\files\\property\\property-";
-					String upPath = "C:\\Users\\woosuki\\git\\airtnt\\src\\main\\webapp\\resources\files\\property\\sproperty-";
+					//String upPath = "C:\\Users\\Haseong\\git\\airtnt\\src\\main\\webapp\\resources\\files\\property\\property-";
+					//수연
+					String upPath = "C:\\Users\\woosuki\\git\\airtnt\\src\\main\\webapp\\resources\\files\\property\\property-";
+					//학원
+					//String upPath = "D:\\study3(spring)\\airtnt\\src\\main\\webapp\\resources\\files\\property\\property-";
 					// 정석
-					// String upPath =
-					// "C:\\Spring\\EZEN\\workspace\\AirTnT\\src\\main\\webapp\\resources\\files\\property\\property-";
+					//String upPath = "C:\\Spring\\EZEN\\workspace\\AirTnT\\src\\main\\webapp\\resources\\files\\property\\property-";
 					// HS >>
 					// D:\bigdata\study3\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\airtnt\resources\files\property
 
@@ -263,6 +264,7 @@ public class HostController implements HostControllerInterface {
 
 	private boolean isValidExtension(String originalName) {
 		String originalNameExtension = originalName.substring(originalName.lastIndexOf(".") + 1);
+		originalNameExtension = originalNameExtension.toLowerCase();
 		switch (originalNameExtension) {
 		case "jpg":
 		case "png":
@@ -300,6 +302,7 @@ public class HostController implements HostControllerInterface {
 	@RequestMapping("host/property_save")
 	public String property_save(HttpSession session) {
 		session.setAttribute("isMemberMode", true);
+		session.setAttribute("member_mode", "2");
 		List<AmenityTypeDTO> listAmenity = (List<AmenityTypeDTO>) session.getAttribute("listAmenity");
 		List<ImageDTO> listImgUrl = (List<ImageDTO>) session.getAttribute("listImgUrl");
 		String hostId = (String) session.getAttribute("member_id");
@@ -397,13 +400,17 @@ public class HostController implements HostControllerInterface {
 	@RequestMapping(value = "host/bookConfirm", method = RequestMethod.POST)
 	public String bookConfirm(@RequestParam Map<String, Object> param) {
 		int bookingId = Integer.valueOf((String) param.get("bookingId"));
-		java.text.DateFormat format = new SimpleDateFormat("yyyyMMdd");
+		java.text.DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 		java.sql.Date payExptDate = null;
 		try {
 			Calendar c = Calendar.getInstance();
 			System.out.println((String) param.get("checkOutDate"));
+			System.out.println((String) param.get("checkOutDate"));
+			
 			Date date = format.parse((String) param.get("checkOutDate"));
-			System.out.println(date);
+			/*
+			 * format. System.out.println(date);
+			 */
 			c.setTime(date);
 			c.add(Calendar.DATE, 3); // 3일 추가하기
 			date = c.getTime();
@@ -416,7 +423,10 @@ public class HostController implements HostControllerInterface {
 		}
 
 		int res1 = hostMapper.bookConfirm(bookingId);
-		int res2 = hostMapper.payExptDateConfirm(bookingId, payExptDate);
+		Map<String, Object> payExptDateConfirm = new Hashtable<>();
+		payExptDateConfirm.put("bookingId", bookingId);
+		payExptDateConfirm.put("payExptDate", payExptDate);
+		int res2 = hostMapper.payExptDateConfirm(payExptDateConfirm);
 		System.out.print("결과: " + res1 + "그리고" + res2);
 		if (res1 > 0 && res2 > 0)
 			return "예약이 승인 되었습니다!";

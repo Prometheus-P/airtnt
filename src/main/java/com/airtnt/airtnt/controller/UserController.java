@@ -235,7 +235,10 @@ public class UserController {
 		String originalFile = mtf.getOriginalFilename();
 		String originalFileExtension = originalFile.substring(originalFile.lastIndexOf("."));
 		String storedFileName = UUID.randomUUID().toString().replaceAll("-", "") + originalFileExtension;
-		String upPath = "D:\\Ezen Learning\\Bigdata Learning Spring\\airtnt\\src\\main\\webapp\\resources\\files\\member_image\\";
+		//승훈
+		//String upPath = "D:\\Ezen Learning\\Bigdata Learning Spring\\airtnt\\src\\main\\webapp\\resources\\files\\member_image\\";
+		//학원
+		String upPath = "D:\\study3(spring)\\airtnt\\src\\main\\webapp\\resources\\files\\member_image\\";
 		//String upPath = req.getServletContext().getRealPath(req.getContextPath())+"\\resources\\files\\member_image\\";
 		// DB 넘길 데이터 설정
 		Map<String, String> params = new Hashtable<>();

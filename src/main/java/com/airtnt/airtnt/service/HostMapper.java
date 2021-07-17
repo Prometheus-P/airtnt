@@ -54,11 +54,12 @@ public class HostMapper implements HostMapperInterface {
 		int res = sqlSession.insert("insertProperty", dto);
 		return res;
 	}
-
+	
+	//성공해도 리턴값 -1
 	@Override
 	public int deleteProperty(Integer propertyId) {
-		int res = sqlSession.delete("deleteProperty", propertyId);
-		return res;
+		int res = sqlSession.delete("deleteProperty",propertyId);
+		return res+2;
 	}
 
 	@Override
@@ -167,9 +168,9 @@ public class HostMapper implements HostMapperInterface {
 		int res = sqlSession.update("bookConfirm", bookingId);
 		return res;
 	}
-
-	public int payExptDateConfirm(int bookingId, java.sql.Date checkOutDate) {
-		int res = sqlSession.update("payExptDateConfirm", checkOutDate);
+	
+	public int payExptDateConfirm(Map<String, Object> payExptDateConfirm) {
+		int res = sqlSession.update("payExptDateConfirm", payExptDateConfirm);
 		return res;
 	}
 

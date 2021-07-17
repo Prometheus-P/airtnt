@@ -50,7 +50,7 @@ public class PropertyController {
 	private final String encoding = Encoding.UTF_8;
 	private final int cookieMaxAge = 10*MINUTE;
 	
-	private final Integer numPerPage = 3;
+	private final Integer numPerPage = 8;
 	
 	@Autowired
 	private PropertyMapper propertyMapper;
@@ -81,7 +81,6 @@ public class PropertyController {
 		req.setAttribute("currentURI", currentURI);
 		
 		// 1. 예외를 일으킬 수 있는 파라미터값 보정
-		
 		if(tempAddressKey == null || tempAddressKey.trim().equals("")) {
 			if(addressKey == null || addressKey.trim().equals("")) {
 				addressKey = "서울";
@@ -96,6 +95,13 @@ public class PropertyController {
 			addressKey = tempAddressKey;
 		}
 		
+		if(addressKey == null || addressKey.trim().equals("")) {
+			addressKey = "서울";
+			// 서울 시청
+			latitude = "37.566826004661";
+			longitude = "126.978652258309";
+		}
+		
 		if(latitude == null || latitude.trim().equals("") ||
 				longitude == null || longitude.trim().equals("")) {
 			addressKey = "서울";
@@ -108,7 +114,10 @@ public class PropertyController {
 		if(pageNum == null || pageNum < 1) {
 			pageNum = 1;
 		}
-		
+		System.out.println("" + addressKey);
+		System.out.println("" + tempAddressKey);
+		System.out.println("" + latitude);
+		System.out.println("" + longitude);
 		
 		// 2. 숙소목록 선택
 		

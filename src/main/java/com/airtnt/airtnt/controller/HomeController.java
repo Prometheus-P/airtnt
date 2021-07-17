@@ -69,7 +69,7 @@ public class HomeController {
 	@RequestMapping("message_host")
 	public String message_host(HttpServletRequest req) {
 		req.setAttribute("msg", "먼저 숙소를 등록해서 호스트가 되어 주세요!");
-		req.setAttribute("url", "/host/guide_home");
+		req.setAttribute("url", "/guide_home");
 		return "message";
 	}
 	
