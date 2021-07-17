@@ -53,7 +53,7 @@ public class PropertyDTO {
 
 	private List<AmenityTypeDTO> amenityTypes;
 	private List<ImageDTO> images;
-    private List<ReviewDTO> reviews;
+	private List<ReviewDTO> reviews;
 	
 	
 	// 자바에서 셋팅하는 값들
