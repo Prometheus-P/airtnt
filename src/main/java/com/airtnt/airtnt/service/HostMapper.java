@@ -57,7 +57,7 @@ public class HostMapper implements HostMapperInterface {
 
 	@Override
 	public int deleteProperty(Integer propertyId) {
-		int res = sqlSession.delete("deleteProperty",propertyId);
+		int res = sqlSession.delete("deleteProperty", propertyId);
 		return res;
 	}
 
@@ -88,7 +88,7 @@ public class HostMapper implements HostMapperInterface {
 	@Override
 	public List<PropertyDTO> getPropertyList(String hostId) {
 		List<PropertyDTO> listProperty = sqlSession.selectList("listProperty", hostId);
-		for(PropertyDTO dto : listProperty) {
+		for (PropertyDTO dto : listProperty) {
 			System.out.println("숙소 ID: " + dto.getId());
 		}
 		return listProperty;
@@ -167,7 +167,7 @@ public class HostMapper implements HostMapperInterface {
 		int res = sqlSession.update("bookConfirm", bookingId);
 		return res;
 	}
-	
+
 	public int payExptDateConfirm(int bookingId, java.sql.Date checkOutDate) {
 		int res = sqlSession.update("payExptDateConfirm", checkOutDate);
 		return res;
@@ -182,9 +182,9 @@ public class HostMapper implements HostMapperInterface {
 		int res = sqlSession.update("transactionRefund", bookingId);
 		return res;
 	}
-	
+
 	public int imageInsert(List<ImageDTO> listImage) {
-		for(int i=0; i<listImage.size(); i++) {
+		for (int i = 0; i < listImage.size(); i++) {
 			listImage.get(i).setId(sqlSession.selectOne("getImageSequence"));
 		}
 		int res = sqlSession.insert("imageInsert", listImage);
@@ -192,26 +192,31 @@ public class HostMapper implements HostMapperInterface {
 	}
 
 	public int insertListAmenity(List<AmenityTypeDTO> listAmenity) {
-		for(int i=0; i<listAmenity.size(); i++) {
+		for (int i = 0; i < listAmenity.size(); i++) {
 			listAmenity.get(i).setAmenityId(sqlSession.selectOne("getAmenitySequence"));
 		}
 		int res = sqlSession.update("insertListAmenity", listAmenity);
 		return res;
 	}
-	
-	public List<ImageDTO> getPropertyImage(int propertyId){
+
+	public List<ImageDTO> getPropertyImage(int propertyId) {
 		List<ImageDTO> list = sqlSession.selectList("getPropertyImage", propertyId);
 		return list;
 	}
-	
-	public List<AmenityTypeDTO> getAmenityList(int propertyId){
+
+	public List<AmenityTypeDTO> getAmenityList(int propertyId) {
 		List<AmenityTypeDTO> list = sqlSession.selectList("getAmenityList", propertyId);
 		return list;
 	}
-	
+
 	public int deleteAmenity(int propertyId) {
-		int res = sqlSession.delete("deleteAmenity",propertyId);
+		int res = sqlSession.delete("deleteAmenity", propertyId);
 		return res;
 	}
-	
+
+	public int reviewAnswer(Map<String, String> param) {
+		int res = sqlSession.insert("reviewAnswer", param);
+		return res;
+	}
+
 }

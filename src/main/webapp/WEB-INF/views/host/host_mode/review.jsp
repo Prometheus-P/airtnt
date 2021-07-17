@@ -59,10 +59,16 @@
 												<h3 class="media-heading" style="font-style: italic;">평점${dto.rating}점</h3>
 												<br>
 												<p>작성자 : ${dto.writer_id}님</p>
+												<p>답글<br>
+												<p>
+												<textarea name="answer" class="form-control col-sm-5" rows="3"
+												 placeholder="ex. 감사합니다!"></textarea></p>
 											</div>
 										</div>
 									</div>
 									<div class="modal-footer">
+									<button type="button" class="btn btn-warning"onclick="sendAnswer(${dto.id})">
+									전송</button>			
 										<button type="button" class="btn btn-default"
 											data-dismiss="modal">닫기</button>
 									</div>

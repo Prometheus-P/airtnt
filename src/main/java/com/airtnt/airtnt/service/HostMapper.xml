@@ -433,5 +433,8 @@
 		WHERE property_id = #{propertyId}
 		AND at.id = am.amenity_type_id
 	</select>
-	
+	<insert id="reviewAnswer" parameterType="java.util.Map">
+		INSERT INTO review(booking_id, content_host, content_host_date) VALUES(#{TO_NUMBER(bookingId)}, #{answer}, sysdate)
+	</insert>
+
 </mapper>

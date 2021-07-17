@@ -48,7 +48,7 @@
 					</ul>
 					</li >
 					<li class="dropdown" style="font-size: 30px ;font:bold;">
-					<a id="drop4" href="#" class="dropdown-toggle" data-toggle="dropdown">
+					<a id="drop4" href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">
 					메뉴 
 					<span class="caret"></span>
 					</a>

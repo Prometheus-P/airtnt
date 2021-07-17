@@ -63,6 +63,29 @@
 				console.log(errorThrown);
 			});
 		}
+		
+		function sendAnswer(id){
+			var answer = $('#answer').val();
+			var reviewId = id;
+			$.ajax({
+				url : "/reviewAnswer",
+				type : "post",
+				data : {'reviewId' : reviewId, 'answer' : answer},
+				success : function(data) {
+							if (JSON.parse(data)['result'] == "OK") {
+								alert("답변 전달 성공!");
+								return;
+								location.reload(true);
+							}else{
+								alert("답변 전달 실패!");
+								return;
+							}
+						},
+				error: function (xhr, status, error) {
+					   	   alert("서버오류로 지연되고있습니다. 잠시 후 다시 시도해주시기 바랍니다.");
+					   	    }
+			});
+		}
 	</script>
 </body>
 </html>

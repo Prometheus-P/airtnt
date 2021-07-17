@@ -167,6 +167,7 @@
 	                success : function(text){
 	                    alert(text);
 	                    $('#close').click();
+	                    location.reload(true);
 	                },
 	                error : function(XMLHttpRequest, textStatus, errorThrown){
 	                    alert("서버 문제 발생! 다시 시도해 주세요.");
@@ -183,6 +184,7 @@
 	                    alert(text);
 	                    $('#close_cancel').click();
 	                    $('#close').click();
+	                    location.reload(true);
 	                },
 	                error : function(XMLHttpRequest, textStatus, errorThrown){
 	                    alert("서버 문제 발생! 다시 시도해 주세요.");
