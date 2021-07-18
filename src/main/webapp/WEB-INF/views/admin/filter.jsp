@@ -123,6 +123,7 @@
 	 
 	  	//[공통] 마스터 테이블 추가 버튼 실행시
    		$("#addRoomTypeBtn, #addAmenityTypeBtn, #addPropertyTypeBtn").click(function() {
+   			
    			var row = null;
 				row = "<tr>";
 				row += "<td><input type='checkbox' name='chk' checked></td>";
@@ -131,6 +132,7 @@
 				row += "<td><input type='checkbox' checked></td>";
 				row += "</tr>";
 			var selectedId = $(this).attr("id");
+			
 			if(selectedId == 'addRoomTypeBtn'){
 				$("#roomTypeTable").append(row);
 			}else if(selectedId == 'addAmenityTypeBtn'){
@@ -144,6 +146,7 @@
 	  	
    		//[SUB PROPERTY TYPE] 테이블 추가 버튼 실행시
    		$("#addSubPropertyTypeBtn").click(function() {
+   			$('#subPropertyTypeTable td').remove();
    			var row = "<tr>";
 				row += "<td><input type='checkbox' name='chk' checked></td>";
 				row += "<td>"+selectedPropCode+"</td>";
