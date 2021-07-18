@@ -1,6 +1,7 @@
 package com.airtnt.airtnt.model;
 
 public class RoomTypeDTO extends AbstractTypeDTO {
+	private static final long serialVersionUID = 1L;
 	
 	public RoomTypeDTO() {}
 	public RoomTypeDTO(String name, String isUse) {

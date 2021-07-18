@@ -2,14 +2,15 @@
  * 카카오 주소 검색
  */
 
-var locationArray = new Array();
+var locationArray;
 
 var autoCompleteArea;
 
-var searchInput, tempSeacrhInput;
-var searchDropButton;
+var searchInput;
+var tempSeacrhInput;
 
-var latitudeInput, longitudeInput;
+var latitudeInput
+var longitudeInput;
 
 var mouseEnteredTag;
 
@@ -18,23 +19,16 @@ $(function(){
 	
 	searchInput = document.querySelector("input#search");
 	tempSearchInput = document.querySelector("input#temp-search");
-	searchDropButton = document.querySelector("button#search-drop-button");
 	
 	latitudeInput = document.querySelector("input#latitude");
 	longitudeInput = document.querySelector("input#longitude");
-	
-	// 검색해서 넘어온 페이지에서 input 태그의 value는
-	// 이전의 검색값이므로 넘어온 값으로 초기화
-	if(searchInput.value != ""){
-		updateAddress(searchInput, false);
-	}
 	
 	// oninput 이벤트시 실행 함수
 	// isShow : oninput때는 dropdown을 열고 onblur때는 dropdown을 열지않는 판별값
 	function updateAddress(inputTag, isShow){
 		var keyword = inputTag.value;
 		if(keyword == ""){
-			$(autoCompleteArea).removeClass("show");
+			initLocalTags();
 			return;
 		}
 		
@@ -54,19 +48,23 @@ $(function(){
 			var meta = response.meta;
 			//console.log(meta);
 			locationArray = response.documents;
+			
 			if(locationArray.length == 0){
-				$(autoCompleteArea).removeClass("show");
-			} else {
-				if(isShow){
-					$(autoCompleteArea).addClass("show");
-				}				
+				// 카카오에서 넘어온 주소가 없는 상황.
+				// backspace로 지워서 없을수도 있기 때문에
+				// 기존에 저장되어있던 변수들도 초기화해야한다.
+				initLocalTags();
 				
-				var si, gu, dong;
+			} else {
+				// 카카오에서 넘어온 주소가 있는 상황
+				var location;
 				var addressName;
-				var latitude, longitude;
+				var latitude
+				var longitude;
+				
 				console.log("--------------검색값---------------");
 				for(var i = 0; i < locationArray.length; i++){
-					var location = locationArray[i];
+					location = locationArray[i];
 					
 					addressName = getAddressName(location);
 					
@@ -77,8 +75,8 @@ $(function(){
 						// 자동완성 주소를 클릭하지 않아도 전체 주소명이 넘어갈 수 있는 hidden input
 						tempSearchInput.value = addressName;
 						// 자동완성 주소를 클릭하지 않아도 첫번째 주소의 좌표값은 저장함
-						latitudeInput.value = latitude;
-						longitudeInput.value = longitude;
+						latitudeInput.value =  latitude;
+						longitudeInput.value =  longitude;
 					}
 					
 					var liTag = document.createElement("li");
@@ -91,15 +89,13 @@ $(function(){
 					// 생겼다 없어졌다 하는 태그이므로 생성될 때 바로 이벤트를 부여해야 함
 					// blur 이벤트가 클릭 이벤트보다 빠르므로
 					// 마우스가 올라갔을때 태그 자기 자신을 저장하는 이벤트가 필요
+					
 					$(aTag).click(function(){
 						setAddress(this);
-						if($(autoCompleteArea).hasClass("show")){
-							$(autoCompleteArea).removeClass("show");
-						}
 					}).on("mouseenter", function(){
 						mouseEnteredTag = this;
 					}).on("mouseleave", function(){
-						mouseEnteredTag = null
+						mouseEnteredTag = null;
 					});
 					
 					aTag.innerHTML = addressName;
@@ -110,55 +106,69 @@ $(function(){
 					console.log("(" + latitude + "," + longitude + ")");
 				}
 				console.log("-----------------------------------");
+				
+				if(isShow){
+					$(autoCompleteArea).addClass("show");
+				}
 			} // end of if-else
 		})
 		.fail(function(){
+			initLocalTags();
 			console.log("외않되..");
-			$(autoCompleteArea).removeClass("show");
 		});
 		// end of oninput function
 	}
 	
 	// 검색창에 이벤트 부여
 	$(searchInput).on("keyup", function(){
-		// 키보드 입력시 열림
+		// 키보드를 눌렀다 손을 뗐을 때 실행
 		updateAddress(this, true);
 	}).on("click", function(){
 		// input 태그 클릭시 커서 생기면 드롭다운 보이기
-		if(locationArray != null && locationArray.length > 0){
-			$(autoCompleteArea).addClass("show");
-		}
+		updateAddress(this, true);
 	}).on("blur", function(){
 		// input 태그 밖의 이벤트 발생 시
-		// 마우스가 있었던 태그가 드롭다운이면 클릭부터 실행
+		// 마우스가 있는 위치가 추천 검색어 태그이면 클릭부터 실행
 		if(mouseEnteredTag != null){
 			mouseEnteredTag.click();
 			updateAddress(this, false);
 		}
 		$(autoCompleteArea).removeClass("show");
 	});
+	
 });
+
+function initLocalTags(){
+	$(autoCompleteArea).removeClass("show");
+	locationArray = null;
+	tempSearchInput.value = "";
+	latitudeInput.value = "";
+	longitudeInput.value = "";
+}
+
+function setLocalTagsOnSubmit(){
+	if(tempSearchInput.value == searchInput.value){
+		tempSearchInput.disabled = true;
+	}
+	if(latitudeInput.value == "" || longitudeInput.value == ""){
+		latitudeInput.disabled = true;
+		longitudeInput.disabled = true;
+	}
+}
 
 function setAddress(aTag){
 	var index = aTag.id.split('-')[1];
+	// 저장되어있던 locationArray에서 값을 가져옴
 	var location = locationArray[index];
-	var si, gu, dong;
-	var addressName;
-	var latitude, longitude;
 	
-	addressName = getAddressName(location);
+	// 추천 검색어를 클릭하면 searchInput의 값을 세팅함
+	searchInput.value = getAddressName(location);
 	
-	latitude = location.address.y; // 위도가 y
-	longitude = location.address.x; // 경도가 x
-	
-	searchInput.value = addressName;
-	tempSearchInput.value = "";
-	
-	latitudeInput.value = latitude;
-	longitudeInput.value = longitude;
+	latitudeInput.value = location.address.y; // 위도가 y
+	longitudeInput.value = location.address.x; // 경도가 x
 	
 	console.log(addressName);
-	console.log("(" + latitude + "," + longitude + ")");
+	console.log("(" + latitudeInput.value + "," + longitudeInput.value + ")");
 }
 
 function getAddressName(location){

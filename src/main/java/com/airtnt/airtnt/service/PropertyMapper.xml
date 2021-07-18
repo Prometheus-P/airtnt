@@ -18,15 +18,15 @@
 		<result property="regDate" column="reg_date"/>
 		<result property="modDate" column="mod_date"/>
 		
-		<association property="host" columnPrefix="host_" javaType="memberDTO">
+		<association property="host" column="host_id" columnPrefix="host_" javaType="memberDTO">
 			<result property="id" column="id"/>
 			<result property="name" column="name"/>
 		</association>
-		<association property="propertyType"
+		<association property="propertyType" column="property_type_id"
 			columnPrefix="property_type_" resultMap="propertyTypeMap"/>
-		<association property="subPropertyType"
+		<association property="subPropertyType" column="sub_property_type_id"
 			columnPrefix="sub_property_type_" resultMap="subPropertyTypeMap"/>
-		<association property="roomType"
+		<association property="roomType" column="room_type_id"
 			columnPrefix="room_type_" resultMap="roomTypeMap"/>
 		
 		<collection property="amenityTypes" ofType="amenityTypeDTO"
@@ -94,7 +94,8 @@
 		<result property="reg_date" column="reg_date"/>
 		<result property="mod_date" column="mod_date"/>
 		
-		<association property="writer" columnPrefix="writer_" javaType="memberDTO">
+		<association property="writer" column="writer_id"
+		columnPrefix="writer_" javaType="memberDTO">
 			<id property="id" column="id"/>
 			<result property="name" column="name"/>
 		</association>

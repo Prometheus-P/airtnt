@@ -147,7 +147,7 @@ Licence URI: https://www.os-templates.com/template-terms
              <button class="btn" type="button"
              style="width: 200px; height: 80px; font-size: 30px">확인</button>
            </a>
-	       <a href="<c:url value=''/>">
+	       <a href="<c:url value='/myPage'/>">
 	         <button class="btn" type="button"
 	         style="width: 200px; height: 80px; font-size: 30px">마이페이지</button>
 	       </a>

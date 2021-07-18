@@ -47,11 +47,11 @@
       <ul class="clear">
         <li class="active">
         <c:if test="${isLogin}">
-        	<c:if test="${member_mode == 1}">
+        	<c:if test="${member_mode == '1'}">
        			<a href="<c:url value='/guide_home'/>">호스트 되기</a>
        			<c:set var='isHostMode' value='false' scope='session'/>
         	</c:if>
-        	<c:if test="${member_mode == 2}">
+        	<c:if test="${member_mode == '2'}">
         		<a href="<c:url value='/host/host_mode'/>">호스트 모드로 전환</a>
         		<c:set var='isHostMode' value='true' scope='session'/>
         	</c:if>
@@ -92,13 +92,13 @@
     <!-- ################################################################################################ -->
         <nav class="navbar navbar-light">
 		  <div class="container-fluid">
-		    <form class="d-flex" action="/property/search" method="get">
+		    <form class="d-flex" action="/property/search" method="get" onsubmit="setLocalTagsOnSubmit()">
 		      <input type="hidden" name="pageNum" value="1">
               <input id="search" name="addressKey" class="form-control me-2" type="search" 
               placeholder="위치" value="${param.addressKey}"
               aria-label="Search" style="height: 50px; width: 300px; font-size: 20px">
               
-              <input type="hidden" id="temp-search" name="tempAddressKey">
+              <input type="hidden" id="temp-search" name="tempAddressKey" value="">
               <input type="hidden" id="latitude" name="latitude" value="${latitude}">
               <input type="hidden" id="longitude" name="longitude" value="${longitude}">
               

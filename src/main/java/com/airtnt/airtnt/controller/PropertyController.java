@@ -48,9 +48,9 @@ public class PropertyController {
 	private static final String RECENT_COOKIE_PREFIX = "AirTnT_recent_";
 	
 	private final String encoding = Encoding.UTF_8;
-	private final int cookieMaxAge = 10*MINUTE;
+	private final int cookieMaxAge = 1*HOUR;
 	
-	private final Integer numPerPage = 8;
+	private final Integer numPerPage = 5;
 	
 	@Autowired
 	private PropertyMapper propertyMapper;
@@ -81,43 +81,26 @@ public class PropertyController {
 		req.setAttribute("currentURI", currentURI);
 		
 		// 1. 예외를 일으킬 수 있는 파라미터값 보정
-		if(tempAddressKey == null || tempAddressKey.trim().equals("")) {
-			if(addressKey == null || addressKey.trim().equals("")) {
-				addressKey = "서울";
-				// 서울 시청
-				latitude = "37.566826004661";
-				longitude = "126.978652258309";
-			} /*else {
-				addressKey만 넘어왔으면 자동완성 주소로 넘어온 것임
-			}*/
-		} else {
-			// 자동완성으로 검색하지 않아도 맨 상단에 있던 주소로 세팅
-			addressKey = tempAddressKey;
-		}
 		
-		if(addressKey == null || addressKey.trim().equals("")) {
-			addressKey = "서울";
-			// 서울 시청
-			latitude = "37.566826004661";
-			longitude = "126.978652258309";
-		}
-		
+		// 자바스크립트에서 이상한 검색어로 검색하면
+		// 좌표값은 무조건 없도록 설정해놨음
 		if(latitude == null || latitude.trim().equals("") ||
 				longitude == null || longitude.trim().equals("")) {
 			addressKey = "서울";
-			// 서울 시청
+			// 서울 시청 좌표
 			latitude = "37.566826004661";
 			longitude = "126.978652258309";
+		} else if(tempAddressKey != null && !tempAddressKey.trim().equals("")) {
+			// 추천검색어 버튼을 누르지 않고 검색버튼을 누르면
+			// 추천검색어 배열 0번째 주소와 좌표값으로
+			// tempAddressKey가 넘어오도록 했음
+			addressKey = tempAddressKey;
 		}
 		
 		// 페이지
 		if(pageNum == null || pageNum < 1) {
 			pageNum = 1;
 		}
-		System.out.println("" + addressKey);
-		System.out.println("" + tempAddressKey);
-		System.out.println("" + latitude);
-		System.out.println("" + longitude);
 		
 		// 2. 숙소목록 선택
 		
@@ -743,29 +726,27 @@ public class PropertyController {
 					System.out.println(decodedCookieString);
 				}
 				
-				LinkedList<Integer> recentPropertyIdsQueue =
-						new LinkedList<>(Numeric.toIntegerList(decodedCookieString.split("%")));
+				String[] recentPropertyIdStrArray = decodedCookieString.split("%");
+				
 				if(debug) {
-					System.out.print("최근목록 숙소 id :");
-					for(Integer recentPropertyId : recentPropertyIdsQueue) {
-						System.out.print(" " + recentPropertyId);
+					if(recentPropertyIdStrArray != null) {
+						System.out.print("최근목록 숙소 id :");
+						for(int i = 0; i < recentPropertyIdStrArray.length; i++) {
+							System.out.print(" " + recentPropertyIdStrArray[i]);
+						}
+						System.out.println();
 					}
-					System.out.println();
 				}
 				
 				// 최근목록 변화 로직
-				// 큐를 쓰면 중간의 값을 버려도 인덱스에 구애받지 않고
-				// 항상 그다음 최근값을 가져올 수 있음
 				
-				// 방금 본 목록을 새로운 쿠키 맨 앞에 추가함
+				// 현재 보고있는 숙소를 앞에 저장
 				decodedCookieString = propertyId.toString();
 				// 최근목록 갯수는 최대 12개 제한
-				int i = 0;
-				while(i < 12 && !recentPropertyIdsQueue.isEmpty()) {
-					Integer recentPropertyId = recentPropertyIdsQueue.poll();
-					if(recentPropertyId != propertyId) {
-						// 현재 보고있는 숙소와 같지 않은것만 저장함
-						decodedCookieString += "%" + recentPropertyId.toString();
+				for(int i = 0; i < recentPropertyIdStrArray.length && i < 12; i++) {
+					if(Integer.parseInt(recentPropertyIdStrArray[i]) != propertyId) {
+						// 현재 보고있는 숙소와 같지 않으면 뒤에 저장
+						decodedCookieString += "%" + recentPropertyIdStrArray[i];
 					}
 				}
 				
