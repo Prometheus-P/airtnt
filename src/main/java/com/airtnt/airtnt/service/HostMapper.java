@@ -1,6 +1,7 @@
 package com.airtnt.airtnt.service;
 
 import java.sql.Date;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +11,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.airtnt.airtnt.host.PropertyInformationBean;
 import com.airtnt.airtnt.model.AmenityDTO;
 import com.airtnt.airtnt.model.AmenityTypeDTO;
 import com.airtnt.airtnt.model.BookingDTO;
@@ -18,6 +20,7 @@ import com.airtnt.airtnt.model.GuideDTO;
 import com.airtnt.airtnt.model.ImageDTO;
 import com.airtnt.airtnt.model.MemberDTO;
 import com.airtnt.airtnt.model.PropertyDTO;
+import com.airtnt.airtnt.model.PropertyInformationDTO;
 import com.airtnt.airtnt.model.PropertyTypeDTO;
 import com.airtnt.airtnt.model.ReviewDTO;
 import com.airtnt.airtnt.model.RoomTypeDTO;
@@ -25,14 +28,14 @@ import com.airtnt.airtnt.model.SubPropertyTypeDTO;
 import com.airtnt.airtnt.model.TransactionDTO;
 
 @Service
-public class HostMapper implements HostMapperInterface {
+public class HostMapper {
 	@Autowired
 	private SqlSession sqlSession;
 
 	//////////////////////////////////////////////////
 	// 1. 숙소등록을 위한 가이드 모음
 	//////////////////////////////////////////////////
-	@Override
+
 	public List<GuideDTO> getGuideList() {
 		List<GuideDTO> listGuide = sqlSession.selectList("listGuide");
 		if (listGuide == null) {
@@ -41,7 +44,6 @@ public class HostMapper implements HostMapperInterface {
 		return listGuide;
 	}
 
-	@Override
 	public GuideDTO getGuide(int id) {
 		GuideDTO guideDTO = sqlSession.selectOne("getGuide", id);
 		return guideDTO;
@@ -56,49 +58,19 @@ public class HostMapper implements HostMapperInterface {
 	// 2. 숙소 관리(등록, 삭제, 업데이트)
 	//////////////////////////////////////////////////
 
-	@Override
 	public int insertProperty(PropertyDTO dto) {
-		int res = sqlSession.insert("insertProperty", dto);
-		return res;
+		// int res = sqlSession.insert("insertProperty", dto);
+		return 0;
 	}
 
 	// 성공해도 리턴값 -1 >> PL/SQL
 	// 다시 1로 나오게 함
-	@Override
+
 	public int deleteProperty(Integer propertyId) {
 		int res = sqlSession.delete("deleteProperty", propertyId);
 		return res;
 	}
 
-	@Override
-	public List<PropertyTypeDTO> getPropertyType() {
-		List<PropertyTypeDTO> propertyType = sqlSession.selectList("propertyType");
-		System.out.println("유형명: " + propertyType.get(0).getName());
-		for (PropertyTypeDTO dto : propertyType) {
-			System.out.println("유형명: " + dto.getName());
-		}
-		return propertyType;
-	}
-
-	@Override
-	public List<SubPropertyTypeDTO> getSubPropertyType(int propertyTypeId) {
-		List<SubPropertyTypeDTO> subPropertyType = sqlSession.selectList("subPropertyType", propertyTypeId);
-		return subPropertyType;
-	}
-
-	@Override
-	public List<RoomTypeDTO> getRoomType() {
-		List<RoomTypeDTO> roomType = sqlSession.selectList("roomType");
-		return roomType;
-	}
-
-	@Override
-	public List<AmenityTypeDTO> getAmenityTypeList() {
-		List<AmenityTypeDTO> list = sqlSession.selectList("listAmenityType");
-		return list;
-	}
-
-	@Override
 	public int updateProperty(PropertyDTO dto) {
 		int res = sqlSession.update("updateProperty", dto);
 		return res;
@@ -109,7 +81,6 @@ public class HostMapper implements HostMapperInterface {
 		return res;
 	}
 
-	@Override
 	public int getPropertyId(String hostId) {
 		int propertyId = sqlSession.selectOne("getPropertyId", hostId);
 		return propertyId;
@@ -136,37 +107,26 @@ public class HostMapper implements HostMapperInterface {
 	// + 예약취소, 예약승인, 숙소 수정, 숙소 삭제, 리뷰 답변
 	//////////////////////////////////////////////////
 
-	@Override
 	public List<PropertyDTO> getPropertyList(String hostId) {
 		List<PropertyDTO> listProperty = sqlSession.selectList("listProperty", hostId);
 		return listProperty;
 	}
 
-	@Override
 	public PropertyDTO getProperty(int propertyId) {
 		PropertyDTO dto = sqlSession.selectOne("getProperty", propertyId);
 		return dto;
 	}
 
-	@Override
 	public List<BookingDTO> getBookingList(String hostId) {
 		List<BookingDTO> listBooking = sqlSession.selectList("listBooking", hostId);
 		return listBooking;
 	}
 
-	@Override
 	public List<TransactionDTO> getTransactionList(String hostId) {
 		List<TransactionDTO> listTransaction = sqlSession.selectList("listTransaction", hostId);
 		return listTransaction;
 	}
 
-	@Override
-	public MemberDTO getMemberDTO(String memberId) {
-		MemberDTO dto = sqlSession.selectOne("getMemberDTO", memberId);
-		return dto;
-	}
-
-	@Override
 	public List<TransactionDTO> getTotalEarning(String memberId) {
 		List<TransactionDTO> list = sqlSession.selectList("totalEarningList", memberId);
 		return list;
@@ -192,13 +152,6 @@ public class HostMapper implements HostMapperInterface {
 		return res;
 	}
 
-	/*
-	 * public int bookingConfirm(Map<String, Object> param) { int res =
-	 * sqlSession.update("bookingConfirm", param); return res; }
-	 */
-
-	/* 예약거절 */
-
 	public int bookReject(int bookingId) {
 		int res = sqlSession.update("bookReject", bookingId);
 		return res;
@@ -208,13 +161,6 @@ public class HostMapper implements HostMapperInterface {
 		int res = sqlSession.update("transactionRefund", bookingId);
 		return res;
 	}
-
-	/*
-	 * public int bookingReject(int bookingId) { int res
-	 * =sqlSession.update("bookingReject", bookingId); System.out.print("res: " +
-	 * res); return res; }
-	 */
-	//
 
 	public List<ImageDTO> getPropertyImage(int propertyId) {
 		List<ImageDTO> list = sqlSession.selectList("getPropertyImage", propertyId);
@@ -226,17 +172,37 @@ public class HostMapper implements HostMapperInterface {
 		return list;
 	}
 
-	public int deleteAmenity(int propertyId) {
-		int res = sqlSession.delete("deleteAmenity", propertyId);
-		return res;
-	}
-
 	public int reviewAnswer(Map<String, String> param) {
 		int res = sqlSession.update("reviewAnswer", param);
 		return res;
 	}
 
-	@Override
+	// 화이팅!!!!
+	public List<PropertyTypeDTO> getListPropertyType() {
+		List<PropertyTypeDTO> listPropertyType = sqlSession.selectList("getListPropertyType");
+		return listPropertyType;
+	}
+
+	public List<SubPropertyTypeDTO> getListSubPropertyType() {
+		List<SubPropertyTypeDTO> listSubPropertyType = sqlSession.selectList("getListSubPropertyType");
+		return listSubPropertyType;
+	}
+
+	public List<RoomTypeDTO> getListRoomType() {
+		List<RoomTypeDTO> listRoomType = sqlSession.selectList("getListRoomType");
+		return listRoomType;
+	}
+
+	public List<AmenityTypeDTO> getListAmenityType() {
+		List<AmenityTypeDTO> listAmenityType = sqlSession.selectList("getListAmenityType");
+		return listAmenityType;
+	}
+
+	public int insertProperty(PropertyInformationDTO dto) {
+		int res = sqlSession.update("insertProperty", dto);
+		return res;
+	}
+
 	public java.sql.Date getSysdate() {
 		java.sql.Date date = sqlSession.selectOne("getSysdate");
 		return date;

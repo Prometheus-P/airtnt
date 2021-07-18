@@ -47,12 +47,12 @@
 						<input id="input_file" multiple="multiple" type="file"
 							style="display: none;"> <br>
 						<span style="font-size: 10px; color: gray;"> ※숙소 사진은 최대
-							10개까지 등록이 가능합니다.<br> ※파일명 클릭 시 삭제 됩니다.
+							10개까지 등록이 가능합니다.<br> ※클릭 시 삭제 됩니다.
 						</span>
 					</div>
 				</div>
 			</div>
-		
+		<br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 		<footer style="font-size: 30px; font-weight: bold;">
 					<div style="float: left; padding-left: 250px; padding-top: 20px">
 						<button type="button" class="btn btn-lg btn-default"
@@ -112,6 +112,18 @@ function fileCheck(e) {
     } else {
     	 fileCount = fileCount + filesArr.length;
     }
+    //확장자 확인
+    filesArr.forEach(function (f){
+    	var filesystemName = f.name.split(".");
+	   	if(filesystemName.length > 1) {
+	    	var ex = filesystemName[filesystemName.length - 1];
+   	 		var extension = ex.toLowerCase();
+  	  		if(extension != "jpg" && extension != "gif" && extension != "bmp" && extension != "png") {
+  				alert("사진의 확장자는 JPG, PNG, GIF, BMP만 가능합니다!");
+  				return;
+  	 		}
+    	}
+    });
     
     // 각각의 파일 배열담기 및 기타
     filesArr.forEach(function (f) {
@@ -121,9 +133,13 @@ function fileCheck(e) {
         $('#articlefileChange').append(
        		'<div id="file' + fileNum + '" onclick="fileDelete(\'file' + fileNum + '\')">'
        		+ '<font style="font-size:12px">' + f.name + '</font>'  
-       		+ '<img src="dash-circle.svg" style="width:20px; height:auto; vertical-align: middle; cursor: pointer;"/>' 
+       		+ '<div id="img'+fileNum+'"></div>' 
        		+ '<div/>'
 		);
+        var img = document.createElement("img");
+        img.setAttribute("src", e.target.result);
+        img.setAttribute("class", "img-thumbnail");
+        document.querySelector("div#img"+fileNum).appendChild(img);
         fileNum ++;
       };
       reader.readAsDataURL(f);
@@ -149,12 +165,17 @@ function fileDelete(fileNum){
 		
 	var form = $("form")[0];        
  	var formData = new FormData(form);
+ 	//var count=0;
 		for (var x = 0; x < content_files.length; x++) {
 			// 삭제 안한것만 담아 준다. 
 			if(!content_files[x].is_delete){
 				 formData.append("article_file", content_files[x]);
+				 //localStorage.setItem("image"+count, content_files[x].result);
+				 //count++;
 			}
+			
 		}
+		//localStroage.setItem("length", count);
    /*
    * 파일업로드 multiple ajax처리
    */    /* host/file-upload */
@@ -171,11 +192,11 @@ function fileDelete(fileNum){
 					window.location.href="/host/name_description_7";
 					return true;
 				} else if (JSON.parse(data)['result'] == "NO_IMAGE") {
-					alert("최소 한장의 사진을 등록해주세요!");
+					alert("한장 이상의 사진을 등록해주세요!");
 				} else if (JSON.parse(data)['result'] == "UNACCEPTED_EXTENSION") {
 					alert("사진의 확장자는 JPG, PNG, GIF, BMP만 가능합니다!");
 				} else if (JSON.parse(data)['result'] == "EXCEED_SIZE") {
-					alert("사진의 크기가 너무 큽니다!(최대 500MB)");
+					alert("사진의 크기가 너무 큽니다!(최대 100MB)");
 				} else
 					alert("서버내 오류로 처리가 지연되고있습니다. 잠시 후 다시 시도해주세요");
 			},
@@ -189,49 +210,7 @@ function fileDelete(fileNum){
 	}
 	function previous(){
 		window.history.back();
-	}
-	
-	function handleFiles(files) {
-		  for (let i = 0; i < files.length; i++) {
-		    const file = files[i];
-
-		    if (!file.type.startsWith('image/')){ continue }
-
-		    const img = document.createElement("img");
-		    img.classList.add("obj");
-		    img.file = file;
-		   	$('#preview').empty(); // "preview"의 자식 태그 비우기
-		    preview.appendChild(img); // "preview"가 결과를 보여줄 div 출력이라 가정.
-
-		    const reader = new FileReader();
-		    reader.onload = (function(aImg) { return function(e) { aImg.src = e.target.result; }; })(img);
-		    reader.readAsDataURL(file);
-		  }
-		}
-	
-	/* var count =0;
-	function setImg(event) {
-			for (var file of event.target.files) {
-			var reader = new FileReader();
-	         reader.onload = function(event) {
-	            var filesystemName = file.name.split(".");
-	            if(filesystemName.length > 1) {
-	               var extension = filesystemName[filesystemName.length - 1];
-	              // document.querySelector("div#image_container").innerHTML = "";  // 앞서 선택한 이미지 삭제
-	               if(extension == "jpg" || extension == "png" || extention == "gif" || extension == "bmp") {
-	                  var img = document.createElement("img");
-	                  img.setAttribute("src", event.target.result);
-	                  img.setAttribute("class", "img-thumbnail");
-	                  img.setAttribute("id", count);
-	                  document.querySelector("div#image_container").appendChild(img);  //새로 선택한 이미지 div에 출력
-	                  count++;
-	               }
-	            }
-	         }
-	         console.log(file);
-	         reader.readAsDataURL(file);
-	      }
-	   } */
+	}	
 
 </script>
 </body>

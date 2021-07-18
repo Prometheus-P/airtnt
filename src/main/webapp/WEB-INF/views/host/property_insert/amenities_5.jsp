@@ -26,10 +26,7 @@ zoom: 2.0;
 			<form name="f" method="post" action="<c:url value='/host/photos_6'/>" onsubmit="return check()">
 			<div class="col-sm-6" style="font-family: fantasy;">
 				<c:forEach var="dto" items="${listAmenityType}">
-					<input class="checkbox" type="checkbox" name="listAmenity" id="${dto.id}" value="${dto.id}" 
-						<c:forEach var="regId" items="${sessionScope.listAmenities}">
-							<c:if test="${regId eq dto.id}">checked</c:if>
-						</c:forEach> >
+					<input class="checkbox" type="checkbox" name="listAmenity" id="${dto.id}" value="${dto.id}" >
 					<font style="font-weight: bold; font-family: fantasy; font-size: large;">
 					${dto.name}
 					</font><br>
