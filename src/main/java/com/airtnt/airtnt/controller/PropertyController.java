@@ -287,6 +287,7 @@ public class PropertyController {
 		
 		PropertyDTO property = propertyMapper.selectProperty(propertyId);
 		setMainImage(property);
+		setRating(property);
 		
 		// 달력에 비활성화를 하는 기준값
 		List<BookingDTO> bookings = bookingMapper.selectFutureBookings(propertyId);
@@ -319,7 +320,7 @@ public class PropertyController {
 		// ArrayList로 캐스팅하지 말것
 		List<PropertyDTO> recentProperties = loadRecentProperties(cookie, resp);
 		setMainImage(recentProperties);
-		setRating(property);
+		setRating(recentProperties);
 		
 		// 현재 보고있는 숙소는 현재 화면의 최근목록에 적용시키지 않음
 		saveRecentProperties(cookie, cookieUser, resp, propertyId);
@@ -607,7 +608,7 @@ public class PropertyController {
 					rating += review.getRating();
 					System.out.println(rating);
 				}
-				ratingStr = String.format("%.2f", rating);
+				ratingStr = String.format("%.2f", rating / reviews.size());
 			}
 			property.setRating(ratingStr);
 		}

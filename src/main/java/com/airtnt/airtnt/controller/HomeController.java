@@ -73,4 +73,8 @@ public class HomeController {
 		return "message";
 	}
 	
+	@RequestMapping("error")
+	public String error() {
+		return "error";
+	}
 }

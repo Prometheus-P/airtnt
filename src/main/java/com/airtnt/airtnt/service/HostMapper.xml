@@ -5,71 +5,6 @@
 
 <mapper namespace="com.airtnt.airtnt.service.HostMapper">
 
-	<resultMap type="propertyDTO" id="propertyMap">
-		<id property="id" column="id"/>
-		<result property="name" column="name"/>
-		<result property="hostId" column="host_id"/>
-		<result property="propertyDesc" column="property_desc"/>
-		<result property="address" column="address"/>
-		<result property="price" column="price"/>
-		<result property="bedCount" column="bed_count"/>
-		<result property="maxGuest" column="max_guest"/>
-		<result property="regDate" column="reg_date"/>
-		<result property="modDate" column="mod_date"/>
-		
-		<association property="propertyType" column="property_type_id"
-			columnPrefix="property_type_" resultMap="propertyTypeMap"/>
-		
-		<association property="subPropertyType" column="sub_property_type_id"
-			columnPrefix="sub_property_type_" resultMap="subPropertyTypeMap"/>
-		
-		<association property="roomType" column="room_type_id"
-			columnPrefix="room_type_" resultMap="roomTypeMap"/>
-		
-		<collection property="amenityTypes" ofType="amenityTypeDTO"
-			columnPrefix="amenity_type_" resultMap="amenityTypeMap" />
-		
-		<collection property="images" ofType="imageDTO"
-			columnPrefix="image_" resultMap="imageMap"/>
-		
-	</resultMap>
-	
-	<resultMap type="propertyTypeDTO" id="propertyTypeMap">
-		<id property="id" column="id"/>
-		<result property="name" column="name"/>
-		<result property="isUse" column="is_use"/>
-		<result property="regDate" column="reg_date"/>
-		<result property="modDate" column="mod_date"/>
-		
-		<collection property="subPropertyTypes" ofType="subPropertyTypeDTO"
-		columnPrefix="sub_property_type_" resultMap="subPropertyTypeMap"/>
-	</resultMap>
-	
-	<resultMap type="subPropertyTypeDTO" id="subPropertyTypeMap">
-		<id property="id" column="id"/>
-		<result property="propertyTypeId" column="property_type_id"/>
-		<result property="name" column="name"/>
-		<result property="isUse" column="is_use"/>
-		<result property="regDate" column="reg_date"/>
-		<result property="modDate" column="mod_date"/>
-	</resultMap>
-	
-	<resultMap type="roomTypeDTO" id="roomTypeMap">
-		<id property="id" column="id"/>
-		<result property="name" column="name"/>
-		<result property="isUse" column="is_use"/>
-		<result property="regDate" column="reg_date"/>
-		<result property="modDate" column="mod_date"/>
-	</resultMap>
-	
-	<resultMap type="amenityTypeDTO" id="amenityTypeMap">
-		<id property="id" column="id"/>
-		<result property="name" column="name"/>
-		<result property="isUse" column="is_use"/>
-		<result property="regDate" column="reg_date"/>
-		<result property="modDate" column="mod_date"/>
-	</resultMap>
-	
 	<resultMap type="imageDTO" id="imageMap">
 		<id property="id" column="id"/>
 		<result property="propertyId" column="property_id"/>
@@ -84,6 +19,7 @@
 		<result column="reviewCount" property="reviewCount" />
 		<result column="bookingCount" property="bookingCount" />
 	</resultMap>
+	
 
 	<select id="listGuide" resultType="GuideDTO">
 		SELECT
@@ -122,34 +58,30 @@
 	<delete id="deleteAmenity" parameterType="int">
 		DELETE FROM amenity WHERE property_id = #{propertyId}
 	</delete>
-		<!-- UPDATE A T1 RIGHT JOIN B T2 
-		ON (T2.a = T1.a) 
-		SET T1.c = '값1', T2.d = '값2' 
-		WHERE A.e = '조건 값' -->
 
 	<delete id="deleteProperty" parameterType="int">
-		{	
+	 DELETE FROM property WHERE id = #{propertyId};
+		<!-- {	
 			CALL
         	DECLARE
         	BEGIN
          	   DELETE FROM property WHERE id = #{propertyId};
-         	 <!--   DELETE FROM amenity WHERE property_id = #{propertyId};
+         	   DELETE FROM amenity WHERE property_id = #{propertyId};
          	   DELETE FROM image WHERE property_id = #{propertyId};
          	   DELETE FROM wishlist_property WHERE property_id = #{propertyId};
          	   DELETE FROM review WHERE property_id = #{propertyId};
-         	   DELETE FROM booking WHERE property_id = #{propertyId}; -->
+         	   DELETE FROM booking WHERE property_id = #{propertyId};
       	  	END
-    	}
+    	} -->
 	</delete>
 
 	<select id="propertyType" resultType="propertyTypeDTO">
-		select
+		SELECT
 		id, name,
-		is_use as
-		isUse,
-		reg_date as regDate,
-		mod_date as modDate
-		from property_type order by id
+		is_use AS isUse,
+		reg_date AS regDate,
+		mod_date AS modDate
+		FROM property_type ORDER BY id
 	</select>
 
 	<select id="subPropertyType" parameterType="int"
@@ -173,38 +105,80 @@
 		mod_date as modDate
 		from room_type
 	</select>
-
+	
 	<select id="listBooking" parameterType="String" resultType="BookingDTO">
 		SELECT
 		b.id,
-		b.property_id as propertyId,
-		b.guest_id as guestId,
-		b.host_id as hostId,
-		b.guest_count as guestCount,
-		b.day_count as dayCount,
-		b.total_price as totalPrice,
-		b.booking_number as bookingNumber,
-		b.check_in_date as checkInDate,
-		b.check_out_date as
-		checkOutDate,
-		b.confirm_date as confirmDate,
-		b.reg_date as regDate,
-		b.mod_date as modDate,
-		m.name as guestName,
-		m.id as memberId,
-		p.id as p_id,
-		p.name as propertyName
-		FROM booking b, member m, property p
-		WHERE b.guest_id = m.id
-		AND b.host_id = #{hostId}
-		AND b.property_id = p.id
+		b.property_id AS propertyId,
+		b.guest_id AS guestId,
+		b.host_id AS hostId,
+		b.guest_count AS guestCount,
+		b.day_count AS dayCount,
+		b.total_price AS totalPrice,
+		b.booking_number AS bookingNumber,
+		b.check_in_date AS checkInDate,
+		b.check_out_date AS checkOutDate,
+		b.confirm_date AS confirmDate,
+		b.reg_date AS regDate,
+		b.mod_date AS modDate,
+		m.name AS guestName,
+		m.email AS guestEmail,
+		p.name AS propertyName,
+		t.pay_expt_date AS payExptDate,
+		t.is_refund AS isRefund
+		FROM booking b
+		LEFT JOIN member m 
+			ON b.guest_id = m.id
+		LEFT JOIN property p
+			ON b.property_id = p.id
+		LEFT JOIN transaction t
+			ON b.id = t.booking_id
+		WHERE b.host_id = #{hostId}
+		
 	</select>
 
 	<select id="getMemberDTO" parameterType="String"
 		resultType="MemberDTO">
 		select * from member where id = #{memberId};
 	</select>
-
+	<!-- <resultMap type="propertyDTO" id="propertyMap">
+		<id property="id" column="id"/>
+		<result property="name" column="name"/>
+		<result property="propertyDesc" column="property_desc"/>
+		<result property="address" column="address"/>
+		<result property="latitude" column="latitude"/>
+		<result property="longitude" column="longitude"/>
+		<result property="price" column="price"/>
+		<result property="bedCount" column="bed_count"/>
+		<result property="maxGuest" column="max_guest"/>
+		<result property="regDate" column="reg_date"/>
+		<result property="modDate" column="mod_date"/>
+		
+		<collection property="amenityTypes" ofType="amenityTypeDTO"
+			columnPrefix="amenity_type_" resultMap="amenityTypeMap" />
+			
+		<collection property="images" ofType="imageDTO"
+			columnPrefix="image_" resultMap="imageMap"/>
+	</resultMap>
+	
+	<resultMap type="amenityTypeDTO" id="propertyAmenityMap">
+		<id property="id" column="id"/>
+		<result property="name" column="name"/>
+		<result property="propertyId" column="property_id"/>
+		<result property="amenityTypeId" column="amenity_type_id"/>
+		<result property="isUse" column="is_use"/>
+	</resultMap>
+	
+	<resultMap type="roomTypeDTO" id="roomTypeMap">
+		<result property="name" column="name"/>
+	</resultMap>
+	
+	<resultMap type="imageDTO" id="imageMap">
+		<result property="propertyId" column="property_id"/>
+		<result property="isMain" column="is_main"/>
+		<result property="path" column="path"/>
+	</resultMap> -->
+	
 	<select id="listProperty" parameterType="String" resultType="PropertyDTO">
 		SELECT
 		p.id, p.name,
@@ -217,16 +191,36 @@
 		p.room_type_id AS roomTypeId,
 		r.name AS roomTypeName,
 		p.sub_property_type_id AS subPropertyTypeId,
-		s.name AS subPropertyTypeName,
-		i.path AS mainImagePath
-		FROM property p, sub_property_type s, room_type	r, image i
+		s.name AS subPropertyTypeName
+		FROM property p
+		LEFT JOIN sub_property_type s
+			ON p.sub_property_type_id = s.id
+		LEFT JOIN room_type	r
+			ON p.room_type_id = r.id
 		WHERE p.host_id = #{hostId}
-		AND p.room_type_id = r.id
-		AND p.sub_property_type_id = s.id
-		AND p.id = i.property_id
-		AND i.is_main = 'Y'
 	</select>
 	
+	<select id="getPropertyImage" parameterType="int" resultType="imageDTO">
+		SELECT 
+			property_id as propertyId,
+			is_main as isMain,
+			path
+		FROM image 
+		WHERE property_id = #{propertyId}
+	</select>
+	
+	<select id="getAmenityList" parameterType="int" resultType="amenityTypeDTO">
+		SELECT 
+			am.property_id as propertyId,
+			am.amenity_type_id as amenityTypeId,
+			at.id as a_id,
+			at.name,
+			at.is_use as isUse
+		FROM amenity am
+		RIGHT JOIN amenity_type at 
+			ON at.id = am.amenity_type_id
+		WHERE property_id = #{propertyId}
+	</select>
 	<select id="listTransaction" parameterType="String"
 		resultType="TransactionDTO">
 		select
@@ -294,6 +288,7 @@
 		and
 		p.sub_property_type_id = s.id
 	</select>
+	
 	<select id="getSysdate" resultType="java.sql.Date">
 		select sysdate from dual
 	</select>
@@ -366,8 +361,6 @@
 		AND sysdate > reg_date) b
 	</select>
 	
-	
-	
 	<update id="bookConfirm" parameterType="int">
 		UPDATE booking SET confirm_date = sysdate WHERE id = #{bookingId}
 	</update>
@@ -378,19 +371,40 @@
 		WHERE booking_id = #{bookingId}
 	</update>
 	
+	<!-- <update id="bookingConfirm" parameterType="java.util.Map">
+		UPDATE booking b
+		LEFT JOIN transaction t
+		ON b.id = t.booking_id
+		SET b.confirm_date = sysdate,
+		t.pay_expt_date = TO_DATE(#{payExptDate}, 'YYYY-MM-DD')
+		WHERE b.id = #{bookingId}
+	</update> -->
+
+	<!-- 예약거절 -->
 	<update id="bookReject" parameterType="int">
 		UPDATE booking
 		SET 
 		booking_number = -1
 		WHERE id = #{bookingId}
 	</update>
-	
+
 	<update id="transactionRefund" parameterType="int">
 		UPDATE transaction 
 		SET 
 		is_refund = 'Y'
 		WHERE booking_id = #{bookingId}
 	</update>
+	
+	<!-- <update id="bookingReject" parameterType="int">
+		UPDATE transaction t 
+		RIGHT JOIN booking b
+		ON (b.id = t.booking_id)
+		SET 
+		t.is_refund = 'Y',
+		b.booking_number = -1
+		WHERE b.id = #{bookingId}
+	</update> -->
+	<!--//  -->
 	
 	<update id="imageInsert" parameterType="java.util.List">
 		<foreach item="item" collection="list"  open="INSERT ALL" close="SELECT * FROM DUAL" separator=" ">
@@ -412,26 +426,13 @@
 	<select id="getImageSequence" resultType="int">
 		SELECT seq_image_id.nextval FROM dual
 	</select>
-	
-	<select id="getPropertyImage" parameterType="int" resultType="imageDTO">
-		SELECT 
-			property_id as propertyId,
-			is_main as isMain,
-			path
-		FROM image 
-		WHERE property_id = #{propertyId}
-	</select>
-	
-	<select id="getAmenityList" parameterType="int" resultType="amenityTypeDTO">
-		SELECT 
-			am.property_id as propertyId,
-			am.amenity_type_id as amenityTypeId,
-			at.id as a_id,
-			at.name,
-			at.is_use as isUse
-		FROM amenity am, amenity_type at 
-		WHERE property_id = #{propertyId}
-		AND at.id = am.amenity_type_id
-	</select>
-	
+
+	<update id="reviewAnswer" parameterType="java.util.Map">
+		UPDATE review
+		SET 
+		content_host = #{answer},
+		content_host_date = sysdate
+		WHERE id = #{reviewId}
+	</update>
+
 </mapper>

@@ -157,13 +157,13 @@ public class HostController implements HostControllerInterface {
 	@RequestMapping("host/floor_plan_4")
 	public String floor_plan_4(HttpSession session, @RequestParam Map<String, String> param) {
 		session.setAttribute("checkAddress", param.get("address"));
-		session.setAttribute("address",  param.get("address") + " " +  param.get("addressDetail"));
+		session.setAttribute("address", param.get("address") + " " + param.get("addressDetail"));
 		session.setAttribute("latitude", param.get("latitude"));
 		session.setAttribute("longitude", param.get("longitude"));
-		
+
 		System.out.println("위도: " + param.get("latitude"));
 		System.out.println("경도: " + param.get("longitude"));
-		System.out.println( param.get("address"));
+		System.out.println(param.get("address"));
 		System.out.println("상세: " + param.get("addressDetail"));
 		return "host/property_insert/floor_plan_4";
 	}
@@ -190,7 +190,7 @@ public class HostController implements HostControllerInterface {
 				if (dto.getId() == id) {
 					isRemove = false;
 					break;
-				}	
+				}
 			}
 			return isRemove;
 		});
@@ -201,29 +201,32 @@ public class HostController implements HostControllerInterface {
 	}
 
 	@Override
-	@ResponseBody
+	@ResponseBody // 사진 마무리 저장은 마지막에!
 	@RequestMapping(value = "/host/file-upload", method = RequestMethod.POST)
-	public String photos_upload(@RequestParam("article_file") List<MultipartFile> multipartFile,
-			HttpSession session) {
+	public String photos_upload(@RequestParam("article_file") List<MultipartFile> multipartFile, HttpSession session) {
 		String strResult = "{ \"result\":\"FAIL\" }";
 		long sizeSum = 0;
+		String memberId = (String) session.getAttribute("member_id");
 		List<ImageDTO> listImgUrl = new ArrayList<>();
+		Map<InputStream, File> imgMap = new Hashtable<>();
 		try {
 			// 파일이 있을때 탄다.
 			if (multipartFile.size() > 0 && !multipartFile.get(0).getOriginalFilename().equals("")) {
 				for (MultipartFile file : multipartFile) {
 					String originalFileName = file.getOriginalFilename(); // 오리지날 파일명
 					long time = System.currentTimeMillis();
-					String savedFileName = time + "-" + originalFileName; // 저장될 파일 명
-					//String upPath = "C:\\Users\\Haseong\\git\\airtnt\\src\\main\\webapp\\resources\\files\\property\\property-";
-					//수연
-					String upPath = "C:\\Users\\woosuki\\git\\airtnt\\src\\main\\webapp\\resources\\files\\property\\property-";
-					//학원
-					//String upPath = "D:\\study3(spring)\\airtnt\\src\\main\\webapp\\resources\\files\\property\\property-";
+					String savedFileName = time + "-" + memberId + "-" + originalFileName; // 저장될 파일 명
+					// 하성
+					String upPath = "C:\\Users\\Haseong\\git\\airtnt\\src\\main\\webapp\\resources\\files\\property\\";
+					// 수연
+					// String upPath =
+					// "C:\\Users\\woosuki\\git\\airtnt\\src\\main\\webapp\\resources\\files\\property\\";
+					// 학원
+					// String upPath =
+					// "D:\\study3(spring)\\airtnt\\src\\main\\webapp\\resources\\files\\property\\";
 					// 정석
-					//String upPath = "C:\\Spring\\EZEN\\workspace\\AirTnT\\src\\main\\webapp\\resources\\files\\property\\property-";
-					// HS >>
-					// D:\bigdata\study3\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\airtnt\resources\files\property
+					// String upPath =
+					// "C:\\Spring\\EZEN\\workspace\\AirTnT\\src\\main\\webapp\\resources\\files\\property\\";
 
 					if (!isValidExtension(originalFileName)) { // 확장자 검사
 						return strResult = "{ \"result\":\"UNACCEPTED_EXTENSION\" }";
@@ -234,23 +237,17 @@ public class HostController implements HostControllerInterface {
 						return strResult = "{ \"result\":\"EXCEED_SIZE\" }";
 					}
 
-					String nameForShow = "/resources/files/property/property-" + savedFileName;
+					String nameForShow = "/resources/files/property/" + savedFileName;
 					File targetFile = new File(upPath + savedFileName);
-					try {
-						InputStream fileStream = file.getInputStream();
-						FileUtils.copyInputStreamToFile(fileStream, targetFile); // 파일 저장
-						ImageDTO dto = new ImageDTO();
-						dto.setFileSize(file.getSize());
-						dto.setPath(nameForShow);
-						listImgUrl.add(dto);
-						System.out.println("사진 주소: " + nameForShow);
-					} catch (Exception e) {
-						// 파일삭제
-						FileUtils.deleteQuietly(targetFile); // 저장된 현재 파일 삭제
-						e.printStackTrace();
-						break;
-					}
+					InputStream fileStream = file.getInputStream();
+					imgMap.put(fileStream, targetFile);
+					ImageDTO dto = new ImageDTO();
+					dto.setFileSize(file.getSize());
+					dto.setPath(nameForShow);
+					listImgUrl.add(dto);
+					System.out.println("사진 주소: " + nameForShow);
 				}
+				session.setAttribute("imgMap", imgMap);
 				session.setAttribute("listImgUrl", listImgUrl); // 바로 img 태그의 src에 넣으면 됨
 				strResult = "{ \"result\":\"OK\" }";
 			} else {
@@ -307,6 +304,7 @@ public class HostController implements HostControllerInterface {
 		List<AmenityTypeDTO> listAmenity = (List<AmenityTypeDTO>) session.getAttribute("listAmenity");
 		List<ImageDTO> listImgUrl = (List<ImageDTO>) session.getAttribute("listImgUrl");
 		String hostId = (String) session.getAttribute("member_id");
+		Map<InputStream, File> imgMap = (Map<InputStream, File>) session.getAttribute("listFile");
 
 		PropertyDTO dtoPro = new PropertyDTO();
 		dtoPro.setHostId(hostId);
@@ -319,34 +317,42 @@ public class HostController implements HostControllerInterface {
 		dtoPro.setName((String) session.getAttribute("name"));
 		dtoPro.setPropertyDesc((String) session.getAttribute("description"));
 		dtoPro.setPrice((int) session.getAttribute("price"));
-		dtoPro.setLatitude((String) session.getAttribute("latitude")); 
+		dtoPro.setLatitude((String) session.getAttribute("latitude"));
 		dtoPro.setLongitude((String) session.getAttribute("longitude"));
-		System.out.println("경도"  + dtoPro.getLongitude());
-		System.out.println("위도"  + dtoPro.getLatitude());
+
 		int propertyOk = hostMapper.insertProperty(dtoPro); // 1. property입력
-		
+
 		int propertyId = hostMapper.getPropertyId(hostId); // 2. propertyId 가져오기
 		for (AmenityTypeDTO dto : listAmenity) {
 			dto.setPropertyId(propertyId);
 		}
+		imgMap.forEach((fileStream, targetFile) -> { // 3. 사진 저장
+			try {
+				FileUtils.copyInputStreamToFile(fileStream, targetFile); // 파일 저장
+			} catch (Exception e) {
+				// 파일삭제
+				FileUtils.deleteQuietly(targetFile); // 저장된 현재 파일 삭제
+				e.printStackTrace();
+			}
+		});
 		for (ImageDTO dto : listImgUrl) {
 			dto.setPropertyId(propertyId);
 		}
 		listImgUrl.get(0).setIsMain('Y'); // 메인 사진 설정
-		int amenityOk = hostMapper.insertListAmenity(listAmenity); // 3. 편의시설 입력
-		int imageOk = hostMapper.imageInsert(listImgUrl); // 4. 숙소 사진 입력
-		int memberChangeOk = hostMapper.updateMemberMode(hostId); // 5. 멤버모드 변경 1 -> 2
-		
-		if (propertyOk <= 0 ) {
+		int amenityOk = hostMapper.insertListAmenity(listAmenity); // 4. 편의시설 입력
+		int imageOk = hostMapper.imageInsert(listImgUrl); // 5. 숙소 사진 입력
+		int memberChangeOk = hostMapper.updateMemberMode(hostId); // 6. 멤버모드 변경 1 -> 2
+
+		if (propertyOk <= 0) {
 			System.out.println("PROPERTY_ERROR");
 			return "{ \"result\":\"PROPERTY_ERROR\" }";
-		}else if(amenityOk <= 0) {
+		} else if (amenityOk <= 0) {
 			System.out.println("AMENITY_ERROR");
 			return "{ \"result\":\"AMENITY_ERROR\" }";
-		}else if(imageOk <= 0) {
+		} else if (imageOk <= 0) {
 			System.out.println("IMAGE_ERROR");
 			return "{ \"result\":\"IMAGE_ERROR\" }";
-		}else if(memberChangeOk <= 0) {
+		} else if (memberChangeOk <= 0) {
 			System.out.println("MEMBER_CHANGE_ERROR");
 			return "{ \"result\":\"MEMBER_CHANGE_ERROR\" }";
 		}
@@ -366,6 +372,7 @@ public class HostController implements HostControllerInterface {
 		session.removeAttribute("listImgUrl");
 		session.removeAttribute("latitude");
 		session.removeAttribute("longitude");
+		session.removeAttribute("imageMap");
 		// 사진도 지우기
 		return "{ \"result\":\"OK\" }";
 	}
@@ -379,18 +386,13 @@ public class HostController implements HostControllerInterface {
 	public ModelAndView host_mode(HttpSession session) {
 		String hostId = (String) session.getAttribute("member_id");
 		List<BookingDTO> listBooking = hostMapper.getBookingList(hostId);
-
+		// System.out.println("isRefund: " + listBooking.get(0).getIsRefund());
 		listBooking.removeIf(dto -> {
 			boolean isRemove = false;
 			if (dto.getBookingNumber().equals("-1"))
 				isRemove = true;
 			return isRemove;
 		});
-		/*
-		 * for(int i=0; i<listBooking.size(); ++i) {
-		 * if(listBooking.get(i).getBooking_number().equals("-1")) {
-		 * listBooking.remove(i); } }
-		 */
 		java.sql.Date today = hostMapper.getSysdate();
 		ModelAndView mav = new ModelAndView("/host/host_mode/host_mode");
 		mav.addObject("listBooking", listBooking);
@@ -406,34 +408,25 @@ public class HostController implements HostControllerInterface {
 		java.sql.Date payExptDate = null;
 		try {
 			Calendar c = Calendar.getInstance();
-			System.out.println((String) param.get("checkOutDate"));
-			System.out.println((String) param.get("checkOutDate"));
-			
 			Date date = format.parse((String) param.get("checkOutDate"));
-			/*
-			 * format. System.out.println(date);
-			 */
 			c.setTime(date);
 			c.add(Calendar.DATE, 3); // 3일 추가하기
 			date = c.getTime();
 			long timeInMilliSeconds = date.getTime();
 			payExptDate = new java.sql.Date(timeInMilliSeconds);
-			System.out.println("parse: " + payExptDate);
+			param.put("payExptDate", payExptDate);
 		} catch (ParseException e) {
 			e.printStackTrace();
-			return "예약 승인 중 오류 발생!";
+			return "{ \"result\":\"FAIL\" }";
 		}
 
 		int res1 = hostMapper.bookConfirm(bookingId);
-		Map<String, Object> payExptDateConfirm = new Hashtable<>();
-		payExptDateConfirm.put("bookingId", bookingId);
-		payExptDateConfirm.put("payExptDate", payExptDate);
-		int res2 = hostMapper.payExptDateConfirm(payExptDateConfirm);
-		System.out.print("결과: " + res1 + "그리고" + res2);
+		int res2 = hostMapper.payExptDateConfirm(param);
+		// int res = hostMapper.bookingConfirm(param);
 		if (res1 > 0 && res2 > 0)
-			return "예약이 승인 되었습니다!";
+			return "{ \"result\":\"OK\" }";
 		else
-			return "예약 승인 중 오류 발생!";
+			return "{ \"result\":\"FAIL\" }";
 	}
 
 	@ResponseBody
@@ -441,11 +434,15 @@ public class HostController implements HostControllerInterface {
 	public String bookReject(@RequestParam("bookingId") Integer bookingId) {
 		int res1 = hostMapper.bookReject(bookingId);
 		int res2 = hostMapper.transactionRefund(bookingId);
-		System.out.print("결과: " + res1 + "그리고" + res2);
-		if (res1 > 0 && res2 > 0)
-			return "예약이 반려 되었습니다!";
-		else
-			return "반려 처리 중 오류 발생!";
+		// int res = hostMapper.bookingReject(bookingId);
+		if (res1 > 0 && res2 > 0) {
+			return "{ \"result\":\"OK\" }";
+		}
+		return "{ \"result\":\"FAIL\" }";
+		/*
+		 * System.out.print("결과: " + res1 + "그리고" + res2); if (res1 > 0 && res2 > 0)
+		 * return "예약이 반려 되었습니다!"; else return "반려 처리 중 오류 발생!";
+		 */
 	}
 
 	@Override
@@ -453,23 +450,23 @@ public class HostController implements HostControllerInterface {
 	public ModelAndView host_properties_list(HttpSession session) {
 		String hostId = (String) session.getAttribute("member_id");
 		List<PropertyDTO> listProperty = hostMapper.getPropertyList(hostId);
-		for(PropertyDTO dto : listProperty) {
+		for (PropertyDTO dto : listProperty) {
 			List<ImageDTO> listImage = hostMapper.getPropertyImage(dto.getId());
 			List<AmenityTypeDTO> listAmenity = hostMapper.getAmenityList(dto.getId());
 			dto.setImages(listImage);
 			dto.setAmenityTypes(listAmenity);
+			System.out.println("");
 		}
-		
 		ModelAndView mav = new ModelAndView("/host/host_mode/host_properties_list");
 		mav.addObject("listProperty", listProperty);
 		return mav;
 	}
-	
+
 	@RequestMapping("host/host_properties_list_update")
 	public ModelAndView host_properties_list_update(@RequestParam Map<String, Object> param) {
 		PropertyDTO dtoPro = new PropertyDTO();
-		dtoPro.setRoomTypeId((Integer)param.get("roomTypeId"));
-		List<Integer> list= (List<Integer>)param.get("listAmenity");
+		dtoPro.setRoomTypeId((Integer) param.get("roomTypeId"));
+		List<Integer> list = (List<Integer>) param.get("listAmenity");
 		List<AmenityTypeDTO> listAmenity = hostMapper.getAmenityTypeList();
 		listAmenity.removeIf(dto -> {
 			boolean isRemove = true;
@@ -477,22 +474,23 @@ public class HostController implements HostControllerInterface {
 				if (dto.getId() == id) {
 					isRemove = false;
 					break;
-				}	
+				}
 			}
 			return isRemove;
 		});
-		dtoPro.setMaxGuest((Integer)param.get("maxGuest"));
-		dtoPro.setBedCount((Integer)param.get("bedCount"));
-		dtoPro.setPropertyDesc((String)param.get("description"));
-		dtoPro.setPrice((Integer)param.get("price"));
+		dtoPro.setMaxGuest((Integer) param.get("maxGuest"));
+		dtoPro.setBedCount((Integer) param.get("bedCount"));
+		dtoPro.setPropertyDesc((String) param.get("description"));
+		dtoPro.setPrice((Integer) param.get("price"));
 		dtoPro.setAmenityTypes(listAmenity);
-		//int propertyOk = hostMapper.insertProperty(dtoPro);
-		//int amenityDelete = hostMapper.deleteAmenity();
+		// int propertyOk = hostMapper.insertProperty(dtoPro);
+		// int amenityDelete = hostMapper.deleteAmenity();
 		int propertyUpdate = hostMapper.updateProperty(dtoPro);
-		//int amenityOk = hostMapper.insertListAmenity(listAmenity);
+		// int amenityOk = hostMapper.insertListAmenity(listAmenity);
 		ModelAndView mav = new ModelAndView("/host/host_mode/host_properties_list");
 		return mav;
 	}
+
 	@Override
 	@RequestMapping(value = "host/property_update", method = RequestMethod.GET)
 	public ModelAndView host_getProperty(int propertyId) {
@@ -502,13 +500,13 @@ public class HostController implements HostControllerInterface {
 		propertyDTO.setImages(listImage);
 		propertyDTO.setAmenityTypes(listAmenity);
 		List<Integer> listAmenityId = new ArrayList<>();
-		for(AmenityTypeDTO dto : listAmenity) {
+		for (AmenityTypeDTO dto : listAmenity) {
 			listAmenityId.add(dto.getAmenityId());
 		}
-		
+
 		List<RoomTypeDTO> listRoomType = hostMapper.getRoomType();
 		List<AmenityTypeDTO> listAmenityType = hostMapper.getAmenityTypeList();
-		
+
 		ModelAndView mav = new ModelAndView("/host/host_mode/properties_update");
 		mav.addObject("propertyDTO", propertyDTO);
 		mav.addObject("listRoomType", listRoomType);
@@ -516,34 +514,36 @@ public class HostController implements HostControllerInterface {
 		mav.addObject("listAmenityId", listAmenityId);
 		return mav;
 	}
-	
+
 	@RequestMapping("host/update_photos")
 	public ModelAndView update_photos(@RequestParam("propertyId") Integer propertyId) {
 		List<ImageDTO> listImage = hostMapper.getPropertyImage(propertyId);
 		return new ModelAndView("/host/host_mode/update_photos", "listImage", listImage);
 	}
-	
+
 	protected int imageDelete(Integer propertyId) {
 		List<ImageDTO> listPath = hostMapper.getPropertyImage(propertyId);
-		int count=0;
-		for(ImageDTO dto : listPath) {
+		int count = 0;
+		for (ImageDTO dto : listPath) {
 			System.out.println("저장 된 사진 경로: " + dto.getPath());
 			File file = new File(dto.getPath());
-			
-			if(file.exists()){
+
+			if (file.exists()) {
 				file.delete();
 				count++;
 			}
 		}
 		return count;
 	}
-	
+
 	@ResponseBody
 	@RequestMapping("host/property_delete")
 	public String delete(@RequestParam("propertyId") Integer propertyId) {
-		imageDelete(propertyId);
+		int count = imageDelete(propertyId);
+		System.out.println("지워진 사진 수: " + count);
 		int res = hostMapper.deleteProperty(propertyId);
-		if(res>0) {
+		System.out.println("res: " + res);
+		if (res > 0) {
 			return "{ \"result\":\"OK\" }";
 		}
 		return "{ \"result\":\"FAIL\" }";
@@ -640,9 +640,23 @@ public class HostController implements HostControllerInterface {
 		mav.addObject("listTotal", listTotal);
 		return mav;
 	}
+
 	@RequestMapping("host/chat")
 	public String chat() {
 		return "/host/host_mode/ehco-ws";
+	}
+
+	@ResponseBody
+	@RequestMapping("reviewAnswer")
+	public String reviewAnswer(@RequestParam Map<String, String> param) {
+		System.out.println("reviewId : " + param.get("reviewId"));
+		System.out.println("answer : " + param.get("answer"));
+		int res = hostMapper.reviewAnswer(param);
+		System.out.println("res: " + res);
+		if (res > 0) {
+			return "{ \"result\":\"OK\" }";
+		}
+		return "{ \"result\":\"FAIL\" }";
 	}
 
 	@Override
