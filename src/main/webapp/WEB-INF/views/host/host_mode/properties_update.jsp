@@ -7,6 +7,7 @@
 <meta charset="UTF-8">
 <title>숙소 수정</title>
 </head>
+
 <%@ include file="top.jsp"%>
 <body>
 <form name="f" action="/host/host_properties_list_update" onsubmit="return check()">

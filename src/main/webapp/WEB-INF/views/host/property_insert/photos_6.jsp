@@ -14,17 +14,10 @@
 <script
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 	<style>
-footer{ 
-	position:fixed; 
-	left:0px; 
-	bottom:0px; 
-	height:20%; 
-	width:100%; 
-	background: #01546b ; 
-	color: white; }
 </style>
 </head>
 <body>
+<%@include file="top.jsp" %>
 <%@include file="../../top.jsp"%>
 	<div class="container">
 
@@ -61,14 +54,14 @@ footer{
 			</div>
 		
 		<footer style="font-size: 30px; font-weight: bold;">
-					<div style="float: left; padding-left: 80px; padding-top: 20px">
+					<div style="float: left; padding-left: 250px; padding-top: 20px">
 						<button type="button" class="btn btn-lg btn-default"
 							onclick="previous()" style="font-size: 30px; font-weight: bold;">
 							<i class="bi bi-arrow-left-square-fill"></i> 
 							이전 페이지
 						</button>
 					</div>
-					<div id="next" style="float: right; padding-right: 80px; padding-top: 20px;">
+					<div id="next" style="float: right; padding-right: 250px; padding-top: 20px;">
 						<button  type="submit" class="btn btn-lg btn-default"
 						 style="font-size: 30px; font-weight: bold;">
 							사진 저장 <i class="bi bi-arrow-right-square-fill"></i>
@@ -197,6 +190,25 @@ function fileDelete(fileNum){
 	function previous(){
 		window.history.back();
 	}
+	
+	function handleFiles(files) {
+		  for (let i = 0; i < files.length; i++) {
+		    const file = files[i];
+
+		    if (!file.type.startsWith('image/')){ continue }
+
+		    const img = document.createElement("img");
+		    img.classList.add("obj");
+		    img.file = file;
+		   	$('#preview').empty(); // "preview"의 자식 태그 비우기
+		    preview.appendChild(img); // "preview"가 결과를 보여줄 div 출력이라 가정.
+
+		    const reader = new FileReader();
+		    reader.onload = (function(aImg) { return function(e) { aImg.src = e.target.result; }; })(img);
+		    reader.readAsDataURL(file);
+		  }
+		}
+	
 	/* var count =0;
 	function setImg(event) {
 			for (var file of event.target.files) {

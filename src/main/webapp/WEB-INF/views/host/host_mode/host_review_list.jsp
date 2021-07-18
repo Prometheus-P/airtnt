@@ -22,12 +22,12 @@
 			</div>
 			<div class="list-group">
 				<c:forEach var="dto" items="${listProperty}">
-					<a type="button" class="list-group-item"
+					<button type="button" class="list-group-item"
 						id="btn" onclick="list(${dto.id})" >
 						<h4 class="list-group-item-heading">${dto.name}</h4>
 						<p class="list-group-item-text">유형: ${dto.subPropertyTypeName}
 						<br>등록일 : ${dto.regDate}</p>
-					</a><br><br>
+					</button><br><br>
 				</c:forEach>
 			</div>
 		</div>
@@ -61,6 +61,29 @@
 				console.log(jqXHR);
 				console.log(textStatus);
 				console.log(errorThrown);
+			});
+		}
+		
+		function sendAnswer(id){
+			var answer = $('#answer').val();
+			var reviewId = id;
+			$.ajax({
+				url : "/reviewAnswer",
+				type : "post",
+				data : {'reviewId' : reviewId, 'answer' : answer},
+				success : function(data) {
+							if (JSON.parse(data)['result'] == "OK") {
+								alert("답변 전달 성공!");
+								return;
+								location.reload(true);
+							}else{
+								alert("답변 전달 실패!");
+								return;
+							}
+						},
+				error: function (xhr, status, error) {
+					   	   alert("서버오류로 지연되고있습니다. 잠시 후 다시 시도해주시기 바랍니다.");
+					   	    }
 			});
 		}
 	</script>

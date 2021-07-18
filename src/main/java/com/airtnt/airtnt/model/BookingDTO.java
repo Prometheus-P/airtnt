@@ -39,6 +39,9 @@ public class BookingDTO {
 	private String memberId;
 	private String guestName;
 	private String propertyName;
+	private char isRefund;
+	private Date payExptDate;
+	private String guestEmail;
 	
 	public Integer getId() {
 		return id;
@@ -229,4 +232,23 @@ public class BookingDTO {
 	public void setPropertyName(String propertyName) {
 		this.propertyName = propertyName;
 	}
+	public char getIsRefund() {
+		return isRefund;
+	}
+	public void setIsRefund(char isRefund) {
+		this.isRefund = isRefund;
+	}
+	public Date getPayExptDate() {
+		return payExptDate;
+	}
+	public void setPayExptDate(Date payExptDate) {
+		this.payExptDate = payExptDate;
+	}
+	public String getGuestEmail() {
+		return guestEmail;
+	}
+	public void setGuestEmail(String guestEmail) {
+		this.guestEmail = guestEmail;
+	}
+	
 }
