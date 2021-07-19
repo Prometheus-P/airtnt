@@ -1,71 +1,86 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans:beans xmlns="http://www.springframework.org/schema/mvc"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:beans="http://www.springframework.org/schema/beans"
-	xmlns:context="http://www.springframework.org/schema/context"
-	xsi:schemaLocation="http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd
-		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
-		http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xmlns:beans="http://www.springframework.org/schema/beans"
+   xmlns:context="http://www.springframework.org/schema/context"
+   xmlns:mvc="http://www.springframework.org/schema/mvc"
+   xsi:schemaLocation="http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd
+      http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+      http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
 
-	<!-- DispatcherServlet Context: defines this servlet's request-processing 
-		infrastructure -->
+   <!-- DispatcherServlet Context: defines this servlet's request-processing 
+      infrastructure -->
 
-	<!-- Enables the Spring MVC @Controller programming model -->
-	<annotation-driven />
-	<context:component-scan
-		base-package="com.airtnt.airtnt" />
+   <!-- Enables the Spring MVC @Controller programming model -->
+   <annotation-driven />
+   <context:component-scan
+      base-package="com.airtnt.airtnt" />
 
-	<!-- Handles HTTP GET requests for /resources/** by efficiently serving 
-		up static resources in the ${webappRoot}/resources directory -->
-	<resources mapping="/resources/**" location="/resources/" />
-	<resources mapping="/resources_host/**" location="/resources_host/" />
-	<!-- Resolves views selected for rendering by @Controllers to .jsp resources 
-		in the /WEB-INF/views directory -->
-	<beans:bean
-		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-		<beans:property name="prefix" value="/WEB-INF/views/" />
-		<beans:property name="suffix" value=".jsp" />
-	</beans:bean>
+   <!-- Handles HTTP GET requests for /resources/** by efficiently serving 
+      up static resources in the ${webappRoot}/resources directory -->
+   <resources mapping="/resources/**" location="/resources/" />
+   <resources mapping="/resources_host/**" location="/resources_host/" />
+   <!-- Resolves views selected for rendering by @Controllers to .jsp resources 
+      in the /WEB-INF/views directory -->
+   <beans:bean
+      class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+      <beans:property name="prefix" value="/WEB-INF/views/" />
+      <beans:property name="suffix" value=".jsp" />
+   </beans:bean>
 
-	<!-- image -->
-	<beans:bean id="multipartResolver"
-		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
-		<beans:property name="maxUploadSize" value="52428800" />
-		<beans:property name="maxInMemorySize" value="1000000" />
-		<beans:property name="defaultEncoding" value="UTF-8" />
-	</beans:bean>
+   <!-- image -->
+   <beans:bean id="multipartResolver"
+      class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+      <beans:property name="maxUploadSize" value="92428800" />
+      <beans:property name="maxInMemorySize" value="1000000" />
+      <beans:property name="defaultEncoding" value="UTF-8" />
+   </beans:bean>
 
-	<!-- 인터셉터를 bean으로 등록 -->
-	<beans:bean id="loginInterceptor"
-		class="com.airtnt.airtnt.interceptor.LoginInterceptor" />
-	<beans:bean id="hostInterceptor"
-		class="com.airtnt.airtnt.interceptor.HostInterceptor" />
+   <!-- 인터셉터를 bean으로 등록 -->
+   <beans:bean id="loginInterceptor"
+      class="com.airtnt.airtnt.interceptor.LoginInterceptor" />
+   <beans:bean id="hostInterceptor"
+      class="com.airtnt.airtnt.interceptor.HostInterceptor" />
+   
+   <!-- 요청이 넘어가기 전 검사할 url 목록. path - beans:ref 순서로 써야함 -->
+   <interceptors>
+      <interceptor>
+         <mapping path="/host/**"/>
+         <mapping path="/property/booking*"/>
+         <mapping path="/myPage*"/>
+         <beans:ref bean="loginInterceptor" />
+      </interceptor>
+      <interceptor>
+         <mapping path="/host/host_mode"/>
+         <mapping path="/host/host_properties_list"/>
+         <mapping path="/host/properties_update"/>
+         <mapping path="/host/properties_update"/>
+         <mapping path="/host/transaction_list"/>
+         <mapping path="/host/host_review_list"/>
+         <mapping path="/host/total_earning"/>
+         <mapping path="/host/host_support"/>
+         <beans:ref bean="hostInterceptor" />
+      </interceptor>
+      
+      <mvc:interceptor>
+          <mvc:mapping path="/**/*" />
+          <beans:bean id="webContentInterceptor" class="org.springframework.web.servlet.mvc.WebContentInterceptor">
+         <beans:property name="cacheSeconds" value="0" />
+          <beans:property name="useExpiresHeader" value="true" />
+         <beans:property name="useCacheControlHeader" value="true" />
+         <beans:property name="useCacheControlNoStore" value="true" />
+          </beans:bean>
+      </mvc:interceptor>
+   </interceptors>
+   
 
-	<!-- 요청이 넘어가기 전 검사할 url 목록. path - beans:ref 순서로 써야함 -->
-	<interceptors>
-		<interceptor>
-			<mapping path="/host/**"/>
-			<mapping path="/property/booking*"/>
-			<beans:ref bean="loginInterceptor" />
-		</interceptor>
-		<interceptor>
-			<mapping path="/host/host_mode"/>
-			<mapping path="/host/host_properties_list"/>
-			<mapping path="/host/properties_update"/>
-			<mapping path="/host/properties_update"/>
-			<mapping path="/host/transaction_list"/>
-			<mapping path="/host/host_review_list"/>
-			<mapping path="/host/total_earning"/>
-			<mapping path="/host/host_support"/>
-			<beans:ref bean="hostInterceptor" />
-		</interceptor>
-	</interceptors>
 
-	<!-- <websocket:handlers> allowed-origins localhost8081
+
+   <!-- <websocket:handlers> allowed-origins localhost8081
         <websocket:mapping path="/chatting" handler="chattingHandlet"/>
         <websocket:sockjs></websocket:sockjs>
     </websocket:handlers>
- 			<beans:bean id="chattingHandlet" class="com.airtnt.airtnt.host.EchoHandler"></beans:bean> -->
+          <beans:bean id="chattingHandlet" class="com.airtnt.airtnt.host.EchoHandler"></beans:bean> -->
     
 
 </beans:beans>
