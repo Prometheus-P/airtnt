@@ -1,6 +1,7 @@
 package com.airtnt.airtnt.model;
 
 public class SubPropertyTypeDTO extends AbstractTypeDTO {
+	private static final long serialVersionUID = 1L;
 	
 	private Integer propertyTypeId;
 	private String propertyTypeName;
@@ -9,15 +10,12 @@ public class SubPropertyTypeDTO extends AbstractTypeDTO {
 	
 	public SubPropertyTypeDTO() {}
 	public SubPropertyTypeDTO(String name, String isUse, String propertyTypeId) {
-		setName(name);
-		setIsUse(isUse.charAt(0));
-		setPropertyTypeId(Integer.parseInt(propertyTypeId));
+		super(name, isUse);
+		this.propertyTypeId = Integer.parseInt(propertyTypeId);
 	}
 	public SubPropertyTypeDTO(String id, String name, String isUse, String propertyTypeId) {
-		setId(Integer.parseInt(id));
-		setName(name);
-		setIsUse(isUse.charAt(0));
-		setPropertyTypeId(Integer.parseInt(propertyTypeId));
+		super(propertyTypeId, name, isUse);
+		this.propertyTypeId = Integer.parseInt(propertyTypeId);
 	}
 	
 	public Integer getPropertyTypeId() {

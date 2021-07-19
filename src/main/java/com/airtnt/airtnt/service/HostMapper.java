@@ -58,11 +58,6 @@ public class HostMapper {
 	// 2. 숙소 관리(등록, 삭제, 업데이트)
 	//////////////////////////////////////////////////
 
-	public int insertProperty(PropertyDTO dto) {
-		// int res = sqlSession.insert("insertProperty", dto);
-		return 0;
-	}
-
 	// 성공해도 리턴값 -1 >> PL/SQL
 	// 다시 1로 나오게 함
 

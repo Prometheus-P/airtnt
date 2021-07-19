@@ -27,11 +27,8 @@
 
 	<!-- 실시간 추전 주소 검색어를 띄워주는 파일 -->
 	<script src="/resources/script/address-control.js"></script>
-	
-	<!-- 카카오 주소검색을 불러오는 커스텀 파일 -->
-		<script src="/resources/script/address-control.js"></script>
 		
-		<form id="search-form" action="<c:url value='/property/search'/>" method="get" onsubmit="setParametersOnSubmit()">
+		<form id="search-form" action="<c:url value='/property/search'/>" method="get" onsubmit="setLocalTagsOnSubmit(); setParametersOnSubmit()">
 			<!-- 검색 네비게이션 바 -->
 			<div class="position-absolute top-0 start-50 translate-middle-x" style="z-index: 999; margin-top:10px; ">
 				<nav class="navbar navbar-light bg-light" id="mainnav" style="justify-content:center; background-color:#ffffff!important;">
