@@ -9,7 +9,7 @@
 <title>숙소 목록</title>
 
 </head>
-<%@ include file="top.jsp"%>
+<%@ include file="host_mode_top.jsp"%>
 <body>
 
 	<div class="container theme-showcase" role="main">

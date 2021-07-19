@@ -9,7 +9,7 @@
 </style>
 </head>
 <body>
-	<%@include file="top.jsp"%>
+	<%@include file="insert_top.jsp"%>
 	<%@include file="../../top.jsp"%>
 	<div class="container theme-showcase" role="main">
 		<div class="page-header">

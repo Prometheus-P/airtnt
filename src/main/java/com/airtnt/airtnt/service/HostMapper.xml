@@ -112,7 +112,7 @@
 		FROM amenity_type
 	</select>
 
-	<select id="listGuide" resultType="GuideDTO">
+	<select id="getGuideList" resultType="GuideDTO">
 		SELECT
 		id, subject,
 		reg_date AS regDate,

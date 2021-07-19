@@ -12,7 +12,7 @@ input[type=checkbox] {
 </style>
 </head>
 <body>
-	<%@include file="top.jsp"%>
+	<%@include file="insert_top.jsp"%>
 	<%@include file="../../top.jsp"%>
 	<!-- <form name="f" method="post"
 		action="<c:url value='/host/property_detail_1'/>" onsubmit="send()"> -->

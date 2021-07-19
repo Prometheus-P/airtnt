@@ -11,7 +11,7 @@
 <meta charset="UTF-8" />
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 </head>
-<%@ include file="top.jsp"%>
+<%@ include file="host_mode_top.jsp"%>
 <body>
 
 	<div class="container theme-showcase" role="main">

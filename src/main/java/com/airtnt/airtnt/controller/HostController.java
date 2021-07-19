@@ -89,19 +89,11 @@ public class HostController {
 	//////////////////////////////////////////////////////////////////////////////////////
 
 	@RequestMapping("host/property_insert")
-	public ModelAndView property_type_0_new(HttpSession session) {
+	public ModelAndView property_insert(HttpSession session) {
 		session.removeAttribute("checkAddress");
-
-		Enumeration<String> emu = session.getAttributeNames();
-		System.out.println("====세션에 담긴 값====");
-		while (emu.hasMoreElements()) {
-			String name = emu.nextElement();
-			Object attrValue = session.getAttribute(name);
-			System.out.println(name + ": " + attrValue);
-		}
 		setProperty(session); // 새롭게 생성해서 저장
 		return new ModelAndView("host/property_insert/property_type_0", "listPropertyType",
-				propertyDTO().getListPropertyType());
+				propertyBean().getListPropertyType());
 	}
 
 	protected void setProperty(HttpSession session) {
@@ -117,27 +109,26 @@ public class HostController {
 		property.setListRoomType(listRoomType);
 		property.setListAmenityType(listAmenityType);
 		property.setHostId(hostId);
-		instance.setPropertyDTO(property);
+		instance.setPropertyInformationDTO(property);
 	}
 
-	protected PropertyInformationDTO propertyDTO() {
+	protected PropertyInformationDTO propertyBean() {
 		PropertyInformationBean propertyInfo = PropertyInformationBean.getInstance();
-		return propertyInfo.getPropertyDTO();
+		return propertyInfo.getPropertyInformationDTO();
 	}
 
 	@RequestMapping("host/property_type_0")
-	public ModelAndView property_type_0() {
+	public ModelAndView property_typ() {
 		return new ModelAndView("host/property_insert/property_type_0", "listPropertyType",
-				propertyDTO().getListPropertyType());
+				propertyBean().getListPropertyType());
 	}
 
 	@RequestMapping("host/sub_property_type_1")
-	public ModelAndView sub_property_type_1(HttpSession session,
-			@RequestParam(value = "propertyTypeId") Integer propertyTypeId,
+	public ModelAndView sub_property_type(@RequestParam(value = "propertyTypeId") Integer propertyTypeId,
 			@RequestParam(value = "propertyTypeName") String propertyTypeName) {
-		propertyDTO().setPropertyTypeId(propertyTypeId);
-		propertyDTO().setPropertyTypeName(propertyTypeName);
-		List<SubPropertyTypeDTO> list = propertyDTO().getListSubPropertyType();
+		propertyBean().setPropertyTypeId(propertyTypeId);
+		propertyBean().setPropertyTypeName(propertyTypeName);
+		List<SubPropertyTypeDTO> list = propertyBean().getListSubPropertyType();
 		list.removeIf(dto -> {
 			boolean isRemove = false;
 			if (dto.getPropertyTypeId() != propertyTypeId) {
@@ -149,51 +140,44 @@ public class HostController {
 	}
 
 	@RequestMapping("host/room_type_2")
-	public ModelAndView room_type_2(HttpSession session,
-			@RequestParam(value = "subPropertyTypeId") Integer subPropertyTypeId,
+	public ModelAndView room_type(@RequestParam(value = "subPropertyTypeId") Integer subPropertyTypeId,
 			@RequestParam(value = "subPropertyTypeName") String subPropertyTypeName) {
-		propertyDTO().setSubPropertyTypeId(subPropertyTypeId);
-		propertyDTO().setSubPropertyTypeName(subPropertyTypeName);
+		propertyBean().setSubPropertyTypeId(subPropertyTypeId);
+		propertyBean().setSubPropertyTypeName(subPropertyTypeName);
 		ModelAndView mav = new ModelAndView("host/property_insert/room_type_2");
-		mav.addObject("listRoomType", propertyDTO().getListRoomType());
+		mav.addObject("listRoomType", propertyBean().getListRoomType());
 		return mav;
 	}
 
 	@RequestMapping("host/address_3")
-	public String address_3(HttpSession session, @RequestParam(value = "roomTypeId") Integer roomTypeId,
+	public String address(@RequestParam(value = "roomTypeId") Integer roomTypeId,
 			@RequestParam(value = "roomTypeName") String roomTypeName) {
-		propertyDTO().setRoomTypeId(roomTypeId);
-		propertyDTO().setRoomTypeName(roomTypeName);
+		propertyBean().setRoomTypeId(roomTypeId);
+		propertyBean().setRoomTypeName(roomTypeName);
 		return "host/property_insert/address_3";
 	}
 
 	@RequestMapping("host/floor_plan_4")
-	public String floor_plan_4(HttpSession session, @RequestParam Map<String, String> param) {
+	public String floor_plan(HttpSession session, @RequestParam Map<String, String> param) {
 		session.setAttribute("checkAddress", param.get("address"));
-		propertyDTO().setAddress(param.get("address") + " " + param.get("addressDetail"));
-		propertyDTO().setLatitude(param.get("latitude"));
-		propertyDTO().setLongitude(param.get("longitude"));
-
-		System.out.println("위도: " + param.get("latitude"));
-		System.out.println("경도: " + param.get("longitude"));
-		System.out.println(param.get("address"));
-		System.out.println("상세: " + param.get("addressDetail"));
+		propertyBean().setAddress(param.get("address") + " " + param.get("addressDetail"));
+		propertyBean().setLatitude(param.get("latitude"));
+		propertyBean().setLongitude(param.get("longitude"));
 		return "host/property_insert/floor_plan_4";
 	}
 
 	@RequestMapping("host/amenities_5")
-	public ModelAndView amenities_5(HttpSession session, @RequestParam(value = "maxGuest") Integer maxGuest,
+	public ModelAndView amenities(@RequestParam(value = "maxGuest") Integer maxGuest,
 			@RequestParam(value = "bedCount") Integer bedCount) {
-		propertyDTO().setMaxGuest(maxGuest);
-		propertyDTO().setBedCount(bedCount);
+		propertyBean().setMaxGuest(maxGuest);
+		propertyBean().setBedCount(bedCount);
 		return new ModelAndView("/host/property_insert/amenities_5", "listAmenityType",
-				propertyDTO().getListAmenityType());
+				propertyBean().getListAmenityType());
 	}
 
 	@RequestMapping("host/photos_6")
-	public String photos_6(HttpSession session,
-			@RequestParam(value = "listAmenity", required = true) List<Integer> amenities) {
-		List<AmenityTypeDTO> listAmenity = propertyDTO().getListAmenityType();
+	public String photos(@RequestParam(value = "listAmenity", required = true) List<Integer> amenities) {
+		List<AmenityTypeDTO> listAmenity = propertyBean().getListAmenityType();
 		listAmenity.removeIf(dto -> {
 			boolean isRemove = true;
 			for (int id : amenities) {
@@ -204,17 +188,16 @@ public class HostController {
 			}
 			return isRemove;
 		});
-		propertyDTO().setListAmenityInsert(listAmenity);
+		propertyBean().setListAmenityInsert(listAmenity);
 		return "/host/property_insert/photos_6";
 	}
 
 	@ResponseBody // 사진 마무리 저장은 마지막에!
 	@RequestMapping(value = "/host/file-upload", method = RequestMethod.POST)
-	public String photos_upload(@RequestParam("article_file") List<MultipartFile> multipartFile, HttpServletRequest req) {
+	public String photos_upload(@RequestParam("article_file") List<MultipartFile> multipartFile) {
 		String strResult = "{ \"result\":\"FAIL\" }";
 		long sizeSum = 0;
-		HttpSession session = req.getSession();
-		String memberId = (String) session.getAttribute("member_id");
+		String memberId = propertyBean().getHostId();
 		List<ImageDTO> listImgUrl = new ArrayList<>();
 		// Map<InputStream, File> imgMap = new Hashtable<>();
 		List<InputStream> listInputStream = new ArrayList<>();
@@ -258,9 +241,9 @@ public class HostController {
 					listImgUrl.add(dto);
 					System.out.println("사진 주소: " + nameForShow);
 				}
-				propertyDTO().setListInputStream(listInputStream);
-				propertyDTO().setListFile(listFile);
-				propertyDTO().setListImage(listImgUrl); // 바로 img 태그의 src에 넣으면 됨
+				propertyBean().setListInputStream(listInputStream);
+				propertyBean().setListFile(listFile);
+				propertyBean().setListImage(listImgUrl); // 바로 img 태그의 src에 넣으면 됨
 				strResult = "{ \"result\":\"OK\" }";
 			} else {
 				strResult = "{ \"result\":\"NO_IMAGE\" }";
@@ -286,50 +269,47 @@ public class HostController {
 	}
 
 	@RequestMapping("host/name_description_7")
-	public String name_description_7() {
+	public String name_description() {
 		return "/host/property_insert/name_description_7";
 	}
 
 	@RequestMapping("host/price_8")
-	public String price_8(HttpSession session, @RequestParam(value = "name") String name,
+	public String price(@RequestParam(value = "name") String name,
 			@RequestParam(value = "description") String description) {
-		propertyDTO().setName(name);
-		propertyDTO().setDescription(description);
+		propertyBean().setName(name);
+		propertyBean().setDescription(description);
 		return "/host/property_insert/price_8";
 	}
 
 	@RequestMapping("host/preview_9")
-	public ModelAndView preview_9(HttpSession session, @RequestParam(value = "price") int price) {
-		propertyDTO().setPrice(price);
+	public ModelAndView preview(@RequestParam(value = "price") int price) {
+		propertyBean().setPrice(price);
 		ModelAndView mav = new ModelAndView("/host/property_insert/preview_9");
-		mav.addObject("path", propertyDTO().getListImage().get(0).getPath());
-		mav.addObject("name", propertyDTO().getName());
-		mav.addObject("subPropertyTypeName", propertyDTO().getSubPropertyTypeName());
-		mav.addObject("maxGuest", propertyDTO().getMaxGuest());
-		mav.addObject("bedCount", propertyDTO().getBedCount());
-		mav.addObject("listAmenity", propertyDTO().getListAmenityInsert());
-		mav.addObject("address", propertyDTO().getAddress());
-		mav.addObject("description", propertyDTO().getDescription());
+		mav.addObject("path", propertyBean().getListImage().get(0).getPath());
+		mav.addObject("name", propertyBean().getName());
+		mav.addObject("subPropertyTypeName", propertyBean().getSubPropertyTypeName());
+		mav.addObject("maxGuest", propertyBean().getMaxGuest());
+		mav.addObject("bedCount", propertyBean().getBedCount());
+		mav.addObject("listAmenity", propertyBean().getListAmenityInsert());
+		mav.addObject("address", propertyBean().getAddress());
+		mav.addObject("description", propertyBean().getDescription());
 		return mav;
 	}
 
 	@ResponseBody
 	@RequestMapping("host/property_save")
 	public String property_save(HttpSession session) {
-
-		PropertyInformationDTO dtoPro = propertyDTO();
-
+		PropertyInformationDTO dtoPro = propertyBean();
 		int propertyOk = hostMapper.insertProperty(dtoPro); // 1. property입력
-
-		int propertyId = hostMapper.getPropertyId(propertyDTO().getHostId()); // 2. propertyId 가져오기
+		int propertyId = hostMapper.getPropertyId(dtoPro.getHostId()); // 2. propertyId 가져오기
 		for (AmenityTypeDTO dto : dtoPro.getListAmenityType()) {
 			dto.setPropertyId(propertyId);
 		}
-		for (ImageDTO dto : propertyDTO().getListImage()) {
+		for (ImageDTO dto : dtoPro.getListImage()) {
 			dto.setPropertyId(propertyId);
 		}
-		List<InputStream> listInputStream = propertyDTO().getListInputStream();
-		List<File> listFile = propertyDTO().getListFile();
+		List<InputStream> listInputStream = dtoPro.getListInputStream();
+		List<File> listFile = dtoPro.getListFile();
 		for (int i = 0; i < listInputStream.size(); i++) { // 3. 사진 저장
 			try {
 				FileUtils.copyInputStreamToFile(listInputStream.get(i), listFile.get(i)); // 파일 저장
@@ -341,10 +321,10 @@ public class HostController {
 			}
 		}
 
-		propertyDTO().getListImage().get(0).setIsMain('Y'); // 메인 사진 설정
-		int amenityOk = hostMapper.insertListAmenity(propertyDTO().getListAmenityInsert()); // 4. 편의시설 입력
-		int imageOk = hostMapper.imageInsert(propertyDTO().getListImage()); // 5. 숙소 사진 입력
-		int memberChangeOk = hostMapper.updateMemberMode(propertyDTO().getHostId()); // 6. 멤버모드 변경 1 -> 2
+		dtoPro.getListImage().get(0).setIsMain('Y'); // 메인 사진 설정
+		int amenityOk = hostMapper.insertListAmenity(dtoPro.getListAmenityInsert()); // 4. 편의시설 입력
+		int imageOk = hostMapper.imageInsert(dtoPro.getListImage()); // 5. 숙소 사진 입력
+		int memberChangeOk = hostMapper.updateMemberMode(dtoPro.getHostId()); // 6. 멤버모드 변경 1 -> 2
 
 		if (propertyOk <= 0) {
 			System.out.println("PROPERTY_ERROR");
@@ -371,11 +351,10 @@ public class HostController {
 	// 3. host_mode 페이지
 	//////////////////////////////////////////////////////////////////////////////////////
 
-	
 	@RequestMapping("host/host_mode")
 	public ModelAndView host_mode(HttpSession session) {
-		//PropertyInformationBean bean = PropertyInformationBean.getInstance();
-		//bean.clear();
+		// PropertyInformationBean bean = PropertyInformationBean.getInstance();
+		// bean.clear();
 		String hostId = (String) session.getAttribute("member_id");
 		List<BookingDTO> listBooking = hostMapper.getBookingList(hostId);
 		// System.out.println("isRefund: " + listBooking.get(0).getIsRefund());
@@ -553,11 +532,11 @@ public class HostController {
 		// 6월 29, 2021 10:31:02 오전
 		ModelAndView mav = new ModelAndView("/host/host_mode/transaction_list");
 		Date today = hostMapper.getSysdate();
-		System.out.println("오늘:"+today);
+		System.out.println("오늘:" + today);
 		for (TransactionDTO dto : listTransaction) {
 			System.out.println("날짜 : " + dto.getPayExptDate());
-			if (dto.getConfirmDate() != null && dto.getPayExptDate() != null) { //예약 확정이 정상적으로 이루어졌고
-				if (dto.getConfirmDate().before(today) && today.before(dto.getPayExptDate())) {//컨펌일 < 오늘 < 돈 받는 날
+			if (dto.getConfirmDate() != null && dto.getPayExptDate() != null) { // 예약 확정이 정상적으로 이루어졌고
+				if (dto.getConfirmDate().before(today) && today.before(dto.getPayExptDate())) {// 컨펌일 < 오늘 < 돈 받는 날
 					mav.addObject("isReserv", 1);
 					break;
 				}

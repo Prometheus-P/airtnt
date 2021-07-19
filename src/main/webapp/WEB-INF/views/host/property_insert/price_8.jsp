@@ -9,7 +9,7 @@
 </style>
 </head>
 <body>
-	<%@include file="top.jsp"%>
+	<%@include file="insert_top.jsp"%>
 	<%@include file="../../top.jsp"%>
 	<!-- <form name="f" method="post"
 		action="<c:url value='/host/property_detail_1'/>" onsubmit="send()"> -->
@@ -24,7 +24,8 @@
 				<input id="decrease-price" type="button" class="btn" value="-"
 					onclick="changePrice(this)" style="font-size: 50px;">
 					
-				₩<input id="price" class="form-control btn" type="number" 
+				<font size="60px">₩</font>
+				<input id="price" class="form-control btn" type="number" 
 					name="price" value="${param.price}" min="10000"
 					style="width: 600px; height: 100px; font-size: 60px;border: thin; border-color: aqua;" required>
 					
@@ -47,6 +48,7 @@
 					</div>
 				</footer>
 		</form>
+		</div>
 		<br> <br> <br> <br> <br> <br> <br>
 		<script>
 		

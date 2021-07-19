@@ -5,7 +5,7 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
-<%@ include file="top.jsp"%>
+<%@ include file="host_mode_top.jsp"%>
 <meta charset="UTF-8">
 <title>총 수입</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>

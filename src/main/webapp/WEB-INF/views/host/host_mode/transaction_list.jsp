@@ -11,7 +11,7 @@
 <title>대금 수령 내역</title>
 <meta charset="UTF-8" />
 </head>
-<%@ include file="top.jsp"%>
+<%@ include file="host_mode_top.jsp"%>
 <body>
 	
 	<div class="container theme-showcase" role="main">

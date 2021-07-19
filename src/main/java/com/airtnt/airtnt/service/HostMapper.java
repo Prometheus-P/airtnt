@@ -37,7 +37,7 @@ public class HostMapper {
 	//////////////////////////////////////////////////
 
 	public List<GuideDTO> getGuideList() {
-		List<GuideDTO> listGuide = sqlSession.selectList("listGuide");
+		List<GuideDTO> listGuide = sqlSession.selectList("getGuideList");
 		if (listGuide == null) {
 			System.out.print("ok");
 		}
@@ -172,7 +172,6 @@ public class HostMapper {
 		return res;
 	}
 
-	// 화이팅!!!!
 	public List<PropertyTypeDTO> getListPropertyType() {
 		List<PropertyTypeDTO> listPropertyType = sqlSession.selectList("getListPropertyType");
 		return listPropertyType;
