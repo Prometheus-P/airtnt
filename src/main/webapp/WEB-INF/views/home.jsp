@@ -47,11 +47,11 @@
       <ul class="clear">
         <li class="active">
         <c:if test="${isLogin}">
-        	<c:if test="${member_mode == '1'}">
+        	<c:if test="${sessionScope.member_mode.trim() == '1'}">
        			<a href="<c:url value='/guide_home'/>">호스트 되기</a>
        			<c:set var='isHostMode' value='false' scope='session'/>
         	</c:if>
-        	<c:if test="${member_mode == '2'}">
+        	<c:if test="${sessionScope.member_mode.trim() == '2'}">
         		<a href="<c:url value='/host/host_mode'/>">호스트 모드로 전환</a>
         		<c:set var='isHostMode' value='true' scope='session'/>
         	</c:if>

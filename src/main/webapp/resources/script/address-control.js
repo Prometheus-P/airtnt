@@ -147,7 +147,7 @@ function initLocalTags(){
 }
 
 function setLocalTagsOnSubmit(){
-	if(tempSearchInput.value == searchInput.value){
+	if(tempSearchInput.value == "" || tempSearchInput.value == searchInput.value){
 		tempSearchInput.disabled = true;
 	}
 	if(latitudeInput.value == "" || longitudeInput.value == ""){
