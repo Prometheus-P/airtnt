@@ -28,7 +28,7 @@ input[type=checkbox] {
 				<%-- <img src="${path}" alt="${count+1}"> --%>
 				<div class="caption">
 					<h2>${name}</h2>
-					<h3>${sessionScope.memeber_name}님이호스팅하는
+					<h3>${sessionScope.member_name}님이호스팅하는
 						${subPropertyTypeName}</h3>
 					<hr class="divider" />
 					<p>최대 인원 ${maxGuest}명 ·
