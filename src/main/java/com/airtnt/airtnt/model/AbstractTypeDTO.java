@@ -15,7 +15,7 @@ public abstract class AbstractTypeDTO implements Serializable{
 	// basic
 	private Integer id;	// fk
 	private String name;
-	private char isUse;
+	private Character isUse;
 	private Date regDate;
 	private Date modDate;
 	
@@ -53,10 +53,10 @@ public abstract class AbstractTypeDTO implements Serializable{
 	public void setName(String name) {
 		this.name = name;
 	}
-	public char getIsUse() {
+	public Character getIsUse() {
 		return isUse;
 	}
-	public void setIsUse(char isUse) {
+	public void setIsUse(Character isUse) {
 		this.isUse = isUse;
 	}
 	public Date getRegDate() {

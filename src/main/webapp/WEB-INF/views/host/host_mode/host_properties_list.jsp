@@ -7,65 +7,9 @@
 <head>
 <meta charset="UTF-8">
 <title>숙소 목록</title>
-<script src='https://github.com/mozilla-comm/ical.js/releases/download/v1.4.0/ical.js'></script>
-<script src="/resources_host/calendar/main.js"></script>
-<link href="/resources_host/calendar/main.css" rel='stylesheet' />
 
-<style>
-  #loading {
-    display: none;
-    position: absolute;
-    top: 10px;
-    right: 10px;
-  }
-
-  #calendar {
-    max-width: 100px;
-    margin: 40px auto;
-    padding: 0 10px;
-  }
-</style>
-		<script>
-			$(document).ready(function() {
-				$('[data-toggle="modal"]').tooltip();
-			});
-
-  			document.addEventListener('DOMContentLoaded', function() {
-   			var calendarEl = document.getElementById('calendar');
-			var date = new Date();
-   			var calendar = new FullCalendar.Calendar(calendarEl, {
-      		displayEventTime: false,
-      		initialDate: date,
-     		navLinks: true, // can click day/week names to navigate views
-    		selectable: false,
-     		selectMirror: true,
-       		editable: true,
-       		dayMaxEvents: true, // allow "more" link when too many events
-      		events: [
-          {
-            title: 'All Day Event',
-            start: '2021-07-01',
-            url:''
-          },
-          {
-            title: 'Long Event',
-            start: '2021-07-07',
-            end: '2021-07-10'
-          }
-        ],
-      headerToolbar: {
-        left: 'prev,next today',
-        center: 'title',
-        right: 'dayGridMonth,listYear'
-      },
-
-    });
-
-    calendar.render();
-  });
-</script>
 </head>
-<%@ include file="top.jsp"%>
+<%@ include file="host_mode_top.jsp"%>
 <body>
 
 	<div class="container theme-showcase" role="main">
@@ -158,14 +102,13 @@
 				</tbody>
 			</table>
 			
-			<div class="calendar"></div>
 		</div>
 	<%@ include file="../../bottom.jsp"%>
 	<script>
 		function deletePro(id){
 			var check = window.confirm("정말 삭제하시겠습니까?");
+			var propertyId = id;
 			if(check){
-				var propertyId = id
 				$.ajax({
 					url : "/host/property_delete",
 					type : "post",

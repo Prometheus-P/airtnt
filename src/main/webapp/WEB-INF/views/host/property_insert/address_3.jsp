@@ -9,7 +9,7 @@
 </style>
 </head>
 <body>
-	<%@include file="top.jsp"%>
+	<%@include file="insert_top.jsp"%>
 	<%@include file="../../top.jsp"%>
 	<div class="container theme-showcase" role="main">
 		<div class="page-header">
@@ -42,7 +42,7 @@
 				<div class="alert alert-success" role="alert" >
 					<strong>위치가 검색 되었습니다!</strong> 상세주소를 입력하시고, 지도의 위치가 맞다면 다음 페이지로 이동해주세요.
 				</div>
-				<div id="map" style="width: 350px; height: 350px; margin-left: 80px;margin-top: 10px; float:rigth;"></div>
+				<div id="map" style="width: 250px; height: 250px; margin-left: 30px;margin-top: 10px; float:left;"></div>
 			</div>
 			</div>
 				<footer style="font-size: 30px; font-weight: bold;">

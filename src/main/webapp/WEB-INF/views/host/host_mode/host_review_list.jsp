@@ -11,14 +11,21 @@
 <meta charset="UTF-8" />
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 </head>
-<%@ include file="top.jsp"%>
+<%@ include file="host_mode_top.jsp"%>
 <body>
 
 	<div class="container theme-showcase" role="main">
 		<div class="col-md-6" style="font-family: fantasy;">
 			<div class="page-header">
 				<br> <br> <br>
-				<h1 style="font-style: italic; font-weight: bold;">리뷰 목록</h1>
+				<div class="jumbotron" style="font-style: italic; font-weight: bold;">
+				<h1 >숙소 별 리뷰 목록</h1>
+				<p>
+					게스트가 숙소에 후기를 남겼나요??<br>
+					감사 인사로 마음을 전달해보아요!<br>
+					숙소를 클릭하면 리뷰 목록이 나옵니다.
+				</p>
+				</div>
 			</div>
 			<div class="list-group">
 				<c:forEach var="dto" items="${listProperty}">

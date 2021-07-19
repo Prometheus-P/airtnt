@@ -8,7 +8,7 @@
 <title>숙소 수정</title>
 </head>
 
-<%@ include file="top.jsp"%>
+<%@ include file="host_mode_top.jsp"%>
 <body>
 <form name="f" action="/host/host_properties_list_update" onsubmit="return check()">
 	<div class="container theme-showcase" role="main">

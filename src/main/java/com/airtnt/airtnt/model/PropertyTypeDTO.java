@@ -3,6 +3,7 @@ package com.airtnt.airtnt.model;
 import java.util.List;
 
 public class PropertyTypeDTO extends AbstractTypeDTO {
+	private static final long serialVersionUID = 1L;
 	
 	private List<SubPropertyTypeDTO> subPropertyTypes;
 	

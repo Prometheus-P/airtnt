@@ -12,11 +12,11 @@ input[type=checkbox] {
 </style>
 </head>
 <body>
-	<%@include file="top.jsp"%>
+	<%@include file="insert_top.jsp"%>
 	<%@include file="../../top.jsp"%>
 	<!-- <form name="f" method="post"
 		action="<c:url value='/host/property_detail_1'/>" onsubmit="send()"> -->
-	<div class="container theme-showcase" role="main">
+	<div id="mainBody" class="container theme-showcase" role="main">
 		<div class="page-header">
 			<h1
 				style="font-style: italic; font-weight: bold; font-family: fantasy;">
@@ -24,20 +24,21 @@ input[type=checkbox] {
 		</div>
 		<div class="col-sm-6" style="font-family: fantasy;">
 			<div class="thumbnail">
-				<img src="${listImgUrl.get(0).path}" alt="${count+1}">
+				<div id="propertyImg"></div>
+				<%-- <img src="${path}" alt="${count+1}"> --%>
 				<div class="caption">
-					<h2>${sessionScope.name}</h2>
+					<h2>${name}</h2>
 					<h3>${sessionScope.memeber_name}님이호스팅하는
-						${sessionScope.subPropertyTypeName}</h3>
+						${subPropertyTypeName}</h3>
 					<hr class="divider" />
-					<p>최대 인원 ${sessionScope.maxGuest}명 ·
-						침대${sessionScope.bedCount}개</p>
+					<p>최대 인원 ${maxGuest}명 ·
+						침대${bedCount}개</p>
 					<hr class="divider" />
 					<h4>
 						편의 시설<br>
 					</h4>
 					<p>
-						<c:forEach var='amenity' items='${sessionScope.listAmenity}'>
+						<c:forEach var='amenity' items='${listAmenity}'>
 							<i class="bi bi-check">${amenity.name}</i>
 							<br>
 						</c:forEach>
@@ -47,13 +48,13 @@ input[type=checkbox] {
 					<h4>
 						위치<br>
 					</h4>
-					<p>${sessionScope.address}</p>
+					<p>${address}</p>
 
 					<hr class="divider" />
 					<h4>
 						설명<br>
 					</h4>
-					<p>${sessionScope.description}</p>
+					<p>${description}</p>
 
 				</div>
 			</div>
@@ -80,6 +81,16 @@ input[type=checkbox] {
 	</footer>
 </body>
 <script>
+	$('#mainBody').load(function (){
+		var length = parseInt(localStorage.getItem('length'));
+		for(var x; x<length; ++x){
+			var src= localStorage.getItem('image'+x);
+			var img = document.createElement("img");
+	        img.setAttribute("src", src);
+	        document.querySelector("div#propertyImg").appendChild(img);
+		}
+	});
+	
 	$(document).ready(function() {
 		$('#save').bind('click', function() {
 			doSomething();
@@ -93,6 +104,7 @@ input[type=checkbox] {
 			type : "post",
 			success : function(data) {
 				if (JSON.parse(data)['result'] == "OK") {
+					localStorage.clear();
 					alert("숙소가 저장 되었습니다! 호스트 메인 페이지로 이동합니다!")
 					location.href = "/host/host_mode";
 				} else {

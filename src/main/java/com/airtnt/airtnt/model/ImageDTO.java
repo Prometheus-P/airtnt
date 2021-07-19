@@ -6,9 +6,9 @@ public class ImageDTO {
 	
 	private Integer id;
 	private Integer propertyId;
-	private char isMain;
+	private Character isMain;
 	private String path;
-	private long fileSize;
+	private Long fileSize;
 	private Date regDate;
 	private Date modDate;
 	
@@ -24,10 +24,10 @@ public class ImageDTO {
 	public void setPropertyId(Integer propertyId) {
 		this.propertyId = propertyId;
 	}
-	public char getIsMain() {
+	public Character getIsMain() {
 		return isMain;
 	}
-	public void setIsMain(char isMain) {
+	public void setIsMain(Character isMain) {
 		this.isMain = isMain;
 	}
 	public String getPath() {
@@ -36,10 +36,10 @@ public class ImageDTO {
 	public void setPath(String path) {
 		this.path = path;
 	}
-	public long getFileSize() {
+	public Long getFileSize() {
 		return fileSize;
 	}
-	public void setFileSize(long fileSize) {
+	public void setFileSize(Long fileSize) {
 		this.fileSize = fileSize;
 	}
 	public Date getRegDate() {
