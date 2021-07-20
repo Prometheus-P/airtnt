@@ -85,7 +85,7 @@
 				$('#set').append(obj2);
 				return true;
 			}
-			alert("숙소 유형을 선택해주세요!");
+			alert("방 유형을 선택해주세요!");
 			return false;
 		}
 	</script>

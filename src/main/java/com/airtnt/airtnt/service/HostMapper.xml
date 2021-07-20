@@ -18,6 +18,9 @@
 		<result property="modDate" column="mod_date"/>
 		<result property="roomTypeId" column="room_type_id"/>
 		<result property="subPropertyTypeId" column="sub_property_type_id"/>
+		<result property="roomTypeName" column="room_name"/>
+		<result property="subPropertyTypeName" column="sub_name"/>
+		
 		
 		<association property="subPropertyType"
 			columnPrefix="sub_property_type_" resultMap="subPropertyTypeMap"/>
@@ -31,7 +34,9 @@
 	<!-- // -->
 	<!-- 숙소 특성 -->
 	<!-- <select id="getPropertyInfo" resultMap="propertyInfoMap">
-		SELECT * FROM 
+		SELECT 
+		s.id AS sub_property_type_  id
+		 FROM 
 		property_type p, sub_property_type s, room_type r, amenity_type a
 	</select>
 	
@@ -85,11 +90,7 @@
 		<result property="name" column="name"/>
 		<result property="isUse" column="is_use"/>
 	</resultMap>
-	
-	<resultMap type="map" id="selectMapList">
-		<result column="reviewCount" property="reviewCount" />
-		<result column="bookingCount" property="bookingCount" />
-	</resultMap>
+
 
 	<select id="getListPropertyType" resultType="propertyTypeDTO">
 		SELECT 
@@ -129,6 +130,46 @@
 		FROM guide
 		WHERE id = #{id}
 	</select>
+	
+	<select id="listProperty" parameterType="String" resultMap="getPropertyMap">
+		SELECT
+		p.id, p.name,
+		p.host_id,
+		p.address, p.price,
+		p.property_desc,
+		p.bed_count,
+		p.max_guest,
+		p.reg_date,
+		p.mod_date,
+		p.room_type_id,
+		r.name AS room_name,
+		p.sub_property_type_id,
+		s.name AS sub_name,
+		i.path AS image_path, 
+		i.is_main AS image_is_main,
+		a.amenity_property_id,
+		a.amenity_name,
+		a.amenity_id
+		FROM property p
+		LEFT JOIN sub_property_type s
+			ON p.sub_property_type_id = s.id
+		LEFT JOIN room_type	r
+			ON p.room_type_id = r.id
+		LEFT JOIN image i
+			ON p.id = i.property_id
+		LEFT JOIN (
+			SELECT 
+			at.name AS amenity_name,
+			at.id AS amenity_id,
+			am.property_id AS amenity_property_id
+			FROM amenity_type at
+			LEFT JOIN amenity am
+				ON am.property_id = at.id
+			) a
+			ON a.amenity_property_id = p.id
+		WHERE p.host_id = #{hostId}
+	</select>
+	
 
 	<insert id="insertProperty" parameterType="PropertyInformationDTO">
 		INSERT INTO property
@@ -148,7 +189,9 @@
 	</update>
 
 	<delete id="deleteProperty" parameterType="int">
-	 DELETE FROM property WHERE id = #{propertyId}
+	 DELETE FROM 
+	 property 
+	 WHERE id = #{propertyId}
 		<!-- {	
 			CALL
         	DECLARE
@@ -162,6 +205,13 @@
       	  	END
     	} -->
 	</delete>
+	
+	<update id="propertyBookingDelete" parameterType="int">
+		UPDATE booking
+		SET
+		booking_number = -1
+		WHERE property_id = #{propertyId}
+	</update>
 
 	<select id="propertyType" resultType="propertyTypeDTO">
 		SELECT
@@ -245,26 +295,6 @@
 		<result property="path" column="path"/>
 	</resultMap> -->
 	
-	<select id="listProperty" parameterType="String" resultType="PropertyDTO">
-		SELECT
-		p.id, p.name,
-		p.host_id AS hostId,
-		p.address, p.price,
-		p.bed_count AS bedCount,
-		p.max_guest AS maxGuest,
-		p.reg_date AS regDate,
-		p.mod_date AS modDate,
-		p.room_type_id AS roomTypeId,
-		r.name AS roomTypeName,
-		p.sub_property_type_id AS subPropertyTypeId,
-		s.name AS subPropertyTypeName
-		FROM property p
-		LEFT JOIN sub_property_type s
-			ON p.sub_property_type_id = s.id
-		LEFT JOIN room_type	r
-			ON p.room_type_id = r.id
-		WHERE p.host_id = #{hostId}
-	</select>
 	
 	<select id="listTransaction" parameterType="String"
 		resultType="TransactionDTO">
@@ -346,14 +376,7 @@
 		is_use as isUse
 		from amenity_type
 	</select>
-	<select resultType="int" id="getPropertyId" parameterType="String">
-		select id from
-		(select * from property
-		where
-		host_id=#{hostId}
-		order by reg_date desc)
-		where ROWNUM = 1
-	</select>
+
 
 	<select id="updateMemberMode" resultType="int"
 		parameterType="String">
@@ -391,22 +414,34 @@
 		r.booking_id = b.id
 		AND r.property_id = p.id
 	</select>
+	
+	<resultMap type="java.util.Map" id="selectMap">
+		<result column="reviewCount" property="reviewCount" />
+		<result column="bookingCount" property="bookingCount" />
+		<result column="avg" property="ratingAvg"/>
+	</resultMap>
 
-	<select id="getReviewWritingRate" resultMap="selectMapList" parameterType="int">
+	<select id="getReviewWritingRate" resultMap="selectMap" parameterType="int">
 		SELECT
 		r.reviewCount,
-		b.bookingCount
+		b.bookingCount,
+		a.avg
 		FROM
-		(select count(*)
-		as reviewCount
+		(SELECT NVL(count(*),0)
+		AS reviewCount
 		FROM review
 		WHERE property_id = #{propertyId}
 		AND sysdate > reg_date) r,
-		(select count(*)
-		as bookingCount
+		(SELECT NVL(count(*),1)
+		AS bookingCount
 		FROM booking
 		WHERE property_id = #{propertyId}
-		AND sysdate > reg_date) b
+		AND sysdate > reg_date) b,
+		(SELECT
+		NVL(AVG(rating), 0) AS avg
+		FROM review 
+		WHERE property_id = #{propertyId}
+		) a 
 	</select>
 	
 	<update id="bookConfirm" parameterType="int">
@@ -426,6 +461,7 @@
 		booking_number = -1
 		WHERE id = #{bookingId}
 	</update>
+	
 
 	<update id="transactionRefund" parameterType="int">
 		UPDATE transaction 
@@ -477,6 +513,10 @@
 		</foreach>
 	</update>
 	
+	<select id="getPropertyId" resultType="int">
+		SELECT seq_property_id.nextval FROM dual
+	</select>
+	
 	<select id="getAmenitySequence" resultType="int">
 		SELECT seq_amenity_id.nextval FROM dual
 	</select>
@@ -492,5 +532,9 @@
 		content_host_date = sysdate
 		WHERE id = #{reviewId}
 	</update>
-
+	
+	<select id="getListPropertyImage" resultType="int">
+		SELECT seq_image_id.nextval FROM dual
+	</select>
+	
 </mapper>

@@ -22,6 +22,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -117,8 +118,13 @@ public class HostController {
 		return propertyInfo.getPropertyInformationDTO();
 	}
 
+	protected void clearBean() {
+		PropertyInformationBean instance = PropertyInformationBean.getInstance();
+		instance.clear();
+	}
+
 	@RequestMapping("host/property_type_0")
-	public ModelAndView property_typ() {
+	public ModelAndView property_type() {
 		return new ModelAndView("host/property_insert/property_type_0", "listPropertyType",
 				propertyBean().getListPropertyType());
 	}
@@ -175,8 +181,8 @@ public class HostController {
 				propertyBean().getListAmenityType());
 	}
 
-	@RequestMapping("host/photos_6")
-	public String photos(@RequestParam(value = "listAmenity", required = true) List<Integer> amenities) {
+	@PostMapping("host/photos_6")
+	public String photos(@RequestParam(value = "listAmenity") List<Integer> amenities) {
 		List<AmenityTypeDTO> listAmenity = propertyBean().getListAmenityType();
 		listAmenity.removeIf(dto -> {
 			boolean isRemove = true;
@@ -226,11 +232,12 @@ public class HostController {
 					}
 
 					sizeSum += file.getSize(); // 사진의 총 사이즈 검사
-					if (sizeSum >= 1 * 1024 * 1024) { // 100MB
+					if (sizeSum >= 50 * 1024 * 1024) { // 50MB
 						return strResult = "{ \"result\":\"EXCEED_SIZE\" }";
 					}
-
-					String nameForShow = "/resources/files/property/" + savedFileName;
+					// 1. upPath으로 저장과 삭제
+					String nameForShow = "C:\\Users\\Haseong\\git\\airtnt\\src\\main\\webapp\\resources\\files\\property\\"
+							+ savedFileName;
 					File targetFile = new File(upPath + savedFileName);
 					InputStream fileStream = file.getInputStream();
 					listInputStream.add(fileStream);
@@ -301,7 +308,7 @@ public class HostController {
 	public String property_save(HttpSession session) {
 		PropertyInformationDTO dtoPro = propertyBean();
 		int propertyOk = hostMapper.insertProperty(dtoPro); // 1. property입력
-		int propertyId = hostMapper.getPropertyId(dtoPro.getHostId()); // 2. propertyId 가져오기
+		int propertyId = hostMapper.getPropertyId(); // 2. propertyId 가져오기
 		for (AmenityTypeDTO dto : dtoPro.getListAmenityType()) {
 			dto.setPropertyId(propertyId);
 		}
@@ -342,8 +349,7 @@ public class HostController {
 		session.setAttribute("isMemberMode", true);
 		session.setAttribute("member_mode", "2");
 		session.removeAttribute("checkAddress");
-		PropertyInformationBean bean = PropertyInformationBean.getInstance();
-		bean.clear(); // Bean 지우기
+		clearBean(); // Bean 지우기
 		return "{ \"result\":\"OK\" }";
 	}
 
@@ -353,17 +359,18 @@ public class HostController {
 
 	@RequestMapping("host/host_mode")
 	public ModelAndView host_mode(HttpSession session) {
-		// PropertyInformationBean bean = PropertyInformationBean.getInstance();
-		// bean.clear();
 		String hostId = (String) session.getAttribute("member_id");
 		List<BookingDTO> listBooking = hostMapper.getBookingList(hostId);
-		// System.out.println("isRefund: " + listBooking.get(0).getIsRefund());
 		listBooking.removeIf(dto -> {
 			boolean isRemove = false;
-			if (dto.getBookingNumber().equals("-1"))
+			char refund = Character.toUpperCase(dto.getIsRefund());
+			if (dto.getBookingNumber().equals("-1") || Character.compare(refund, 'Y') == 0)
+				isRemove = true;
+			if(dto.getPropertyId() == null) 
 				isRemove = true;
 			return isRemove;
 		});
+
 		java.sql.Date today = hostMapper.getSysdate();
 		ModelAndView mav = new ModelAndView("/host/host_mode/host_mode");
 		mav.addObject("listBooking", listBooking);
@@ -393,7 +400,6 @@ public class HostController {
 
 		int res1 = hostMapper.bookConfirm(bookingId);
 		int res2 = hostMapper.payExptDateConfirm(param);
-		// int res = hostMapper.bookingConfirm(param);
 		if (res1 > 0 && res2 > 0)
 			return "{ \"result\":\"OK\" }";
 		else
@@ -405,34 +411,21 @@ public class HostController {
 	public String bookReject(@RequestParam("bookingId") Integer bookingId) {
 		int res1 = hostMapper.bookReject(bookingId);
 		int res2 = hostMapper.transactionRefund(bookingId);
-		// int res = hostMapper.bookingReject(bookingId);
 		if (res1 > 0 && res2 > 0) {
 			return "{ \"result\":\"OK\" }";
 		}
 		return "{ \"result\":\"FAIL\" }";
-		/*
-		 * System.out.print("결과: " + res1 + "그리고" + res2); if (res1 > 0 && res2 > 0)
-		 * return "예약이 반려 되었습니다!"; else return "반려 처리 중 오류 발생!";
-		 */
 	}
 
 	@RequestMapping("host/host_properties_list")
 	public ModelAndView host_properties_list(HttpSession session) {
 		String hostId = (String) session.getAttribute("member_id");
 		List<PropertyDTO> listProperty = hostMapper.getPropertyList(hostId);
-		for (PropertyDTO dto : listProperty) {
-			List<ImageDTO> listImage = hostMapper.getPropertyImage(dto.getId());
-			List<AmenityTypeDTO> listAmenity = hostMapper.getAmenityList(dto.getId());
-			dto.setImages(listImage);
-			dto.setAmenityTypes(listAmenity);
-			System.out.println("");
-		}
-		ModelAndView mav = new ModelAndView("/host/host_mode/host_properties_list");
-		mav.addObject("listProperty", listProperty);
-		return mav;
+		clearBean();
+		return new ModelAndView("/host/host_mode/host_properties_list", "listProperty", listProperty);
 	}
 
-	@RequestMapping("host/host_properties_list_update")
+	@RequestMapping(value = "host/property_update", method = RequestMethod.POST)
 	public ModelAndView host_properties_list_update(@RequestParam Map<String, Object> param) {
 		PropertyDTO dtoPro = new PropertyDTO();
 		dtoPro.setRoomTypeId((Integer) param.get("roomTypeId"));
@@ -457,31 +450,43 @@ public class HostController {
 		// int amenityDelete = hostMapper.deleteAmenity();
 		int propertyUpdate = hostMapper.updateProperty(dtoPro);
 		// int amenityOk = hostMapper.insertListAmenity(listAmenity);
+		clearBean();
 		ModelAndView mav = new ModelAndView("/host/host_mode/host_properties_list");
 		return mav;
 	}
 
 	@RequestMapping(value = "host/property_update", method = RequestMethod.GET)
-	public ModelAndView host_getProperty(int propertyId) {
+	public ModelAndView host_getProperty(HttpSession session, int propertyId) {
 		PropertyDTO propertyDTO = hostMapper.getProperty(propertyId);
-		List<ImageDTO> listImage = hostMapper.getPropertyImage(propertyId);
-		List<AmenityTypeDTO> listAmenity = hostMapper.getAmenityList(propertyId);
-		propertyDTO.setImages(listImage);
-		propertyDTO.setAmenityTypes(listAmenity);
-		List<Integer> listAmenityId = new ArrayList<>();
-		for (AmenityTypeDTO dto : listAmenity) {
-			listAmenityId.add(dto.getAmenityId());
-		}
-
-		List<RoomTypeDTO> listRoomType = hostMapper.getListRoomType();
-		List<AmenityTypeDTO> listAmenityType = hostMapper.getListAmenityType();
+		setProperty(session);
 
 		ModelAndView mav = new ModelAndView("/host/host_mode/properties_update");
 		mav.addObject("propertyDTO", propertyDTO);
-		mav.addObject("listRoomType", listRoomType);
-		mav.addObject("listAmenityType", listAmenityType);
-		mav.addObject("listAmenityId", listAmenityId);
+		mav.addObject("listRoomType", propertyBean().getListRoomType());
+		mav.addObject("listAmenityType", propertyBean().getListAmenityType());
 		return mav;
+	}
+
+	@RequestMapping("host/photos_upload")
+	public String photos_upload() {
+		if (propertyBean().getListInputStream() != null && propertyBean().getListFile() != null) {
+			List<InputStream> listInputStream = propertyBean().getListInputStream();
+			List<File> listFile = propertyBean().getListFile();
+			for (int i = 0; i < listInputStream.size(); i++) { // 3. 사진 저장
+				try {
+					FileUtils.copyInputStreamToFile(listInputStream.get(i), listFile.get(i)); // 파일 저장
+					System.out.println("파일");
+				} catch (Exception e) {
+					// 파일삭제
+					FileUtils.deleteQuietly(listFile.get(i)); // 저장된 현재 파일 삭제
+					e.printStackTrace();
+				}
+			}
+			int imageOk = hostMapper.imageInsert(propertyBean().getListImage());
+		}
+
+		clearBean();
+		return "/host/host_mode/host_properties_list";
 	}
 
 	@RequestMapping("host/update_photos")
@@ -497,7 +502,7 @@ public class HostController {
 			System.out.println("저장 된 사진 경로: " + dto.getPath());
 			File file = new File(dto.getPath());
 
-			if (file.exists()) {
+			if (file.exists() == true) {
 				file.delete();
 				count++;
 			}
@@ -510,9 +515,10 @@ public class HostController {
 	public String delete(@RequestParam("propertyId") Integer propertyId) {
 		int count = imageDelete(propertyId);
 		System.out.println("지워진 사진 수: " + count);
-		int res = hostMapper.deleteProperty(propertyId);
-		System.out.println("res: " + res);
-		if (res > 0) {
+		int res1 = hostMapper.deleteProperty(propertyId);
+		int res2 = hostMapper.propertyBookingDelete(propertyId);
+		System.out.println("" + res2);
+		if (res1 > 0 && res2 > 0) {
 			return "{ \"result\":\"OK\" }";
 		}
 		return "{ \"result\":\"FAIL\" }";
@@ -532,15 +538,14 @@ public class HostController {
 		// 6월 29, 2021 10:31:02 오전
 		ModelAndView mav = new ModelAndView("/host/host_mode/transaction_list");
 		Date today = hostMapper.getSysdate();
-		System.out.println("오늘:" + today);
 		for (TransactionDTO dto : listTransaction) {
-			System.out.println("날짜 : " + dto.getPayExptDate());
-			if (dto.getConfirmDate() != null && dto.getPayExptDate() != null) { // 예약 확정이 정상적으로 이루어졌고
+			if (dto.getConfirmDate() != null && dto.getPayExptDate() != null && dto.getPropertyId() != null) { // 예약 확정이 정상적으로 이루어졌고
 				if (dto.getConfirmDate().before(today) && today.before(dto.getPayExptDate())) {// 컨펌일 < 오늘 < 돈 받는 날
 					mav.addObject("isReserv", 1);
 					break;
 				}
 			}
+			dto.setIsRefund(Character.toUpperCase(dto.getIsRefund()));
 		}
 		mav.addObject("listTransaction", listTransaction);
 		mav.addObject("today", today);
@@ -558,19 +563,20 @@ public class HostController {
 	public ModelAndView getReiview(HttpServletRequest req) {
 		Integer propertyId = Integer.parseInt(req.getParameter("propertyId"));
 		List<ReviewDTO> list = hostMapper.getReviewList(propertyId);
-		List<Map<String, Integer>> listMap = hostMapper.getReviewWritingRate(propertyId);
+		Map<String, Object> listMap = hostMapper.getReviewWritingRate(propertyId);
 		ModelAndView mav = new ModelAndView("/host/host_mode/review");
-		double reviewCount = Double.parseDouble(String.valueOf(listMap.get(0).get("reviewCount")));// 무슨 에러 떠서 해결법 찾음
-		double bookingCount = Double.parseDouble(String.valueOf(listMap.get(0).get("bookingCount")));
+		double reviewCount = Double.parseDouble(String.valueOf(listMap.get("reviewCount")));// 무슨 에러 떠서 해결법 찾음
+		double bookingCount = Double.parseDouble(String.valueOf(listMap.get("bookingCount")));
 		double reviewRate = reviewCount / bookingCount * 100;
+		double ratingAvg = Double.parseDouble(String.valueOf(listMap.get("ratingAvg")));
 		mav.addObject("reviewRate", Math.round(reviewRate));
+		mav.addObject("ratingAvg", Math.round(ratingAvg));
 		mav.addObject("listReview", list);
 		return mav;
 	}
 
 	@GetMapping("review_send")
 	public ModelAndView review_html(@RequestParam String review) {
-		System.out.println("review_html:" + review);
 		return new ModelAndView("/host/host_mode/host_review_list", "review", review);
 	}
 
@@ -593,10 +599,11 @@ public class HostController {
 		for (int i = 0; i < 13; ++i) {
 			beM[i] = addMonth(date, -i);
 		}
-		for (TransactionDTO dto : list) { // 6개월 전
+		for (TransactionDTO dto : list) { // 1년 전
+			char refund = Character.toUpperCase(dto.getIsRefund());
 			for (int i = 0; i < 12; ++i) {
 				if (beM[i + 1].before(dto.getPayExptDate()) && dto.getPayExptDate().before(beM[i])) {
-					if (Character.compare(dto.getIsRefund(), 'N') == 0) {
+					if (Character.compare(refund, 'N') == 0) {
 						total[i] += dto.getTotalPrice() - dto.getTotalPrice() * dto.getSiteFee();
 					}
 				}
@@ -617,10 +624,7 @@ public class HostController {
 	@ResponseBody
 	@RequestMapping("reviewAnswer")
 	public String reviewAnswer(@RequestParam Map<String, String> param) {
-		System.out.println("reviewId : " + param.get("reviewId"));
-		System.out.println("answer : " + param.get("answer"));
 		int res = hostMapper.reviewAnswer(param);
-		System.out.println("res: " + res);
 		if (res > 0) {
 			return "{ \"result\":\"OK\" }";
 		}

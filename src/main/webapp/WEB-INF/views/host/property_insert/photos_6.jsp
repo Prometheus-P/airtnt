@@ -29,12 +29,6 @@
 			<div class="data_file_txt" id="data_file_txt" style="margin: 40px;">
 				<div class="row">
 					<h3>사진 추가</h3>
-					<!-- <div class="col-sm-4">
-						<div id="image_container"></div>
-						<div class="grid-item grid-item--width2">...</div>
-  						<div class="grid-item">...</div>
- 							 ...
-					</div> -->
 					<div class="col-sm-4">
 						<div id="articlefileChange" style="font-family: fantasy;"></div>
 					
@@ -196,7 +190,7 @@ function fileDelete(fileNum){
 				} else if (JSON.parse(data)['result'] == "UNACCEPTED_EXTENSION") {
 					alert("사진의 확장자는 JPG, PNG, GIF, BMP만 가능합니다!");
 				} else if (JSON.parse(data)['result'] == "EXCEED_SIZE") {
-					alert("사진의 크기가 너무 큽니다!(최대 100MB)");
+					alert("사진의 크기가 너무 큽니다!(최대 50MB)");
 				} else
 					alert("서버내 오류로 처리가 지연되고있습니다. 잠시 후 다시 시도해주세요");
 			},

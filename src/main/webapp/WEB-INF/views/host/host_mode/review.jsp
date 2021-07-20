@@ -14,15 +14,17 @@
 		style="font-family: fantasy; font-weight: lighter;">
 
 		<div class="page-header">
-			<h2>
-				<b>리뷰 작성률<br>${reviewRate}%</b>
-			</h2>
+			<h1><b>평점 평균 : <font color="blue">${ratingAvg}점</font></b><br>
+				<b>리뷰 작성률 : <font color="blue">${reviewRate}%</font></b>
+			</h1>
 		</div>
 		<div class="progress">
 			<div class="progress-bar progress-bar-striped" role="progressbar"
 				aria-valuenow="${reviewRate}" aria-valuemin="0" aria-valuemax="100"
 				style="width: ${reviewRate}%"></div>
 		</div>
+
+		
 		<c:if test="${empty listReview}">
 			<div class="well">
 				<h2>후기가 아직 없습니다.</h2>

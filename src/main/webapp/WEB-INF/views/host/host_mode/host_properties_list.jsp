@@ -113,7 +113,6 @@
 					url : "/host/property_delete",
 					type : "post",
 					data : {'propertyId': propertyId},
-					dataType:'text',
 					success : function(data) {
 						console.log(JSON.parse(data)['result']);
 						if (JSON.parse(data)['result'] == "OK") {
