@@ -53,7 +53,7 @@
 							이전 페이지
 						</button>
 					</div>
-					<div id="next" style="float: right; padding-right: 250px; padding-top: 20px; display:none;">
+					<div id="next" style="float: right; padding-right: 200px; padding-top: 20px; display:none;">
 						<button  type="submit" class="btn btn-lg btn-default"
 						 style="font-size: 30px; font-weight: bold;">
 							다음 페이지 <i class="bi bi-arrow-right-square-fill"></i>
@@ -63,7 +63,7 @@
 				<div id="location"></div>
 			</form>
 		</div>
-		<br> <br> <br> <br> <br> <br> <br>
+		<br><br><br><br><br>
 		<script
 			src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 		<script
