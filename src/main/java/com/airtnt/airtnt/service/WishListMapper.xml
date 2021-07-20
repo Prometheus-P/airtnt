@@ -16,38 +16,33 @@
 		) and member_id=#{member_id} and is_main='Y' or (member_id =#{member_id} and property_id is null)
 	</select>
 	<select id="getAdminWish" resultType="WishList_PropertyDTO"> 
-		Select name,wish_id,property_id,path
+		Select name,wish_id,property_id,path,is_admin
 		From wishlist_view
 		Where (property_id , wish_id ) in (
 		Select min(property_id), wish_id
 		From wishlist_view
 		Group by wish_id
-		) and is_main='Y' or (is_admin ='Y' and property_id is null)
+		) and (is_main='Y' and is_admin ='Y') or (is_admin ='Y' and property_id is null)
 	</select>
 	<select id="getWishRoom" resultType="WishList_PropertyDTO" parameterType="String"> 
 		select *
 		from 
-			(select rownum num, w.* from wishlist_room_view w)
-		where 
-			wish_id=#{wish_id}
-			and num BETWEEN 1 and 10
+			(select rownum num, w.* from wishlist_room_view w
+             where wish_id=#{wish_id})
+		where num BETWEEN 1 and 10
 	</select>
 	<select id="getMoreWishRoom" resultType="WishList_PropertyDTO" parameterType="java.util.Map"> 
 		select *
 		from 
-			(select rownum num, w.* from wishlist_room_view w)
-		where 
-			wish_id=#{wish_id}
-			and num BETWEEN #{startNum} and #{lastNum}
+			(select rownum num, w.* from wishlist_room_view w
+             where wish_id=#{wish_id})
+		where num BETWEEN #{startNum} and #{lastNum}
 	</select>
 	<update id="updateWish" parameterType="java.util.Map">
 		update wishlist set name=#{wish_name} where id =#{wish_id}
 	</update>
 	<delete id="deleteWish" parameterType="String">
 		delete from wishlist where id =#{wish_id}
-	</delete>
-	<delete id="deleteWishRoom" parameterType="String">
-		delete from wishlist_property where wish_id =#{wish_id}
 	</delete>
 	
 	<!--wishlist_property  -->
