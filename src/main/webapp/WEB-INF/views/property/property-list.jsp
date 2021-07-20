@@ -354,7 +354,7 @@
 			
 			<!-- 카카오맵 -->
 			<div class="one_half" style="margin-left:0px; width: 40%;">
-				<div id="map" style="width: 800px; height: 100%;  position: absolute;">
+				<div id="map" style="width: 800px; height: 100%;  position: fixed; z-index: 100">
 					<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=62b11c585fb341eec39dbc28ac9bad71"></script>
 					<script>
 						$(document).ready(function() {
@@ -559,41 +559,10 @@
 	</div>
 	
 	
-	<div class="wrapper row5" style="height:30%; bottom: 0; width: 100%;">
-	  <section id="ctdetails" class="hoc clear"> 
-	    ################################################################################################
-	    <ul class="nospace clear">
-	      <li class="one_quarter first">
-	        <div class="block clear">
-	          <a href="#"><i class="fas fa-phone"></i></a>
-	          <span><strong>대표 오정석</strong> +082 010-7293-4295</span>
-	          <span><strong>기획팀장 이승훈</strong> +082 010-1234-5678</span>
-	          <span><strong>연구소장 최수연</strong> +082 010-1234-5678</span>
-	          <span><strong>그냥 박하성</strong> +082 010-1234-5678</span>
-	        </div>
-	        <div class="block clear"><a href="#"><i class="fas fa-phone"></i></a> <span><strong>Give us a call:</strong> +00 (123) 456 7890</span></div>
-	      </li>
-	      <li class="one_quarter">
-	        <div class="block clear"><a href="#"><i class="fas fa-envelope"></i></a> <span><strong>Send us a mail:</strong> support@domain.com</span></div>
-	      </li>
-	      <li class="one_quarter">
-	        <div class="block clear">
-	          <a href="#"><i class="fas fa-clock"></i></a>
-	          <span>개발 시간<strong> 월 - 일(주중 무휴)</strong> 00:00am - 23:59pm</span>
-	        </div>
-	        <div class="block clear"><a href="#"><i class="fas fa-clock"></i></a> <span><strong> Mon. - Sat.:</strong> 08.00am - 18.00pm</span></div>
-	      </li>
-	      <li class="one_quarter">
-	        <div class="block clear"><a href="#"><i class="fas fa-map-marker-alt"></i></a> <span><strong>Come visit us:</strong> Directions to <a href="#">our location</a></span></div>
-	      </li>
-	    </ul>
-	    ################################################################################################
-	  </section>
-	</div>
+	<%-- <c:import url="/WEB-INF/views/bottom.jsp"/> --%>
 </div>
 	<a id="backtotop" href="#top"><i class="fas fa-chevron-up"></i></a>
 	<!-- JAVASCRIPTS -->
 	<script src="/resources/layout/scripts/jquery.backtotop.js"></script>
-	<script src="../layout/scripts/jquery.backtotop.js"></script>
 </body>
 </html>

@@ -79,7 +79,7 @@
 		</collection>
 	</resultMap>
 	
-	<select id="selectWishLists" parameterType="java.util.Map" resultMap="wishListMap">
+	<select id="selectWishLists" parameterType="String" resultMap="wishListMap">
 		select
 			wl.*,
 			wlp.property_id,
@@ -94,14 +94,6 @@
 			left join image i on p.id=i.property_id
 		
 		where
-		<choose>
-			<when test="member_id != null">
-				wl.member_id=#{member_id}
-			</when>
-			<otherwise>
-				wl.is_admin='Y'
-				and member_id='0'
-			</otherwise>
-		</choose>
+			wl.member_id=#{member_id}
 	</select>
 </mapper>

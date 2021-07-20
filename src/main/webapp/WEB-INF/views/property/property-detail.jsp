@@ -455,7 +455,41 @@ function checkParametersOnSubmit(){
         </div>
       </div>
       <div class="modal-body content" style="height: 400px">
-      <table>
+        <c:forEach var="review" items="${property.reviews}">
+          <div class="d-flex flex-column">
+            <div class="d-flex flex-row">
+              <div class="d-flex p-2 flex-column">
+                <img src="/resources/property_img/user.png" style="width:60px; height:60px;">
+              </div>
+              <div class="d-flex flex-column">
+                <div><h4>${review.writer.name}</h4></div>
+                <div><h5>${review.reg_date}</h5></div>
+              </div>
+            </div>
+            <div class="d-flex p-2 flex-row">
+              <p>${review.content}</p>
+            </div>
+          </div>
+          
+          <c:if test="${not empty review.content_host}">
+          <div class="d-flex flex-column">
+            <div class="d-flex flex-row flex-row-reverse">
+              <div class="p-2">
+                <img src="/resources/property_img/user.png" style="width:60px; height:60px;">
+              </div>
+              <div class="d-flex flex-column">
+                <div><h4>호스트 답글</h4></div>
+                <div><h5>${review.content_host_date}</h5></div>
+              </div>
+            </div>
+            <div class="d-flex p-2 flex-row flex-row-reverse">
+              <p>${review.content_host}</p>
+            </div>
+          </div>
+          </c:if>
+          
+        </c:forEach>
+      <%-- <table>
         <c:forEach var="review" items="${property.reviews}">
         	<tr>
         		<td rowspan="2" width=10%><img src="/resources/property_img/user.png" style="width:50px; height:50px;"></td>
@@ -471,19 +505,20 @@ function checkParametersOnSubmit(){
         		<td style="color:white">${review.reg_date}</td>
         	</tr>
           <c:if test="${not empty review.content_host}">
-            <div class="position-relative">
-              <div class="position-absolute end-0">
-                <h3>호스트 답글</h3>
-                <span>${review.content_host_date}</span>
-                <p>
-                  ${review.content_host}
-                </p>
-              </div>
-            </div>
+        	<tr>
+        		<td style="font-weight: bold; font-size:15px; color:black;">호스트 답글</td>
+        		<td rowspan="2" width=10%><img src="/resources/property_img/user.png" style="width:50px; height:50px;"></td>
+        	</tr>
+        	<tr>
+        		<td>${review.content_host_date}</td>
+        	</tr>
+        	<tr>
+        		<td colspan="2" style="font-size:15px; color:#544b4b;">${review.content_host}</td>
+        	</tr>
           </c:if>
           
         </c:forEach>
-        </table> 	
+        </table> --%>
       </div>
       <div class="modal-footer">
         AirTnT CopyRight ⓒ TeamBit corp. All Rights Reserved.

@@ -39,7 +39,10 @@
   <header id="header" class="hoc clear" style="padding-right: 10vh;">
     <div id="logo" class="fl_left"> 
       <!-- ################################################################################################ -->
-      <h1><a href="/index">AirTnT</a></h1>
+      <h1 style="font-size: 25px">
+        <a href="/"><img src="/resources/images/paper-plane-logo.png"
+        style="width: 30px;height: 30px;"> AirTnT</a>
+      </h1>
       <!-- ################################################################################################ -->
     </div>
     <nav id="mainav" class="fl_right" > 
