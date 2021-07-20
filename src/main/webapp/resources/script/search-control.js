@@ -70,27 +70,32 @@ function changeCount(button){
 }
 
 function modMinMaxPrice(priceTag){
+	
+	if(parseInt(priceTag.value) < 10000){
+		priceTag.value = "";
+		return;
+	}
+	
 	var minPriceTag, maxPriceTag;
 	switch(priceTag.id){
 	case "min-price":
 		minPriceTag = priceTag; // event source
 		maxPriceTag = document.querySelector("input#max-price");
-		var minPrice = parseInt(minPriceTag.value);
-		var maxPrice;
 		if(maxPriceTag.value != ""){
-			maxPrice = parseInt(maxPriceTag.value);
+			var minPrice = parseInt(minPriceTag.value);
+			var maxPrice = parseInt(maxPriceTag.value);
 			if(minPrice > maxPrice){
 				maxPriceTag.value = minPrice + 10000;
 			}
 		}
 		break;
+		
 	case "max-price":
 		minPriceTag = document.querySelector("input#min-price");
 		maxPriceTag = priceTag; // event source
-		var minPrice;
-		var maxPrice = parseInt(maxPriceTag.value);
 		if(minPriceTag.value != ""){
-			minPrice = parseInt(minPriceTag.value);
+			var minPrice = parseInt(minPriceTag.value);
+			var maxPrice = parseInt(maxPriceTag.value);
 			if(minPrice > maxPrice){
 				minPrice = maxPrice - 10000;
 				if(minPrice < 10000){
@@ -100,12 +105,6 @@ function modMinMaxPrice(priceTag){
 			minPriceTag.value = minPrice;
 		}
 		break;
-	}
-}
-
-function modUnderPrice(priceTag){
-	if(parseInt(priceTag.value) < 10000){
-		priceTag.value = 10000;
 	}
 }
 

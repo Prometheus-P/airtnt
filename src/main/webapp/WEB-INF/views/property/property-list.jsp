@@ -174,33 +174,43 @@
 							<div class="dropdown-menu list-group" aria-labelledby="dropdownMenuClickableInside-4" style="width: 500px;">
 								<div class="btn-group list-group-item" style="padding-bottom: 50px; padding-left: 20px">
 									<h3>인원</h3>
-									<input id="decrease-guest" type="button" class="btn" value="-" onclick="changeCount(this)" style="font-size: 20px;">
+									<a id="decrease-guest" type="button" class="btn" value="-" onclick="changeCount(this)" style="font-size: 20px;">
+										<img src="https://img.icons8.com/ultraviolet/48/000000/minus-math.png"
+										style="width: 30px; height: 30px"/>
+									</a>
 									<input id="guest-count" class="form-control btn" type="number"
-										    name="guestCount" value="${param.guestCount}" min="1"
+											name="guestCount" value="${param.guestCount}" min="1"
 											readonly style="width: 80px; height: 44px; font-size: 30px;">
-									<input id="increase-guest" type="button" class="btn" value="+" onclick="changeCount(this)" style="font-size: 20px;">
+									<a id="increase-guest" type="button" class="btn" value="+" onclick="changeCount(this)" style="font-size: 20px;">
+										<img src="https://img.icons8.com/ultraviolet/40/000000/plus-math.png"
+										style="width: 30px; height: 30px"/>
+									</a>
 								</div>
 								
 								<div class="btn-group list-group-item" style="padding-bottom: 50px; padding-left: 20px">
 									<h3>침대 수</h3>
-									<input id="decrease-bed" type="button" class="btn" value="-" onclick="changeCount(this)" style="font-size: 20px;">
+									<a id="decrease-bed" type="button" class="btn" onclick="changeCount(this)">
+										<img src="https://img.icons8.com/ultraviolet/48/000000/minus-math.png"
+										style="width: 30px; height: 30px"/>
+									</a>
 									<input id="bed-count" class="form-control btn" type="number"
 											name="bedCount" value="${param.bedCount}" min="1" readonly
 											style="width: 80px; height: 44px; font-size: 30px;">
-									<input id="increase-bed" type="button" class="btn" value="+" onclick="changeCount(this)" style="font-size: 20px;">
+									<a id="increase-bed" type="button" class="btn" value="+" onclick="changeCount(this)">
+										<img src="https://img.icons8.com/ultraviolet/40/000000/plus-math.png"
+										style="width: 30px; height: 30px"/>
+									</a>
 								</div>
 								<div class="list-group-item form-check form-check-inline" style="font-size: 20px;">
 									<h3>가격 범위</h3>
 									₩<input id="min-price" class="form-control form-check-label"
 											type="number" name="minPrice" value="${param.minPrice}"
-											min="10000" step="10000" placeholder="10000+"
-											oninput="modMinMaxPrice(this)" onchange="modUnderPrice(this)"
+											min="0" step="10000" placeholder="10000+" onblur="modMinMaxPrice(this)"
 											style="width: 150px; display: inline; font-size: 20px">
-									~&nbsp; 
-									₩<input id="max-price" class="form-control form-check-label" type="number"
-											name="maxPrice" value="${param.maxPrice}" min="10000"
-											step="10000" placeholder="10000+"
-											oninput="modMinMaxPrice(this)" onchange="modUnderPrice(this)"
+									~&nbsp;
+									₩<input id="max-price" class="form-control form-check-label"
+											type="number" name="maxPrice" value="${param.maxPrice}"
+											min="0" step="10000" placeholder="10000+" onblur="modMinMaxPrice(this)"
 											style="width: 150px; display: inline; font-size: 20px">
 								</div>
 								<div class="list-group-item">
@@ -256,7 +266,7 @@
 							</h5>
 							<div class="position-absolute end-0 bottom-0" style="margin-right:20px;">
 								<h4 style="color: #0d6efd">
-									<fmt:formatNumber type="currency" value="${property.price}" />
+									<fmt:formatNumber type="currency" value="${property.price}" />/박
 								</h4>
 							</div>
 						</div>

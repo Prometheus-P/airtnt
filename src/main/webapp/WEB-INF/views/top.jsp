@@ -55,16 +55,21 @@
        			<a href="/guide_home">호스트 되기</a>
        			<c:set var='isHostMode' value='false' scope='session'/>
         	</c:if>
-        	<c:if test="${sessionScope.member_mode.trim() == '2' && !sessionScope.isHostMode}">
-        		<a href="/host/host_mode">호스트 모드로 전환</a>
-        		<c:set var='isHostMode' value='true' scope='session'/>
+        	<c:if test="${sessionScope.member_mode.trim() == '2'}">
+        		<c:choose>
+        			<c:when test="${sessionScope.isHostMode}">
+        				<a href="<c:url value='/host/host_mode'/>">호스트 홈으로</a>
+        			</c:when>
+        			<c:otherwise>
+        				<a href="/host/host_mode">호스트 모드로 전환</a>
+        				<c:set var='isHostMode' value='true' scope='session'/>
+        			</c:otherwise>
+        		</c:choose>
         	</c:if>
         </c:if>
-        <c:if test='${sessionScope.isHostMode}'>
-        	<a href="<c:url value='/host/host_mode'/>">호스트 홈으로</a>
-        </c:if>
+        
         <c:if test="${!isLogin}">
-         <a href="/guide_home">호스트 되기</a>
+        	<a href="/guide_home">호스트 되기</a>
         </c:if>
         </li>
         <c:if test="${!isLogin}">
