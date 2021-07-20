@@ -44,10 +44,9 @@ function loginCheck(){
 <script type="text/javascript" src="/resources/daterangepicker/moment.min.js"></script>
 <script type="text/javascript" src="/resources/daterangepicker/moment-with-locales.js"></script>
 <script type="text/javascript" src="/resources/daterangepicker/daterangepicker.js"></script>
-<script type="text/javascript" src="/resources/script/json2.js"></script>
 <script type="text/javascript">
 const MILLISECONDS_PER_DAY = 24*60*60*1000;
-const invalidDateStrArray = ${invalidDates};	console.log(invalidDateStrArray);
+var invalidDateStrArray = ${invalidDates};	console.log(invalidDateStrArray);
 var dayCount = 0;
 
 var applyButton;
@@ -105,7 +104,6 @@ $(function(){
 	}).attr("placeholder", "기간을 입력해주세요.");
 
 	$("input#date-range").on("apply.daterangepicker", function(ev, picker) {
-		dateRangeInput.placeholder = "";
 		
 		var checkInDateStr = picker.startDate.format("YYYY-MM-DD");
 		var checkOutDateStr = picker.endDate.format("YYYY-MM-DD");
@@ -142,7 +140,7 @@ $(function(){
 			}
 		}
 		
-		$(this).val(checkInDateStr + " ~ " + checkOutDateStr);
+		this.value = checkInDateStr + " ~ " + checkOutDateStr;
 		checkInDateInput.value = checkInDateStr;
 		checkOutDateInput.value = checkOutDateStr;
 		dayCountInput.value = (checkOutDateToTime - checkInDateToTime) / MILLISECONDS_PER_DAY;
@@ -274,7 +272,7 @@ function checkParametersOnSubmit(){
 	          </p>
 	          <div class="position-absolute top-0 end-0">
 	            <p style="font-size: 30px">
-	              <fmt:formatNumber type="currency" value="${property.price}"/>
+	              <fmt:formatNumber type="currency" value="${property.price}"/>/박
 	            </p>
 	          </div>
 	        </div>
@@ -346,7 +344,8 @@ function checkParametersOnSubmit(){
             <hr>
 	        <div class="position-absolute end-0 top-50">
 	          <a href="#review-modal" class="trigger-btn btn" data-toggle="modal" style="font-size: 20px; border:1px solid black;">
-	                         후기 더보기
+	            <img src="https://img.icons8.com/fluent/48/000000/list.png"
+	            style="width: 30px; height: 30px;"/> 더보기
 	          </a>
 	        </div>
 	      </div>
@@ -455,7 +454,41 @@ function checkParametersOnSubmit(){
         </div>
       </div>
       <div class="modal-body content" style="height: 400px">
-      <table>
+        <c:forEach var="review" items="${property.reviews}">
+          <div class="d-flex flex-column">
+            <div class="d-flex flex-row">
+              <div class="d-flex p-2 flex-column">
+                <img src="/resources/property_img/user.png" style="width:60px; height:60px;">
+              </div>
+              <div class="d-flex flex-column">
+                <div><h4>${review.writer.name}</h4></div>
+                <div><h5>${review.reg_date}</h5></div>
+              </div>
+            </div>
+            <div class="d-flex p-2 flex-row">
+              <p>${review.content}</p>
+            </div>
+          </div>
+          
+          <c:if test="${not empty review.content_host}">
+          <div class="d-flex flex-column">
+            <div class="d-flex flex-row flex-row-reverse">
+              <div class="p-2">
+                <img src="/resources/property_img/user.png" style="width:60px; height:60px;">
+              </div>
+              <div class="d-flex flex-column">
+                <div><h4>호스트 답글</h4></div>
+                <div><h5>${review.content_host_date}</h5></div>
+              </div>
+            </div>
+            <div class="d-flex p-2 flex-row flex-row-reverse">
+              <p>${review.content_host}</p>
+            </div>
+          </div>
+          </c:if>
+          
+        </c:forEach>
+      <%-- <table>
         <c:forEach var="review" items="${property.reviews}">
         	<tr>
         		<td rowspan="2" width=10%><img src="/resources/property_img/user.png" style="width:50px; height:50px;"></td>
@@ -471,19 +504,20 @@ function checkParametersOnSubmit(){
         		<td style="color:white">${review.reg_date}</td>
         	</tr>
           <c:if test="${not empty review.content_host}">
-            <div class="position-relative">
-              <div class="position-absolute end-0">
-                <h3>호스트 답글</h3>
-                <span>${review.content_host_date}</span>
-                <p>
-                  ${review.content_host}
-                </p>
-              </div>
-            </div>
+        	<tr>
+        		<td style="font-weight: bold; font-size:15px; color:black;">호스트 답글</td>
+        		<td rowspan="2" width=10%><img src="/resources/property_img/user.png" style="width:50px; height:50px;"></td>
+        	</tr>
+        	<tr>
+        		<td>${review.content_host_date}</td>
+        	</tr>
+        	<tr>
+        		<td colspan="2" style="font-size:15px; color:#544b4b;">${review.content_host}</td>
+        	</tr>
           </c:if>
           
         </c:forEach>
-        </table> 	
+        </table> --%>
       </div>
       <div class="modal-footer">
         AirTnT CopyRight ⓒ TeamBit corp. All Rights Reserved.

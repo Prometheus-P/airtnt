@@ -10,7 +10,7 @@
 <body>
 <!-- wish list modal -->
 <div id="wish-modal" class="modal fade">
-  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
     <div class="modal-content">
       <div class="modal-header position-relative">
         <h3 class="modal-title">위시리스트 선택</h3>
@@ -44,8 +44,9 @@
           <div class="one_half <c:if test='${i % 2 == 1}'>first</c:if>">
             <a href="<c:url value='/wishList?member_id=${sessionScope.member_id}'/>"
             class="btn" id="add-wishList"
-            style="width: 20rem; height: 15rem; font-size: 20px; padding-top: 6rem">
-              + 위시리스트 추가
+            style="width: 25rem; height: 20rem; font-size: 20px; padding-top: 9rem">
+              <img src="https://img.icons8.com/ultraviolet/48/000000/add--v1.png"
+              style="width: 30px; height: 30px;"/> 위시리스트 추가
             </a>
           </div>
       </div>

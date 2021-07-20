@@ -55,14 +55,8 @@ public class WishListMapper {
 	}
 	
 	// 정석
-	public List<WishListDTO> selectWishLists(Map<String, Object> wishMap){
-		List<WishListDTO> wishLists = sqlSession.selectList("selectWishLists", wishMap);
-		if(wishLists == null || wishLists.size() == 0) {
-			// 내 아이디로 등록된 위시리스트가 없으면 id가 null인 상태로
-			// 관리자 추천 위시리스트를 골라옴
-			wishLists = sqlSession.selectList("selectWishLists");
-		}
-		return wishLists;
+	public List<WishListDTO> selectWishLists(String memberId){
+		return sqlSession.selectList("selectWishLists", memberId);
 	}
 
 	public int insertWishProperty(WishList_PropertyDTO dto) {
