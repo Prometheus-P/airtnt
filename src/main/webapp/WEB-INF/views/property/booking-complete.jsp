@@ -130,13 +130,13 @@ Licence URI: https://www.os-templates.com/template-terms
        <div class="content" style="font-size: 20px">
          <div>
            <ul class="list-group">
-             <li class="list-group-item">
+             <li class="list-group-item" style="font-size: 30px">
                결제정보
              </li>
              <li class="list-group-item">
-               <ul>
+               <ul style="font-size: 25px">
                  <li>결제일시 : ${transaction.regDate}</li>
-                 <li>결제금액 : ${booking.totalPrice}</li>
+                 <li>결제금액 : <fmt:formatNumber type="currency" value="${booking.totalPrice}"/></li>
                  <li>예약번호 : ${booking.bookingNumber}</li>
                </ul>
              </li>
@@ -147,7 +147,7 @@ Licence URI: https://www.os-templates.com/template-terms
              <button class="btn" type="button"
              style="width: 200px; height: 80px; font-size: 30px">확인</button>
            </a>
-	       <a href="<c:url value='/myPage'/>">
+	       <a href="<c:url value='/tour'/>">
 	         <button class="btn" type="button"
 	         style="width: 200px; height: 80px; font-size: 30px">마이페이지</button>
 	       </a>

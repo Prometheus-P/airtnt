@@ -154,27 +154,26 @@ public class PropertyController {
 		setFilter(amenityTypes, amenityTypeIdKeyArray);
 		
 		
-		// 4. 숙소 목록 중 위시리스트 등록여부 체크
-		
-		// 위시리스트
-		Map<String, Object> wishMap = new Hashtable<>();
-		String memberId = Util.getMemberId(req);
-		if(memberId != null && !memberId.trim().equals("")) {
-			wishMap.put("member_id", memberId);
-		}
-		List<WishListDTO> wishLists = wishListMapper.selectWishLists(wishMap);
-		
-		// 숙소 wished, unwished 여부 설정
-		setWish(properties, wishLists);
-		
-		
-		// 5. 최근목록 조회
+		// 4. 최근목록 조회
 		
 		// 최근목록 리스트는 LinkedList로 메모리를 배정하였으므로
 		// ArrayList로 캐스팅하지 말것
 		List<PropertyDTO> recentProperties = loadRecentProperties(req, resp);
 		setMainImage(recentProperties);
 		setRating(recentProperties);
+		
+		
+		// 5. 숙소 목록 중 위시리스트 등록여부 체크
+		
+		String memberId = Util.getMemberId(req);
+		// 위시리스트
+		List<WishListDTO> wishLists = null;
+		if(memberId != null && !memberId.trim().equals("")) {
+			wishLists = wishListMapper.selectWishLists(memberId);
+			// 숙소 wished, unwished 여부 설정
+			setWish(properties, wishLists);
+			setWish(recentProperties, wishLists);
+		}
 		
 		if(debug) {
 			System.out.println("현재 URI : " + currentURI);
@@ -197,15 +196,17 @@ public class PropertyController {
 				System.out.println("rownum : " + property.getRowNum());
 			}
 			
-			System.out.println("----- 위시리스트별 숙소 목록 -----");
-			for(WishListDTO wishList : wishLists) {
-				System.out.print("위시리스트[" + wishList.getName() + "] : ");
-				for(PropertyDTO wishProperty : wishList.getProperties()) {
-					System.out.print(wishProperty.getName() + " ");
+			if(wishLists != null) {
+				System.out.println("----- 위시리스트별 숙소 목록 -----");
+				for(WishListDTO wishList : wishLists) {
+					System.out.print("위시리스트[" + wishList.getName() + "] : ");
+					for(PropertyDTO wishProperty : wishList.getProperties()) {
+						System.out.print(wishProperty.getName() + " ");
+					}
+					System.out.println();
 				}
-				System.out.println();
+				System.out.println("---------------------------");
 			}
-			System.out.println("---------------------------");
 			
 			System.out.println("----- 숙소별 위시리스트 등록 여부 -----");
 			for(PropertyDTO property : properties) {
@@ -275,19 +276,9 @@ public class PropertyController {
 		// 달력에 비활성화를 하는 기준값
 		List<BookingDTO> bookings = bookingMapper.selectFutureBookings(propertyId);
 		// 체크인 날짜부터 체크아웃 전날까지 비활성화
-		List<String> invalidDates = getInvalidDates(bookings);
+		List<String> invalidDates = getInvalidDates(bookings);	
 		
-		// 위시리스트
-		Map<String, Object> wishMap = new Hashtable<>();
 		String memberId = Util.getMemberId(req);
-		if(memberId != null && !memberId.trim().equals("")) {
-			wishMap.put("member_id", memberId);
-		}
-		List<WishListDTO> wishLists = wishListMapper.selectWishLists(wishMap);
-		
-		// 숙소 wished, unwished 여부 설정
-		setWish(property, wishLists);
-		
 		// 로그인하지 않았다면 비회원 최근목록에 저장
 		// 로그인중이라면 회원 최근목록에 저장
 		String cookieUser = memberId;
@@ -304,6 +295,15 @@ public class PropertyController {
 		List<PropertyDTO> recentProperties = loadRecentProperties(cookie, resp);
 		setMainImage(recentProperties);
 		setRating(recentProperties);
+		
+		// 위시리스트
+		List<WishListDTO> wishLists = null;
+		if(memberId != null && !memberId.trim().equals("")) {
+			wishLists = wishListMapper.selectWishLists(memberId);
+			// 숙소 wished, unwished 여부 설정
+			setWish(property, wishLists);
+			setWish(recentProperties, wishLists);
+		}
 		
 		// 현재 보고있는 숙소는 현재 화면의 최근목록에 적용시키지 않음
 		saveRecentProperties(cookie, cookieUser, resp, propertyId);
@@ -528,12 +528,20 @@ public class PropertyController {
 	}
 	
 	public void setWish(PropertyDTO property, List<WishListDTO> wishLists) {
+		if(property == null) {
+			return;
+		}
+		
 		List<PropertyDTO> properties = new ArrayList<>();
 		properties.add(property);
 		setWish(properties, wishLists);
 	}
 	
 	public void setWish(List<PropertyDTO> properties, List<WishListDTO> wishLists) {
+		if(properties == null) {
+			return;
+		}
+		
 		outer: for(PropertyDTO property : properties) {
 			for(WishListDTO wishList : wishLists) {
 				for(PropertyDTO wishProperty : wishList.getProperties()) {
