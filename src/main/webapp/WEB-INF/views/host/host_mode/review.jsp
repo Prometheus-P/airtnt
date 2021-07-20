@@ -31,6 +31,7 @@
 			</div>
 		</c:if>
 		<c:forEach items="${listReview}" var="dto">
+		<br><br>
 			<div class="page-header">
 				<h3>
 					#${count} <br> <font style="font-style: italic;">평점
@@ -84,9 +85,11 @@
 				</div>
 			</div>
 			<c:if test="${not empty dto.content_host}">
+				
 				<div class="well">
 					<div class="col-md-6">
-						<p>${dto.content_host}</p>
+						<p><i class="bi bi-arrow-return-right"></i>&nbsp;&nbsp;&nbsp;
+						${dto.content_host}</p>
 					</div>
 					<div class="col-md-6">
 						<p style="font-size: 10px; color: gray;">작성일:
@@ -124,6 +127,7 @@
 			</div>
 		</c:forEach>
 	</div>
+	<br><br><br>
 	<script>
 		$("#reviewHtmlAjax").load(
 				function() {

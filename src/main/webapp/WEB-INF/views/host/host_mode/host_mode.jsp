@@ -167,7 +167,7 @@
 	                url : "/host/bookConfirm",
 	                data : {'bookingId' : bookingId, 'checkOutDate' : checkOutDate},
 	                success : function(text){
-	                    if (JSON.parse(data)['result'] == "OK") {
+	                    if (JSON.parse(text)['result'] == "OK") {
 							alert("예약을 승인했습니다! 게스트와 email로 연락해보세요!");
 							$('#close').click();
 			                location.reload(true);

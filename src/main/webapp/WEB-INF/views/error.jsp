@@ -106,9 +106,9 @@ h1 {
 //Here are the different messages we'll use for creating the 500 displayable message
 const messages = [
   ['o(ㅠ~ㅠ)o', ':(' , '(ToT)', '(ㅠ_ㅠ)','o(T^To)', ':<'],
-  ['아마', '그게..', '아마', '저희가 생각엔'],
+  ['아마', '그게..', '아마', '저희 생각엔'],
   ['누가 실수 했나봐요.', '서버에 문제가 생긴 것 같네요.', '미처 확인하지 못한 오류가 있었나봐요.', '실수가 있었나봐요.'],
-  ['죄송합니다.', '너른 양해 부탁드립니다.', '조금만 기다려주세요.', '더 노력하겠습니다.']
+  ['죄송합니다.', '너른 양해 부탁드립니다.', '조금만 기다려주세요.', '더 노력하겠습니다ㅠ']
 ];
 
 // These are the different elements we'll be populating. They are in the same order as the messages array

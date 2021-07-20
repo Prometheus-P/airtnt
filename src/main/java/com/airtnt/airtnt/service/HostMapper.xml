@@ -130,7 +130,7 @@
 		FROM guide
 		WHERE id = #{id}
 	</select>
-	
+
 	<select id="listProperty" parameterType="String" resultMap="getPropertyMap">
 		SELECT
 		p.id, p.name,
@@ -164,18 +164,17 @@
 			am.property_id AS amenity_property_id
 			FROM amenity_type at
 			LEFT JOIN amenity am
-				ON am.property_id = at.id
+				ON am.amenity_type_id = at.id
 			) a
 			ON a.amenity_property_id = p.id
 		WHERE p.host_id = #{hostId}
 	</select>
 	
-
 	<insert id="insertProperty" parameterType="PropertyInformationDTO">
 		INSERT INTO property
 		(id, name, host_id, property_desc, property_type_id,
 		sub_property_type_id, room_type_id, address, price, bed_count, max_guest, latitude, longitude)
-		VALUES(seq_property_id.nextval,#{name}, #{hostId}, #{description},
+		VALUES(#{propertyId},#{name}, #{hostId}, #{description},
 		#{propertyTypeId}, #{subPropertyTypeId}, #{roomTypeId}, #{address},
 		#{price}, #{bedCount}, #{maxGuest}, #{latitude}, #{longitude})<!-- modeDate==null -->
 	</insert>
@@ -221,6 +220,8 @@
 		mod_date AS modDate
 		FROM property_type ORDER BY id
 	</select>
+	
+	
 
 	<select id="listBooking" parameterType="String" resultType="BookingDTO">
 		SELECT
@@ -431,12 +432,12 @@
 		AS reviewCount
 		FROM review
 		WHERE property_id = #{propertyId}
-		AND sysdate > reg_date) r,
+		AND sysdate >= reg_date) r,
 		(SELECT NVL(count(*),1)
 		AS bookingCount
 		FROM booking
 		WHERE property_id = #{propertyId}
-		AND sysdate > reg_date) b,
+		AND sysdate >= check_out_date) b,
 		(SELECT
 		NVL(AVG(rating), 0) AS avg
 		FROM review 
@@ -450,7 +451,7 @@
 	
 	<update id="payExptDateConfirm" parameterType="java.util.Map">
 		UPDATE transaction 
-		SET pay_expt_date = TO_DATE(#{payExptDate}, 'YYYY-MM-DD') 
+		SET pay_expt_date = #{payExptDate}
 		WHERE booking_id = #{bookingId}
 	</update>
 	

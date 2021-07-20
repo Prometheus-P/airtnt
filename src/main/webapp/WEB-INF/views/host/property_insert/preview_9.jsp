@@ -89,7 +89,7 @@ input[type=checkbox] {
     ctx.drawImage(img, 0, 0);
     var dataURL = canvas.toDataURL("image/png");
     return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
-}
+	}
 	$('#mainBody').load(function (){
 		var dataImage = localStorage.getItem('imgData');
 		bannerImg = document.getElementById('tableBanner');

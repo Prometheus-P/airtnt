@@ -205,7 +205,6 @@ public class HostController {
 		long sizeSum = 0;
 		String memberId = propertyBean().getHostId();
 		List<ImageDTO> listImgUrl = new ArrayList<>();
-		// Map<InputStream, File> imgMap = new Hashtable<>();
 		List<InputStream> listInputStream = new ArrayList<>();
 		List<File> listFile = new ArrayList<>();
 		// 하성
@@ -232,12 +231,13 @@ public class HostController {
 					}
 
 					sizeSum += file.getSize(); // 사진의 총 사이즈 검사
-					if (sizeSum >= 50 * 1024 * 1024) { // 50MB
+					if (sizeSum >= 20 * 1024 * 1024) { // 50MB
 						return strResult = "{ \"result\":\"EXCEED_SIZE\" }";
 					}
-					// 1. upPath으로 저장과 삭제
-					String nameForShow = "C:\\Users\\Haseong\\git\\airtnt\\src\\main\\webapp\\resources\\files\\property\\"
-							+ savedFileName;
+					// 1. upPath으로 저장과 삭제 : 지워짐. BUT LOAD를 해도 사진이 안보임.
+					//"C:\\Users\\Haseong\\git\\airtnt\\src\\main\\webapp\\resources\\files\\property\\
+					//2. 
+					String nameForShow = "/resources/files/property/"	+ savedFileName;
 					File targetFile = new File(upPath + savedFileName);
 					InputStream fileStream = file.getInputStream();
 					listInputStream.add(fileStream);
@@ -307,8 +307,10 @@ public class HostController {
 	@RequestMapping("host/property_save")
 	public String property_save(HttpSession session) {
 		PropertyInformationDTO dtoPro = propertyBean();
-		int propertyOk = hostMapper.insertProperty(dtoPro); // 1. property입력
-		int propertyId = hostMapper.getPropertyId(); // 2. propertyId 가져오기
+
+		int propertyId = hostMapper.getPropertyId(); // 1. propertyId 가져오기
+		dtoPro.setPropertyId(propertyId);
+		int propertyOk = hostMapper.insertProperty(dtoPro); // 2. property입력
 		for (AmenityTypeDTO dto : dtoPro.getListAmenityType()) {
 			dto.setPropertyId(propertyId);
 		}
@@ -375,6 +377,7 @@ public class HostController {
 		ModelAndView mav = new ModelAndView("/host/host_mode/host_mode");
 		mav.addObject("listBooking", listBooking);
 		mav.addObject("today", today);
+		clearBean();
 		return mav;
 	}
 
@@ -495,12 +498,12 @@ public class HostController {
 		return new ModelAndView("/host/host_mode/update_photos", "listImage", listImage);
 	}
 
-	protected int imageDelete(Integer propertyId) {
+	protected int imageDelete(HttpServletRequest req, Integer propertyId) {
 		List<ImageDTO> listPath = hostMapper.getPropertyImage(propertyId);
 		int count = 0;
 		for (ImageDTO dto : listPath) {
 			System.out.println("저장 된 사진 경로: " + dto.getPath());
-			File file = new File(dto.getPath());
+			File file = new File(req.getServletContext().getRealPath("/")+dto.getPath());
 
 			if (file.exists() == true) {
 				file.delete();
@@ -512,13 +515,13 @@ public class HostController {
 
 	@ResponseBody
 	@RequestMapping("host/property_delete")
-	public String delete(@RequestParam("propertyId") Integer propertyId) {
-		int count = imageDelete(propertyId);
+	public String delete(@RequestParam("propertyId") Integer propertyId, HttpServletRequest req) {
+		int count = imageDelete(req, propertyId);
 		System.out.println("지워진 사진 수: " + count);
 		int res1 = hostMapper.deleteProperty(propertyId);
 		int res2 = hostMapper.propertyBookingDelete(propertyId);
 		System.out.println("" + res2);
-		if (res1 > 0 && res2 > 0) {
+		if (res1 > 0 && res2 >= 0) {
 			return "{ \"result\":\"OK\" }";
 		}
 		return "{ \"result\":\"FAIL\" }";
