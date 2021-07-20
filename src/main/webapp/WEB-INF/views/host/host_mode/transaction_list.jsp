@@ -11,13 +11,19 @@
 <title>대금 수령 내역</title>
 <meta charset="UTF-8" />
 </head>
-<%@ include file="top.jsp"%>
+<%@ include file="host_mode_top.jsp"%>
 <body>
-
+	
 	<div class="container theme-showcase" role="main">
-		<div class="col-md-6" style="width: 80%">
+	<br> <br> <br>
+		<div class="jumbotron" style="font-style: italic; font-weight: bold;">
+				<h1 >대금 목록</h1>
+				<p>
+					수령완료 된 대금과 수령 예정인 대금을 확인해보세요!
+				</p>
+		</div>
+		<div class="col-md-6" style="width: 95%">
 			<div class="page-header">
-				<br> <br> <br>
 				<h1 style="font-style: italic; font-weight: bold;">대금수령 완료</h1>
 			</div>
 			<table id="csvtable" class="table table-striped"
@@ -35,7 +41,7 @@
 				</thead>
 				<tbody>
 					<c:forEach var="dto" items="${listTransaction}">
-						<c:if test="${dto.checkOutDate.before(today)}">
+						<c:if test="${dto.payExptDate.before(today)}"><!-- 돈 받는날 < 오늘 -->
 							<c:set var="count_1" value="${count_1+1}" />
 							<tr>
 								<td>${count_1}</td>
@@ -45,7 +51,7 @@
 								<td>₩${dto.totalPrice * dto.siteFee}</td>
 								<td>₩${dto.totalPrice - dto.totalPrice * dto.siteFee}</td>
 								<td>${dto.payExptDate}</td>
-								<c:if test="${Character.compare(dto.isRefund, y) == 0}">
+								<c:if test="${Character.compare(dto.isRefund, 'Y') == 0}">
 									<td>*환불 되었습니다</td>
 									<td>환불일: ${dto.modDate}</td>
 								</c:if>
@@ -78,7 +84,7 @@
 			</div>
 		</div>
 
-		<div class="col-md-6" style="width: 80%">
+		<div class="col-md-6" style="width: 95%">
 			<div class="page-header">
 				<br> <br> <br>
 				<h1 style="font-style: italic; font-weight: bold;">대금 수령 예정 내역</h1>

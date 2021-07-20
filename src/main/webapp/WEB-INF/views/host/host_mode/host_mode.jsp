@@ -20,7 +20,7 @@
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 </head>
 <body role="document">
-	<%@include file="top.jsp"%>
+	<%@include file="host_mode_top.jsp"%>
 	<br>
 	<br>
 	<br>

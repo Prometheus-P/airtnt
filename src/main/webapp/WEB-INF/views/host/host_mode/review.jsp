@@ -6,7 +6,7 @@
 <head>
 <meta charset="UTF-8">
 <title>리뷰 목록 가져오기</title>
-<c:import url="top.jsp"></c:import>
+<c:import url="host_mode_top.jsp"></c:import>
 </head>
 <body>
 	<c:set var="count" value="${listReview.size()}" />

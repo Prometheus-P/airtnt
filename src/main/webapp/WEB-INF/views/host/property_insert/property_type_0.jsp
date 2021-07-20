@@ -8,7 +8,7 @@
 </head>
 <body bgcolor="#D1E6E5">
 	<%@include file="../../top.jsp"%>
-	<c:import url="top.jsp"/>
+	<c:import url="insert_top.jsp"/>
 	<div id="mainBody" class="container theme-showcase" role="main">
 		<div class="page-header">
 			<h1 style="font-style: italic; font-weight: bold; font-family: fantasy;">
