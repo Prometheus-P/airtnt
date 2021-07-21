@@ -13,26 +13,27 @@
 	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 <script
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+	<style>
+</style>
 </head>
 <body>
+<%@include file="../property_insert/insert_top.jsp" %>
 <%@include file="../../top.jsp"%>
 	<div class="container">
 
 		<form name="dataForm" id="dataForm" onsubmit="return registerAction()">
 			<div class="page-header"
 				style="font-style: italic; font-family: fantasy;">
-				<h1 style="font-weight: bold;">추가로 등록할 사진이 있으신가요?</h1>
-				<button type="submit" class="btn btn-lg btn-success">전송</button>
+				<h1 style="font-weight: bold;">추가 하실 사진이 더 있으신가요?</h1>
 			</div>
 			<div class="data_file_txt" id="data_file_txt" style="margin: 40px;">
 				<div class="row">
-					<h3>첨부 파일</h3>
-					<!-- <div class="col-sm-4">
-						<div id="image_container"></div>
-						<div class="grid-item grid-item--width2">...</div>
-  						<div class="grid-item">...</div>
- 							 ...
-					</div> -->
+				<div class="col-sm-4">
+					<c:forEach items="${listImage}" var="image">
+						
+					</c:forEach>
+				</div>
+					<h3>사진 추가</h3>
 					<div class="col-sm-4">
 						<div id="articlefileChange" style="font-family: fantasy;"></div>
 					
@@ -45,12 +46,27 @@
 						<input id="input_file" multiple="multiple" type="file"
 							style="display: none;"> <br>
 						<span style="font-size: 10px; color: gray;"> ※숙소 사진은 최대
-							10개까지 등록이 가능합니다.<br> ※파일명 클릭 시 삭제 됩니다.
+							10개까지 등록이 가능합니다.<br> ※클릭 시 삭제 됩니다.
 						</span>
 					</div>
 				</div>
 			</div>
-		</form>
+		<br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+		<footer style="font-size: 30px; font-weight: bold;">
+					<div style="float: left; padding-left: 250px; padding-top: 20px">
+						<button type="button" class="btn btn-lg btn-default"
+							onclick="previous()" style="font-size: 30px; font-weight: bold;">
+							이전 페이지
+						</button>
+					</div>
+					<div id="next" style="float: right; padding-right: 250px; padding-top: 20px;">
+						<button  type="submit" class="btn btn-lg btn-default"
+						 style="font-size: 30px; font-weight: bold;">
+							사진 저장
+						</button>
+					</div>
+				</footer>
+				</form>
 	</div>
 
 
@@ -94,6 +110,18 @@ function fileCheck(e) {
     } else {
     	 fileCount = fileCount + filesArr.length;
     }
+    //확장자 확인
+    filesArr.forEach(function (f){
+    	var filesystemName = f.name.split(".");
+	   	if(filesystemName.length > 1) {
+	    	var ex = filesystemName[filesystemName.length - 1];
+   	 		var extension = ex.toLowerCase();
+  	  		if(extension != "jpg" && extension != "gif" && extension != "bmp" && extension != "png") {
+  				alert("사진의 확장자는 JPG, PNG, GIF, BMP만 가능합니다!");
+  				return;
+  	 		}
+    	}
+    });
     
     // 각각의 파일 배열담기 및 기타
     filesArr.forEach(function (f) {
@@ -103,9 +131,13 @@ function fileCheck(e) {
         $('#articlefileChange').append(
        		'<div id="file' + fileNum + '" onclick="fileDelete(\'file' + fileNum + '\')">'
        		+ '<font style="font-size:12px">' + f.name + '</font>'  
-       		+ '<img src="dash-circle.svg" style="width:20px; height:auto; vertical-align: middle; cursor: pointer;"/>' 
+       		+ '<div id="img'+fileNum+'"></div>' 
        		+ '<div/>'
 		);
+        var img = document.createElement("img");
+        img.setAttribute("src", e.target.result);
+        img.setAttribute("class", "img-thumbnail");
+        document.querySelector("div#img"+fileNum).appendChild(img);
         fileNum ++;
       };
       reader.readAsDataURL(f);
@@ -131,12 +163,17 @@ function fileDelete(fileNum){
 		
 	var form = $("form")[0];        
  	var formData = new FormData(form);
+ 	//var count=0;
 		for (var x = 0; x < content_files.length; x++) {
 			// 삭제 안한것만 담아 준다. 
 			if(!content_files[x].is_delete){
 				 formData.append("article_file", content_files[x]);
+				 //localStorage.setItem("image"+count, content_files[x].result);
+				 //count++;
 			}
+			
 		}
+		//localStroage.setItem("length", count);
    /*
    * 파일업로드 multiple ajax처리
    */    /* host/file-upload */
@@ -150,14 +187,17 @@ function fileDelete(fileNum){
 			success : function(data) {
 				if (JSON.parse(data)['result'] == "OK") {
 					alert("사진업로드 성공");
-					window.location.href="/host/host_properties_list";
+					window.location.href="/host/photos_upload";
 					return true;
 				} else if (JSON.parse(data)['result'] == "NO_IMAGE") {
-					alert("최소 한장의 사진을 등록해주세요!");
+					if(window.confirm("사진 등록 없이 숙소목록으로 이동할까요?")){
+						window.location.href="/host/photos_upload";
+						return true;
+					}
 				} else if (JSON.parse(data)['result'] == "UNACCEPTED_EXTENSION") {
 					alert("사진의 확장자는 JPG, PNG, GIF, BMP만 가능합니다!");
 				} else if (JSON.parse(data)['result'] == "EXCEED_SIZE") {
-					alert("사진의 크기가 너무 큽니다!(최대 500MB)");
+					alert("사진의 크기가 너무 큽니다!(최대 100MB)");
 				} else
 					alert("서버내 오류로 처리가 지연되고있습니다. 잠시 후 다시 시도해주세요");
 			},
@@ -169,6 +209,10 @@ function fileDelete(fileNum){
    	    });
    	    return false;
 	}
+	function previous(){
+		window.history.back();
+	}	
+
 </script>
 </body>
 </html>

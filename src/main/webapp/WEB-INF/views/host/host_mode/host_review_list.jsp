@@ -5,11 +5,7 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 <title>리뷰 목록</title>
-<meta charset="UTF-8" />
-<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 </head>
 <%@ include file="host_mode_top.jsp"%>
 <body>
@@ -22,7 +18,7 @@
 				<h1 >숙소 별 리뷰 목록</h1>
 				<p>
 					게스트가 숙소에 후기를 남겼나요??<br>
-					감사 인사로 마음을 전달해보아요!<br>
+					감사 인사로 마음을 전달해봐요!<br>
 					숙소를 클릭하면 리뷰 목록이 나옵니다.
 				</p>
 				</div>
@@ -81,8 +77,8 @@
 				success : function(data) {
 							if (JSON.parse(data)['result'] == "OK") {
 								alert("답변 전달 성공!");
-								return;
 								location.reload(true);
+								return;
 							}else{
 								alert("답변 전달 실패!");
 								return;

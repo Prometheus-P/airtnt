@@ -65,6 +65,11 @@ public class HostMapper {
 		int res = sqlSession.delete("deleteProperty", propertyId);
 		return res;
 	}
+	
+	public int propertyBookingDelete(Integer propertyId) {
+		int res = sqlSession.delete("propertyBookingDelete", propertyId);
+		return res;
+	}
 
 	public int updateProperty(PropertyDTO dto) {
 		int res = sqlSession.update("updateProperty", dto);
@@ -76,8 +81,8 @@ public class HostMapper {
 		return res;
 	}
 
-	public int getPropertyId(String hostId) {
-		int propertyId = sqlSession.selectOne("getPropertyId", hostId);
+	public int getPropertyId() {
+		int propertyId = sqlSession.selectOne("getPropertyId");
 		return propertyId;
 	}
 
@@ -132,9 +137,9 @@ public class HostMapper {
 		return list;
 	}
 
-	public List<Map<String, Integer>> getReviewWritingRate(Integer propertyId) {
-		List<Map<String, Integer>> listMap = sqlSession.selectList("getReviewWritingRate", propertyId);
-		return listMap;
+	public Map<String, Object> getReviewWritingRate(Integer propertyId) {
+		Map<String, Object> map = sqlSession.selectOne("getReviewWritingRate", propertyId);
+		return map;
 	}
 
 	public int bookConfirm(int bookingId) {
@@ -159,6 +164,11 @@ public class HostMapper {
 
 	public List<ImageDTO> getPropertyImage(int propertyId) {
 		List<ImageDTO> list = sqlSession.selectList("getPropertyImage", propertyId);
+		return list;
+	}
+
+	public List<ImageDTO> getListPropertyImage(String hostId) {
+		List<ImageDTO> list = sqlSession.selectList("getListPropertyImage", hostId);
 		return list;
 	}
 

@@ -14,21 +14,24 @@
 		style="font-family: fantasy; font-weight: lighter;">
 
 		<div class="page-header">
-			<h2>
-				<b>리뷰 작성률<br>${reviewRate}%</b>
-			</h2>
+			<h1><b>평점 평균 : <font color="blue">${ratingAvg}점</font></b><br>
+				<b>리뷰 작성률 : <font color="blue">${reviewRate}%</font></b>
+			</h1>
 		</div>
 		<div class="progress">
 			<div class="progress-bar progress-bar-striped" role="progressbar"
 				aria-valuenow="${reviewRate}" aria-valuemin="0" aria-valuemax="100"
 				style="width: ${reviewRate}%"></div>
 		</div>
+
+		
 		<c:if test="${empty listReview}">
 			<div class="well">
 				<h2>후기가 아직 없습니다.</h2>
 			</div>
 		</c:if>
 		<c:forEach items="${listReview}" var="dto">
+		<br><br>
 			<div class="page-header">
 				<h3>
 					#${count} <br> <font style="font-style: italic;">평점
@@ -82,9 +85,11 @@
 				</div>
 			</div>
 			<c:if test="${not empty dto.content_host}">
+				
 				<div class="well">
 					<div class="col-md-6">
-						<p>${dto.content_host}</p>
+						<p><i class="bi bi-arrow-return-right"></i>&nbsp;&nbsp;&nbsp;
+						${dto.content_host}</p>
 					</div>
 					<div class="col-md-6">
 						<p style="font-size: 10px; color: gray;">작성일:
@@ -122,6 +127,7 @@
 			</div>
 		</c:forEach>
 	</div>
+	<br><br><br>
 	<script>
 		$("#reviewHtmlAjax").load(
 				function() {

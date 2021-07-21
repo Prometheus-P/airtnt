@@ -15,6 +15,7 @@ public class PropertyInformationDTO implements Serializable {
 	private List<AmenityTypeDTO> listAmenityType;
 
 	// 저장을 위한 정보
+	private Integer propertyId;
 	private String hostId;
 	private Integer propertyTypeId;
 	private String propertyTypeName;
@@ -69,6 +70,14 @@ public class PropertyInformationDTO implements Serializable {
 	}
 
 	// 저장을 위해
+
+	public Integer getPropertyId() {
+		return propertyId;
+	}
+
+	public void setPropertyId(Integer propertyId) {
+		this.propertyId = propertyId;
+	}
 
 	public String getHostId() {
 		return hostId;

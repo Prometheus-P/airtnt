@@ -16,8 +16,6 @@ zoom: 2.0;
 <body>
 	<%@include file="insert_top.jsp" %>
 	<%@include file="../../top.jsp"%>
-	<!-- <form name="f" method="post"
-		action="<c:url value='/host/property_detail_1'/>" onsubmit="send()"> -->
 		<div id="mainBody" class="container theme-showcase" role="main">
 			<div class="page-header">
 				<h1 style="font-style: italic; font-weight: bold; font-family: fantasy;">
@@ -50,7 +48,7 @@ zoom: 2.0;
 			
 			</form>
 		</div>
-		<br><br><br><br>
+		<br><br><br><br><br><br><br><br><br><br><br><br>
 	<script>
 	$('.checkbox').click(function(){
 		document.getElementById('next').style.display="block";

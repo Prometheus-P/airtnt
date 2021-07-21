@@ -40,6 +40,5 @@ footer{
 </style>
 </head>
 <body>
-
 </body>
 </html>
