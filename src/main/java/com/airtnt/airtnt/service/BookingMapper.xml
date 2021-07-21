@@ -35,7 +35,9 @@
 	<select id="getPlanedBooking" resultType="BookingDTO" parameterType="String"> 
 		select *
 		from booking_view
-		where guest_id=#{member_id} and check_out_date > sysdate
+		where guest_id=#{member_id} 
+			and check_in_date > sysdate 
+			and confirm_date is not null
 	</select>
 	<select id="getPreBooking" resultType="BookingDTO" parameterType="String"> 
 		select *
@@ -45,7 +47,7 @@
 			and sysdate > check_out_date
 			and num BETWEEN 1 and 10
 	</select>
-	<select id="getToWriteBooking" resultType="BookingDTO" parameterType="String"> 
+	<select id="getToWriteReview" resultType="BookingDTO" parameterType="String"> 
 		select *
 		from (
             select * 

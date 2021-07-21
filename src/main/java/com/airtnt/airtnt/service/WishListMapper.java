@@ -53,11 +53,6 @@ public class WishListMapper {
 		int res = sqlSession.delete("deleteWish", wish_id);
 		return res;
 	}
-	public int deleteWishRoom(String wish_id) {
-		int res = sqlSession.delete("deleteWishRoom", wish_id);
-		return res;
-	}
-	
 	
 	// 정석
 	public List<WishListDTO> selectWishLists(String memberId){

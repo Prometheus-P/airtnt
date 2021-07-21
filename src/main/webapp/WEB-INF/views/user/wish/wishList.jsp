@@ -15,7 +15,7 @@
 <div class="hoc container clear">
    <div>
       <span class="bold fl_left" style="font-size: 4vh; margin-right:50vh;">위시리스트</span>
-      <span><a id="newWish" class="btn btn-outline-primary fl_right" onclick="newWish()" href="" role="button" data-toggle="modal">새로운 위시리스트 만들기</a></span>
+      <span><a id="newWish" class="btn btn-outline-primary fl_right" onclick="newWish()" href="" role="button" data-toggle="modal" style="border: 1px solid black;">새로운 위시리스트 만들기</a></span>
    </div>
   <main> 
     <!-- main body -->
@@ -28,7 +28,7 @@
               <li class="one_third">
                  <div class="text-center">
                     <c:if test="${not empty dto.path}">
-                       <a href="inWishList?wish_id=${dto.wish_id}&wish_name=${dto.name}"><img src="${dto.path}" style="object-fit:contain; width:300px; height:200px;"></a>
+                       <a href="inWishList?wish_id=${dto.wish_id}&wish_name=${dto.name}"><img src="${dto.path}" style="object-fit:contain; width:250px; height:200px;"></a>
                     </c:if>
                     <c:if test="${empty dto.path}">
                     <a href="inWishList?wish_id=${dto.wish_id}&wish_name=${dto.name}" style="color:black">
