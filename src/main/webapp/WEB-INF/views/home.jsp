@@ -125,21 +125,21 @@
       </div>
       <ul class="nospace group grid-3">
         <li class="one_third">
-          <article><a href="/property/search"><i class="fas fa-bicycle"></i>
+          <article><a href="/property/search?pageNum=1&addressKey=서울&latitude=37.566826004661&longitude=126.978652258309"><i class="fas fa-bicycle"></i>
             <p class="bold fs-2">서울</p>
             <img style="width:300px; height:150px; object-fit:cover;" src="/resources/files/home/seoul.jpg" class="img-thumbnail" alt="...">
             </a>
           </article>
         </li>
         <li class="one_third">
-          <article><a href="/property/search"><i class="fas fa-bus"></i>
+          <article><a href="/property/search?pageNum=1&addressKey=부산&latitude=35.1798200522868&longitude=129.075087492149"><i class="fas fa-bus"></i>
             <p class="bold fs-2">부산</p>
             <img style="width:300px; height:150px; object-fit:cover;" src="/resources/files/home/busan.jpg" class="img-thumbnail" alt="...">
           	</a>
           </article>
         </li>
         <li class="one_third">
-          <article><a href="/property/search"><i class="fas fa-car"></i>
+          <article><a href="/property/search?pageNum=1&addressKey=대구&latitude=35.8713802646197&longitude=128.601805491072"><i class="fas fa-car"></i>
             <p class="bold fs-2">대구</p>
             <img style="width:300px; height:150px; object-fit:cover;" src="/resources/files/home/daegu.jpg" class="img-thumbnail" alt="...">
           	</a>
