@@ -20,17 +20,17 @@
 		</div>
 		<form name="f" method="post" action="<c:url value='/host/preview_9'/>"
 			onsubmit="return check()">
-			<div style="padding-bottom: 50px; padding-left: 20px; font-weight: bold; sfont-family: fantasy;">
+			<div style="padding-bottom: 50px; padding-left: 20px; font-weight: bold; font-family: fantasy;">
 				<input id="decrease-price" type="button" class="btn" value="-"
-					onclick="changePrice(this)" style="font-size: 50px;">
-					
-				<font size="60px">₩</font>
+					onclick="changePrice(this)" style="font-size: 60px;">
+					&nbsp;&nbsp;&nbsp;&nbsp;
+				<font size="50px">₩</font>
 				<input id="price" class="form-control btn" type="number" 
 					name="price" value="${param.price}" min="10000"
 					style="width: 600px; height: 100px; font-size: 60px;border: thin; border-color: aqua;" required>
-					
+					&nbsp;&nbsp;&nbsp;&nbsp;
 				<input id="increase-price" type="button" class="btn" value="+"
-					onclick="changePrice(this)" style="font-size: 50px;">
+					onclick="changePrice(this)" style="font-size: 60px;">
 			</div>
 				<footer style="font-size: 30px; font-weight: bold;">
 					<div style="float: left; padding-left: 250px; padding-top: 20px">

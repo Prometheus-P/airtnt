@@ -29,12 +29,6 @@
 			<div class="data_file_txt" id="data_file_txt" style="margin: 40px;">
 				<div class="row">
 					<h3>사진 추가</h3>
-					<!-- <div class="col-sm-4">
-						<div id="image_container"></div>
-						<div class="grid-item grid-item--width2">...</div>
-  						<div class="grid-item">...</div>
- 							 ...
-					</div> -->
 					<div class="col-sm-4">
 						<div id="articlefileChange" style="font-family: fantasy;"></div>
 					
@@ -112,6 +106,12 @@ function fileCheck(e) {
     } else {
     	 fileCount = fileCount + filesArr.length;
     }
+    //용량 검사
+    if(files[0].size > 2*1024*1024 -1){
+    	alert("사진 용량이 너무 큽니다!(최대 용량 2MB)");
+    	return false;
+	}
+    
     //확장자 확인
     filesArr.forEach(function (f){
     	var filesystemName = f.name.split(".");
@@ -166,16 +166,22 @@ function fileDelete(fileNum){
 	var form = $("form")[0];        
  	var formData = new FormData(form);
  	//var count=0;
+ 	var size=0;
 		for (var x = 0; x < content_files.length; x++) {
 			// 삭제 안한것만 담아 준다. 
 			if(!content_files[x].is_delete){
+				//if(count==0){
+					// localStorage.setItem("image", content_files[x].result);
+					// count++;
+				//}
 				 formData.append("article_file", content_files[x]);
-				 //localStorage.setItem("image"+count, content_files[x].result);
-				 //count++;
+				 size = size + content_files[x].size;
+					if(size > 2*1024*1024 -1){
+				    	alert("사진 용량이 너무 큽니다!(최대 용량 2MB)");
+				    	return false;
+					}
 			}
-			
 		}
-		//localStroage.setItem("length", count);
    /*
    * 파일업로드 multiple ajax처리
    */    /* host/file-upload */
@@ -196,7 +202,7 @@ function fileDelete(fileNum){
 				} else if (JSON.parse(data)['result'] == "UNACCEPTED_EXTENSION") {
 					alert("사진의 확장자는 JPG, PNG, GIF, BMP만 가능합니다!");
 				} else if (JSON.parse(data)['result'] == "EXCEED_SIZE") {
-					alert("사진의 크기가 너무 큽니다!(최대 100MB)");
+					alert("사진의 크기가 너무 큽니다!(최대 2MB)");
 				} else
 					alert("서버내 오류로 처리가 지연되고있습니다. 잠시 후 다시 시도해주세요");
 			},

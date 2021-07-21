@@ -41,7 +41,7 @@
 				</thead>
 				<tbody>
 					<c:forEach var="dto" items="${listTransaction}">
-						<c:if test="${dto.payExptDate.before(today)}"><!-- 돈 받는날 < 오늘 -->
+						<c:if test="${dto.payExptDate.before(today) && dto.propertyId !=null}"><!-- 돈 받는날 < 오늘 -->
 							<c:set var="count_1" value="${count_1+1}" />
 							<tr>
 								<td>${count_1}</td>
@@ -56,10 +56,11 @@
 									<td>환불일: ${dto.modDate}</td>
 								</c:if>
 							</tr>
+							<c:if test="${Character.compare(dto.isRefund, 'N') == 0 && dto.payExptDate.before(today) && dto.propertyId !=null}">
+								<c:set var="total"
+								value="${total + dto.totalPrice - dto.totalPrice * dto.siteFee}" />
+							</c:if>
 						</c:if>
-
-						<c:set var="total"
-							value="${total + dto.totalPrice - dto.totalPrice * dto.siteFee}" />
 					</c:forEach>
 				</tbody>
 			</table>
@@ -106,9 +107,9 @@
 							<td rowspan="5">예정 내역이 없습니다.</td>
 						</c:if>
 
-						<c:forEach var="dto" items="${listTransaction}">
+						<c:forEach var="dto" items="${listTransaction }">
 							<!--  confirmDate<  today <checkOutDate -->
-							<c:if test="${dto.confirmDate!=null && dto.payExptDate != null}">
+							<c:if test="${dto.confirmDate!=null && dto.payExptDate != null && dto.propertyId !=null}">
 								<c:if
 									test="${dto.confirmDate.before(today) && today.before(dto.payExptDate)}">
 									<c:set var="count_2" value="${count_2+1}" />

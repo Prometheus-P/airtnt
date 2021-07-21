@@ -12,7 +12,6 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-<script src="/resources/files/sockjs.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
 </head>
 <body>
@@ -40,21 +39,21 @@
 					<li>
 					<a href="<c:url value='/host/transaction_list'/>">대금수령 내역</a></li>
 					<li>
+					<a href="<c:url value='/host/host_review_list'/>">리뷰</a></li>
+					<!-- <li>
 					<ul class="nav nav-pills" role="tablist">
 						<li role="presentation">
 						<a href="javascript:chat()" >채팅 <span class="badge">3</span></a>
 						</li>
 							
 					</ul>
-					</li >
+					</li > -->
 					<li class="dropdown" style="font-size: 30px ;font:bold;">
 					<a id="drop4" href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">
 					메뉴 
 					<span class="caret"></span>
 					</a>
 						<ul class="dropdown-menu" style="font-size: 20px; font-family:fantasy;">
-							<li>
-							<a href="<c:url value='/host/host_review_list'/>">리뷰</a></li>
 							<li>
 							<a href="<c:url value='/host/total_earning'/>">총 수입</a></li>
 							<li>
@@ -66,62 +65,18 @@
 							게스트 모드로 전환
 							</a></li>
 							<li><a href="<c:url value='/myPage'/>">계정</a></li>
-							<li class="dropdown-header">메롱</li>
+							<!-- <li class="dropdown-header">메롱</li> -->
 						</ul></li>
 				</ul>
 			</div>
-			<!--/.nav-collapse -->
 		</div>
 	</nav>
-	<div id="chatForm"  class="modal fade" role="dialog">
-	<form >
-		<div class="modal-dialog">
-        <div class="chat_start_main">
-            상담 CHAT
-        </div>
-        <div class="chat_main" style="display:none;">
-            <div class="modal-header" style="height:20%;">
-                상담 CHAT 
-            </div>
-            <div class="modal-body" id="chat" style="height:60%;">
-                
-            </div>
-            <div class="modal-footer">
-                <input type="text" id="message" class="form-control" style="height:20%;" placeholder="메세지를 입력하세요"/>    
-                <button type="button" class="btn btn-default"
-											data-dismiss="modal">닫기</button>
-            </div>
-            </div>
-        </div>
-         <%--  <div id="${dto.id}" class="modal fade" role="dialog">
-							<div class="modal-dialog">
-								<!-- Modal content-->
-								<div class="modal-content">
-									<div class="modal-header">
-										<button type="button" class="close" data-dismiss="modal">&times;</button>
-										<h4 class="modal-title">숙소 상세</h4>
-									</div>
-									<div class="modal-body">
-										
-									</div>
-									<div class="modal-footer">
-										<button type="button" class="btn btn-default"
-											data-dismiss="modal">닫기</button>
-									</div>
-								</div>
-							</div>
-						</div> --%>
-<!--         <button class="">send</button> -->
-    </form>
-    </div>
+
 	<script type="text/javascript">
 		$('li').click(function() {
 			$('li').removeClass('active'); 
 			$(this).addClass('active');
 		});
-		function chat(){
-			window.open('/host/chat', 'window팝업', 'width=400, height=600, menubar=no, status=no, toolbar=no');  
-		}
 		
 
 		/* //전역변수 선언-모든 홈페이지에서 사용 할 수 있게 index에 저장

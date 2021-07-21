@@ -81,9 +81,9 @@
 												<button onclick="location.href='<c:url value="/property/detail"/>?propertyId=${dto.id}'"
 												type="button" class="btn btn-primary" formmethod="get">
 												게시된 숙소 확인</button>
-												<button onclick="location.href='<c:url value="/host/property_update"/>?propertyId=${dto.id}'" 
+												<%-- <button onclick="location.href='<c:url value="/host/property_update"/>?propertyId=${dto.id}'" 
 												type="button" class="btn btn-warning"  formmethod="get" >
-												수정하기</button>
+												수정하기</button> --%>
 												<button onclick="deletePro(${dto.id})" 
 												type="button" class="btn btn-danger"  formmethod="get" >
 												삭제하기</button>
@@ -113,7 +113,6 @@
 					url : "/host/property_delete",
 					type : "post",
 					data : {'propertyId': propertyId},
-					dataType:'text',
 					success : function(data) {
 						console.log(JSON.parse(data)['result']);
 						if (JSON.parse(data)['result'] == "OK") {

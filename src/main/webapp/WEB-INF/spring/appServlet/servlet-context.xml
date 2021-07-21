@@ -62,7 +62,7 @@
          <beans:ref bean="hostInterceptor" />
       </interceptor>
       
-      <mvc:interceptor>
+      <!-- <mvc:interceptor>
           <mvc:mapping path="/**/*" />
           <beans:bean id="webContentInterceptor" class="org.springframework.web.servlet.mvc.WebContentInterceptor">
          <beans:property name="cacheSeconds" value="0" />
@@ -70,7 +70,7 @@
          <beans:property name="useCacheControlHeader" value="true" />
          <beans:property name="useCacheControlNoStore" value="true" />
           </beans:bean>
-      </mvc:interceptor>
+      </mvc:interceptor> -->
    </interceptors>
    
 

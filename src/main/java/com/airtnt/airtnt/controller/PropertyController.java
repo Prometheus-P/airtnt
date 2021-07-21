@@ -108,16 +108,16 @@ public class PropertyController {
 		Map<String, Object> searchKeyMap = new Hashtable<>();
 		searchKeyMap.put("addressKey", addressKey);
 		Object[][] paramMatrix = new Object[][] {
-				{"propertyTypeIdKeyArray", propertyTypeIdKeyArray},
-				{"subPropertyTypeIdKeyArray", subPropertyTypeIdKeyArray},
-				{"roomTypeIdKeyArray", roomTypeIdKeyArray},
-				{"amenityTypeIdKeyArray", amenityTypeIdKeyArray},
-				{"guestCountKey", guestCountKey},
-				{"bedCountKey", bedCountKey},
-				{"minPriceKey", minPriceKey},
-				{"maxPriceKey", maxPriceKey},
-				{"latitude", latitude},
-				{"longitude", longitude}
+			{"propertyTypeIdKeyArray", propertyTypeIdKeyArray},
+			{"subPropertyTypeIdKeyArray", subPropertyTypeIdKeyArray},
+			{"roomTypeIdKeyArray", roomTypeIdKeyArray},
+			{"amenityTypeIdKeyArray", amenityTypeIdKeyArray},
+			{"guestCountKey", guestCountKey},
+			{"bedCountKey", bedCountKey},
+			{"minPriceKey", minPriceKey},
+			{"maxPriceKey", maxPriceKey},
+			{"latitude", latitude},
+			{"longitude", longitude}
 		};
 		for(int i = 0; i < paramMatrix.length; i++) {
 			if(paramMatrix[i][1] != null) {
