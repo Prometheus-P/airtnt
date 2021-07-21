@@ -54,7 +54,7 @@ public class UserController {
 	@Autowired
 	ReviewMapper reviewMapper;
 
-	// 회원가입
+	// [회원가입] by승훈, 210617
 	@RequestMapping("signUp")
 	public String signUp(HttpServletRequest req, @ModelAttribute MemberDTO dto,
 			@RequestParam(value = "preURI", required = false) String preURI) {
@@ -74,7 +74,7 @@ public class UserController {
 		return "message";
 	}
 
-	// 로그인
+	// [로그인] by승훈, 210617
 	@RequestMapping("login")
 	public String login(HttpServletRequest req, @RequestParam Map<String, String> params,
 			@RequestParam(value = "preURI", required = false) String preURI, HttpServletResponse resp,
@@ -114,7 +114,8 @@ public class UserController {
 			return "redirect:" + nextURI;
 		}
 	}
-
+	
+	//[로그아웃] by승훈, 210617
 	@RequestMapping("logout")
 	public String logout(HttpServletRequest req, @RequestParam(value = "preURI", required = false) String preURI) {
 		String nextURI = preURI;
@@ -128,37 +129,45 @@ public class UserController {
 		return "redirect:" + nextURI;
 	}
 	
-	//[비밀번호 찾기]
+	//[비밀번호 찾기] by승훈, 210702
 	@RequestMapping("findPass")
 	public String findPass(HttpServletRequest req, @RequestParam Map<String, String> params) throws Exception {
 		String member_id = params.get("id");
 		MemberDTO getMember = memberMapper.getMember(member_id);
+		
+		// 입력 정보 확인, by승훈, 210702
 		if(!getMember.getId().isEmpty()) {
 			if(params.get("email").equals(getMember.getEmail())) {
 				if(params.get("name").equals(getMember.getName())) {
-					// 임시 비밀번호 생성
+					
+					// 임시 비밀번호 생성, by승훈, 210702
 					String Npasswd = "";
 					for (int i = 0; i < 12; i++) {
 						Npasswd += (char) ((Math.random() * 26) + 97);
 					}
 					
-					// 비밀번호 변경
+					// 비밀번호 변경, by승훈, 210702
 					params.put("member_id", getMember.getId());
 					params.put("Npasswd", Npasswd);
 					memberMapper.updateMember(params);
 					
-					// 비밀번호 변경 메일 발송
-					int res = sendEmail(getMember, "findpw");
+					// 비밀번호 변경 메일 발송, by승훈, 210702
+//					int res = sendEmail(getMember, "findpw");
+//					
+//					//메일 전송 여부, by승훈, 210702
+//					if(res>0) {
+//						req.getSession().setAttribute("findId",getMember.getId()); //로그인창에 input id value값주기, by승훈, 210702
+//						req.setAttribute("msg", "임시비밀번호를 이메일로 전송하였습니다");
+//						req.setAttribute("url", "/index");
+//						return "message";
+//					}
+//					req.setAttribute("msg", "메일 전송 실패");
+//					req.setAttribute("url", "/index");
+//					return "message";
 					
-					//메일 전송 여부
-					if(res>0) {
-						//로그인창에 input id value값주기
-						req.getSession().setAttribute("findId",getMember.getId());
-						req.setAttribute("msg", "임시비밀번호를 이메일로 전송하였습니다");
-						req.setAttribute("url", "/index");
-						return "message";
-					}
-					req.setAttribute("msg", "메일 전송 실패");
+					req.getSession().setAttribute("findId",getMember.getId()); //로그인창에 input id value값주기, by승훈, 210702
+					req.getSession().setAttribute("findPw",Npasswd); //로그인창에 input pw value값주기, by승훈, 210702
+					req.setAttribute("msg", "임시비밀번호 : " + Npasswd);
 					req.setAttribute("url", "/index");
 					return "message";
 				}
@@ -175,7 +184,7 @@ public class UserController {
 		return "message";
 	}
 	
-	//[아이디 찾기]
+	//[아이디 찾기] by승훈, 210702
 	@RequestMapping("findId")
 	public String findId(HttpServletRequest req, @RequestParam Map<String, String> params) {
 		MemberDTO getMember = memberMapper.findId(params);
@@ -190,7 +199,7 @@ public class UserController {
 		return "message";
 	}
 	
-	// [마이페이지]
+	// [마이페이지] by승훈, 210621
 	@RequestMapping("myPage")
 	public String mypage(HttpServletRequest req) {
 		LoginOKBean memberData = LoginOKBean.getInstance();
@@ -198,7 +207,8 @@ public class UserController {
 
 		return "user/user/myPage";
 	}
-
+	
+	// [마이페이지 - 프로필] by승훈, 210621
 	@RequestMapping("myPage/profile")
 	public String profile(HttpServletRequest req) {
 		LoginOKBean memberData = LoginOKBean.getInstance();
@@ -206,7 +216,7 @@ public class UserController {
 		return "user/user/profile";
 	}
 	
-	//[마이페이지 - 개인정보 수정]
+	//[마이페이지 - 개인정보 수정] by승훈, 210622
 	@RequestMapping("myPage/updateMember")
 	public String updateMember(HttpServletRequest req, @ModelAttribute MemberDTO dto) {
 		String member_id = (String) req.getSession().getAttribute("member_id");
@@ -217,7 +227,8 @@ public class UserController {
 		login.init_setting(getMember);
 		return "redirect:/myPage/profile";
 	}
-
+	
+	//[마이페이지 - 이미지페이지] by승훈, 210623
 	@RequestMapping("myPage/editPhoto")
 	public String editPhoto(HttpServletRequest req) {
 		LoginOKBean memberData = LoginOKBean.getInstance();
@@ -225,13 +236,13 @@ public class UserController {
 		return "user/user/editPhoto";
 	}
 	
-	//[마이페이지 - 멤버이미지 등록]
+	//[마이페이지 - 멤버이미지 등록] by승훈, 210623
 	@RequestMapping(value = ("myPage/updateMemberImage"), method = RequestMethod.POST)
 	public String updateMemberImage(HttpServletRequest req, 
 			@RequestParam("filename") MultipartFile mtf,
 			@RequestParam("member_image") String member_image) throws Exception {
 
-		// 파일 경로 설정
+		// 파일 경로 설정, by승훈, 210623
 		String originalFile = mtf.getOriginalFilename();
 		String originalFileExtension = originalFile.substring(originalFile.lastIndexOf("."));
 		String storedFileName = UUID.randomUUID().toString().replaceAll("-", "") + originalFileExtension;
@@ -240,7 +251,8 @@ public class UserController {
 		//학원
 		String upPath = "D:\\study3(spring)\\airtnt\\src\\main\\webapp\\resources\\files\\member_image\\";
 		//String upPath = req.getServletContext().getRealPath(req.getContextPath())+"\\resources\\files\\member_image\\";
-		// DB 넘길 데이터 설정
+		
+		// DB 넘길 데이터 설정, by승훈, 210623
 		Map<String, String> params = new Hashtable<>();
 		String member_id = (String) req.getSession().getAttribute("member_id");
 		String NewMember_image = "/resources/files/member_image/" + storedFileName;
@@ -249,7 +261,7 @@ public class UserController {
 		params.put("member_image", NewMember_image);
 
 
-		// 기존 이미지파일이 있다면 서버 및 DB 삭제
+		// 기존 이미지파일이 있다면 서버 및 DB 삭제, by승훈, 210624
 		if(!member_image.isEmpty()) {
 			String substring = "/resources/files/member_image/";
 			File delfile = new File(upPath + member_image.substring(substring.length()));
@@ -260,12 +272,12 @@ public class UserController {
 			int res = memberMapper.deleteMemberImage(member_id);
 		}
 		
-		// 파일 서버 저장 및 DB 저장
+		// 파일 서버 저장 및 DB 저장, by승훈, 210624
 		File file = new File(upPath + storedFileName);
 		mtf.transferTo(file);
 		int res2 = memberMapper.updateMemberImage(params);
 		
-		//init 세팅
+		//init 세팅, by승훈, 210624
 		MemberDTO getMember = memberMapper.getMember(member_id);
 		LoginOKBean login = LoginOKBean.getInstance();
 		login.init_setting(getMember);
@@ -273,12 +285,15 @@ public class UserController {
 		return "redirect:/myPage/editPhoto";
 	}
 	
-	//[마이페이지 - 멤버이미지 삭제]
+	//[마이페이지 - 멤버이미지 삭제] by승훈, 210625
 	@RequestMapping(value = ("myPage/updateMemberImage"), method = RequestMethod.GET)
 	public String updateMemberImage(HttpServletRequest req, @RequestParam("del") String del,
 			@RequestParam("member_image") String member_image) throws Exception {
 		String member_id = (String) req.getSession().getAttribute("member_id");
-		String upPath = "D:\\Ezen Learning\\Bigdata Learning Spring\\airtnt\\src\\main\\webapp\\resources\\files\\member_image\\";
+		//승훈
+		//String upPath = "D:\\Ezen Learning\\Bigdata Learning Spring\\airtnt\\src\\main\\webapp\\resources\\files\\member_image\\";
+		//학원
+		String upPath = "D:\\study3(spring)\\airtnt\\src\\main\\webapp\\resources\\files\\member_image\\";
 		String substring = "/resources/files/member_image/";
 		if (del.equals("del")) {
 			File delfile = new File(upPath + member_image.substring(substring.length()));
@@ -293,13 +308,14 @@ public class UserController {
 		return "redirect:/myPage/editPhoto";
 	}
 	
-	//[마이페이지 - 비밀번호 변경]
+	//[마이페이지 - 비밀번호 변경페이지] by승훈, 210626
 	@RequestMapping(value = ("myPage/editPassword"), method = RequestMethod.GET)
 	public String editPassword(HttpServletRequest req) {
 
 		return "user/user/editPassword";
 	}
 	
+	//[마이페이지 - 비밀번호 변경] by승훈, 210626
 	@RequestMapping(value = ("myPage/editPassword"), method = RequestMethod.POST)
 	public String editPassword(HttpServletRequest req, @RequestParam Map<String, String> params) {
 		LoginOKBean memberData = LoginOKBean.getInstance();
@@ -320,7 +336,7 @@ public class UserController {
 		return "message";
 	}
 	
-	//[마이페이지 - 회원탈퇴]
+	//[마이페이지 - 회원탈퇴] by승훈, 210627
 		@RequestMapping(value = ("myPage/deleteMember"), method = RequestMethod.GET)
 		public String deleteMember(HttpServletRequest req) {
 			String member_id = (String) req.getSession().getAttribute("member_id");
@@ -335,12 +351,12 @@ public class UserController {
 				return "message";
 		}
 		
-	//[마이페이지 - 리뷰]
+	//[마이페이지 - 리뷰] by승훈, 210628
 	@RequestMapping(value="myPage/review", method=RequestMethod.GET)
 	public String review(HttpServletRequest req) {
 		String member_id = (String) req.getSession().getAttribute("member_id");
 		
-		List<BookingDTO> toWriteReviews = bookingMapper.getToWriteBooking(member_id);
+		List<BookingDTO> toWriteReviews = bookingMapper.getToWriteReview(member_id);
 		List<ReviewDTO> myReviews = reviewMapper.getReview(member_id);
 		
 		req.setAttribute("toWriteReviews", toWriteReviews);
@@ -349,20 +365,20 @@ public class UserController {
 		return "user/user/review";
 	}
 	
+	//[마이페이지 - 리뷰(더보기요청)] by승훈, 210705
 	@RequestMapping(value="myPage/review", method=RequestMethod.POST)
 	  @ResponseBody
-	public List<ReviewDTO> moerReview(HttpServletRequest req, @RequestParam Map<String, String> params) {
-		params.put("member_id",(String) req.getSession().getAttribute("member_id"));
-		//more값 변환 
-		int startNum = Integer.parseInt(params.get("more"))+1;
-		int lastNum = startNum+9;
-		params.put("startNum",String.valueOf(startNum));
-		params.put("lastNum",String.valueOf(lastNum));
+	public List<ReviewDTO> moerReview(HttpServletRequest req, @RequestParam Map<String, String> param) {
 		
+		//넘겨받은 more값 바탕으로 num설정, by승훈, 210705
+		Map<String, String> params = setMoreNum(param.get("more"));
+		
+		params.put("member_id",(String) req.getSession().getAttribute("member_id"));
 		List<ReviewDTO> list = reviewMapper.getMoreReview(params);
 		return list;
 	}
 	
+	//[마이페이지 - 리뷰쓰기] by승훈, 210628
 	@RequestMapping("myPage/writeReview")
 	public String writeReview(HttpServletRequest req, @ModelAttribute ReviewDTO dto) {
 		String member_id = (String) req.getSession().getAttribute("member_id");
@@ -379,34 +395,37 @@ public class UserController {
 		return "message";
 	}
 	
+	//[마이페이지 - 리뷰삭제] by승훈, 210628
 	@RequestMapping("myPage/deleteReview")
 	public String deleteReview(HttpServletRequest req, @RequestParam("id") String id) {
 		int res = reviewMapper.deleteReview(id);
 		return "redirect:/myPage/review";
 	}
 	
+	//[마이페이지 - 리뷰업데이트] by승훈, 210629
 	@RequestMapping("myPage/updateReview")
 	public String updateReview(HttpServletRequest req, @RequestParam Map<String, String> params) {
 		int res = reviewMapper.updateReview(params);
 		return "redirect:/myPage/review";
 	}
 	
-	// 위시리스트
+	//[위시리스트] by승훈, 210620
 	@RequestMapping("wishList")
 	public String wishList(HttpServletRequest req) {
 		String member_id = (String) req.getSession().getAttribute("member_id");
-		List<WishList_PropertyDTO> list = wishListMapper.getWish(member_id);
-		if (list == null || list.size() == 0) {
-			List<WishList_PropertyDTO> adminList = wishListMapper.getAdminWish();
-			req.setAttribute("admin_wishList", adminList);
+		List<WishList_PropertyDTO> userWishList = wishListMapper.getWish(member_id);
+		System.out.println(userWishList.size());
+		if (userWishList == null || userWishList.size() == 0) {
+			List<WishList_PropertyDTO> adminWishList = wishListMapper.getAdminWish();
+			req.setAttribute("admin_wishList", adminWishList);
 		} else {
-			req.setAttribute("user_wishList", list);
-			req.setAttribute("listSize", list.size());
+			req.setAttribute("user_wishList", userWishList);
+			req.setAttribute("listSize", userWishList.size());
 		}
-
 		return "user/wish/wishList";
 	}
-
+	
+	//[위시리스트 생성] by승훈, 210620
 	@RequestMapping("makeWish")
 	public String makeWish(HttpServletRequest req, @ModelAttribute WishListDTO dto) {
 		dto.setMember_id((String) req.getSession().getAttribute("member_id"));
@@ -417,58 +436,59 @@ public class UserController {
 		
 		return "redirect:/wishList";
 	}
-
-	@RequestMapping(value="inWishList", method=RequestMethod.GET)
-	public String inWishList(HttpServletRequest req, @RequestParam Map<String, String> params) {
-		List<WishList_PropertyDTO> list = wishListMapper.getWishRoom(params.get("wish_id"));
-		req.setAttribute("wish_name", params.get("wish_name"));
-		req.setAttribute("wish_id", params.get("wish_id"));
-		
-		//맵 마커 사용(등록한 property 정보가 없을땐 제외)
-		if(list.size() > 0) {
-			req.setAttribute("longitude", list.get(0).getLongitude()); //맵 마커 사용
-			req.setAttribute("latitude", list.get(0).getLatitude()); //맵 마커 사용
-		}
-		req.setAttribute("propertiesListSize", list.size());
-		req.setAttribute("properties", list);
-		return "user/wish/inWishList";
-	}
 	
-	  @RequestMapping(value="inWishList", method=RequestMethod.POST)
-	  @ResponseBody
-	public List<WishList_PropertyDTO> moreInWishList(HttpServletRequest req, @RequestParam Map<String, String> params) {
-		//more값 변환 
-		int startNum = Integer.parseInt(params.get("more"))+1;
-		int lastNum = startNum+9;
-		params.put("startNum",String.valueOf(startNum));
-		params.put("lastNum",String.valueOf(lastNum));
-		List<WishList_PropertyDTO> list = wishListMapper.getMoreWishRoom(params);
-		return list;
-	}
-
+	//[위시리스트 수정] by승훈, 210620
 	@RequestMapping("updateWish")
 	public String updateWish(HttpServletRequest req, @RequestParam Map<String, String> params) {
 		int res = wishListMapper.updateWish(params);
-
+		
 		return "redirect:/wishList";
 	}
-
+	
+	//[위시리스트 삭제] by승훈, 210620
 	@RequestMapping("deleteWish")
 	public String deleteWish(HttpServletRequest req, @RequestParam Map<String, String> params) {
-		int res1 = wishListMapper.deleteWishRoom(params.get("wish_id"));
 		int res2 = wishListMapper.deleteWish(params.get("wish_id"));
-
+		
 		return "redirect:/wishList";
 	}
-
-	// 정석 작성
+	
+	//[위시리스트 - 숙소리스트] by승훈, 210621
+		@RequestMapping(value="inWishList", method=RequestMethod.GET)
+		public String inWishList(HttpServletRequest req, @RequestParam Map<String, String> params) {
+			List<WishList_PropertyDTO> list = wishListMapper.getWishRoom(params.get("wish_id"));
+			req.setAttribute("wish_name", params.get("wish_name"));
+			req.setAttribute("wish_id", params.get("wish_id"));
+			
+			//맵 마커 사용(등록한 property 정보가 없을땐 제외), by수연, 210710
+			if(list.size() > 0) {
+				req.setAttribute("longitude", list.get(0).getLongitude());
+				req.setAttribute("latitude", list.get(0).getLatitude());
+			}
+			req.setAttribute("propertiesListSize", list.size());
+			req.setAttribute("properties", list);
+			return "user/wish/inWishList";
+		}
+		
+	//[위시리스트 - 숙소리스트(더보기)] by승훈, 210705
+	@RequestMapping(value="inWishList", method=RequestMethod.POST)
+	@ResponseBody
+	public List<WishList_PropertyDTO> moreInWishList(HttpServletRequest req, @RequestParam Map<String, String> param) {
+		//넘겨받은 more값 바탕으로 num설정, by승훈, 210705
+		Map<String, String> params = setMoreNum(param.get("more"));
+		params.put("wish_id", param.get("wish_id"));
+		List<WishList_PropertyDTO> list = wishListMapper.getMoreWishRoom(params);
+		return list;
+	}
+	
+	// [위시숙소등록] 정석 작성
 	@RequestMapping("wish/async")
 	@ResponseBody
 	public int wishPropertyAsync(HttpServletRequest req, @ModelAttribute WishList_PropertyDTO dto) {
 		int result = wishListMapper.insertWishProperty(dto);
 		return result;
 	}
-
+	// [위시숙소해제] 정석 작성
 	@RequestMapping("unwish/async")
 	@ResponseBody
 	public int unwishPropertyAsync(HttpServletRequest req, @RequestParam Map<String, String> params) {
@@ -476,7 +496,7 @@ public class UserController {
 		return result;
 	}
 
-	// 여행
+	// [여행] by승훈, 210623
 	@RequestMapping(value="tour", method=RequestMethod.GET)
 	public String tour(HttpServletRequest req) {
 		String member_id = (String) req.getSession().getAttribute("member_id");
@@ -488,20 +508,19 @@ public class UserController {
 		return "user/tour/tour";
 	}
 	
+	// [여행 (더보기)] by승훈, 210705
 	@RequestMapping(value="tour", method=RequestMethod.POST)
 	  @ResponseBody
-	public List<BookingDTO> moreTour(HttpServletRequest req, @RequestParam Map<String, String> params) {
+	public List<BookingDTO> moreTour(HttpServletRequest req, @RequestParam Map<String, String> param) {
+		//넘겨받은 more값 바탕으로 num설정, by승훈, 210705
+		Map<String, String> params = setMoreNum(param.get("more"));
+		
 		params.put("member_id",(String) req.getSession().getAttribute("member_id"));
-		//more값 변환 
-		int startNum = Integer.parseInt(params.get("more"))+1;
-		int lastNum = startNum+9;
-		params.put("startNum",String.valueOf(startNum));
-		params.put("lastNum",String.valueOf(lastNum));
 		List<BookingDTO> list = bookingMapper.getMorePreBooking(params);
 		return list;
 	}
 	
-	//[미구현 페이지]
+	//[미구현 페이지 처리]
 	@RequestMapping("myPage/payment")
 	public String payment(HttpServletRequest req) {
 		req.setAttribute("msg", "준비중입니다~");
@@ -515,8 +534,7 @@ public class UserController {
 		return "message";
 	}
 	
-	
-	//[메일보내는 메소드]
+	//[메일보내기] by승훈, 210711
 	public int sendEmail(MemberDTO dto, String div) {
 		// Mail Server 설정
 		String charSet = "utf-8";
@@ -562,5 +580,16 @@ public class UserController {
 		}
 		
 		return 1;
+	}
+	
+	//[더보기 Num세팅] by승훈, 210705
+	public Map<String, String> setMoreNum(String more) {
+		Map<String, String> params = new Hashtable<>();
+		//more값 변환 
+			int startNum = Integer.parseInt(more)+1;
+			int lastNum = startNum+9;
+			params.put("startNum",String.valueOf(startNum));
+			params.put("lastNum",String.valueOf(lastNum));
+		return params;
 	}
 }
