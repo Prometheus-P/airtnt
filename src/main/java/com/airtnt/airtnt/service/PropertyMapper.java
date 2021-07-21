@@ -40,6 +40,12 @@ public class PropertyMapper {
 		return sqlSession.selectList("selectProperty", selectKeyMap);
 	}
 	
+	public List<PropertyDTO> selectProperties(String hostId) {
+		Map<String, String> selectKeyMap = new Hashtable<>();
+		selectKeyMap.put("hostId", hostId);
+		return sqlSession.selectList("selectProperty", selectKeyMap);
+	}
+	
 	// 상세보기
 	public PropertyDTO selectProperty(int propertyId) {
 		Map<String, Integer> selectKeyMap = new Hashtable<>();

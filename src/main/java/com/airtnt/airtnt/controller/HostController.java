@@ -50,12 +50,16 @@ import com.airtnt.airtnt.model.RoomTypeDTO;
 import com.airtnt.airtnt.model.SubPropertyTypeDTO;
 import com.airtnt.airtnt.model.TransactionDTO;
 import com.airtnt.airtnt.service.HostMapper;
+import com.airtnt.airtnt.service.PropertyMapper;
 
 @Controller
 @SuppressWarnings("unchecked")
 public class HostController {
 	@Autowired
 	private HostMapper hostMapper;
+	
+	@Autowired
+	private PropertyMapper propertyMapper;
 
 	// 1. 호스트 시작하기 >>으로 이동
 	// 나머지는 게시판
@@ -423,7 +427,16 @@ public class HostController {
 	@RequestMapping("host/host_properties_list")
 	public ModelAndView host_properties_list(HttpSession session) {
 		String hostId = (String) session.getAttribute("member_id");
-		List<PropertyDTO> listProperty = hostMapper.getPropertyList(hostId);
+		//List<PropertyDTO> listProperty = hostMapper.getPropertyList(hostId);
+		List<PropertyDTO> listProperty = propertyMapper.selectProperties(hostId);
+		for(PropertyDTO property : listProperty) {
+			for(AmenityTypeDTO amenityType : property.getAmenityTypes()) {
+				System.out.println(amenityType.getName());
+			}
+			for(ImageDTO image : property.getImages()) {
+				System.out.println(image.getPath());
+			}
+		}
 		clearBean();
 		return new ModelAndView("/host/host_mode/host_properties_list", "listProperty", listProperty);
 	}
