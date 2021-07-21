@@ -213,7 +213,7 @@
     	//alert(obj);
     	// document.getElementByName('propName1').checked = true;
     	//$('input:checkbox[name="propName1"]').attr("checked", true);
-    	alert(obj.checked);
+    	//alert(obj.checked);
     }
     
   </script>

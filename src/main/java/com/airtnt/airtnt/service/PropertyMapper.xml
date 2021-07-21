@@ -366,6 +366,10 @@
 			<when test="propertyId != null">
 				p.id=#{propertyId}
 			</when>
+			<!-- 호스트가 등록한 숙소들을 로딩 -->
+			<when test="hostId != null">
+				p.host_id=#{hostId}
+			</when>
 		</choose>
 	</select>
 	
