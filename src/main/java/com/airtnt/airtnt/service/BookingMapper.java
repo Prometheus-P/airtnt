@@ -26,8 +26,8 @@ public class BookingMapper {
 		List<BookingDTO> list = sqlSession.selectList("getPreBooking", member_id);
 		return list;
 	}
-	public List<BookingDTO> getToWriteBooking(String member_id) {
-		List<BookingDTO> list = sqlSession.selectList("getToWriteBooking", member_id);
+	public List<BookingDTO> getToWriteReview(String member_id) {
+		List<BookingDTO> list = sqlSession.selectList("getToWriteReview", member_id);
 		return list;
 	}
 	public List<BookingDTO> getMorePreBooking(Map<String, String> params) {

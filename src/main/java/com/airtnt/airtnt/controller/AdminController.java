@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.ServletRequest;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -54,9 +55,13 @@ public class AdminController{
 	 * [main] : admin 계정 로그인 화면
 	 */
 	@RequestMapping(value = "", method = {RequestMethod.GET, RequestMethod.POST})
-	public String goMainView() {
+	public String goMainView(ServletRequest request) {
 		 LoginOKBean login = LoginOKBean.getInstance();
-		 if(login.getId()!=null) { 
+		 HttpServletRequest httpRequest = (HttpServletRequest) request;
+		 HttpSession session = httpRequest.getSession(false);
+		 
+		 //로그인 상태면 dashboard로 리턴 아니면 로그인 페이지로
+		 if(login.getId()!=null && session!= null && session.getAttribute("member_id")!=null) { 
 			 return "redirect:admin/dashboard"; 
 		 }else {
 			 return "admin/main";
@@ -132,6 +137,7 @@ public class AdminController{
 		req.setAttribute("keylist", key); // 라벨날짜
 		req.setAttribute("this_valuelist", this_value); // 올해
 		req.setAttribute("last_valuelist", last_value); // 작년
+		req.setAttribute("selectedMenu", "dashboard"); //nav 메뉴표시
 		return "admin/dashboard";
 	}
 	
@@ -169,6 +175,8 @@ public class AdminController{
 		req.setAttribute("startPage", startPage);
 		req.setAttribute("endPage", endPage);
 		req.setAttribute("pageCount", pageCount);
+		
+		req.setAttribute("selectedMenu", "member"); //nav 메뉴표시
 		return "admin/member";
 	}
 	
@@ -184,6 +192,8 @@ public class AdminController{
 		req.setAttribute("bookingList", bookingList);
 		req.setAttribute("transactionList", transactionList);
 		req.setAttribute("today", strToday);
+		
+		req.setAttribute("selectedMenu", "reports"); //nav 메뉴표시
 		return "admin/reports";
 	}
 	
@@ -220,6 +230,8 @@ public class AdminController{
 		req.setAttribute("propertyTypeList", propertyTypeList);
 		req.setAttribute("subPropertyTypeList", subPropertyTypeList);
 		req.setAttribute("amenityTypeList", amenityTypeList);
+		
+		req.setAttribute("selectedMenu", "filter"); //nav 메뉴표시
 
 		return "admin/filter";
 	}
@@ -229,7 +241,8 @@ public class AdminController{
 	 */
 	@RequestMapping(value = "filter", method = RequestMethod.POST)
 	@ResponseBody
-	public List<SubPropertyTypeDTO> getSubProperty(HttpServletRequest req, @RequestParam String propertyTypeId) throws Exception {
+	public List<SubPropertyTypeDTO> getSubProperty( HttpServletRequest req, 
+													@RequestParam String propertyTypeId) throws Exception {
 		List<SubPropertyTypeDTO> selectedSubProperty = adminMapper.getSubPropertyType(propertyTypeId); 
 		return selectedSubProperty; 
 	}
@@ -309,6 +322,7 @@ public class AdminController{
 	 */
 	@RequestMapping(value = "guideWrite", method = RequestMethod.GET)
 	public String goWriteForm(HttpServletRequest req) throws Exception {
+		req.setAttribute("selectedMenu", "guide"); //nav 메뉴표시
 		return "admin/guide_write";
 	}
 	
@@ -316,8 +330,9 @@ public class AdminController{
 	 * [Guide] : 글작성
 	 */
 	@RequestMapping(value = "guideWrite", method = RequestMethod.POST)
-	public String insertBoard(GuideDTO guideDto,
-							@RequestParam(value = "contextArr", required = false) String[] contextArr) throws Exception {
+	public String insertBoard(HttpServletRequest req,
+							  GuideDTO guideDto,
+							  @RequestParam(value = "contextArr", required = false) String[] contextArr) throws Exception {
 		
 		//마스터 테이블 pk id 조회
 		int id = adminMapper.selectIdSeq();
@@ -338,6 +353,7 @@ public class AdminController{
 				int res2 = adminMapper.insertBoardContext(context);
 			}
 		}
+		req.setAttribute("selectedMenu", "guide"); //nav 메뉴표시
 		return "redirect:guidelist";
 	}
 	
@@ -371,6 +387,8 @@ public class AdminController{
 		req.setAttribute("endPage", endPage);
 		req.setAttribute("pageCount", pageCount);
 		
+		req.setAttribute("selectedMenu", "guide"); //nav 메뉴표시
+		
 		return "admin/guide_list";
 	}
 	
@@ -384,6 +402,7 @@ public class AdminController{
 	public String getSelectedBoard(HttpServletRequest req, @RequestParam String id) throws Exception {
 		List<GuideDTO> list = adminMapper.getSelectedBoard(id);
 		req.setAttribute("boardList", list);
+		req.setAttribute("selectedMenu", "guide"); //nav 메뉴표시
 		return "admin/guide_view";
 	}
 	

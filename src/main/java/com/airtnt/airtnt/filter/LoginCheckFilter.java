@@ -36,6 +36,7 @@ public class LoginCheckFilter implements Filter {
 
 		httpRequest.setCharacterEncoding("UTF-8");
 		String path = ((HttpServletRequest) request).getServletPath();
+		
         
 		boolean login = false;
 		if (session != null) {

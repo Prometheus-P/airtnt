@@ -178,7 +178,12 @@
 						</c:if>
 					</div>
 					<div class="form-group">
-						<input type="password" class="form-control" name="passwd" placeholder="Password" required="required">	
+					<c:if test="${empty value}">	
+						<input type="password" class="form-control" name="passwd" placeholder="Password" required="required" value="${findPw}">	
+					</c:if>
+					<c:if test="${not empty value}">
+						<input type="password" class="form-control" name="passwd" placeholder="Password" required="required">
+					</c:if>
 					</div>        
 					<div class="form-group">
 						<button type="submit" class="btn btn-primary btn-lg btn-block login-btn">로그인</button>

@@ -146,14 +146,14 @@ $(function(){
 			</div>
 				<div class="container-sm fl_left" style="margin-top: 30px;">
 					<div class="bold" style="font-size: 3vh; margin-bottom:2vh;">${wish_name}</div>
-				    <div  id="btn_group" class="btn-group" role="group" aria-label="Basic outlined example">
+				    <!-- <div  id="btn_group" class="btn-group" role="group" aria-label="Basic outlined example">
 						<a href="#Date" data-toggle="modal">
 							<button id="test_btn2" style="font-size:20px; padding-left:15px; padding-right:15px;" type="button" class="btn btn-outline-primary">날짜</button>
 						</a>
 						<a href="#Guest" data-toggle="modal">
 							<button id="test_btn2" style="font-size:20px; padding-left:15px; padding-right:15px;" type="button" class="btn btn-outline-primary">인원</button>
 						</a>
-					</div>
+					</div> -->
 			<!-- 숙소리스트 부분 -->
 				<!-- 위시리스트에 숙소가 없다면  -->
 				<c:if test="${empty properties}">

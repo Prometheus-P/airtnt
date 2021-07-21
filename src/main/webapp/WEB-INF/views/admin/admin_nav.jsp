@@ -41,37 +41,37 @@
           <div class="sidebar-sticky">
             <ul class="nav flex-column">
               <li class="nav-item">
-                <a class="nav-link active" href="/admin/dashboard">
+                <a class="nav-link ${selectedMenu eq 'dashboard' ? 'active' : ''}" href="/admin/dashboard">
                   <span data-feather="home"></span>
                   Dashboard
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="/admin/member">
+                <a class="nav-link ${selectedMenu eq 'member' ? 'active' : ''}" href="/admin/member">
                   <span data-feather="users"></span>
                   Member
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="/admin/reports">
+                <a class="nav-link ${selectedMenu eq 'reports' ? 'active' : ''}" href="/admin/reports">
                   <span data-feather="bar-chart-2"></span>
                   Reports
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="/admin/filter">
+                <a class="nav-link ${selectedMenu eq 'filter' ? 'active' : ''}" href="/admin/filter">
                   <span data-feather="filter"></span>
                   Room Filter
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="/wishList">
+                <a class="nav-link ${selectedMenu eq 'wishList' ? 'active' : ''}" href="/wishList">
                   <span data-feather="star"></span>
                   Wish-List
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="/admin/guidelist">
+                <a class="nav-link ${selectedMenu eq 'guide' ? 'active' : ''}" href="/admin/guidelist">
                   <span data-feather="info"></span>
                   Guide Board
                 </a>
@@ -99,6 +99,12 @@
     <script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
     <script>
       feather.replace()
+      
+      $('.nav-link').click(function() {
+			$('.nav-link').removeClass('active');
+			$(this).toggleClass('active');
+		});
+      
     </script>
 
   </body>

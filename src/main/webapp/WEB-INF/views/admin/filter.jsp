@@ -213,7 +213,7 @@
     	//alert(obj);
     	// document.getElementByName('propName1').checked = true;
     	//$('input:checkbox[name="propName1"]').attr("checked", true);
-    	alert(obj.checked);
+    	//alert(obj.checked);
     }
     
   </script>
@@ -317,7 +317,7 @@
 	            </div>
 	         </div>
 			
-	        <div style="overflow:auto; height:20%;">
+	        <div style="overflow:auto; height:25%;">
 				<table class="table table-striped table-sm" id="propertyTypeTable" style="text-align:center;">
 					<tr class = "thead-dark" style='position:relative;top:expression(this.offsetParent.scrollTop);'>
 						<th colspan="2">숙소유형코드</th>
