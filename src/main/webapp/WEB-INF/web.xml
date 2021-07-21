@@ -92,9 +92,7 @@
 		<filter-class> com.airtnt.airtnt.filter.LoginCheckFilter</filter-class> 
 		<init-param> 
 			<param-name>excludedUrls</param-name> 
-			<param-value>/index,/host,/login,/signUp,/findPass,/findId,
-				/property/search,/property/detail,
-				/admin/main,/admin,/admin/loginCheck,/guide_home,/admin/logout</param-value> 
+			<param-value>/index,/host,/login,/signUp,/findPass,/findId,/property/search,/property/detail,/admin/main,/admin,/admin/loginCheck,/guide_home,/admin/logout</param-value> 
 		</init-param> 
 	</filter> 
 	

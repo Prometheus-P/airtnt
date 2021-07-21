@@ -166,7 +166,8 @@
 			              <div class="one_third text-left">
 			                <p class="fs-2"><a style="color:black" href="/property/detail?propertyId=${dto.property_id}">${dto.property_name}</a></p>
 			                <p>${dto.type_name}/${dto.sub_type_name} ${dto.room_type_name}</p>
-			                <p>${dto.property_address}   /   ${dto.total_price}원   /   ${dto.check_in_date} | ${dto.check_out_date}</p>
+			                <p>${dto.property_address}</p>
+			                <p>${dto.total_price}원   /   ${dto.check_in_date} | ${dto.check_out_date}</p>
 			              </div>
 			              <div class="one_third text-right">
 			              	<button data-target="#ReviewModal" onclick="transferData(${dto.property_id},${dto.id})" data-toggle="modal" id="test_btn3" style="font-size:20px;" type="button" class="btn btn-outline-primary">리뷰작성하기</button>

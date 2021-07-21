@@ -342,7 +342,7 @@ function checkParametersOnSubmit(){
             	<br>
             </div>
             <hr>
-	        <div class="position-absolute end-0 top-50">
+	        <div class="position-absolute end-0 top-0">
 	          <a href="#review-modal" class="trigger-btn btn" data-toggle="modal" style="font-size: 20px; border:1px solid black;">
 	            <img src="https://img.icons8.com/fluent/48/000000/list.png"
 	            style="width: 30px; height: 30px;"/> 더보기
