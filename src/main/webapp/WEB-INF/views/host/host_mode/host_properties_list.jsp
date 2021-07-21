@@ -72,7 +72,7 @@
 												<p>가격 : ${dto.price}</p>
 												<p>편의시설 : <br>
 												<c:forEach var="listAmenity" items="${dto.amenityTypes}">
-													${listAmenity.name}<br>
+													<i class="bi bi-check">${listAmenity.name}</i><br>
 												</c:forEach>
 												</p>
 												<p>숙소 설명 : ${dto.propertyDesc}</p>

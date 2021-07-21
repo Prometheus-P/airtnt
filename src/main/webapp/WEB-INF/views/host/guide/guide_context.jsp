@@ -16,12 +16,14 @@
 	</head>
 	<body>
 		<!-- Header -->
-			<header id="header">
-				<div class="logo">${guideDTO.subject}<span>by AirTnT</span></div>
+			<header id="header" >
+				<div class="logo" style="font-size: x-large; font-weight: bold; color: black;">
+				${guideDTO.subject}<span>by AirTnT</span>
+				</div>
 			</header>
 
 		<!-- Main -->
-			<section id="main">
+			<section id="main" >
 				<div class="inner">
 
 				<!-- One -->
@@ -32,11 +34,11 @@
 						</div>
 						<header class="special">
 							<h2>${guideDTO.subject}</h2>
-							<p>
+							<p style="font-size: x-large;">
 							${guideDTO.explanation}
 							</p>
 						</header>
-						<div class="content">
+						<div class="content" style="font-size: xx-large;">
 						<c:forEach var="list" items="${listGuideContext}">
 							<p>
 							${list.context}
@@ -52,7 +54,7 @@
 						</div>
 					</section>
 				<!-- Three -->
-					<section id="three" class="wrapper">
+					<section id="three" class="wrapper" style='font-size: large;'>
 					<c:forEach var="dto" items="${guideList}">
 						<div class="spotlight">
 							<div class="image flush"><img src="/resources_host/images/pic06.jpg" alt="" /></div>
