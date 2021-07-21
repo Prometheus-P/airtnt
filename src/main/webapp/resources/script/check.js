@@ -6,7 +6,7 @@ function checkAll() {
             return false;
         } else if (!checkName(form.name.value)) {
             return false;
-        } else if (!checkEmail(form.eamil.value)) {
+        } else if (!checkEmail(form.email.value)) {
             return false;
         }
         

@@ -35,7 +35,9 @@
 			</div>
 		</div>
 		<div class="col-md-6">
-		<br><br><br><br><br><br>
+		<br><br><br><br><br><br><br><br>
+		<br><br><br><br><br><br><br><br>
+		<br><br><br><br>
 			<div id="reviewDiv"></div>
 		</div>
 
