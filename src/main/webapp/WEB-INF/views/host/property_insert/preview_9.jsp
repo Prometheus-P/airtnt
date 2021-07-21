@@ -24,7 +24,7 @@ input[type=checkbox] {
 		</div>
 		<div class="col-sm-6" style="font-family: fantasy;">
 			<div class="thumbnail">
-				<div id="propertyImg"></div>
+				<img src="" id="tableBanner" />
 				<%-- <img src="${path}" alt="${count+1}"> --%>
 				<div class="caption">
 					<h2>${name}</h2>
@@ -81,14 +81,19 @@ input[type=checkbox] {
 	</footer>
 </body>
 <script>
+	function getBase64Image(img) {
+   	 var canvas = document.createElement("canvas");
+   	 canvas.width = img.width;
+   	 canvas.height = img.height;
+   	 var ctx = canvas.getContext("2d");
+    ctx.drawImage(img, 0, 0);
+    var dataURL = canvas.toDataURL("image/png");
+    return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
+	}
 	$('#mainBody').load(function (){
-		var length = parseInt(localStorage.getItem('length'));
-		for(var x; x<length; ++x){
-			var src= localStorage.getItem('image'+x);
-			var img = document.createElement("img");
-	        img.setAttribute("src", src);
-	        document.querySelector("div#propertyImg").appendChild(img);
-		}
+		var dataImage = localStorage.getItem('imgData');
+		bannerImg = document.getElementById('tableBanner');
+		bannerImg.src = "data:image/png;base64," + dataImage;
 	});
 	
 	$(document).ready(function() {
@@ -105,8 +110,8 @@ input[type=checkbox] {
 			success : function(data) {
 				if (JSON.parse(data)['result'] == "OK") {
 					localStorage.clear();
-					alert("숙소가 저장 되었습니다! 호스트 메인 페이지로 이동합니다!")
-					location.href = "/host/host_mode";
+					alert("숙소가 저장 되었습니다! 숙소목록으로 이동합니다!")
+					location.href = "/host/host_properties_list";
 				} else {
 					alert("숙소 저장 중 문제 발생! 관리자에게 연락바랍니다!");
 				}

@@ -86,9 +86,19 @@
           <location>/error</location>
  	</error-page>
 
-	<!-- <filter> <filter-name>LoginCheck</filter-name> <filter-class> com.airtnt.airtnt.filter.LoginCheckFilter 
-		</filter-class> <init-param> <param-name>excludedUrls</param-name> <param-value>/index,/login,/property/search,/property/detail,/admin,/admin/loginCheck</param-value> 
-		</init-param> </filter> <filter-mapping> <filter-name>LoginCheck</filter-name> 
-		<url-pattern>/*</url-pattern> </filter-mapping> -->
+	<!-- admin login filter -->
+	<filter> 
+		<filter-name>LoginCheck</filter-name> 
+		<filter-class> com.airtnt.airtnt.filter.LoginCheckFilter</filter-class> 
+		<init-param> 
+			<param-name>excludedUrls</param-name> 
+			<param-value>/index,/host,/login,/property/search,/property/detail,/admin/main,/admin,/admin/loginCheck,/guide_home,/admin/logout</param-value> 
+		</init-param> 
+	</filter> 
+	
+	<filter-mapping> 
+		<filter-name>LoginCheck</filter-name> 
+		<url-pattern>/*</url-pattern> 
+	</filter-mapping>
 
 </web-app>

@@ -317,7 +317,7 @@
 	            </div>
 	         </div>
 			
-	        <div style="overflow:auto; height:20%;">
+	        <div style="overflow:auto; height:25%;">
 				<table class="table table-striped table-sm" id="propertyTypeTable" style="text-align:center;">
 					<tr class = "thead-dark" style='position:relative;top:expression(this.offsetParent.scrollTop);'>
 						<th colspan="2">숙소유형코드</th>

@@ -10,7 +10,7 @@
 
 <%@ include file="host_mode_top.jsp"%>
 <body>
-<form name="f" action="/host/host_properties_list_update" onsubmit="return check()">
+<form name="f" action="/host/host_property_update" method="post" onsubmit="return check()">
 	<div class="container theme-showcase" role="main">
 		<div class="page-header">
 		<br> <br> <br>
