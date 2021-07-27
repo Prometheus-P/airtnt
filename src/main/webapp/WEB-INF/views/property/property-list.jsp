@@ -42,7 +42,7 @@
 					<ul id="auto-complete-area" class="dropdown-menu list-group" style="width: 40rem; font-size: 2rem;">
 						<!-- 주소 자동완성 목록 -->
 					</ul>
-					<button class="btn btn-info" type="submit" style="margin-left:10px; box-shadow: 0px 0px 10px #e0e0e0;">Search</button>
+					<button class="btn" type="submit" style="margin-left:10px; box-shadow: 0px 0px 10px #e0e0e0;">Search</button>
 				</nav>
 			</div>
 			

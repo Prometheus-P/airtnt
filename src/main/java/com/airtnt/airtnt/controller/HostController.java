@@ -211,14 +211,16 @@ public class HostController {
 		List<ImageDTO> listImgUrl = new ArrayList<>();
 		List<InputStream> listInputStream = new ArrayList<>();
 		List<File> listFile = new ArrayList<>();
+		//승훈
+		String upPath = "D:\\Ezen Learning\\Bigdata Learning Spring\\airtnt\\src\\main\\webapp\\resources\\files\\property\\";
 		// 하성
 		//String upPath = "C:\\Users\\Haseong\\git\\airtnt\\src\\main\\webapp\\resources\\files\\property\\";
 		// 수연
 		// String upPath =
 		// "C:\\Users\\woosuki\\git\\airtnt\\src\\main\\webapp\\resources\\files\\property\\";
-		// 학원
-		 String upPath =
-		 "D:\\study3(spring)\\airtnt\\src\\main\\webapp\\resources\\files\\property\\";
+		//학원
+		 //String upPath =
+		 //"D:\\study3(spring)\\airtnt\\src\\main\\webapp\\resources\\files\\property\\";
 		// 정석
 		// String upPath =
 		// "C:\\Spring\\EZEN\\workspace\\AirTnT\\src\\main\\webapp\\resources\\files\\property\\";

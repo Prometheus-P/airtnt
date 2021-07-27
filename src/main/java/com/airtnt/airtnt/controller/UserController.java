@@ -247,9 +247,9 @@ public class UserController {
 		String originalFileExtension = originalFile.substring(originalFile.lastIndexOf("."));
 		String storedFileName = UUID.randomUUID().toString().replaceAll("-", "") + originalFileExtension;
 		//승훈
-		//String upPath = "D:\\Ezen Learning\\Bigdata Learning Spring\\airtnt\\src\\main\\webapp\\resources\\files\\member_image\\";
+		String upPath = "D:\\Ezen Learning\\Bigdata Learning Spring\\airtnt\\src\\main\\webapp\\resources\\files\\member_image\\";
 		//학원
-		String upPath = "D:\\study3(spring)\\airtnt\\src\\main\\webapp\\resources\\files\\member_image\\";
+		//String upPath = "D:\\study3(spring)\\airtnt\\src\\main\\webapp\\resources\\files\\member_image\\";
 		//String upPath = req.getServletContext().getRealPath(req.getContextPath())+"\\resources\\files\\member_image\\";
 		
 		// DB 넘길 데이터 설정, by승훈, 210623
@@ -291,9 +291,9 @@ public class UserController {
 			@RequestParam("member_image") String member_image) throws Exception {
 		String member_id = (String) req.getSession().getAttribute("member_id");
 		//승훈
-		//String upPath = "D:\\Ezen Learning\\Bigdata Learning Spring\\airtnt\\src\\main\\webapp\\resources\\files\\member_image\\";
+		String upPath = "D:\\Ezen Learning\\Bigdata Learning Spring\\airtnt\\src\\main\\webapp\\resources\\files\\member_image\\";
 		//학원
-		String upPath = "D:\\study3(spring)\\airtnt\\src\\main\\webapp\\resources\\files\\member_image\\";
+		//String upPath = "D:\\study3(spring)\\airtnt\\src\\main\\webapp\\resources\\files\\member_image\\";
 		String substring = "/resources/files/member_image/";
 		if (del.equals("del")) {
 			File delfile = new File(upPath + member_image.substring(substring.length()));
@@ -368,7 +368,7 @@ public class UserController {
 	//[마이페이지 - 리뷰(더보기요청)] by승훈, 210705
 	@RequestMapping(value="myPage/review", method=RequestMethod.POST)
 	  @ResponseBody
-	public List<ReviewDTO> moerReview(HttpServletRequest req, @RequestParam Map<String, String> param) {
+	public List<ReviewDTO> moreReview(HttpServletRequest req, @RequestParam Map<String, String> param) {
 		
 		//넘겨받은 more값 바탕으로 num설정, by승훈, 210705
 		Map<String, String> params = setMoreNum(param.get("more"));

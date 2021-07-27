@@ -78,7 +78,7 @@
 						name="filename" onchange="handleFiles(this.files)">
 				</div>
 				<button type="button" class="btn" onclick="check()"
-					style="background-color: #001a21ad; margin-top: 10px;">저장</button>
+					style="margin-top: 10px;">저장</button>
 			</form>
 		</div>
 	</div>

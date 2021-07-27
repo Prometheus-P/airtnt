@@ -28,7 +28,7 @@
               <li class="one_third">
                  <div class="text-center">
                     <c:if test="${not empty dto.path}">
-                       <a href="inWishList?wish_id=${dto.wish_id}&wish_name=${dto.name}"><img src="${dto.path}" style="object-fit:contain; width:250px; height:200px;"></a>
+                       <a href="inWishList?wish_id=${dto.wish_id}&wish_name=${dto.name}"><img src="${dto.path}" style="object-fit:cover; width:250px; height:180px; border-radius:10px;"></a>
                     </c:if>
                     <c:if test="${empty dto.path}">
                     <a href="inWishList?wish_id=${dto.wish_id}&wish_name=${dto.name}" style="color:black">
@@ -38,7 +38,7 @@
                      </svg></a>
                     </c:if>
                  </div>
-                  <footer class="text-center"><span class="bold " style="font-size: 2vh;">${dto.name}</span></footer>
+                  <footer class="text-center" style="margin-top: 5px"><span class="bold " style="font-size: 2vh;">${dto.name}</span></footer>
               </li>
          </c:forEach>
       </c:if>
@@ -47,7 +47,7 @@
               <li class="one_third">
                  <div class="text-center">
                     <c:if test="${not empty dto.path}">
-                       <a href="inWishList?wish_id=${dto.wish_id}&wish_name=${dto.name}"><img src="${dto.path}" style="object-fit:contain; width:300px; height:200px;"></a>
+                       <a href="inWishList?wish_id=${dto.wish_id}&wish_name=${dto.name}"><img src="${dto.path}" style="object-fit:cover; width:250px; height:180px; border-radius:10px;"></a>
                     </c:if>
                     <c:if test="${empty dto.path}">
                        <a href="inWishList?wish_id=${dto.wish_id}&wish_name=${dto.name}" style="color:black">
@@ -57,7 +57,7 @@
                         </svg></a>
                     </c:if>
                  </div>
-                  <footer class="text-center"><span class="bold " style="font-size: 2vh;">${dto.name}</span></footer>
+                  <footer class="text-center" style="margin-top: 5px"><span class="bold " style="font-size: 2vh;">${dto.name}</span></footer>
               </li>
          </c:forEach>
       </c:if>

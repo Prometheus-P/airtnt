@@ -104,8 +104,7 @@
               <ul id="auto-complete-area" class="dropdown-menu list-group" style="width: 40rem; font-size: 2rem;">
                 <!-- 주소 자동완성 목록 -->
               </ul>
-		      <input  class="btn btn-outline-primary" type="submit" value="검색"
-		      style="background-color:#01546b; border: 0px;">
+		      <input  class="btn btn-outline-primary" type="submit" value="검색">
 		    </form>
 		  </div>
 		</nav>

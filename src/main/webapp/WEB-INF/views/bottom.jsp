@@ -7,10 +7,7 @@
       <li class="one_quarter first">
         <div class="block clear">
           <a href="#"><i class="fas fa-phone"></i></a>
-          <span><strong>대표 오정석</strong> +082 010-7293-4295</span>
-          <span><strong>기획팀장 이승훈</strong> +082 010-1234-5678</span>
-          <span><strong>연구소장 최수연</strong> +082 010-1234-5678</span>
-          <span><strong>그냥 박하성</strong> +082 010-1234-5678</span>
+          <span><strong>airTnT 고객센터</strong> +082 02-000-0000</span>
         </div>
       </li>
       <li class="one_quarter">
